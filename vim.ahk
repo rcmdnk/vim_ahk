@@ -2,11 +2,14 @@
 GroupAdd VimGroup, ahk_class Notepad
 GroupAdd VimGroup, ahk_class WordPadClass
 GroupAdd VimGroup, ahk_class TTeraPadMainForm
-GroupAdd VimGroup, ahk_class CabinetWClas
+GroupAdd VimGroup, ahk_class CabinetWClas ; Exploler
 GroupAdd VimGroup, 作成 ;Thunderbird, 日本語
 GroupAdd VimGroup, Write: ;Thuderbird, English
 GroupAdd VimGroup, ahk_class PP12FrameClass ; PowerPoint
 GroupAdd VimGroup, ahk_class OpusApp ; Word
+GroupAdd VimGroup, ahk_class ENMainFrame ; Evernote
+
+vim_verbose=2
 
 VimMode=Insert
 Vim_g=0
@@ -29,7 +32,7 @@ Return
 
 ; Ref for IME: http://www6.atwiki.jp/eamat/pages/17.html
 ; Get IME Status. 0: Off, 1: On
-IME_GET(WinTitle="A")  {
+VIM_IME_GET(WinTitle="A")  {
   ControlGet,hwnd,HWND,,,%WinTitle%
   if (WinActive(WinTitle)) {
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
@@ -46,7 +49,7 @@ IME_GET(WinTitle="A")  {
       ,  Int, 0)      ;lParam  : 0
 }
 ; Get input status. 1: Converting, 2: Have converting window, 0: Others
-IME_GetConverting(WinTitle="A",ConvCls="",CandCls="") {
+VIM_IME_GetConverting(WinTitle="A",ConvCls="",CandCls="") {
   ; Input windows, candidate windows (Add new IME with "|")
   ConvCls .= (ConvCls ? "|" : "")                 ;--- Input Window ---
     .  "ATOK\d+CompStr"                           ; ATOK
@@ -119,7 +122,7 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1) {
   if (LineCopy!=-1) {
     VimLineCopy=%LineCopy%
   }
-  VimCheckMode(2)
+  VimCheckMode(vim_verbose)
   Return
 }
 VimCheckMode(verbose=0) {
@@ -147,9 +150,14 @@ VimCheckMode(verbose=0) {
 
 ; Enter vim normal mode {{{
 #IfWInActive, ahk_group VimGroup
-Esc:: ; Just send Esc at converting.
-  if (IME_GET(A)) {
-    if (IME_GetConverting(A)) {
+Esc:: ; Just send Esc at converting, long press for normal Esc.
+  KeyWait, Esc, T0.5
+  if (ErrorLevel){ ; long press
+    Send,{Esc}
+    Return
+  }
+  if (VIM_IME_GET(A)) {
+    if (VIM_IME_GetConverting(A)) {
       Send,{Esc}
     } else {
       IME_SET()
@@ -161,7 +169,12 @@ Esc:: ; Just send Esc at converting.
   Return
 
 ^[:: ; Go to Normal mode (for vim) with IME off even at converting.
-  if (IME_GET(A)) {
+  KeyWait, [, T0.5
+  if (ErrorLevel){ ; long press to Esc
+    Send,{Esc}
+    Return
+  }
+  if (VIM_IME_GET(A)) {
     Send,{Esc}
     Sleep 1
     IME_SET()
@@ -264,6 +277,11 @@ u::Send,^z
 
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_Normal")
 Space::Send,{Right}
+
+; period
+.::Send, +^{Right}{BS}^v
+
+#If
 ; }}}
 
 ; Replace {{{
@@ -271,32 +289,32 @@ Space::Send,{Right}
 r::VimSetMode("r_once")
 +r::VimSetMode("r_repeat")
 #If WInActive("ahk_group VimGroup") and (VimMode="r_once")
-~*a::
-~*b::
-~*c::
-~*d::
-~*e::
-~*f::
-~*g::
-~*h::
-~*i::
-~*j::
-~*k::
-~*l::
-~*m::
-~*n::
-~*o::
-~*p::
-~*q::
-~*r::
-~*s::
-~*t::
-~*u::
-~*v::
-~*w::
-~*x::
-~*y::
-~*z::
+~a::
+~b::
+~c::
+~d::
+~e::
+~f::
+~g::
+~h::
+~i::
+~j::
+~k::
+~l::
+~m::
+~n::
+~o::
+~p::
+~q::
+~r::
+~s::
+~t::
+~u::
+~v::
+~w::
+~x::
+~y::
+~z::
 ~0::
 ~1::
 ~2::
@@ -345,32 +363,32 @@ r::VimSetMode("r_once")
   VimSetMode("Vim_Normal")
   Return
 #If WInActive("ahk_group VimGroup") and (VimMode="r_repeat")
-~*a::
-~*b::
-~*c::
-~*d::
-~*e::
-~*f::
-~*g::
-~*h::
-~*i::
-~*j::
-~*k::
-~*l::
-~*m::
-~*n::
-~*o::
-~*p::
-~*q::
-~*r::
-~*s::
-~*t::
-~*u::
-~*v::
-~*w::
-~*x::
-~*y::
-~*z::
+~a::
+~b::
+~c::
+~d::
+~e::
+~f::
+~g::
+~h::
+~i::
+~j::
+~k::
+~l::
+~m::
+~n::
+~o::
+~p::
+~q::
+~r::
+~s::
+~t::
+~u::
+~v::
+~w::
+~x::
+~y::
+~z::
 ~0::
 ~1::
 ~2::
@@ -700,11 +718,31 @@ c::
     VimSetMode("Insert",0,0,0)
   }
   Return
+
+*::
+  bak:=ClipboardAll
+  Clipboard=
+  Send,^c
+  ClipWait,1
+  Send,^f
+  Send,^v!f
+  clipboard:=bak
+  VimSetMode("Vim_Normal")
+  Return
 ; }}} Vim visual mode
 
 ; Search {{{
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_Normal")
 /::Send,^f
+*::
+  bak:=ClipboardAll
+  Clipboard=
+  Send,^{Left}+^{Right}^c
+  ClipWait,1
+  Send,^f
+  Send,^v!f
+  clipboard:=bak
+  Return
 n::Send,{F3}
 +n::Send,+{F3}
 ; }}} Search
@@ -739,5 +777,5 @@ Return::
   VimSetMode("Normal")
   Return
 ; }}} Vim command mode
-
+#If
 ; }}} Vim Mode
