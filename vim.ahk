@@ -85,7 +85,7 @@ VIM_IME_GetConverting(WinTitle="A",ConvCls="",CandCls="") {
   Return ret
 }
 ; Set IME, SetSts=0: Off, 1: On, return 0 for success, others for non-success
-IME_SET(SetSts=0, WinTitle="A")    {
+VIM_IME_SET(SetSts=0, WinTitle="A")    {
   ControlGet,hwnd,HWND,,,%WinTitle%
   if(WinActive(WinTitle)){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
@@ -160,7 +160,7 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
     if (VIM_IME_GetConverting(A)) {
       Send,{Esc}
     } else {
-      IME_SET()
+      VIM_IME_SET()
       VimSetMode("Vim_Normal")
     }
   } else {
@@ -177,7 +177,7 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
   if (VIM_IME_GET(A)) {
     Send,{Esc}
     Sleep 1
-    IME_SET()
+    VIM_IME_SET()
   }
   VimSetMode("Vim_Normal")
   Return
