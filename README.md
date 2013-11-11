@@ -153,7 +153,7 @@ y/d/c+Move Command can be used, too.
 |h | Open help of the application|
 
 
-# Bunus
+# Bonus
 vim_ime.exe is execute file which enable automatic IME off on Vim (at mode change of Insert->Normal Mode).
 The setting file can be found in the [gist](https://gist.github.com/rcmdnk/6147672).
 
