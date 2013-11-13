@@ -122,12 +122,14 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1) {
   if (LineCopy!=-1) {
     VimLineCopy=%LineCopy%
   }
-  VimCheckMode(vim_verbose)
+  VimCheckMode(vim_verbose,Mode,g,n,LineCopy)
   Return
 }
-VimCheckMode(verbose=0) {
+VimCheckMode(verbose=0,Mode="", g=0, n=0, LineCopy=-1) {
   global
-  if(verbose=1){
+  if(verbose<0) or ((Mode=="" ) and (g==0) and (n==0) and (LineCopy==-1)) {
+    Return
+  }else if(verbose=1){
     TrayTip,VimMode,%VimMode%,10,, ; 10 sec is minimum for TrayTip
   }else if(verbose=2){
     TrayTip,VimMode,%VimMode%`r`ng=%Vim_g%`r`nn=%Vim_n%,10,,
@@ -144,7 +146,7 @@ VimCheckMode(verbose=0) {
   Return
 }
 ^!+c::
-  VimCheckMode(3)
+  VimCheckMode(3,VimMode)
   Return
 ; }}}
 
