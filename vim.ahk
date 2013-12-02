@@ -2,7 +2,7 @@
 GroupAdd VimGroup, ahk_class Notepad
 GroupAdd VimGroup, ahk_class WordPadClass
 GroupAdd VimGroup, ahk_class TTeraPadMainForm
-GroupAdd VimGroup, ahk_class CabinetWClas ; Exploler
+GroupAdd VimGroup, ahk_class CabinetWClass ; Exploler
 GroupAdd VimGroup, 作成 ;Thunderbird, 日本語
 GroupAdd VimGroup, Write: ;Thuderbird, English
 GroupAdd VimGroup, ahk_class PP12FrameClass ; PowerPoint
