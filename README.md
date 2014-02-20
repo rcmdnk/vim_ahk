@@ -156,8 +156,3 @@ y/d/c+Move Command can be used, too.
 # Bonus
 vim_ime.exe is execute file which enable automatic IME off on Vim (at mode change of Insert->Normal Mode).
 The setting file can be found in the [gist](https://gist.github.com/rcmdnk/6147672).
-
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/rcmdnk/vim_ahk/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
