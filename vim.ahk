@@ -9,7 +9,7 @@ GroupAdd VimGroup, ahk_class PP12FrameClass ; PowerPoint
 GroupAdd VimGroup, ahk_class OpusApp ; Word
 GroupAdd VimGroup, ahk_class ENMainFrame ; Evernote
 
-vim_verbose=2
+vim_verbose=0
 
 VimMode=Insert
 Vim_g=0
@@ -127,7 +127,7 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1) {
 }
 VimCheckMode(verbose=0,Mode="", g=0, n=0, LineCopy=-1) {
   global
-  if(verbose<0) or ((Mode=="" ) and (g==0) and (n==0) and (LineCopy==-1)) {
+  if(verbose<1) or ((Mode=="" ) and (g==0) and (n==0) and (LineCopy==-1)) {
     Return
   }else if(verbose=1){
     TrayTip,VimMode,%VimMode%,1,, ; 1 sec is minimum for TrayTip
