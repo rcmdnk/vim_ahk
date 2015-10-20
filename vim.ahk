@@ -107,6 +107,18 @@ VIM_IME_SET(SetSts=0, WinTitle="A")    {
 ; Vim mode {{{
 #IfWInActive, ahk_group VimGroup
 
+Status(Title){
+    WinGetPos,,,W,H,A
+    Tooltip,%Title%,W/2,H/2
+    SetTimer, RemoveStatus, 16000
+}
+
+RemoveStatus:
+    SetTimer, RemoveStatus, off
+    ; SplashTextOff
+    Tooltip
+return
+
 ; Reset Modes {{{
 VimSetMode(Mode="", g=0, n=0, LineCopy=-1) {
   global
@@ -130,9 +142,9 @@ VimCheckMode(verbose=0,Mode="", g=0, n=0, LineCopy=-1) {
   if(verbose<1) or ((Mode=="" ) and (g==0) and (n==0) and (LineCopy==-1)) {
     Return
   }else if(verbose=1){
-    TrayTip,VimMode,%VimMode%,1,, ; 1 sec is minimum for TrayTip
+    Status(VimMode)
   }else if(verbose=2){
-    TrayTip,VimMode,%VimMode%`r`ng=%Vim_g%`r`nn=%Vim_n%,1,,
+    Status(VimMode)
   }
   if(verbose=3){
     Msgbox,
