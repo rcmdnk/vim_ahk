@@ -15,6 +15,7 @@ VimMode=Insert
 Vim_g=0
 Vim_n=0
 VimLineCopy=0
+LastIME=0
 
 Return
 ; }}}
@@ -124,6 +125,9 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1) {
   global
   if(Mode!=""){
     VimMode=%Mode%
+    If(Mode=="Insert"){
+        VIM_IME_SET(LastIME)
+    }
   }
   if (g != -1){
     Vim_g=%g%
@@ -170,7 +174,8 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
     Send,{Esc}
     Return
   }
-  if (VIM_IME_GET(A)) {
+  LastIME:=VIM_IME_Get()
+  if (LastIME) {
     if (VIM_IME_GetConverting(A)) {
       Send,{Esc}
     } else {
