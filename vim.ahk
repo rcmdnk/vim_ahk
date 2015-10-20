@@ -8,6 +8,9 @@ GroupAdd VimGroup, Write: ;Thuderbird, English
 GroupAdd VimGroup, ahk_class PP12FrameClass ; PowerPoint
 GroupAdd VimGroup, ahk_class OpusApp ; Word
 GroupAdd VimGroup, ahk_class ENMainFrame ; Evernote
+GroupAdd VimGroup, ahk_exe Code.exe ; Visual Studio Code
+GroupAdd VimGroup, ahk_exe onenote.exe ; OneNote Desktop
+GroupAdd VimGroup, OneNote ; OneNote in Windows 10
 
 vim_verbose=0
 
