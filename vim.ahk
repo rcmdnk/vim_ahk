@@ -12,8 +12,9 @@ GroupAdd VimGroup, ahk_exe Code.exe ; Visual Studio Code
 GroupAdd VimGroup, ahk_exe onenote.exe ; OneNote Desktop
 GroupAdd VimGroup, OneNote ; OneNote in Windows 10
 
-vim_verbose=0
+GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 
+vim_verbose=0
 VimMode=Insert
 Vim_g=0
 Vim_n=0
@@ -599,6 +600,9 @@ c::VimSetMode("Vim_ydc_c",0,-1,0)
 +y::
   VimSetMode("Vim_ydc_y",0,0,1)
   Sleep,150 ; Need to wait (For variable change?)
+  if WinActive("ahk_group DoubleHome"){
+    Send,{Home}
+  }
   Send,{Home}+{End}
   VimMoveLoop("l")
   Return
@@ -613,18 +617,27 @@ c::VimSetMode("Vim_ydc_c",0,-1,0)
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_ydc_y")
 y::
   VimLineCopy=1
+  if WinActive("ahk_group DoubleHome"){
+    Send,{Home}
+  }
   Send,{Home}+{End}
   VimMoveLoop("l")
   Return
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_ydc_d")
 d::
   VimLineCopy=1
+  if WinActive("ahk_group DoubleHome"){
+    Send,{Home}
+  }
   Send,{Home}+{End}
   VimMoveLoop("l")
   Return
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_ydc_c")
 c::
   VimLineCopy=1
+  if WinActive("ahk_group DoubleHome"){
+    Send,{Home}
+  }
   Send,{Home}+{End}
   VimMoveLoop("l")
   Return
