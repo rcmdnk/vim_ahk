@@ -123,7 +123,6 @@ Status(Title){
 
 RemoveStatus:
     SetTimer, RemoveStatus, off
-    ; SplashTextOff
     Tooltip
 return
 
@@ -153,7 +152,7 @@ VimCheckMode(verbose=0,Mode="", g=0, n=0, LineCopy=-1) {
   if(verbose<1) or ((Mode=="" ) and (g==0) and (n==0) and (LineCopy==-1)) {
     Return
   }else if(verbose=1){
-    Status(VimMode)
+    Status(VimMode) ; 1 sec is minimum for TrayTip
   }else if(verbose=2){
     Status(VimMode)
   }
@@ -200,12 +199,17 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
     Send,{Esc}
     Return
   }
-  if (VIM_IME_GET(A)) {
-    Send,{Esc}
-    Sleep 1
-    VIM_IME_SET()
+  LastIME:=VIM_IME_Get()
+  if (LastIME) {
+    if (VIM_IME_GetConverting(A)) {
+      Send,{Esc}
+    } else {
+      VIM_IME_SET()
+      VimSetMode("Vim_Normal")
+    }
+  } else {
+    VimSetMode("Vim_Normal")
   }
-  VimSetMode("Vim_Normal")
   Return
 ; }}}
 
@@ -214,6 +218,7 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
 i::VimSetMode("Insert")
 +i::
   Send,{Home}
+  Sleep 200
   VimSetMode("Insert")
   Return
 a::
@@ -222,6 +227,7 @@ a::
   Return
 +a::
   Send,{End}
+  Sleep 200
   VimSetMode("Insert")
   Return
 o::
@@ -230,6 +236,7 @@ o::
   Return
 +o::
   Send,{Up}{End}{Enter}
+  Sleep 200
   VimSetMode("Insert")
   Return
 ; }}}
