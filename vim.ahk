@@ -1,4 +1,6 @@
 ﻿; Auto-execute section {{{
+
+; Application groups
 GroupAdd VimGroup, ahk_class Notepad
 GroupAdd VimGroup, ahk_class WordPadClass
 GroupAdd VimGroup, ahk_class TTeraPadMainForm
@@ -17,12 +19,15 @@ GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 GroupAdd OneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
 GroupAdd OneNoteGroup, , OneNote ; OneNote in Windows 10
 
-vim_verbose=0
+; Global settings
+VimVerbose=0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically) 
+VimRestoreIME=1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
+
 VimMode=Insert
 Vim_g=0
 Vim_n=0
 VimLineCopy=0
-LastIME=0
+VimLastIME=0
 
 Return
 ; }}}
@@ -117,8 +122,8 @@ VIM_IME_SET(SetSts=0, WinTitle="A")    {
 
 Status(Title){
     WinGetPos,,,W,H,A
-    Tooltip,%Title%,W/2,H/2
-    SetTimer, RemoveStatus, 16000
+    Tooltip,%Title%,W*3/4,H*3/4
+    SetTimer, RemoveStatus, 1000
 }
 
 RemoveStatus:
@@ -131,7 +136,7 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1) {
   global
   if(Mode!=""){
     VimMode=%Mode%
-    If(Mode=="Insert"){
+    If(Mode=="Insert") and (VimRestoreIME==1){
         VIM_IME_SET(LastIME)
     }
   }
@@ -144,7 +149,7 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1) {
   if (LineCopy!=-1) {
     VimLineCopy=%LineCopy%
   }
-  VimCheckMode(vim_verbose,Mode,g,n,LineCopy)
+  VimCheckMode(VimVerbose,Mode,g,n,LineCopy)
   Return
 }
 VimCheckMode(verbose=0,Mode="", g=0, n=0, LineCopy=-1) {
@@ -154,7 +159,7 @@ VimCheckMode(verbose=0,Mode="", g=0, n=0, LineCopy=-1) {
   }else if(verbose=1){
     Status(VimMode) ; 1 sec is minimum for TrayTip
   }else if(verbose=2){
-    Status(VimMode)
+    Status(VimMode "`r`ng=" Vim_g "`r`nn=" Vim_n)
   }
   if(verbose=3){
     Msgbox,
@@ -180,8 +185,8 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
     Send,{Esc}
     Return
   }
-  LastIME:=VIM_IME_Get()
-  if (LastIME) {
+  VimLastIME:=VIM_IME_Get()
+  if (VimLastIME) {
     if (VIM_IME_GetConverting(A)) {
       Send,{Esc}
     } else {
@@ -199,8 +204,8 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
     Send,{Esc}
     Return
   }
-  LastIME:=VIM_IME_Get()
-  if (LastIME) {
+  VimLastIME:=VIM_IME_Get()
+  if (VimLastIME) {
     if (VIM_IME_GetConverting(A)) {
       Send,{Esc}
     } else {
