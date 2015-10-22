@@ -8,13 +8,21 @@ GroupAdd VimGroup, Write: ;Thuderbird, English
 GroupAdd VimGroup, ahk_class PP12FrameClass ; PowerPoint
 GroupAdd VimGroup, ahk_class OpusApp ; Word
 GroupAdd VimGroup, ahk_class ENMainFrame ; Evernote
+GroupAdd VimGroup, ahk_exe Code.exe ; Visual Studio Code
+GroupAdd VimGroup, ahk_exe onenote.exe ; OneNote Desktop
+GroupAdd VimGroup, OneNote ; OneNote in Windows 10
+
+GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
+
+GroupAdd OneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
+GroupAdd OneNoteGroup, , OneNote ; OneNote in Windows 10
 
 vim_verbose=0
-
 VimMode=Insert
 Vim_g=0
 Vim_n=0
 VimLineCopy=0
+LastIME=0
 
 Return
 ; }}}
@@ -107,11 +115,25 @@ VIM_IME_SET(SetSts=0, WinTitle="A")    {
 ; Vim mode {{{
 #IfWInActive, ahk_group VimGroup
 
+Status(Title){
+    WinGetPos,,,W,H,A
+    Tooltip,%Title%,W/2,H/2
+    SetTimer, RemoveStatus, 16000
+}
+
+RemoveStatus:
+    SetTimer, RemoveStatus, off
+    Tooltip
+return
+
 ; Reset Modes {{{
 VimSetMode(Mode="", g=0, n=0, LineCopy=-1) {
   global
   if(Mode!=""){
     VimMode=%Mode%
+    If(Mode=="Insert"){
+        VIM_IME_SET(LastIME)
+    }
   }
   if (g != -1){
     Vim_g=%g%
@@ -130,9 +152,9 @@ VimCheckMode(verbose=0,Mode="", g=0, n=0, LineCopy=-1) {
   if(verbose<1) or ((Mode=="" ) and (g==0) and (n==0) and (LineCopy==-1)) {
     Return
   }else if(verbose=1){
-    TrayTip,VimMode,%VimMode%,1,, ; 1 sec is minimum for TrayTip
+    Status(VimMode) ; 1 sec is minimum for TrayTip
   }else if(verbose=2){
-    TrayTip,VimMode,%VimMode%`r`ng=%Vim_g%`r`nn=%Vim_n%,1,,
+    Status(VimMode)
   }
   if(verbose=3){
     Msgbox,
@@ -158,7 +180,8 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
     Send,{Esc}
     Return
   }
-  if (VIM_IME_GET(A)) {
+  LastIME:=VIM_IME_Get()
+  if (LastIME) {
     if (VIM_IME_GetConverting(A)) {
       Send,{Esc}
     } else {
@@ -176,12 +199,17 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
     Send,{Esc}
     Return
   }
-  if (VIM_IME_GET(A)) {
-    Send,{Esc}
-    Sleep 1
-    VIM_IME_SET()
+  LastIME:=VIM_IME_Get()
+  if (LastIME) {
+    if (VIM_IME_GetConverting(A)) {
+      Send,{Esc}
+    } else {
+      VIM_IME_SET()
+      VimSetMode("Vim_Normal")
+    }
+  } else {
+    VimSetMode("Vim_Normal")
   }
-  VimSetMode("Vim_Normal")
   Return
 ; }}}
 
@@ -190,6 +218,7 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
 i::VimSetMode("Insert")
 +i::
   Send,{Home}
+  Sleep 200
   VimSetMode("Insert")
   Return
 a::
@@ -198,6 +227,7 @@ a::
   Return
 +a::
   Send,{End}
+  Sleep 200
   VimSetMode("Insert")
   Return
 o::
@@ -206,6 +236,7 @@ o::
   Return
 +o::
   Send,{Up}{End}{Enter}
+  Sleep 200
   VimSetMode("Insert")
   Return
 ; }}}
@@ -487,9 +518,17 @@ VimMove(key="", shift=0){
 
   ; 1 character
   if (key="j"){
-    Send,{Down}
+    if WinActive("ahk_group OneNoteGroup"){
+      Send ^{Down}
+    } else {
+      Send,{Down}
+    }
   }else if (key="k"){
-    Send,{Up}
+    if WinActive("ahk_group OneNoteGroup"){
+      Send ^{Up}
+    } else {
+      Send,{Up}
+    }
   ; Page Up/Down
   }else if (key="^u"){
     Send,{Up 10}
@@ -579,6 +618,9 @@ c::VimSetMode("Vim_ydc_c",0,-1,0)
 +y::
   VimSetMode("Vim_ydc_y",0,0,1)
   Sleep,150 ; Need to wait (For variable change?)
+  if WinActive("ahk_group DoubleHome"){
+    Send,{Home}
+  }
   Send,{Home}+{End}
   VimMoveLoop("l")
   Return
@@ -593,18 +635,27 @@ c::VimSetMode("Vim_ydc_c",0,-1,0)
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_ydc_y")
 y::
   VimLineCopy=1
+  if WinActive("ahk_group DoubleHome"){
+    Send,{Home}
+  }
   Send,{Home}+{End}
   VimMoveLoop("l")
   Return
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_ydc_d")
 d::
   VimLineCopy=1
+  if WinActive("ahk_group DoubleHome"){
+    Send,{Home}
+  }
   Send,{Home}+{End}
   VimMoveLoop("l")
   Return
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_ydc_c")
 c::
   VimLineCopy=1
+  if WinActive("ahk_group DoubleHome"){
+    Send,{Home}
+  }
   Send,{Home}+{End}
   VimMoveLoop("l")
   Return
