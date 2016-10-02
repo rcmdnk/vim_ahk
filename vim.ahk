@@ -1,29 +1,32 @@
 ﻿; Auto-execute section {{{
 
 ; Application groups
-GroupAdd VimGroup, ahk_class Notepad
-GroupAdd VimGroup, ahk_class WordPadClass
-GroupAdd VimGroup, ahk_class TTeraPadMainForm
-GroupAdd VimGroup, ahk_class CabinetWClass ; Exploler
+
+; Enable vim mode for following applications
+GroupAdd VimGroup, ahk_exe notepad.exe ; NotePad
+GroupAdd VimGroup, ahk_exe wordpad.exe ; WordPad
+GroupAdd VimGroup, ahk_exe TeraPad.exe ; TeraPad
+GroupAdd VimGroup, ahk_exe exploler.exe
 GroupAdd VimGroup, 作成 ;Thunderbird, 日本語
 GroupAdd VimGroup, Write: ;Thuderbird, English
-GroupAdd VimGroup, ahk_class PP12FrameClass ; PowerPoint
-GroupAdd VimGroup, ahk_class OpusApp ; Word
-GroupAdd VimGroup, ahk_class ENMainFrame ; Evernote
+GroupAdd VimGroup, ahk_exe POWERPNT.exe ; PowerPoint
+GroupAdd VimGroup, ahk_exe WINWORD.exe ; Word
+GroupAdd VimGroup, ahk_exe Evernote.exe ; Evernote
 GroupAdd VimGroup, ahk_exe Code.exe ; Visual Studio Code
 GroupAdd VimGroup, ahk_exe onenote.exe ; OneNote Desktop
 GroupAdd VimGroup, OneNote ; OneNote in Windows 10
 
-GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
+; Following application select the line break at Shift + End.
+GroupAdd LBSelect, ahk_exe POWERPNT.exe ; PowerPoint
+GroupAdd LBSelect, ahk_exe WINWORD.exe ; Word
+GroupAdd LBSelect, ahk_exe wordpad.exe ; WordPad
 
 ; Seems Windows 10's OneNote has normal behavior as others.
 GroupAdd OneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
 ;GroupAdd OneNoteGroup, , OneNote ; OneNote in Windows 10
 
-; Only these two have different treatment of break line at {End}.
-; OneNote or Excel don't have.
-GroupAdd MSOffice, ahk_class PP12FrameClass ; PowerPoint
-GroupAdd MSOffice, ahk_class OpusApp ; Word
+; Need Home twice
+GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 
 ; Global settings
 VimVerbose=0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
@@ -633,7 +636,7 @@ c::VimSetMode("Vim_ydc_c",0,-1,0)
     Send,{Home}
   }
   Send,{Home}+{End}
-  if not WinActive("ahk_group MSOffice"){
+  if not WinActive("ahk_group LBSelect"){
     VimMove("l")
   }else{
     VimMove("")
@@ -641,7 +644,7 @@ c::VimSetMode("Vim_ydc_c",0,-1,0)
   Return
 +d::
   VimSetMode("Vim_ydc_d",0,0,0)
-  if not WinActive("ahk_group MSOffice"){
+  if not WinActive("ahk_group LBSelect"){
     VimMove("$")
   }else{
     Send,{Shift Down}{End}{Left}
@@ -650,7 +653,7 @@ c::VimSetMode("Vim_ydc_c",0,-1,0)
   Return
 +c::
   VimSetMode("Vim_ydc_c",0,0,0)
-  if not WinActive("ahk_group MSOffice"){
+  if not WinActive("ahk_group LBSelect"){
     VimMove("$")
   }else{
     Send,{Shift Down}{End}{Left}
@@ -664,7 +667,7 @@ y::
     Send,{Home}
   }
   Send,{Home}+{End}
-  if not WinActive("ahk_group MSOffice"){
+  if not WinActive("ahk_group LBSelect"){
     VimMove("l")
   }else{
     VimMove("")
@@ -677,7 +680,7 @@ d::
     Send,{Home}
   }
   Send,{Home}+{End}
-  if not WinActive("ahk_group MSOffice"){
+  if not WinActive("ahk_group LBSelect"){
     VimMove("l")
   }else{
     VimMove("")
@@ -690,7 +693,7 @@ c::
     Send,{Home}
   }
   Send,{Home}+{End}
-  if not WinActive("ahk_group MSOffice"){
+  if not WinActive("ahk_group LBSelect"){
     VimMove("l")
   }else{
     VimMove("")
