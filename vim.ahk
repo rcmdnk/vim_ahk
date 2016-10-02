@@ -641,6 +641,7 @@ c::VimSetMode("Vim_ydc_c",0,-1,0)
   }else{
     VimMove("")
   }
+  Send, {Left}{Home}
   Return
 +d::
   VimSetMode("Vim_ydc_d",0,0,0)
@@ -672,6 +673,7 @@ y::
   }else{
     VimMove("")
   }
+  Send, {Left}{Home}
   Return
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_ydc_d")
 d::
