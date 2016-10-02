@@ -16,11 +16,17 @@ GroupAdd VimGroup, OneNote ; OneNote in Windows 10
 
 GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 
+; Seems Windows 10's OneNote has normal behavior as others.
 GroupAdd OneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
-GroupAdd OneNoteGroup, , OneNote ; OneNote in Windows 10
+;GroupAdd OneNoteGroup, , OneNote ; OneNote in Windows 10
+
+; Only these two have different treatment of break line at {End}.
+; OneNote or Excel don't have.
+GroupAdd MSOffice, ahk_class PP12FrameClass ; PowerPoint
+GroupAdd MSOffice, ahk_class OpusApp ; Word
 
 ; Global settings
-VimVerbose=2 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically) 
+VimVerbose=0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
 VimRestoreIME=1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
 
 VimMode=Insert
@@ -522,6 +528,7 @@ VimMove(key="", shift=0){
 
   ; 1 character
   if (key="j"){
+    ; Only for OneNote of less than windows 10?
     if WinActive("ahk_group OneNoteGroup"){
       Send ^{Down}
     } else {
@@ -589,11 +596,11 @@ l::VimMoveLoop("l")
 ^k::VimMoveLoop("k")
 ^l::VimMoveLoop("l")
 ; Home/End
-0::VimMoveLoop("0")
-$::VimMoveLoop("$")
-^a::VimMoveLoop("0") ; Emacs like
-^e::VimMoveLoop("$") ; Emacs like
-^::VimMoveLoop("^")
+0::VimMove("0")
+$::VimMove("$")
+^a::VimMove("0") ; Emacs like
+^e::VimMove("$") ; Emacs like
+^::VimMove("^")
 ; Words
 w::VimMoveLoop("w")
 +w::VimMoveLoop("w") ; +w/e/+e are same as w
@@ -607,10 +614,10 @@ b::VimMoveLoop("b")
 ^b::VimMoveLoop("^b")
 ^f::VimMoveLoop("^f")
 ; G
-+g::VimMoveLoop("+g")
++g::VimMove("+g")
 ; gg
 #If WInActive("ahk_group VimGroup") and (InStr(VimMode,"Vim_")) and (Vim_g)
-g::VimMoveLoop("g")
+g::VimMove("g")
 ; }}} Move
 
 ; Copy/Cut/Paste (ydcxp){{{
@@ -626,15 +633,29 @@ c::VimSetMode("Vim_ydc_c",0,-1,0)
     Send,{Home}
   }
   Send,{Home}+{End}
-  VimMoveLoop("l")
+  if not WinActive("ahk_group MSOffice"){
+    VimMove("l")
+  }else{
+    VimMove("")
+  }
   Return
 +d::
   VimSetMode("Vim_ydc_d",0,0,0)
-  VimMoveLoop("$")
+  if not WinActive("ahk_group MSOffice"){
+    VimMove("$")
+  }else{
+    Send,{Shift Down}{End}{Left}
+    VimMove("")
+  }
   Return
 +c::
   VimSetMode("Vim_ydc_c",0,0,0)
-  VimMoveLoop("$")
+  if not WinActive("ahk_group MSOffice"){
+    VimMove("$")
+  }else{
+    Send,{Shift Down}{End}{Left}
+    VimMove("")
+  }
   Return
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_ydc_y")
 y::
@@ -643,7 +664,11 @@ y::
     Send,{Home}
   }
   Send,{Home}+{End}
-  VimMoveLoop("l")
+  if not WinActive("ahk_group MSOffice"){
+    VimMove("l")
+  }else{
+    VimMove("")
+  }
   Return
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_ydc_d")
 d::
@@ -652,7 +677,11 @@ d::
     Send,{Home}
   }
   Send,{Home}+{End}
-  VimMoveLoop("l")
+  if not WinActive("ahk_group MSOffice"){
+    VimMove("l")
+  }else{
+    VimMove("")
+  }
   Return
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_ydc_c")
 c::
@@ -661,7 +690,11 @@ c::
     Send,{Home}
   }
   Send,{Home}+{End}
-  VimMoveLoop("l")
+  if not WinActive("ahk_group MSOffice"){
+    VimMove("l")
+  }else{
+    VimMove("")
+  }
   Return
 
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_Normal")
