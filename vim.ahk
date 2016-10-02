@@ -20,7 +20,7 @@ GroupAdd OneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
 GroupAdd OneNoteGroup, , OneNote ; OneNote in Windows 10
 
 ; Global settings
-VimVerbose=0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically) 
+VimVerbose=2 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically) 
 VimRestoreIME=1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
 
 VimMode=Insert
@@ -482,7 +482,6 @@ g::VimSetMode("",1)
 
 VimMove(key="", shift=0){
   global
-  ;msgbox, %shift%
   if (InStr(VimMode,"Visual") or InStr(VimMode,"ydc") or shift=1){
     Send,{Shift Down}
   }
@@ -516,7 +515,7 @@ VimMove(key="", shift=0){
     VimLineCopy=1
     Send,{Shift Up}{Home}{Down}{Shift Down}{Up}
   }
-  if (InStr(VimMode,"Vim_ydc")) and (key="k" or key="^u" or key="^b" or key="g"){
+  if (InStr(VimMode,"Vim_ydc")) and (key="j" or key="^d" or key="^f" or key="+g"){
     VimLineCopy=1
     Send,{Shift Up}{Home}{Shift Down}{Down}
   }
