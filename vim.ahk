@@ -828,7 +828,10 @@ c::
 
 ; Search {{{
 #If WInActive("ahk_group VimGroup") and (VimMode="Vim_Normal")
-/::Send,^f
+/::
+  Send,^f
+  VimSetMode("Inseret")
+  Return
 *::
   bak:=ClipboardAll
   Clipboard=
@@ -837,6 +840,7 @@ c::
   Send,^f
   Send,^v!f
   clipboard:=bak
+  VimSetMode("Inseret")
   Return
 n::Send,{F3}
 +n::Send,+{F3}
