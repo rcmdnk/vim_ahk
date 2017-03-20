@@ -776,6 +776,8 @@ v::VimSetMode("Vim_VisualChar")
 y::
   Clipboard=
   Send,^c
+  Send,{Right}
+  Send,{Left}
   ClipWait,1
   if (InStr(VimMode,"Line")){
     VimSetMode("Vim_Normal",0,0,1)
