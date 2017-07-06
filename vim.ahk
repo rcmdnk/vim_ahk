@@ -6,7 +6,7 @@
 GroupAdd VimGroup, ahk_exe notepad.exe ; NotePad
 GroupAdd VimGroup, ahk_exe wordpad.exe ; WordPad
 GroupAdd VimGroup, ahk_exe TeraPad.exe ; TeraPad
-GroupAdd VimGroup, ahk_exe exploler.exe
+GroupAdd VimGroup, ahk_exe explorer.exe
 GroupAdd VimGroup, 作成 ;Thunderbird, 日本語
 GroupAdd VimGroup, Write: ;Thuderbird, English
 GroupAdd VimGroup, ahk_exe POWERPNT.exe ; PowerPoint
