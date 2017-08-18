@@ -21,9 +21,8 @@ GroupAdd LBSelect, ahk_exe POWERPNT.exe ; PowerPoint
 GroupAdd LBSelect, ahk_exe WINWORD.exe ; Word
 GroupAdd LBSelect, ahk_exe wordpad.exe ; WordPad
 
-; Seems Windows 10's OneNote has normal behavior as others.
+; OneNote before Windows 10
 GroupAdd OneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
-;GroupAdd OneNoteGroup, , OneNote ; OneNote in Windows 10
 
 ; Need Home twice
 GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
@@ -31,6 +30,10 @@ GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 ; Global settings
 VimVerbose=0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
 VimRestoreIME=1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
+if VimIcon is not integer
+{
+  VimIcon=1 ; 1 to enable Tray Icon for Vim Modes (0 to disable)
+}
 
 VimMode=Insert
 Vim_g=0
@@ -38,6 +41,7 @@ Vim_n=0
 VimLineCopy=0
 VimLastIME=0
 
+SetIcon("Disabled")
 Return
 ; }}}
 
@@ -124,6 +128,29 @@ VIM_IME_SET(SetSts=0, WinTitle="A")    {
     ,  Int, SetSts) ;lParam  : 0 or 1
 }
 
+SetIcon(Mode=""){
+  global VimIcon
+  if(VimIcon!=1){
+    Return
+  }
+  icon =
+  if InStr(Mode, "Normal"){
+    icon = icons/normal.ico
+  }else if InStr(Mode, "Insert"){
+    icon = icons/insert.ico
+  }else if InStr(Mode, "Visual"){
+    icon = icons/visual.ico
+  }else if InStr(Mode, "Disabled"){
+    icon = icons/disabled.ico
+  }
+  if(icon != ""){
+    icon = % A_ScriptDir . "\" . icon
+    if FileExist(icon){
+      Menu, Tray, Icon, %icon%
+    }
+  }
+}
+
 ; }}}
 
 ; Vim mode {{{
@@ -140,14 +167,15 @@ RemoveStatus:
     Tooltip
 return
 
-; Reset Modes {{{
+; Set Modes {{{
 VimSetMode(Mode="", g=0, n=0, LineCopy=-1) {
   global
   if(Mode!=""){
     VimMode=%Mode%
     If(Mode=="Insert") and (VimRestoreIME==1){
-        VIM_IME_SET(LastIME)
+      VIM_IME_SET(LastIME)
     }
+    SetIcon(VimMode)
   }
   if (g != -1){
     Vim_g=%g%
@@ -878,5 +906,7 @@ Return::
   VimSetMode("Normal")
   Return
 ; }}} Vim command mode
-#If
 ; }}} Vim Mode
+
+; vim: foldmethod=marker
+; vim: foldmarker={{{,}}}
