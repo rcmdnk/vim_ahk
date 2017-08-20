@@ -41,7 +41,7 @@ Vim_n=0
 VimLineCopy=0
 VimLastIME=0
 
-SetIcon("Disabled")
+;SetIcon("Disabled")
 Return
 ; }}}
 
