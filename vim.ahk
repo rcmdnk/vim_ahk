@@ -133,21 +133,21 @@ SetIcon(Mode=""){
   if(VimIcon !=1 ){
     Return
   }
-  icon =
+  icon :=
   if InStr(Mode, "Normal"){
-    icon = icons/normal.ico
+    icon := % A_ScriptDir . "/icons/normal.ico"
   }else if InStr(Mode, "Insert"){
-    icon = icons/insert.ico
+    icon := % A_ScriptDir . "/icons/insert.ico"
   }else if InStr(Mode, "Visual"){
-    icon = icons/visual.ico
+    icon := % A_ScriptDir . "/icons/visual.ico"
+  }else if InStr(Mode, "Command"){
+    icon := % A_ScriptDir . "/icons/command.ico"
   }else if InStr(Mode, "Disabled"){
-    icon = icons/disabled.ico
+    icon := A_AhkPath ; Default icon
+    ;icon := % A_ScriptDir . "/icons/disabled.ico"
   }
-  if(icon != ""){
-    icon = % A_ScriptDir . "\" . icon
-    if FileExist(icon){
-      Menu, Tray, Icon, %icon%
-    }
+  if FileExist(icon){
+    Menu, Tray, Icon, %icon%
   }
 }
 
@@ -156,6 +156,7 @@ SetIcon(Mode=""){
 ; Vim mode {{{
 #IfWInActive, ahk_group VimGroup
 
+; Status Tooltip {{{
 Status(Title){
   WinGetPos, , , W, H, A
   Tooltip, %Title%, W*3/4, H*3/4
@@ -166,6 +167,7 @@ RemoveStatus:
   SetTimer, RemoveStatus, off
   Tooltip
 return
+; }}}
 
 ; Set Modes {{{
 VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
