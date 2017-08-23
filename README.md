@@ -34,8 +34,10 @@ The default setting enables vim-mode for the following applications:
 * Microsoft Word
 * Evernote
 
-If you want to change applications, add/remove `GroupAdd` lines at the top of vim.ahk.
-(Window title/class can be seen by window spy in AutoHotkey.)
+If you want to change applications, add `GroupAdd VimGroup` lines at the top of vim.ahk
+(Window title/class can be seen by window spy in AutoHotkey), like:
+
+    GroupAdd VimGroup, ahk_exe notepad.exe ; NotePad
 
 ## Verbose level
 vim.ahk can show information of vim mode at different levels.
