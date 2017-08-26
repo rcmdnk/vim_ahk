@@ -28,7 +28,7 @@ GroupAdd OneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
 GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 
 ; Global settings
-VimVerbose := 2 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
+VimVerbose := 0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
 VimRestoreIME := 1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
 if(VimIcon is not integer){
   VimIcon := 1 ; 1 to enable Tray Icon for Vim Modes (0 to disable)
@@ -135,16 +135,16 @@ SetIcon(Mode=""){
   }
   icon :=
   if InStr(Mode, "Normal"){
-    icon := % A_ScriptDir . "/icons/normal.ico"
+    icon := % A_LineFile . "\..\icons\normal.ico"
   }else if InStr(Mode, "Insert"){
-    icon := % A_ScriptDir . "/icons/insert.ico"
+    icon := % A_LineFile . "\..\icons\insert.ico"
   }else if InStr(Mode, "Visual"){
-    icon := % A_ScriptDir . "/icons/visual.ico"
+    icon := % A_LineFile . "\..\icons\visual.ico"
   }else if InStr(Mode, "Command"){
-    icon := % A_ScriptDir . "/icons/command.ico"
+    icon := % A_LineFile . "\..\icons\command.ico"
   }else if InStr(Mode, "Disabled"){
     icon := A_AhkPath ; Default icon
-    ;icon := % A_ScriptDir . "/icons/disabled.ico"
+    ;icon := % A_LineFile . "\..\icons/\isabled.ico"
   }
   if FileExist(icon){
     Menu, Tray, Icon, %icon%
@@ -272,6 +272,7 @@ a::
   Send, {Right}
   VimSetMode("Insert")
 Return
+
 +a::
   Send, {End}
   Sleep, 200
@@ -305,7 +306,7 @@ Return
   VimSetMode("", 0, n_repeat)
 Return
 
-#If WInActive("ahk_group VimGroup") and (InStr(VimMode,"Vim_")) and (Vim__n>0)
+#If WInActive("ahk_group VimGroup") and (InStr(VimMode,"Vim_")) and (Vim_n > 0)
 0:: ; 0 is used as {Home} for Vim_n=0
   n_repeat := Vim_n*10 + A_ThisHotkey
   VimSetMode("", 0, n_repeat)
