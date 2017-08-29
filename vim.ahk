@@ -40,12 +40,10 @@ Vim_n := 0
 VimLineCopy := 0
 VimLastIME := 0
 
-;SetIcon("Disabled")
 Return
 ; }}}
 
-; Basic Settings, HotKeys, Functions {{{
-; Settings
+; Settings {{{
 
 #UseHook On ; Make it a bit slow, but can avoid infinitude loop
             ; Same as "$" for each hotkey
@@ -54,15 +52,18 @@ Return
 
 #HotkeyInterval 2000 ; Hotkey inteval (default 2000 milliseconds).
 #MaxHotkeysPerInterval 70 ; Max hotkeys perinterval (default 50).
+;}}}
 
+; IME {{{
 ; Ref for IME: http://www6.atwiki.jp/eamat/pages/17.html
+
 ; Get IME Status. 0: Off, 1: On
 VIM_IME_GET(WinTitle="A"){
   ControlGet,hwnd,HWND,,,%WinTitle%
   if(WinActive(WinTitle)){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
     VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
-    NumPut(cbSize, stGTI, 0, "UInt")   ;   DWORD   cbSize;
+    NumPut(cbSize, stGTI, 0, "UInt") ; DWORD cbSize;
     hwnd := DllCall("GetGUIThreadInfo", Uint,0, Uint, &stGTI)
         ? NumGet(stGTI, 8+PtrSize, "UInt") : hwnd
   }
@@ -74,7 +75,7 @@ VIM_IME_GET(WinTitle="A"){
       ,  Int, 0)      ;lParam  : 0
 }
 ; Get input status. 1: Converting, 2: Have converting window, 0: Others
-VIM_IME_GetConverting(WinTitle="A",ConvCls="",CandCls="") {
+VIM_IME_GetConverting(WinTitle="A", ConvCls="", CandCls=""){
   ; Input windows, candidate windows (Add new IME with "|")
   ConvCls .= (ConvCls ? "|" : "")                 ;--- Input Window ---
     .  "ATOK\d+CompStr"                           ; ATOK
@@ -94,13 +95,13 @@ VIM_IME_GetConverting(WinTitle="A",ConvCls="",CandCls="") {
   if(WinActive(WinTitle)){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
     VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
-    NumPut(cbSize, stGTI,  0, "UInt")   ;   DWORD   cbSize;
-    hwnd := DllCall("GetGUIThreadInfo", Uint,0, Uint,&stGTI)
-      ? NumGet(stGTI,8+PtrSize,"UInt") : hwnd
+    NumPut(cbSize, stGTI, 0, "UInt")   ;   DWORD   cbSize;
+    hwnd := DllCall("GetGUIThreadInfo", Uint, 0, Uint,&stGTI)
+      ? NumGet(stGTI, 8+PtrSize, "UInt") : hwnd
   }
 
   WinGet, pid, PID,% "ahk_id " hwnd
-  tmm:=A_TitleMatchMode
+  tmm := A_TitleMatchMode
   SetTitleMatchMode, RegEx
   ret := WinExist("ahk_class " . CandCls . " ahk_pid " pid) ? 2
       :  WinExist("ahk_class " . CandGCls                 ) ? 2
@@ -112,22 +113,24 @@ VIM_IME_GetConverting(WinTitle="A",ConvCls="",CandCls="") {
 
 ; Set IME, SetSts=0: Off, 1: On, return 0 for success, others for non-success
 VIM_IME_SET(SetSts=0, WinTitle="A"){
-  ControlGet,hwnd,HWND, , , %WinTitle%
+  ControlGet, hwnd, HWND, , , %WinTitle%
   if(WinActive(WinTitle)){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
     VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
-    NumPut(cbSize, stGTI, 0, "UInt")   ;   DWORD   cbSize;
+    NumPut(cbSize, stGTI, 0, "UInt") ; DWORD cbSize;
     hwnd := DllCall("GetGUIThreadInfo", Uint, 0, Uint, &stGTI)
         ? NumGet(stGTI, 8+PtrSize, "UInt") : hwnd
   }
 
   Return DllCall("SendMessage"
-    , UInt, DllCall("imm32\ImmGetDefaultIMEWnd", Uint,hwnd)
+    , UInt, DllCall("imm32\ImmGetDefaultIMEWnd", Uint, hwnd)
     , UInt, 0x0283  ;Message : WM_IME_CONTROL
     ,  Int, 0x006   ;wParam  : IMC_SETOPENSTATUS
     ,  Int, SetSts) ;lParam  : 0 or 1
 }
+; }}}
 
+; Basic Functions {{{
 SetIcon(Mode=""){
   global VimIcon
   if(VimIcon !=1 ){
@@ -151,25 +154,6 @@ SetIcon(Mode=""){
   }
 }
 
-; }}}
-
-; Vim mode {{{
-#IfWInActive, ahk_group VimGroup
-
-; Status Tooltip {{{
-Status(Title){
-  WinGetPos, , , W, H, A
-  Tooltip, %Title%, W*3/4, H*3/4
-  SetTimer, RemoveStatus, 1000
-}
-
-RemoveStatus:
-  SetTimer, RemoveStatus, off
-  Tooltip
-return
-; }}}
-
-; Set Modes {{{
 VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
   global
   if(Mode!=""){
@@ -213,20 +197,35 @@ VimCheckMode(verbose=0, Mode="", g=0, n=0, LineCopy=-1){
   Return
 }
 
+Status(Title){
+  WinGetPos, , , W, H, A
+  Tooltip, %Title%, W*3/4, H*3/4
+  SetTimer, RemoveStatus, 1000
+}
+
+RemoveStatus:
+  SetTimer, RemoveStatus, off
+  Tooltip
+Return
+; }}}
+
+; Vim mode {{{
+#IfWInActive, ahk_group VimGroup
+
+; Check Mode {{{
 ^!+c::
   VimCheckMode(3, VimMode)
   Return
 ; }}}
 
 ; Enter vim normal mode {{{
-#IfWInActive, ahk_group VimGroup
 Esc:: ; Just send Esc at converting, long press for normal Esc.
   KeyWait, Esc, T0.5
   if (ErrorLevel){ ; long press
     Send,{Esc}
     Return
   }
-  VimLastIME:=VIM_IME_Get()
+  VimLastIME := VIM_IME_Get()
   if(VimLastIME){
     if(VIM_IME_GetConverting(A)){
       Send,{Esc}
@@ -262,6 +261,7 @@ Return
 ; Enter vim insert mode (Exit vim normal mode) {{{
 #If WInActive("ahk_group VimGroup") && (VimMode == "Vim_Normal")
 i::VimSetMode("Insert")
+
 +i::
   Send, {Home}
   Sleep, 200
@@ -323,7 +323,6 @@ u::Send,^z
 +j::Send, {Down}{Home}{BS}{Space}{Left}
 
 ; Change case
-#If WInActive("ahk_group VimGroup") and (VimMode="Vim_Normal")
 ~::
   bak := ClipboardAll
   Clipboard =
@@ -339,11 +338,11 @@ u::Send,^z
     ;Msgbox, %Clipboard% is others
   }
   Send, ^v
-  clipboard := bak
-return
+  Clipboard := bak
+Return
 
 +z::VimSetMode("Z")
-#If WInActive("ahk_group VimGroup") and (VimMode="Z")
+#If WInActive("ahk_group VimGroup") and (VimMode == "Z")
 +z::
   Send, ^s
   Send, !{F4}
@@ -355,21 +354,19 @@ Return
   VimSetMode("Vim_Normal")
 Return
 
-#If WInActive("ahk_group VimGroup") and (VimMode="Vim_Normal")
+#If WInActive("ahk_group VimGroup") and (VimMode == "Vim_Normal")
 Space::Send, {Right}
 
 ; period
 .::Send, +^{Right}{BS}^v
-
-#If
 ; }}}
 
 ; Replace {{{
-#If WInActive("ahk_group VimGroup") and (VimMode="Vim_Normal")
+#If WInActive("ahk_group VimGroup") and (VimMode == "Vim_Normal")
 r::VimSetMode("r_once")
 +r::VimSetMode("r_repeat")
 
-#If WInActive("ahk_group VimGroup") and (VimMode="r_once")
+#If WInActive("ahk_group VimGroup") and (VimMode == "r_once")
 ~a::
 ~b::
 ~c::
@@ -656,7 +653,7 @@ b::VimMoveLoop("b")
 ; G
 +g::VimMove("+g")
 ; gg
-#If WInActive("ahk_group VimGroup") and (InStr(VimMode,"Vim_")) and (Vim_g)
+#If WInActive("ahk_group VimGroup") and (InStr(VimMode, "Vim_")) and (Vim_g)
 g::VimMove("g")
 ; }}} Move
 
