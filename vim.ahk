@@ -932,8 +932,78 @@ Return
 ; }}} Vim command mode
 
 ; Disable keys {{{
-; Normal Mode {{{
-#If WInActive("ahk_group VimGroup") and ((InStr(VimMode,"Vim_")) or (InStr(VimMode, "Command")) or (VimMode == "Z"))
+#If WInActive("ahk_group VimGroup") and (InStr(VimMode, "ydc") or InStr(VimMode, "Command") or (VimMode == "Z"))
+*a::
+*b::
+*c::
+*d::
+*e::
+*f::
+*g::
+*h::
+*i::
+*j::
+*k::
+*l::
+*m::
+*n::
+*o::
+*p::
+*q::
+*r::
+*s::
+*t::
+*u::
+*v::
+*w::
+*x::
+*y::
+*z::
+0::
+1::
+2::
+3::
+4::
+5::
+6::
+7::
+8::
+9::
+`::
+~::
+!::
+@::
+#::
+$::
+%::
+^::
+&::
+*::
+(::
+)::
+-::
+_::
+=::
++::
+[::
+{::
+]::
+}::
+\::
+|::
+:::
+`;::
+'::
+"::
+,::
+<::
+.::
+>::
+Space::
+  VimSetMode("Vim_Normal")
+Return
+
+#If WInActive("ahk_group VimGroup") and (InStr(VimMode,"Vim_") or (1 == 2))
 *a::
 *b::
 *c::
@@ -1003,9 +1073,6 @@ _::
 Space::
 Return
 
-#If WInActive("ahk_group VimGroup") and (VimMode == "Vim_Visual")
-
-; }}}
 ; }}}
 ; }}} Vim Mode
 
