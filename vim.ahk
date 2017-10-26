@@ -28,7 +28,7 @@ GroupAdd OneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
 GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 
 ; Global settings
-VimVerbose := 0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
+VimVerbose := 1 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
 VimRestoreIME := 1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
 if(VimIcon is not integer){
   VimIcon := 1 ; 1 to enable Tray Icon for Vim Modes (0 to disable)
@@ -218,6 +218,8 @@ Return
   Return
 ; }}}
 
+
+
 ; Enter vim normal mode {{{
 Esc:: ; Just send Esc at converting, long press for normal Esc.
   KeyWait, Esc, T0.5
@@ -289,6 +291,8 @@ Return
   Sleep, 200
   VimSetMode("Insert")
 Return
+
+
 ; }}}
 
 ; Repeat {{{
@@ -621,11 +625,32 @@ VimMoveLoop(key="", shift=0){
     VimMove(key, shift)
   }
 }
-
+; here we can check if we are in insert mode
+; and if we pressed (j or ت) then we have to go
+; in Vim_Normal mode !!
+#If WInActive("ahk_group VimGroup") and (InStr(VimMode,"Insert"))
+;j key : {vk4Asc024}
+~*SC024 up::
+Input, jState, I T0.09 V L2, {j}{?},j,? ;{vk4Asc024 up}
+		if(ErrorLevel = "EndKey:J"||ErrorLevel = "EndKey:?")
+		{          
+			sleep,20			
+            SendInput,{BackSpace 2}            
+			sleep,200
+			VimSetMode("Vim_Normal")
+			;Send,{Esc}
+			sleep,100
+			if(CheckKeyboardLayout() = 0x4290429) ; 0x4290429 is Farsi(Persian) https://www.autohotkey.com/docs/misc/Languages.htm
+			{			 
+				PostMessage, 0x50, 2, 0,, A ; 0x50 is WM_INPUTLANGCHANGEREQUEST
+				VimSetMode("Vim_Normal")				
+			}				
+		}
+Return
 #If WInActive("ahk_group VimGroup") and (InStr(VimMode,"Vim_"))
 ; 1 character
 h::VimMoveLoop("h")
-j::VimMoveLoop("j")
+SC024::VimMoveLoop("j")
 k::VimMoveLoop("k")
 l::VimMoveLoop("l")
 ^h::VimMoveLoop("h")
@@ -653,6 +678,9 @@ b::VimMoveLoop("b")
 ; G
 +g::VimMove("+g")
 ; gg
+
+      
+
 #If WInActive("ahk_group VimGroup") and (InStr(VimMode, "Vim_")) and (Vim_g)
 g::VimMove("g")
 ; }}} Move
@@ -1003,6 +1031,8 @@ Space::
   VimSetMode("Vim_Normal")
 Return
 
+
+
 #If WInActive("ahk_group VimGroup") and (InStr(VimMode,"Vim_") or (1 == 2))
 *a::
 *b::
@@ -1078,3 +1108,14 @@ Return
 
 ; vim: foldmethod=marker
 ; vim: foldmarker={{{,}}}
+
+; blow code can detect whether keyboard layout is on English or Persian
+; Id for persian language is : 0x4290429
+CheckKeyboardLayout() {
+  SetFormat, Integer, H
+  WinGet, WinID,, A
+  ThreadID:=DllCall("GetWindowThreadProcessId", "UInt", WinID, "UInt", 0)
+  InputLocaleID:=DllCall("GetKeyboardLayout", "UInt", ThreadID, "UInt")
+  ;MsgBox,%InputLocaleID%
+  return %InputLocaleID%
+}
