@@ -30,10 +30,11 @@ GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 ; Global settings
 VimVerbose := 1 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
 VimRestoreIME := 1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
-if(VimIcon is not integer){
-  VimIcon := 1 ; 1 to enable Tray Icon for Vim Modes (0 to disable)
-}
-
+;if(VimIcon is not integer){
+;  VimIcon := 1 ; 1 to enable Tray Icon for Vim Modes (0 to disable)
+;}
+VimIcon := 1
+Menu, Tray, Icon,./icons/disabled.ico
 VimMode := "Insert"
 Vim_g := 0
 Vim_n := 0
@@ -138,15 +139,15 @@ SetIcon(Mode=""){
   }
   icon :=
   if InStr(Mode, "Normal"){
-    icon := % A_LineFile . "\..\icons\normal.ico"
+    icon := "./icons/normal.ico"
   }else if InStr(Mode, "Insert"){
-    icon := % A_LineFile . "\..\icons\insert.ico"
+    icon := "./icons/insert.ico"
   }else if InStr(Mode, "Visual"){
-    icon := % A_LineFile . "\..\icons\visual.ico"
+    icon := "./icons/visual.ico"
   }else if InStr(Mode, "Command"){
-    icon := % A_LineFile . "\..\icons\command.ico"
+    icon := "./icons/command.ico"
   }else if InStr(Mode, "Disabled"){
-    icon := A_AhkPath ; Default icon
+    icon := "./disabled.ico" ; Default icon
     ;icon := % A_LineFile . "\..\icons/\isabled.ico"
   }
   if FileExist(icon){
