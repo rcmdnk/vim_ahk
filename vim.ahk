@@ -38,18 +38,17 @@ GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 ; }}}
 
 ; Global settings
-if(VimVerbose is not integer){
+if VimVerbose is not integer
   VimVerbose := 0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
-}
-if(VimRestoreIME is not integer){
+
+if VimRestoreIME is not integer
   VimRestoreIME := 1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
-}
-if(VimJJ is not integer){
+
+if VimJJ is not integer
   VimJJ := 0 ; jتto enter Normal mode
-}
-if(VimIcon is not integer){
+
+if VimIcon is not integer
   VimIcon := 1 ; 1 to enable Tray Icon for Vim Modes (0 to disable)
-}
 
 ; Starting variables
 VimMode := "Insert"
@@ -279,21 +278,21 @@ SetIcon(Mode=""){
     icon := A_AhkPath ; Default icon
     ;icon := % A_LineFile . "\..\icons/\disabled.ico"
   }
-  Menu, VimSubMenu, Icon, Vim Status, %icon%
-  if(VimIcon !=1 ){
-    Return
-  }
   if FileExist(icon){
+    Menu, VimSubMenu, Icon, Vim Status, %icon%
+    if(VimIcon !=1 ){
+      Return
+    }
     Menu, Tray, Icon, %icon%
   }
 }
 
 VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
   global
-  if(Mode!=""){
+  if(Mode != ""){
     VimMode := Mode
-    If(Mode=="Insert") and (VimRestoreIME==1){
-      VIM_IME_SET(LastIME)
+    If(Mode == "Insert") and (VimRestoreIME == 1){
+      VIM_IME_SET(VimLastIME)
     }
     SetIcon(VimMode)
   }
@@ -313,14 +312,14 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
 VimCheckMode(verbose=0, Mode="", g=0, n=0, LineCopy=-1){
   global
 
-  if(verbose<1) or ((Mode=="") and (g==0) and (n==0) and (LineCopy==-1)){
+  if(verbose < 1) or ((Mode == "") and (g == 0) and (n == 0) and (LineCopy == -1)){
     Return
-  }else if(verbose=1){
+  }else if(verbose == 1){
     Status(VimMode) ; 1 sec is minimum for TrayTip
-  }else if(verbose=2){
+  }else if(verbose == 2){
     Status(VimMode "`r`ng=" Vim_g "`r`nn=" Vim_n)
   }
-  if(verbose=3){
+  if(verbose == 3){
     Msgbox,
     (
     VimMode: %VimMode%
@@ -586,7 +585,7 @@ Return
   VimSetMode("Vim_Normal")
 Return
 
-#If WInActive("ahk_group VimGroup") and (VimMode="r_repeat")
+#If WInActive("ahk_group VimGroup") and (VimMode == "r_repeat")
 ~a::
 ~b::
 ~c::
@@ -675,35 +674,35 @@ VimMove(key="", shift=0){
   ; Left/Right
   if(not InStr(VimMode, "Line")){
     ; 1 character
-    if(key=="h"){
+    if(key == "h"){
       Send, {Left}
-    }else if(key=="l"){
+    }else if(key == "l"){
       Send, {Right}
     ; Home/End
-    }else if(key=="0"){
+    }else if(key == "0"){
       Send, {Home}
-    }else if(key=="$"){
+    }else if(key == "$"){
       Send, {End}
-    }else if(key=="^"){
+    }else if(key == "^"){
       Send, {End}^{Right}
     ; Words
-    }else if(key=="w"){
+    }else if(key == "w"){
       Send, ^{Right}
-    }else if(key=="b"){
+    }else if(key == "b"){
       Send, ^{Left}
     }
   }
   ; Up/Down
-  if(VimMode="Vim_VisualLineFirst") and (key="k" or key="^u" or key="^b" or key="g"){
+  if(VimMode == "Vim_VisualLineFirst") and (key == "k" or key == "^u" or key == "^b" or key == "g"){
     Send, {Shift Up}{End}{Home}{Shift Down}{Up}
     VimSetMode("Vim_VisualLine")
   }
-  if(InStr(VimMode, "Vim_ydc")) and (key="k" or key="^u" or key="^b" or key="g"){
-    VimLineCopy=1
+  if(InStr(VimMode, "Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
+    VimLineCopy := 1
     Send,{Shift Up}{Home}{Down}{Shift Down}{Up}
   }
-  if(InStr(VimMode,"Vim_ydc")) and (key="j" or key="^d" or key="^f" or key="+g"){
-    VimLineCopy=1
+  if(InStr(VimMode,"Vim_ydc")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
+    VimLineCopy := 1
     Send,{Shift Up}{Home}{Shift Down}{Down}
   }
 
@@ -743,12 +742,12 @@ VimMove(key="", shift=0){
     Send, ^c
     ClipWait, 1
     VimSetMode("Vim_Normal")
-  }else if(VimMode="Vim_ydc_d"){
+  }else if(VimMode == "Vim_ydc_d"){
     Clipboard :=
     Send, ^x
     ClipWait, 1
     VimSetMode("Vim_Normal")
-  }else if(VimMode="Vim_ydc_c"){
+  }else if(VimMode == ="Vim_ydc_c"){
     Clipboard :=
     Send, ^x
     ClipWait, 1
@@ -759,7 +758,7 @@ VimMove(key="", shift=0){
 VimMoveLoop(key="", shift=0){
   global
   if(Vim_n == 0){
-    Vim_n = 1
+    Vim_n := 1
   }
   Loop, %Vim_n%{
     VimMove(key, shift)
