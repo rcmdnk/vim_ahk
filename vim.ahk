@@ -31,15 +31,115 @@ GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 VimVerbose := 0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
 VimRestoreIME := 1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
 VimJJ := 0 ; jتto enter Normal mode
+VimMode := "Insert"
 if(VimIcon is not integer){
   VimIcon := 1 ; 1 to enable Tray Icon for Vim Modes (0 to disable)
 }
-VimMode := "Insert"
 Vim_g := 0
 Vim_n := 0
 VimLineCopy := 0
 VimLastIME := 0
 
+; Menu
+Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
+Menu, VimSubMenu, Add, Vim Status, MenuVimStatus
+Menu, VimSubMenu, Add, Vim Debug, MenuVimDebug
+Menu, VimSubMenu, Add, Vim RestoreIME, MenuVimRestoreIME
+Menu, VimSubMenu, Add, Vim JJ, MenuVimJJ
+Menu, VimSubMenu, Add, Vim Icon, MenuVimIcon
+Menu, Tray, Add, VimMenu, :VimSubMenu
+
+if(VimRestoreIME == 1){
+  Menu, VimSubMenu, Check, Vim RestoreIME
+}
+if(VimVerbose >= 1){
+  Menu, VimSubMenu, Check, Vim Debug
+}
+if(VimJJ == 1){
+  Menu, VimSubMenu, Check, Vim JJ
+}
+if(VimIcon == 1){
+  Menu, VimSubMenu, Check, Vim Icon
+}
+
+; Set initial icon
+SetIcon(VimMode)
+
+Return
+
+; }}}
+
+; Menu functions {{{
+MenuVimCheck:
+  ; Additional message is necessary before checking current window.
+  ; Otherwise process name cannot be retrieved...?
+  Msgbox, , Vim Ahk, Checking current window...
+  WinGet, process, PID, A
+  ;WinGet, name, ProcessName, ahk_pid %process%
+  WinGet, name, ProcessName, ahk_pid %process%
+  WinGetClass, class, ahk_pid %process%
+  WinGetTitle, title, ahk_pid %process%
+  if WInActive("ahk_group VimGroup"){
+    Msgbox, 0x40, Vim Ahk,
+    (
+      Supported
+      Process name: %name%
+      Class       : %class%
+      Title       : %title%
+    )
+  }else{
+    Msgbox, 0x10, Vim Ahk,
+    (
+      Not supported
+      Process name: %name%
+      Class       : %class%
+      Title       : %title%
+    )
+  }
+Return
+
+MenuVimStatus:
+Return
+
+MenuVimDebug:
+  if(VimVerbose >= 1){
+    VimVerbose := 0
+    Menu, VimSubMenu, Uncheck, Vim Debug
+  }else{
+    VimVerbose := 2
+    Menu, VimSubMenu, Check, Vim Debug
+  }
+Return
+
+MenuVimRestoreIME:
+  if(VimRestoreIME == 1){
+    VimRestoreIME := 0
+    Menu, VimSubMenu, Uncheck, Vim RestoreIME
+  }else{
+    VimRestoreIME := 1
+    Menu, VimSubMenu, Check, Vim RestoreIME
+  }
+Return
+
+MenuVimJJ:
+  if(VimJJ == 1){
+    VimJJ := 0
+    Menu, VimSubMenu, Uncheck, Vim JJ
+  }else{
+    VimJJ := 1
+    Menu, VimSubMenu, Check, Vim JJ
+  }
+Return
+
+MenuVimIcon:
+  if(VimIcon == 1){
+    VimIcon := 0
+    Menu, VimSubMenu, Uncheck, Vim Icon
+    Menu, Tray, Icon, %A_AhkPath%
+  }else{
+    VimIcon := 1
+    Menu, VimSubMenu, Check, Vim Icon
+  }
 Return
 ; }}}
 
@@ -133,9 +233,6 @@ VIM_IME_SET(SetSts=0, WinTitle="A"){
 ; Basic Functions {{{
 SetIcon(Mode=""){
   global VimIcon
-  if(VimIcon !=1 ){
-    Return
-  }
   icon :=
   if InStr(Mode, "Normal"){
     icon := % A_LineFile . "\..\icons\normal.ico"
@@ -147,7 +244,11 @@ SetIcon(Mode=""){
     icon := % A_LineFile . "\..\icons\command.ico"
   }else if InStr(Mode, "Disabled"){
     icon := A_AhkPath ; Default icon
-    ;icon := % A_LineFile . "\..\icons/\isabled.ico"
+    ;icon := % A_LineFile . "\..\icons/\disabled.ico"
+  }
+  Menu, VimSubMenu, Icon, Vim Status, %icon%
+  if(VimIcon !=1 ){
+    Return
   }
   if FileExist(icon){
     Menu, Tray, Icon, %icon%
@@ -178,6 +279,7 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
 
 VimCheckMode(verbose=0, Mode="", g=0, n=0, LineCopy=-1){
   global
+
   if(verbose<1) or ((Mode=="") and (g==0) and (n==0) and (LineCopy==-1)){
     Return
   }else if(verbose=1){
