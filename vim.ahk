@@ -3,6 +3,8 @@
 ; Application groups
 
 ; Enable vim mode for following applications
+GroupAdd VimGroup, ahk_exe texworks.exe ;TexWork
+GroupAdd VimGroup, ahk_exe texstudio.exe ; TexStudio
 GroupAdd VimGroup, ahk_exe notepad.exe ; NotePad
 GroupAdd VimGroup, ahk_exe wordpad.exe ; WordPad
 GroupAdd VimGroup, ahk_exe TeraPad.exe ; TeraPad
@@ -30,10 +32,11 @@ GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 ; Global settings
 VimVerbose := 0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
 VimRestoreIME := 1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
-if(VimIcon is not integer){
-  VimIcon := 1 ; 1 to enable Tray Icon for Vim Modes (0 to disable)
-}
-
+;if(VimIcon is not integer){
+;  VimIcon := 1 ; 1 to enable Tray Icon for Vim Modes (0 to disable)
+;}
+VimIcon := 1
+Menu, Tray, Icon,./icons/disabled.ico
 VimMode := "Insert"
 Vim_g := 0
 Vim_n := 0
@@ -138,15 +141,15 @@ SetIcon(Mode=""){
   }
   icon :=
   if InStr(Mode, "Normal"){
-    icon := % A_LineFile . "\..\icons\normal.ico"
+    icon := "./icons/normal.ico"
   }else if InStr(Mode, "Insert"){
-    icon := % A_LineFile . "\..\icons\insert.ico"
+    icon := "./icons/insert.ico"
   }else if InStr(Mode, "Visual"){
-    icon := % A_LineFile . "\..\icons\visual.ico"
+    icon := "./icons/visual.ico"
   }else if InStr(Mode, "Command"){
-    icon := % A_LineFile . "\..\icons\command.ico"
+    icon := "./icons/command.ico"
   }else if InStr(Mode, "Disabled"){
-    icon := A_AhkPath ; Default icon
+    icon := "./disabled.ico" ; Default icon
     ;icon := % A_LineFile . "\..\icons/\isabled.ico"
   }
   if FileExist(icon){
@@ -621,7 +624,29 @@ VimMoveLoop(key="", shift=0){
     VimMove(key, shift)
   }
 }
-
+; here we can check if we are in insert mode
+; and if we pressed (j or ت) then we have to go
+; in Vim_Normal mode !!
+#If WInActive("ahk_group VimGroup") and (InStr(VimMode,"Insert"))
+;j key : {vk4Asc024}
+~*j up::
+Input, jState, I T0.09 V L2, {j},{j} ;{vk4Asc024 up}
+		if(ErrorLevel = "EndKey:J")
+		{          
+			sleep,20			
+            SendInput,{BackSpace 2}            
+			sleep,200
+			VimSetMode("Vim_Normal")
+			;Send,{Esc}
+			sleep,100
+            LangID:= CheckKeyboardLayout()
+			if(LangId!="0x4090409")and(LangId!="0x0091009") ; 0x0091009 = English_Canadian, 0x4090409 is English_United_States, 0x4290429 is Farsi(Persian) https://www.autohotkey.com/docs/misc/Languages.htm
+			{             
+				PostMessage, 0x50, 2, 0,, A ; 0x50 is WM_INPUTLANGCHANGEREQUEST
+				VimSetMode("Vim_Normal")				
+			}				
+		}
+Return
 #If WInActive("ahk_group VimGroup") and (InStr(VimMode,"Vim_"))
 ; 1 character
 h::VimMoveLoop("h")
@@ -1078,3 +1103,13 @@ Return
 
 ; vim: foldmethod=marker
 ; vim: foldmarker={{{,}}}
+; blow code can detect whether keyboard layout is on English or Persian
+; Id for persian language is : 0x4290429
+CheckKeyboardLayout() {
+  SetFormat, Integer, H
+  WinGet, WinID,, A
+  ThreadID:=DllCall("GetWindowThreadProcessId", "UInt", WinID, "UInt", 0)
+  InputLocaleID:=DllCall("GetKeyboardLayout", "UInt", ThreadID, "UInt")
+  ;MsgBox,%InputLocaleID%
+  return %InputLocaleID%
+}
