@@ -1,5 +1,12 @@
 ﻿; Auto-execute section {{{
 
+; About vim_ahk
+VimVersion := "v0.0.1"
+VimDate := "05/Nov/2017"
+VimAuthor := "rcmdnk"
+VimDescription := "Vim emulation with AutoHotKey, everywhere in Windows."
+VimHomepage := "https://github.com/rcmdnk/vim_ahk"
+
 ; Application groups
 
 ; Enable vim mode for following applications
@@ -49,6 +56,7 @@ Menu, VimSubMenu, Add, Vim Debug, MenuVimDebug
 Menu, VimSubMenu, Add, Vim RestoreIME, MenuVimRestoreIME
 Menu, VimSubMenu, Add, Vim JJ, MenuVimJJ
 Menu, VimSubMenu, Add, Vim Icon, MenuVimIcon
+Menu, VimSubMenu, Add, About vim_ahk, MenuVimAbout
 Menu, Tray, Add, VimMenu, :VimSubMenu
 
 if(VimRestoreIME == 1){
@@ -77,7 +85,6 @@ MenuVimCheck:
   ; Otherwise process name cannot be retrieved...?
   Msgbox, , Vim Ahk, Checking current window...
   WinGet, process, PID, A
-  ;WinGet, name, ProcessName, ahk_pid %process%
   WinGet, name, ProcessName, ahk_pid %process%
   WinGetClass, class, ahk_pid %process%
   WinGetTitle, title, ahk_pid %process%
@@ -142,6 +149,21 @@ MenuVimIcon:
     VimIcon := 1
     Menu, VimSubMenu, Check, Vim Icon
   }
+Return
+
+MenuVimAbout:
+  Gui, Add, Text, , Vim Ahk (vim_ahk):`n%VimDescription%
+  Gui, Add, Text, , Version: %VimVersion%
+  Gui, Add, Text, , Last update: %VimDate%
+  Gui, Add, Text, , Author: %VimAuthor%
+  Gui, Font, underline
+  Gui, Add, Text, cBlue gVimAhkGitHub, Homepage
+  Gui, Font, norm
+  Gui, Show, , Vim Ahk
+Return
+
+VimAhkGitHub:
+  Run %VimHomepage%
 Return
 ; }}}
 
