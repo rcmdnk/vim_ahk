@@ -30,10 +30,10 @@ GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 ; Global settings
 VimVerbose := 0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
 VimRestoreIME := 1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
+VimJJ := 0 ; jتto enter Normal mode
 if(VimIcon is not integer){
   VimIcon := 1 ; 1 to enable Tray Icon for Vim Modes (0 to disable)
 }
-
 VimMode := "Insert"
 Vim_g := 0
 Vim_n := 0
@@ -253,6 +253,15 @@ Return
       VimSetMode("Vim_Normal")
     }
   }else{
+    VimSetMode("Vim_Normal")
+  }
+Return
+
+#If WInActive("ahk_group VimGroup") and (InStr(VimMode, "Insert")) and (VimJJ == 1)
+~j up:: ; jj (or ت ت) to got to Normal mode.
+  Input, jState, I T0.1 V L1, {j}
+  if(ErrorLevel == "EndKey:J"){
+    SendInput, {BackSpace 2}
     VimSetMode("Vim_Normal")
   }
 Return
@@ -621,7 +630,6 @@ VimMoveLoop(key="", shift=0){
     VimMove(key, shift)
   }
 }
-
 #If WInActive("ahk_group VimGroup") and (InStr(VimMode,"Vim_"))
 ; 1 character
 h::VimMoveLoop("h")
