@@ -18,7 +18,7 @@ Please put vim.ahk in `\Users\%username%\Documents`
 or where the script is in,
 and add the following line in AutoHotkey.ahk or your script:
 
-    #Include  %A_LineFile%\..\vim.ahk
+    #Include  %A_ScriptDir%\vim.ahk
 
 at the end of the <a href="http://www.autohotkey.com/docs/Scripts.htm#auto">Auto-execute section</a>.
 
