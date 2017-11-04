@@ -33,21 +33,33 @@ The default setting enables vim-mode for the following applications:
 * Microsoft PowerPoint
 * Microsoft Word
 * Evernote
+* Visual Studio Code
+* OneNote
+* TexWork
+* TexStudio
 
 If you want to change applications, add `GroupAdd VimGroup` lines at the top of vim.ahk
 (Window title/class can be seen by window spy in AutoHotkey), like:
 
     GroupAdd VimGroup, ahk_exe notepad.exe ; NotePad
 
-## Verbose level
-vim.ahk can show information of vim mode at different levels.
+## Options
+
+|Option|Description|Default|
+|:-----|:----------|:------|
+|VimVerbose|Verbose level (see below for details).|0|
+|VimRestoreIME|If 1, IME status is restored at entering insert mode.|1|
+|VimJJ|If 1, `jj` changes mode to Normal from Insert.|0|
+|VimIcon|If 1, task tray icon is changed when mode is changed.|1|
+
+Verbose level:
 
 * 0 : Nothing
 * 1 : Only mode in task tray tips.
 * 2 : Mode and g-mode information, n (number of repeat) in task tray tips.
 * 3 : Mode and g-mode information, n (number of repeat) in task tray tips and message box.
 
-The default verbose level is 2.
+You can change these options from right click menu of task tray icon (find `VimMenu` in the list).
 
 ## Main Modes
 Here are the main modes.
@@ -73,10 +85,13 @@ After pressing `:`, a few commands to save/quit are available.
 |Key/Commands|Function|
 |:----------:|:-------|
 |ESC/Ctrl-[| Enter Normal Mode. Holding (0.5s) these keys emulate normal ESC.|
+|jj|Enter Normal Mode.|
 
-Both keys switch off IME if IME is on.
+ESC/Ctrl-[ switch off IME if IME is on.
 ESC acts as ESC when IME is on and converting instructions.
 Ctrl-[ switches off IME and enters Normal Mode even if IME is on.
+
+jj is optional one, which is enabled when VimJJ = 1.
 
 ## Available commands in Normal Mode
 ### Mode Change

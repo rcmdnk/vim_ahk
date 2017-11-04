@@ -7,7 +7,7 @@ VimAuthor := "rcmdnk"
 VimDescription := "Vim emulation with AutoHotKey, everywhere in Windows."
 VimHomepage := "https://github.com/rcmdnk/vim_ahk"
 
-; Application groups
+; Application groups {{{
 
 ; Enable vim mode for following applications
 GroupAdd VimGroup, ahk_exe notepad.exe ; NotePad
@@ -35,15 +35,24 @@ GroupAdd OneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
 
 ; Need Home twice
 GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
+; }}}
 
 ; Global settings
-VimVerbose := 0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
-VimRestoreIME := 1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
-VimJJ := 0 ; jتto enter Normal mode
-VimMode := "Insert"
+if(VimVerbose is not integer){
+  VimVerbose := 0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
+}
+if(VimRestoreIME is not integer){
+  VimRestoreIME := 1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
+}
+if(VimJJ is not integer){
+  VimJJ := 0 ; jتto enter Normal mode
+}
 if(VimIcon is not integer){
   VimIcon := 1 ; 1 to enable Tray Icon for Vim Modes (0 to disable)
 }
+
+; Starting variables
+VimMode := "Insert"
 Vim_g := 0
 Vim_n := 0
 VimLineCopy := 0
