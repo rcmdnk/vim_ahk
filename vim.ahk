@@ -15,6 +15,8 @@ GroupAdd VimGroup, ahk_exe Evernote.exe ; Evernote
 GroupAdd VimGroup, ahk_exe Code.exe ; Visual Studio Code
 GroupAdd VimGroup, ahk_exe onenote.exe ; OneNote Desktop
 GroupAdd VimGroup, OneNote ; OneNote in Windows 10
+GroupAdd VimGroup, ahk_exe texworks.exe ; TexWork
+GroupAdd VimGroup, ahk_exe texstudio.exe ; TexStudio
 
 ; Following application select the line break at Shift + End.
 GroupAdd LBSelect, ahk_exe POWERPNT.exe ; PowerPoint
