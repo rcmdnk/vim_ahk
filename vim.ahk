@@ -393,7 +393,7 @@ Return
 
 #If WInActive("ahk_group VimGroup") and (InStr(VimMode, "Insert")) and (VimJJ == 1)
 ~j up:: ; jj (or ت ت) to got to Normal mode.
-  Input, jState, I T0.1 V L1, {j}
+  Input, jout, I T0.1 V L1, j
   if(ErrorLevel == "EndKey:J"){
     SendInput, {BackSpace 2}
     VimSetMode("Vim_Normal")
