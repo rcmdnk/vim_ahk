@@ -60,10 +60,11 @@ VimLastIME := 0
 ; Menu
 Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
 Menu, VimSubMenu, Add, Vim Status, MenuVimStatus
-Menu, VimSubMenu, Add, Vim Debug, MenuVimDebug
+Menu, VimSubMenu, Add, Vim Debug, MenuVimVerbose
 Menu, VimSubMenu, Add, Vim RestoreIME, MenuVimRestoreIME
 Menu, VimSubMenu, Add, Vim JJ, MenuVimJJ
 Menu, VimSubMenu, Add, Vim Icon, MenuVimIcon
+Menu, VimSubMenu, Add
 Menu, VimSubMenu, Add, About vim_ahk, MenuVimAbout
 Menu, Tray, Add, VimMenu, :VimSubMenu
 
@@ -118,14 +119,27 @@ Return
 MenuVimStatus:
 Return
 
-MenuVimDebug:
-  if(VimVerbose >= 1){
-    VimVerbose := 0
-    Menu, VimSubMenu, Uncheck, Vim Debug
-  }else{
-    VimVerbose := 2
-    Menu, VimSubMenu, Check, Vim Debug
-  }
+MenuVimVerbose:
+  Gui, 2:Add, Text, , Set verbose level
+  Gui, 2:Add, Text, , 0: Nothing.
+  Gui, 2:Add, Text, Y+0, 1: Status with tool tips.
+  Gui, 2:Add, Text, Y+0, 2: More status information with Tool tips.
+  Gui, 2:Add, Text, Y+0, 3: More status information with MsgBox.
+  Gui, 2:Add, Edit
+  Gui, 2:Add, UpDown, vVimVerbose range0-3, %VimVerbose%
+  Gui, 2:Add, Button, W100 X25 Default ,OK
+  Gui, 2:Add, Button, W100 X+0, Cancel
+  Gui, 2:Show, W250, Vim Ahk
+Return
+
+2ButtonOK:
+  Gui, 2:Submit
+  Gui, 2:Destroy
+Return
+
+2ButtonCancel:
+2GuiClose:
+  Gui, 2:Destroy
 Return
 
 MenuVimRestoreIME:
@@ -160,14 +174,23 @@ MenuVimIcon:
 Return
 
 MenuVimAbout:
-  Gui, Add, Text, , Vim Ahk (vim_ahk):`n%VimDescription%
-  Gui, Add, Text, , Version: %VimVersion%
-  Gui, Add, Text, , Last update: %VimDate%
-  Gui, Add, Text, , Author: %VimAuthor%
-  Gui, Font, underline
-  Gui, Add, Text, cBlue gVimAhkGitHub, Homepage
-  Gui, Font, norm
-  Gui, Show, , Vim Ahk
+  Gui, 1:Add, Text, , Vim Ahk (vim_ahk):`n%VimDescription%
+  Gui, 1:Font, Underline
+  Gui, 1:Add, Text, Y+0 cBlue gVimAhkGitHub, Homepage
+  Gui, 1:Font, Norm
+  Gui, 1:Add, Text, , Version: %VimVersion%
+  Gui, 1:Add, Text, Y+0, Last update: %VimDate%
+  Gui, 1:Add, Text, , Author: %VimAuthor%
+  Gui, 1:Add, Button, X125 W100 Default, OK
+  Gui, 1:Show, W350, Vim Ahk
+Return
+
+ButtonOK:
+  Gui, Destroy
+Return
+
+GuiClose:
+  Gui, Destroy
 Return
 
 VimAhkGitHub:
@@ -392,7 +415,7 @@ Return
 Return
 
 #If WInActive("ahk_group VimGroup") and (InStr(VimMode, "Insert")) and (VimJJ == 1)
-~j up:: ; jj (or ت ت) to got to Normal mode.
+~j up:: ; jj: go to Normal mode.
   Input, jout, I T0.1 V L1, j
   if(ErrorLevel == "EndKey:J"){
     SendInput, {BackSpace 2}
