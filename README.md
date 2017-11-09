@@ -55,11 +55,11 @@ If you want to change applications, add `GroupAdd VimGroup` lines at the top of 
 Verbose level:
 
 * 0 : Nothing
-* 1 : Only mode in task tray tips.
-* 2 : Mode and g-mode information, n (number of repeat) in task tray tips.
-* 3 : Mode and g-mode information, n (number of repeat) in task tray tips and message box.
+* 1 : Minimum tool tips.
+* 2 : Tool tips.
+* 3 : Msgbox.
 
-You can change these options from right click menu of task tray icon (find `VimMenu` in the list).
+You can change these options from the right click menu of task tray icon (find `VimMenu`-`Settings` in the list).
 
 ## Main Modes
 Here are the main modes.

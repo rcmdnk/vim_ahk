@@ -1,11 +1,30 @@
 ﻿; Auto-execute section {{{
-
 ; About vim_ahk
-VimVersion := "v0.0.1"
-VimDate := "05/Nov/2017"
+VimVersion := "v0.1.0"
+VimDate := "09/Nov/2017"
 VimAuthor := "rcmdnk"
 VimDescription := "Vim emulation with AutoHotKey, everywhere in Windows."
 VimHomepage := "https://github.com/rcmdnk/vim_ahk"
+
+; Ini file
+VimIniDir := % A_AppData . "\AutoHotkey"
+VimIni := % VimIniDir . "\vim_ahk.ini"
+
+VimSection := "Vim Ahk Settings"
+
+; Starting variables
+VimMode := "Insert"
+Vim_g := 0
+Vim_n := 0
+VimLineCopy := 0
+VimLastIME := 0
+
+; Icon places
+VimIconNormal := % A_LineFile . "\..\icons\normal.ico"
+VimIconInsert := % A_LineFile . "\..\icons\insert.ico"
+VimIconVisual := % A_LineFile . "\..\icons\visual.ico"
+VimIconCommand := % A_LineFile . "\..\icons\command.ico"
+VimIconDisabled := % A_AhkPath
 
 ; Application groups {{{
 
@@ -38,8 +57,16 @@ GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 ; }}}
 
 ; Global settings
+; First check if they are already set (in mother script).
+; Second read settings if it exits.
 if VimVerbose is not integer
-  VimVerbose := 0 ; Verbose level (0: no pop up, 1: minimum tool tips of status, 2: more info in tool tips, 3: Debug mode with a message box, which doesn't disappear automatically)
+  VimVerbose := 1 ; Verbose level (1: no pop up, 2: minimum tool tips of status, 3: more info in tool tips, 4: Debug mode with a message box, which doesn't disappear automatically)
+VimVerbose1 := "No pop up"
+VimVerbose2 := "Minimum tool tips"
+VimVerbose3 := "Tool tips"
+VimVerbose4 := "Popup message"
+vimVerboseMax := 4
+VimVerboseValue := ""
 
 if VimRestoreIME is not integer
   VimRestoreIME := 1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
@@ -50,147 +77,125 @@ if VimJJ is not integer
 if VimIcon is not integer
   VimIcon := 1 ; 1 to enable Tray Icon for Vim Modes (0 to disable)
 
-; Starting variables
-VimMode := "Insert"
-Vim_g := 0
-Vim_n := 0
-VimLineCopy := 0
-VimLastIME := 0
+; Read Ini
+VimReadIni()
 
 ; Menu
-Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
-Menu, VimSubMenu, Add, Vim Status, MenuVimStatus
-Menu, VimSubMenu, Add, Vim Debug, MenuVimVerbose
-Menu, VimSubMenu, Add, Vim RestoreIME, MenuVimRestoreIME
-Menu, VimSubMenu, Add, Vim JJ, MenuVimJJ
-Menu, VimSubMenu, Add, Vim Icon, MenuVimIcon
+;Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
+Menu, VimSubMenu, Add, Settings, MenuVimSettings
 Menu, VimSubMenu, Add
+Menu, VimSubMenu, Add, Status, MenuVimStatus
 Menu, VimSubMenu, Add, About vim_ahk, MenuVimAbout
+
+Menu, Tray, Add
 Menu, Tray, Add, VimMenu, :VimSubMenu
 
-if(VimRestoreIME == 1){
-  Menu, VimSubMenu, Check, Vim RestoreIME
-}
-if(VimVerbose >= 1){
-  Menu, VimSubMenu, Check, Vim Debug
-}
-if(VimJJ == 1){
-  Menu, VimSubMenu, Check, Vim JJ
-}
-if(VimIcon == 1){
-  Menu, VimSubMenu, Check, Vim Icon
-}
-
 ; Set initial icon
-SetIcon(VimMode)
+VimSetIcon(VimMode)
 
 Return
 
 ; }}}
 
 ; Menu functions {{{
-MenuVimCheck:
-  ; Additional message is necessary before checking current window.
-  ; Otherwise process name cannot be retrieved...?
-  Msgbox, , Vim Ahk, Checking current window...
-  WinGet, process, PID, A
-  WinGet, name, ProcessName, ahk_pid %process%
-  WinGetClass, class, ahk_pid %process%
-  WinGetTitle, title, ahk_pid %process%
-  if WInActive("ahk_group VimGroup"){
-    Msgbox, 0x40, Vim Ahk,
-    (
-      Supported
-      Process name: %name%
-      Class       : %class%
-      Title       : %title%
-    )
-  }else{
-    Msgbox, 0x10, Vim Ahk,
-    (
-      Not supported
-      Process name: %name%
-      Class       : %class%
-      Title       : %title%
-    )
-  }
-Return
+;MenuVimCheck:
+;  ; Additional message is necessary before checking current window.
+;  ; Otherwise process name cannot be retrieved...?
+;  Msgbox, , Vim Ahk, Checking current window...
+;  WinGet, process, PID, A
+;  WinGet, name, ProcessName, ahk_pid %process%
+;  WinGetClass, class, ahk_pid %process%
+;  WinGetTitle, title, ahk_pid %process%
+;  if WInActive("ahk_group VimGroup"){
+;    Msgbox, 0x40, Vim Ahk,
+;    (
+;      Supported
+;      Process name: %name%
+;      Class       : %class%
+;      Title       : %title%
+;    )
+;  }else{
+;    Msgbox, 0x10, Vim Ahk,
+;    (
+;      Not supported
+;      Process name: %name%
+;      Class       : %class%
+;      Title       : %title%
+;    )
+;  }
+;Return
 
 MenuVimStatus:
+  VimCheckMode(VimVerboseMax, , , , 1)
 Return
 
-MenuVimVerbose:
-  Gui, 2:Add, Text, , Set verbose level
-  Gui, 2:Add, Text, , 0: Nothing.
-  Gui, 2:Add, Text, Y+0, 1: Status with tool tips.
-  Gui, 2:Add, Text, Y+0, 2: More status information with Tool tips.
-  Gui, 2:Add, Text, Y+0, 3: More status information with MsgBox.
-  Gui, 2:Add, Edit
-  Gui, 2:Add, UpDown, vVimVerbose range0-3, %VimVerbose%
-  Gui, 2:Add, Button, W100 X25 Default ,OK
-  Gui, 2:Add, Button, W100 X+0, Cancel
-  Gui, 2:Show, W250, Vim Ahk
-Return
-
-2ButtonOK:
-  Gui, 2:Submit
-  Gui, 2:Destroy
-Return
-
-2ButtonCancel:
-2GuiClose:
-  Gui, 2:Destroy
-Return
-
-MenuVimRestoreIME:
+MenuVimSettings:
+  Gui, VimGuiSettings:+LabelVimGuiSettings
+  Gui, VimGuiSettings:-MinimizeBox
+  Gui, VimGuiSettings:-Resize
   if(VimRestoreIME == 1){
-    VimRestoreIME := 0
-    Menu, VimSubMenu, Uncheck, Vim RestoreIME
+    Gui, VimGuiSettings:Add, Checkbox, xm Checked vVimRestoreIME, Restore IIME
   }else{
-    VimRestoreIME := 1
-    Menu, VimSubMenu, Check, Vim RestoreIME
+    Gui, VimGuiSettings:Add, Checkbox, xm vVimRestoreIME, Restore IIME
   }
-Return
-
-MenuVimJJ:
   if(VimJJ == 1){
-    VimJJ := 0
-    Menu, VimSubMenu, Uncheck, Vim JJ
+    Gui, VimGuiSettings:Add, Checkbox, xm Checked vVimJJ, JJ
   }else{
-    VimJJ := 1
-    Menu, VimSubMenu, Check, Vim JJ
+    Gui, VimGuiSettings:Add, Checkbox, xm vVimJJ, JJ
   }
+  if(VimIcon == 1){
+    Gui, VimGuiSettings:Add, Checkbox, xm Checked vVimIcon, Icon
+  }else{
+    Gui, VimGuiSettings:Add, Checkbox, xm vVimIcon, Icon
+  }
+  Gui, VimGuiSettings:Add, Text, Y+20, Verbose level
+  Gui, VimGuiSettings:Add, DropDownList, vVimVerboseValue Choose%VimVerbose%, %VimVerbose1%|%VimVerbose2%|%VimVerbose3%|%VimVerbose4%
+  Gui, VimGuiSettings:Add, Text, Y+20, Check
+  Gui, VimGuiSettings:Font, Underline
+  Gui, VimGuiSettings:Add, Text, X+5 cBlue gVimAhkGitHub, HELP
+  Gui, VimGuiSettings:Font, Norm
+  Gui, VimGuiSettings:Add, Text, X+5, for further information.
+  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsOK xm W100 X45 Y+20 Default ,OK
+  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsCannel W100 X+10, Cancel
+  Gui, VimGuiSettings:Show, W300, Vim Ahk Settings
 Return
 
-MenuVimIcon:
-  if(VimIcon == 1){
-    VimIcon := 0
-    Menu, VimSubMenu, Uncheck, Vim Icon
-    Menu, Tray, Icon, %A_AhkPath%
-  }else{
-    VimIcon := 1
-    Menu, VimSubMenu, Check, Vim Icon
+VimGuiSettingsOK:
+  Gui, VimGuiSettings:Submit
+  Loop, %VimVerboseMax% {
+    if(VimVerboseValue == VimVerbose%A_Index%){
+      VimVerbose := A_Index
+      Break
+    }
   }
+  VimWriteIni()
+VimGuiSettingsCannel:
+VimGuiSettingsClose:
+VimGuiSettingsEscape:
+  Gui, VimGuiSettings:Destroy
 Return
 
 MenuVimAbout:
-  Gui, 1:Add, Text, , Vim Ahk (vim_ahk):`n%VimDescription%
-  Gui, 1:Font, Underline
-  Gui, 1:Add, Text, Y+0 cBlue gVimAhkGitHub, Homepage
-  Gui, 1:Font, Norm
-  Gui, 1:Add, Text, , Version: %VimVersion%
-  Gui, 1:Add, Text, Y+0, Last update: %VimDate%
-  Gui, 1:Add, Text, , Author: %VimAuthor%
-  Gui, 1:Add, Button, X125 W100 Default, OK
-  Gui, 1:Show, W350, Vim Ahk
+  Gui, VimGuiAbout:+LabelVimGuiAbout
+  Gui, VimGuiAbout:-MinimizeBox
+  Gui, VimGuiAbout:-Resize
+  Gui, VimGuiAbout:Add, Text, , Vim Ahk (vim_ahk):`n%VimDescription%
+  Gui, VimGuiAbout:Font, Underline
+  Gui, VimGuiAbout:Add, Text, Y+0 cBlue gVimAhkGitHub, Homepage
+  Gui, VimGuiAbout:Font, Norm
+  Gui, VimGuiAbout:Add, Text, , Author: %VimAuthor%
+  Gui, VimGuiAbout:Add, Text, , Version: %VimVersion%
+  Gui, VimGuiAbout:Add, Text, Y+0, Last update: %VimDate%
+  Gui, VimGuiAbout:Add, Text, , Script path:`n%A_LineFile%
+  Gui, VimGuiAbout:Add, Text, , Setting file:`n%VimIni%
+  Gui, VimGuiAbout:Add, Button, gVimGuiAboutOK X200 W100 Default, OK
+  Gui, VimGuiAbout:Show, W500, Vim Ahk
 Return
 
-ButtonOK:
-  Gui, Destroy
-Return
-
-GuiClose:
-  Gui, Destroy
+VimGuiAboutOK:
+VimGuiAboutClose:
+VimGuiAboutEscape:
+  Gui, VimGuiAbout:Destroy
 Return
 
 VimAhkGitHub:
@@ -246,7 +251,7 @@ VIM_IME_GetConverting(WinTitle="A", ConvCls="", CandCls=""){
     .  "|SKKIME\d+\.*\d+UCand"                    ; SKKIME Unicode
   CandGCls := "GoogleJapaneseInputCandidateWindow" ; Google IME
 
-  ControlGet,hwnd,HWND, , , %WinTitle%
+  ControlGet, hwnd, HWND, , , %WinTitle%
   if(WinActive(WinTitle)){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
     VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
@@ -286,23 +291,22 @@ VIM_IME_SET(SetSts=0, WinTitle="A"){
 ; }}}
 
 ; Basic Functions {{{
-SetIcon(Mode=""){
-  global VimIcon
+VimSetIcon(Mode=""){
+  global VimIcon, VimIconNormal, VimIconInsert, VimIconVisual, VimIconCommand, VimIconDisabled
   icon :=
   if InStr(Mode, "Normal"){
-    icon := % A_LineFile . "\..\icons\normal.ico"
+    icon := VimIconNormal
   }else if InStr(Mode, "Insert"){
-    icon := % A_LineFile . "\..\icons\insert.ico"
+    icon := VimIconInsert
   }else if InStr(Mode, "Visual"){
-    icon := % A_LineFile . "\..\icons\visual.ico"
+    icon := VimIconVisual
   }else if InStr(Mode, "Command"){
-    icon := % A_LineFile . "\..\icons\command.ico"
+    icon := VimIconCommand
   }else if InStr(Mode, "Disabled"){
-    icon := A_AhkPath ; Default icon
-    ;icon := % A_LineFile . "\..\icons/\disabled.ico"
+    icon := VimIconDisabled
   }
   if FileExist(icon){
-    Menu, VimSubMenu, Icon, Vim Status, %icon%
+    Menu, VimSubMenu, Icon, Status, %icon%
     if(VimIcon !=1 ){
       Return
     }
@@ -317,7 +321,7 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
     If(Mode == "Insert") and (VimRestoreIME == 1){
       VIM_IME_SET(VimLastIME)
     }
-    SetIcon(VimMode)
+    VimSetIcon(VimMode)
   }
   if(g != -1){
     Vim_g := g
@@ -332,38 +336,63 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
   Return
 }
 
-VimCheckMode(verbose=0, Mode="", g=0, n=0, LineCopy=-1){
+VimCheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
   global
 
-  if(verbose < 1) or ((Mode == "") and (g == 0) and (n == 0) and (LineCopy == -1)){
+  if(force == 0) and ((verbose <= 1) or ((Mode == "") and (g == 0) and (n == 0) and (LineCopy == -1))){
     Return
-  }else if(verbose == 1){
-    Status(VimMode) ; 1 sec is minimum for TrayTip
   }else if(verbose == 2){
-    Status(VimMode "`r`ng=" Vim_g "`r`nn=" Vim_n)
+    VimStatus(VimMode) ; 1 sec is minimum for TrayTip
+  }else if(verbose == 3){
+    VimStatus(VimMode "`r`ng=" Vim_g "`r`nn=" Vim_n "`r`nLineCopy=" VimLineCopy)
   }
-  if(verbose == 3){
-    Msgbox,
-    (
-    VimMode: %VimMode%
-    Vim_g: %Vim_g%
-    Vim_n: %Vim_n%
-    VimLineCopy: %VimLineCopy%
-    )
+  if(verbose >= 4){
+    Msgbox, , Vim Ahk, VimMode: %VimMode%`nVim_g: %Vim_g%`nVim_n: %Vim_n%`nVimLineCopy: %VimLineCopy%
   }
   Return
 }
 
-Status(Title){
+VimStatus(Title){
   WinGetPos, , , W, H, A
   Tooltip, %Title%, W*3/4, H*3/4
-  SetTimer, RemoveStatus, 1000
+  SetTimer, VimRemoveStatus, 1000
 }
 
-RemoveStatus:
-  SetTimer, RemoveStatus, off
+VimRemoveStatus:
+  SetTimer, VimRemoveStatus, off
   Tooltip
 Return
+
+VimReadIni(ini=""){
+  global
+  if(ini == ""){
+    ini := VimIni
+  }
+  IniRead, VimVerbose, %ini%, %VimSection%, VimVerbose, %VimVerbose%
+  IniRead, VimRestoreIME, %ini%, %VimSection%, VimRestoreIME, %VimRestoreIME%
+  IniRead, VimJJ, %ini%, %VimSection%, VimJJ, %VimJJ%
+  IniRead, VimIcon, %ini%, %VimSection%, VimIcon, %VimIcon%
+}
+
+VimWriteIni(ini=""){
+  global
+  if(ini == ""){
+    ini := VimIni
+  }
+  IfNotExist, %ini%\..\
+    FileCreateDir, %ini%\..\
+
+  IniWrite, %VimVerbose%, %ini%, %VimSection%, VimVerbose
+  IniWrite, %VimRestoreIME%, %ini%, %VimSection%, VimRestoreIME
+  IniWrite, %VimJJ%, %ini%, %VimSection%, VimJJ
+  IniWrite, %VimIcon%, %ini%, %VimSection%, VimIcon
+}
+
+VimSetGuiOffset(offset=0){
+  VimGuiAbout := offset + 1
+  VimGuiSettings := offset + 2
+  VimGuiVerbose := offset + 3
+}
 ; }}}
 
 ; Vim mode {{{
@@ -371,7 +400,7 @@ Return
 
 ; Check Mode {{{
 ^!+c::
-  VimCheckMode(3, VimMode)
+  VimCheckMode(VimVerboseMax, VimMode)
   Return
 ; }}}
 
@@ -495,13 +524,13 @@ u::Send,^z
   Send, +{Right}^x
   ClipWait, 1
   if(Clipboard is lower){
-    ;Msgbox, %Clipboard% is lower
+    ;Msgbox, , Vim Ahk, %Clipboard% is lower
     StringUpper, Clipboard, Clipboard
   }else if(Clipboard is upper){
-    ;Msgbox, %Clipboard% is upper
+    ;Msgbox, , Vim Ahk, %Clipboard% is upper
     StringLower, Clipboard, Clipboard
   }else{
-    ;Msgbox, %Clipboard% is others
+    ;Msgbox, , Vim Ahk, %Clipboard% is others
   }
   Send, ^v
   Clipboard := bak
@@ -932,7 +961,7 @@ p::
   ;  if(i == 0){
   ;    Sleep, 500
   ;  }else if(i > 100){
-  ;    Msgbox Stop at 100!!!
+  ;    Msgbox, , Vim Ahk, Stop at 100!!!
   ;    break
   ;  }else{
   ;    Sleep, 0
@@ -1096,7 +1125,7 @@ Return::
 Return
 ; }}} Vim command mode
 
-; Disable keys {{{
+; Disable other keys {{{
 #If WInActive("ahk_group VimGroup") and (InStr(VimMode, "ydc") or InStr(VimMode, "Command") or (VimMode == "Z"))
 *a::
 *b::
@@ -1237,7 +1266,6 @@ _::
 >::
 Space::
 Return
-
 ; }}}
 ; }}} Vim Mode
 
