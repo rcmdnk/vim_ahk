@@ -12,13 +12,6 @@ VimIni := % VimIniDir . "\vim_ahk.ini"
 
 VimSection := "Vim Ahk Settings"
 
-; Starting variables
-VimMode := "Insert"
-Vim_g := 0
-Vim_n := 0
-VimLineCopy := 0
-VimLastIME := 0
-
 ; Icon places
 VimIconNormal := % A_LineFile . "\..\icons\normal.ico"
 VimIconInsert := % A_LineFile . "\..\icons\insert.ico"
@@ -56,29 +49,47 @@ GroupAdd OneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
 GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
 ; }}}
 
-; Global settings
+; Setting variables
 ; First check if they are already set (in mother script).
 ; Second read settings if it exits.
+
+; Verbose level, 1: No pop up, 2: Minimum tool tips of status, 3: More info in tool tips, 4: Debug mode with a message box, which doesn't disappear automatically
 if VimVerbose is not integer
-  VimVerbose := 1 ; Verbose level (1: no pop up, 2: minimum tool tips of status, 3: more info in tool tips, 4: Debug mode with a message box, which doesn't disappear automatically)
-VimVerbose1 := "No pop up"
-VimVerbose2 := "Minimum tool tips"
-VimVerbose3 := "Tool tips"
-VimVerbose4 := "Popup message"
+  VimVerbose := 1
+VimVerbose1 := "1: No pop up"
+VimVerbose2 := "2: Minimum tool tips"
+VimVerbose3 := "3: Tool tips"
+VimVerbose4 := "4: Popup message"
 vimVerboseMax := 4
 VimVerboseValue := ""
+VimVerboseValue_TT := "Verbose level`n`n1: No pop up`n2: Minimum tool tips of status`n: More info in tool tips`n4: Debug mode with a message box, which doesn't disappear automatically"
+VimVerboseLevel_TT := VimVerboseValue_TT
 
+; If IME status is restored or not at entering insert mode. 1 for restoring. 0 for not to restore (always IME off at enterng insert mode).
 if VimRestoreIME is not integer
-  VimRestoreIME := 1 ; If IME status is restored or not at entering insert mode. 1 for restoring, 0 for not to restore (always IME off at enterng insert mode).
+  VimRestoreIME := 1
+VimRestoreIME_TT := "Check to restore IME status at entering insert mode."
 
+; Set 1 to asign jj to enter Normal mode
 if VimJJ is not integer
-  VimJJ := 0 ; jتto enter Normal mode
+  VimJJ := 0
+VimJJ_TT := "Check to asign jj to enter Normal mode"
 
+; Set 1 to enable Tray Icon for Vim Modes`nSet 0 for original Icon
 if VimIcon is not integer
-  VimIcon := 1 ; 1 to enable Tray Icon for Vim Modes (0 to disable)
+  VimIcon := 1
+VimIcon_TT := "Check to enable Tray Icon for Vim Modes"
+VimAhkGitHub_TT := VimHomepage
 
 ; Read Ini
 VimReadIni()
+
+; Starting variables
+VimMode := "Insert"
+Vim_g := 0
+Vim_n := 0
+VimLineCopy := 0
+VimLastIME := 0
 
 ; Menu
 ;Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
@@ -148,17 +159,40 @@ MenuVimSettings:
   }else{
     Gui, VimGuiSettings:Add, Checkbox, xm vVimIcon, Icon
   }
-  Gui, VimGuiSettings:Add, Text, Y+20, Verbose level
+  Gui, VimGuiSettings:Add, Text, Y+20 vVimVerboseLevel, Verbose level
   Gui, VimGuiSettings:Add, DropDownList, vVimVerboseValue Choose%VimVerbose%, %VimVerbose1%|%VimVerbose2%|%VimVerbose3%|%VimVerbose4%
   Gui, VimGuiSettings:Add, Text, Y+20, Check
   Gui, VimGuiSettings:Font, Underline
-  Gui, VimGuiSettings:Add, Text, X+5 cBlue gVimAhkGitHub, HELP
+  Gui, VimGuiSettings:Add, Text, X+5 cBlue gVimAhkGitHub vVimAhkGitHub, HELP
   Gui, VimGuiSettings:Font, Norm
   Gui, VimGuiSettings:Add, Text, X+5, for further information.
   Gui, VimGuiSettings:Add, Button, gVimGuiSettingsOK xm W100 X45 Y+20 Default ,OK
   Gui, VimGuiSettings:Add, Button, gVimGuiSettingsCannel W100 X+10, Cancel
   Gui, VimGuiSettings:Show, W300, Vim Ahk Settings
+  OnMessage(0x200, "WimMouseMove")
 Return
+
+WimMouseMove(){
+  static CurrControl, PrevControl, _TT
+  CurrControl := A_GuiControl
+  if(CurrControl != PrevControl and not InStr(CurrControl, " ")){
+    ToolTip
+    SetTimer, VimDisplayToolTip, 1000
+    PrevControl := CurrControl
+  }
+  Return
+
+  VimDisplayToolTip:
+  SetTimer, VimDisplayToolTip, Off
+  ToolTip % %CurrControl%_TT
+  SetTimer, VimRemoveToolTip, 60000
+  return
+
+  VimRemoveToolTip:
+  SetTimer, VimRemoveToolTip, Off
+  ToolTip
+  return
+}
 
 VimGuiSettingsOK:
   Gui, VimGuiSettings:Submit
@@ -173,6 +207,13 @@ VimGuiSettingsCannel:
 VimGuiSettingsClose:
 VimGuiSettingsEscape:
   Gui, VimGuiSettings:Destroy
+Return
+
+VimVerboseLevel: ; Dummy to assign Gui Control
+Return
+
+VimAhkGitHub:
+  Run %VimHomepage%
 Return
 
 MenuVimAbout:
@@ -196,10 +237,6 @@ VimGuiAboutOK:
 VimGuiAboutClose:
 VimGuiAboutEscape:
   Gui, VimGuiAbout:Destroy
-Return
-
-VimAhkGitHub:
-  Run %VimHomepage%
 Return
 ; }}}
 
@@ -353,8 +390,9 @@ VimCheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
 }
 
 VimStatus(Title){
-  WinGetPos, , , W, H, A
-  Tooltip, %Title%, W*3/4, H*3/4
+  ;WinGetPos, , , W, H, A
+  ;Tooltip, %Title%, W - 110, H - 100
+  Tooltip, %Title%, 0, 0
   SetTimer, VimRemoveStatus, 1000
 }
 
