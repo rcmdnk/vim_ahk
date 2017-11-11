@@ -38,15 +38,15 @@ GroupAdd VimGroup, ahk_exe texworks.exe ; TexWork
 GroupAdd VimGroup, ahk_exe texstudio.exe ; TexStudio
 
 ; Following application select the line break at Shift + End.
-GroupAdd LBSelect, ahk_exe POWERPNT.exe ; PowerPoint
-GroupAdd LBSelect, ahk_exe WINWORD.exe ; Word
-GroupAdd LBSelect, ahk_exe wordpad.exe ; WordPad
+GroupAdd LBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
+GroupAdd LBSelectGroup, ahk_exe WINWORD.exe ; Word
+GroupAdd LBSelectGroup, ahk_exe wordpad.exe ; WordPad
 
 ; OneNote before Windows 10
 GroupAdd OneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
 
 ; Need Home twice
-GroupAdd DoubleHome, ahk_exe Code.exe ; Visual Studio Code
+GroupAdd DoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
 ; }}}
 
 ; Setting variables
@@ -169,10 +169,10 @@ MenuVimSettings:
   Gui, VimGuiSettings:Add, Button, gVimGuiSettingsOK xm W100 X45 Y+20 Default ,OK
   Gui, VimGuiSettings:Add, Button, gVimGuiSettingsCannel W100 X+10, Cancel
   Gui, VimGuiSettings:Show, W300, Vim Ahk Settings
-  OnMessage(0x200, "WimMouseMove")
+  OnMessage(0x200, "VimMouseMove")
 Return
 
-WimMouseMove(){
+VimMouseMove(){
   static CurrControl, PrevControl, _TT
   CurrControl := A_GuiControl
   if(CurrControl != PrevControl and not InStr(CurrControl, " ")){
@@ -240,15 +240,14 @@ VimGuiAboutEscape:
 Return
 ; }}}
 
-; Settings {{{
+; AutohHotkey settings {{{
 
 #UseHook On ; Make it a bit slow, but can avoid infinitude loop
             ; Same as "$" for each hotkey
 #InstallKeybdHook ; For checking key history
                   ; Use ~500kB memory?
-
 #HotkeyInterval 2000 ; Hotkey inteval (default 2000 milliseconds).
-#MaxHotkeysPerInterval 70 ; Max hotkeys perinterval (default 50).
+#MaxHotkeysPerInterval 70 ; Max hotkeys per interval (default 50).
 ;}}}
 
 ; IME {{{
@@ -905,11 +904,11 @@ c::VimSetMode("Vim_ydc_c", 0, -1, 0)
 +y::
   VimSetMode("Vim_ydc_y", 0, 0, 1)
   Sleep, 150 ; Need to wait (For variable change?)
-  if WinActive("ahk_group DoubleHome"){
+  if WinActive("ahk_group DoubleHomeGroup"){
     Send, {Home}
   }
   Send, {Home}+{End}
-  if not WinActive("ahk_group LBSelect"){
+  if not WinActive("ahk_group LBSelectGroup"){
     VimMove("l")
   }else{
     VimMove("")
@@ -919,7 +918,7 @@ Return
 
 +d::
   VimSetMode("Vim_ydc_d", 0, 0, 0)
-  if not WinActive("ahk_group LBSelect"){
+  if not WinActive("ahk_group LBSelectGroup"){
     VimMove("$")
   }else{
     Send, {Shift Down}{End}{Left}
@@ -929,7 +928,7 @@ Return
 
 +c::
   VimSetMode("Vim_ydc_c",0,0,0)
-  if not WinActive("ahk_group LBSelect"){
+  if not WinActive("ahk_group LBSelectGroup"){
     VimMove("$")
   }else{
     Send, {Shift Down}{End}{Left}
@@ -940,11 +939,11 @@ Return
 #If WInActive("ahk_group VimGroup") and (VimMode == "Vim_ydc_y")
 y::
   VimLineCopy := 1
-  if WinActive("ahk_group DoubleHome"){
+  if WinActive("ahk_group DoubleHomeGroup"){
     Send, {Home}
   }
   Send, {Home}+{End}
-  if not WinActive("ahk_group LBSelect"){
+  if not WinActive("ahk_group LBSelectGroup"){
     VimMove("l")
   }else{
     VimMove("")
@@ -955,11 +954,11 @@ Return
 #If WInActive("ahk_group VimGroup") and (VimMode == "Vim_ydc_d")
 d::
   VimLineCopy := 1
-  if WinActive("ahk_group DoubleHome"){
+  if WinActive("ahk_group DoubleHomeGroup"){
     Send, {Home}
   }
   Send, {Home}+{End}
-  if not WinActive("ahk_group LBSelect"){
+  if not WinActive("ahk_group LBSelectGroup"){
     VimMove("l")
   }else{
     VimMove("")
@@ -969,11 +968,11 @@ Return
 #If WInActive("ahk_group VimGroup") and (VimMode == "Vim_ydc_c")
 c::
   VimLineCopy := 1
-  if WinActive("ahk_group DoubleHome"){
+  if WinActive("ahk_group DoubleHomeGroup"){
     Send, {Home}
   }
   Send, {Home}+{End}
-  if not WinActive("ahk_group LBSelect"){
+  if not WinActive("ahk_group LBSelectGroup"){
     VimMove("l")
   }else{
     VimMove("")
