@@ -21,32 +21,36 @@ VimIconDisabled := % A_AhkPath
 
 ; Application groups {{{
 
+VimGroupDel := ","
+
 ; Enable vim mode for following applications
-GroupAdd VimGroup, ahk_exe notepad.exe ; NotePad
-GroupAdd VimGroup, ahk_exe wordpad.exe ; WordPad
-GroupAdd VimGroup, ahk_exe TeraPad.exe ; TeraPad
-GroupAdd VimGroup, ahk_exe explorer.exe
-GroupAdd VimGroup, 作成 ;Thunderbird, 日本語
-GroupAdd VimGroup, Write: ;Thuderbird, English
-GroupAdd VimGroup, ahk_exe POWERPNT.exe ; PowerPoint
-GroupAdd VimGroup, ahk_exe WINWORD.exe ; Word
-GroupAdd VimGroup, ahk_exe Evernote.exe ; Evernote
-GroupAdd VimGroup, ahk_exe Code.exe ; Visual Studio Code
-GroupAdd VimGroup, ahk_exe onenote.exe ; OneNote Desktop
-GroupAdd VimGroup, OneNote ; OneNote in Windows 10
-GroupAdd VimGroup, ahk_exe texworks.exe ; TexWork
-GroupAdd VimGroup, ahk_exe texstudio.exe ; TexStudio
+VimGroup_TT := "Set one application per one line."
+VimGroupText_TT := VimGroup_TT
+VimGroup := "ahk_exe notepad.exe"   ; NotePad
+VimGroup := VimGroup . VimGroupDel . "ahk_exe wordpad.exe"   ; WordPad
+VimGroup := VimGroup . VimGroupDel . "ahk_exe TeraPad.exe"   ; TeraPad
+VimGroup := VimGroup . VimGroupDel . "ahk_exe explorer.exe"  ; Explorer
+VimGroup := VimGroup . VimGroupDel . "作成"                  ;Thunderbird, 日本語
+VimGroup := VimGroup . VimGroupDel . "Write:"                ;Thuderbird, English
+VimGroup := VimGroup . VimGroupDel . "ahk_exe POWERPNT.exe"  ; PowerPoint
+VimGroup := VimGroup . VimGroupDel . "ahk_exe WINWORD.exe"   ; Word
+VimGroup := VimGroup . VimGroupDel . "ahk_exe Evernote.exe"  ; Evernote
+VimGroup := VimGroup . VimGroupDel . "ahk_exe Code.exe"      ; Visual Studio Code
+VimGroup := VimGroup . VimGroupDel . "ahk_exe onenote.exe"   ; OneNote Desktop
+VimGroup := VimGroup . VimGroupDel . "OneNote"               ; OneNote in Windows 10
+VimGroup := VimGroup . VimGroupDel . "ahk_exe texworks.exe"  ; TexWork
+VimGroup := VimGroup . VimGroupDel . "ahk_exe texstudio.exe" ; TexStudio
 
 ; Following application select the line break at Shift + End.
-GroupAdd LBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
-GroupAdd LBSelectGroup, ahk_exe WINWORD.exe ; Word
-GroupAdd LBSelectGroup, ahk_exe wordpad.exe ; WordPad
+GroupAdd, VimLBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
+GroupAdd, VimLBSelectGroup, ahk_exe WINWORD.exe  ; Word
+GroupAdd, VimLBSelectGroup, ahk_exe wordpad.exe  ; WordPad
 
 ; OneNote before Windows 10
-GroupAdd OneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
+GroupAdd, VimOneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
 
 ; Need Home twice
-GroupAdd DoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
+GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
 ; }}}
 
 ; Setting variables
@@ -83,6 +87,9 @@ VimAhkGitHub_TT := VimHomepage
 
 ; Read Ini
 VimReadIni()
+
+; Set group
+VimSetGroup()
 
 ; Starting variables
 VimMode := "Insert"
@@ -144,10 +151,13 @@ MenuVimSettings:
   Gui, VimGuiSettings:+LabelVimGuiSettings
   Gui, VimGuiSettings:-MinimizeBox
   Gui, VimGuiSettings:-Resize
+  Gui, VimGuiSettings:Add, Text, Y+20 vVimGroupText, Applications
+  StringReplace, VimgroupList, VimGroup, %VimGroupDel%, `n, All
+  Gui, VimGuiSettings:Add, Edit, R10 Multi vVimGroupList, %VimGroupList%
   if(VimRestoreIME == 1){
-    Gui, VimGuiSettings:Add, Checkbox, xm Checked vVimRestoreIME, Restore IIME
+    Gui, VimGuiSettings:Add, Checkbox, xm Y+20 Checked vVimRestoreIME, Restore IIME
   }else{
-    Gui, VimGuiSettings:Add, Checkbox, xm vVimRestoreIME, Restore IIME
+    Gui, VimGuiSettings:Add, Checkbox, xm Y+20 vVimRestoreIME, Restore IIME
   }
   if(VimJJ == 1){
     Gui, VimGuiSettings:Add, Checkbox, xm Checked vVimJJ, JJ
@@ -196,6 +206,7 @@ VimMouseMove(){
 
 VimGuiSettingsOK:
   Gui, VimGuiSettings:Submit
+  VimSetGroup()
   Loop, %VimVerboseMax% {
     if(VimVerboseValue == VimVerbose%A_Index%){
       VimVerbose := A_Index
@@ -327,6 +338,16 @@ VIM_IME_SET(SetSts=0, WinTitle="A"){
 ; }}}
 
 ; Basic Functions {{{
+VimSetGroup() {
+  global
+  Loop, Parse, VimGroup, % VimGroupDel
+  {
+    if(A_LoopField != ""){
+      GroupAdd VimGroup, %A_LoopField%
+    }
+  }
+}
+
 VimSetIcon(Mode=""){
   global VimIcon, VimIconNormal, VimIconInsert, VimIconVisual, VimIconCommand, VimIconDisabled
   icon :=
@@ -378,9 +399,9 @@ VimCheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
   if(force == 0) and ((verbose <= 1) or ((Mode == "") and (g == 0) and (n == 0) and (LineCopy == -1))){
     Return
   }else if(verbose == 2){
-    VimStatus(VimMode) ; 1 sec is minimum for TrayTip
+    VimStatus(VimMode, 1) ; 1 sec is minimum for TrayTip
   }else if(verbose == 3){
-    VimStatus(VimMode "`r`ng=" Vim_g "`r`nn=" Vim_n "`r`nLineCopy=" VimLineCopy)
+    VimStatus(VimMode "`r`ng=" Vim_g "`r`nn=" Vim_n "`r`nLineCopy=" VimLineCopy, 4)
   }
   if(verbose >= 4){
     Msgbox, , Vim Ahk, VimMode: %VimMode%`nVim_g: %Vim_g%`nVim_n: %Vim_n%`nVimLineCopy: %VimLineCopy%
@@ -388,10 +409,9 @@ VimCheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
   Return
 }
 
-VimStatus(Title){
-  ;WinGetPos, , , W, H, A
-  ;Tooltip, %Title%, W - 110, H - 100
-  Tooltip, %Title%, 0, 0
+VimStatus(Title, lines=1){
+  WinGetPos, , , W, H, A
+  Tooltip, %Title%, W - 110, H - 30 - (lines) * 20
   SetTimer, VimRemoveStatus, 1000
 }
 
@@ -405,10 +425,11 @@ VimReadIni(ini=""){
   if(ini == ""){
     ini := VimIni
   }
-  IniRead, VimVerbose, %ini%, %VimSection%, VimVerbose, %VimVerbose%
+  IniRead, VimGroup, %ini%, %VimSection%, VimGroup, %VimGroup%
   IniRead, VimRestoreIME, %ini%, %VimSection%, VimRestoreIME, %VimRestoreIME%
   IniRead, VimJJ, %ini%, %VimSection%, VimJJ, %VimJJ%
   IniRead, VimIcon, %ini%, %VimSection%, VimIcon, %VimIcon%
+  IniRead, VimVerbose, %ini%, %VimSection%, VimVerbose, %VimVerbose%
 }
 
 VimWriteIni(ini=""){
@@ -419,10 +440,23 @@ VimWriteIni(ini=""){
   IfNotExist, %ini%\..\
     FileCreateDir, %ini%\..\
 
-  IniWrite, %VimVerbose%, %ini%, %VimSection%, VimVerbose
-  IniWrite, %VimRestoreIME%, %ini%, %VimSection%, VimRestoreIME
-  IniWrite, %VimJJ%, %ini%, %VimSection%, VimJJ
-  IniWrite, %VimIcon%, %ini%, %VimSection%, VimIcon
+  VimGroup := ""
+  Loop, Parse, VimGroupList, `n
+  {
+    if(! InStr(VimGroup, A_LoopField)){
+      if(VimGroup == ""){
+        VimGroup := A_LoopField
+      }else{
+        VimGroup := VimGroup . VimGroupDel . A_LoopField
+      }
+    }
+  }
+  VimSetGroup()
+  IniWrite, % VimGroup, % ini, % VimSection, VimGroup
+  IniWrite, % VimRestoreIME, % ini, % VimSection, VimRestoreIME
+  IniWrite, % VimJJ, % ini, % VimSection, VimJJ
+  IniWrite, % VimIcon, % ini, % VimSection, VimIcon
+  IniWrite, % VimVerbose, % ini, % VimSection, VimVerbose
 }
 
 VimSetGuiOffset(offset=0){
@@ -433,7 +467,7 @@ VimSetGuiOffset(offset=0){
 ; }}}
 
 ; Vim mode {{{
-#IfWInActive, ahk_group VimGroup
+#If WInActive("ahk_group VimGroup")
 
 ; Launch Settings {{{
 ^!+v::
@@ -805,13 +839,13 @@ VimMove(key="", shift=0){
   ; 1 character
   if(key == "j"){
     ; Only for OneNote of less than windows 10?
-    if WinActive("ahk_group OneNoteGroup"){
+    if WinActive("ahk_group VimOneNoteGroup"){
       Send ^{Down}
     } else {
       Send,{Down}
     }
   }else if(key="k"){
-    if WinActive("ahk_group OneNoteGroup"){
+    if WinActive("ahk_group VimOneNoteGroup"){
       Send ^{Up}
     }else{
       Send,{Up}
@@ -904,11 +938,11 @@ c::VimSetMode("Vim_ydc_c", 0, -1, 0)
 +y::
   VimSetMode("Vim_ydc_y", 0, 0, 1)
   Sleep, 150 ; Need to wait (For variable change?)
-  if WinActive("ahk_group DoubleHomeGroup"){
+  if WinActive("ahk_group VimDoubleHomeGroup"){
     Send, {Home}
   }
   Send, {Home}+{End}
-  if not WinActive("ahk_group LBSelectGroup"){
+  if not WinActive("ahk_group VimLBSelectGroup"){
     VimMove("l")
   }else{
     VimMove("")
@@ -918,7 +952,7 @@ Return
 
 +d::
   VimSetMode("Vim_ydc_d", 0, 0, 0)
-  if not WinActive("ahk_group LBSelectGroup"){
+  if not WinActive("ahk_group VimLBSelectGroup"){
     VimMove("$")
   }else{
     Send, {Shift Down}{End}{Left}
@@ -928,7 +962,7 @@ Return
 
 +c::
   VimSetMode("Vim_ydc_c",0,0,0)
-  if not WinActive("ahk_group LBSelectGroup"){
+  if not WinActive("ahk_group VimLBSelectGroup"){
     VimMove("$")
   }else{
     Send, {Shift Down}{End}{Left}
@@ -939,11 +973,11 @@ Return
 #If WInActive("ahk_group VimGroup") and (VimMode == "Vim_ydc_y")
 y::
   VimLineCopy := 1
-  if WinActive("ahk_group DoubleHomeGroup"){
+  if WinActive("ahk_group VimDoubleHomeGroup"){
     Send, {Home}
   }
   Send, {Home}+{End}
-  if not WinActive("ahk_group LBSelectGroup"){
+  if not WinActive("ahk_group VimLBSelectGroup"){
     VimMove("l")
   }else{
     VimMove("")
@@ -954,11 +988,11 @@ Return
 #If WInActive("ahk_group VimGroup") and (VimMode == "Vim_ydc_d")
 d::
   VimLineCopy := 1
-  if WinActive("ahk_group DoubleHomeGroup"){
+  if WinActive("ahk_group DoubleHome"){
     Send, {Home}
   }
   Send, {Home}+{End}
-  if not WinActive("ahk_group LBSelectGroup"){
+  if not WinActive("ahk_group VimLBSelectGroup"){
     VimMove("l")
   }else{
     VimMove("")
@@ -968,11 +1002,11 @@ Return
 #If WInActive("ahk_group VimGroup") and (VimMode == "Vim_ydc_c")
 c::
   VimLineCopy := 1
-  if WinActive("ahk_group DoubleHomeGroup"){
+  if WinActive("ahk_group DoubleHome"){
     Send, {Home}
   }
   Send, {Home}+{End}
-  if not WinActive("ahk_group LBSelectGroup"){
+  if not WinActive("ahk_group VimLBSelectGroup"){
     VimMove("l")
   }else{
     VimMove("")
