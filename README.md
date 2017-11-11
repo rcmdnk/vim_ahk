@@ -47,19 +47,20 @@ If you want to change applications, add `GroupAdd VimGroup` lines at the top of 
 
 |Option|Description|Default|
 |:-----|:----------|:------|
-|VimVerbose|Verbose level (see below for details).|0|
 |VimRestoreIME|If 1, IME status is restored at entering insert mode.|1|
 |VimJJ|If 1, `jj` changes mode to Normal from Insert.|0|
 |VimIcon|If 1, task tray icon is changed when mode is changed.|1|
+|VimVerbose|Verbose level (see below for details).|0|
 
 Verbose level:
 
-* 0 : Nothing
-* 1 : Minimum tool tips.
-* 2 : Tool tips.
-* 3 : Msgbox.
+* 1: Nothing.
+* 2: Minimum tool tips (Mode name only).
+* 3: Tool tips.
+* 4: Msgbox.
 
-You can change these options from the right click menu of task tray icon (find `VimMenu`-`Settings` in the list).
+You can change these options from the right click menu of task tray icon (find `VimMenu`-`Settings` in the list),
+or launch the setting window by `Ctrl-Alt-Shift-v`.
 
 ## Main Modes
 Here are the main modes.

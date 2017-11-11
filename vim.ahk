@@ -436,10 +436,17 @@ VimSetGuiOffset(offset=0){
 ; Vim mode {{{
 #IfWInActive, ahk_group VimGroup
 
+; Launch Settings {{{
+^!+v::
+  Gosub, MenuVimSettings
+Return
+
+; }}}
+
 ; Check Mode {{{
 ^!+c::
   VimCheckMode(VimVerboseMax, VimMode)
-  Return
+Return
 ; }}}
 
 ; Enter vim normal mode {{{
