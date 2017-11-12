@@ -25,7 +25,7 @@ VimGroupDel := ","
 VimGroupN := 0
 
 ; Enable vim mode for following applications
-VimGroup_TT := "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).`n`nTo reflect deleting items, you need to Reload This Script (in the right click menu of tray icon)."
+VimGroup_TT := "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon)."
 ;VimGroupList_TT := VimGroup_TT
 VimGroupText_TT := VimGroup_TT
 VimGroupIni := "ahk_exe notepad.exe"   ; NotePad
@@ -193,9 +193,9 @@ MenuVimSettings:
   Gui, VimGuiSettings:Add, Text, X+5 cBlue gVimAhkGitHub vVimAhkGitHub, HELP
   Gui, VimGuiSettings:Font, Norm
   Gui, VimGuiSettings:Add, Text, X+5, for further information.
-  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsOK vVimGuiSettingsOK xm W100 X45 Y+30 Default ,OK
-  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsReset vVimGuiSettingsReset W100 X+10, Reset
-  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsCancel vVimGuiSettingsCancel W100 X+10, Cancel
+  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsOK vVimGuiSettingsOK xm W100 X45 Y+30 Default, &OK
+  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsReset vVimGuiSettingsReset W100 X+10, &Reset
+  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsCancel vVimGuiSettingsCancel W100 X+10, &Cancel
   Gui, VimGuiSettings:Show, W410, Vim Ahk Settings
   OnMessage(0x200, "VimMouseMove")
 Return
@@ -282,7 +282,7 @@ MenuVimAbout:
   Gui, VimGuiAbout:Add, Text, Y+0, Last update: %VimDate%
   Gui, VimGuiAbout:Add, Text, , Script path:`n%A_LineFile%
   Gui, VimGuiAbout:Add, Text, , Setting file:`n%VimIni%
-  Gui, VimGuiAbout:Add, Button, gVimGuiAboutOK X200 W100 Default, OK
+  Gui, VimGuiAbout:Add, Button, gVimGuiAboutOK X200 W100 Default, &OK
   Gui, VimGuiAbout:Show, W500, Vim Ahk
 Return
 
@@ -505,7 +505,7 @@ VimSetGuiOffset(offset=0){
 ; }}}
 
 ; Vim mode {{{
-#If WInActive("ahk_group " . VimGroupName)
+#If
 
 ; Launch Settings {{{
 ^!+v::
@@ -514,6 +514,7 @@ Return
 
 ; }}}
 
+#If WInActive("ahk_group " . VimGroupName)
 ; Check Mode {{{
 ^!+c::
   VimCheckMode(VimVerboseMax, VimMode)
