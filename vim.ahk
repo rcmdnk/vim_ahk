@@ -43,6 +43,7 @@ VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe texworks.exe"  ; TexWork
 VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe texstudio.exe" ; TexStudio
 
 VimGroup := VimGroupIni
+VimGroupAll := ""
 
 ; Following application select the line break at Shift + End.
 GroupAdd, VimLBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
@@ -380,8 +381,10 @@ VimSetGroup() {
   global
   Loop, Parse, VimGroup, % VimGroupDel
   {
-    if(A_LoopField != ""){
+    if(A_LoopField != "" && InStr(VimGroupAll, A_LoopField) == 0){
+      Msgbox, % A_LoopField
       GroupAdd VimGroup, %A_LoopField%
+      VimGroupAll := VimGroupAll . VimGroupDel . A_LoopField
     }
   }
 }
