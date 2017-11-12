@@ -1,9 +1,9 @@
 ﻿; Auto-execute section {{{
 ; About vim_ahk
-VimVersion := "v0.1.0"
-VimDate := "09/Nov/2017"
+VimVersion := "v0.1.1"
+VimDate := "12/Nov/2017"
 VimAuthor := "rcmdnk"
-VimDescription := "Vim emulation with AutoHotKey, everywhere in Windows."
+VimDescription := "Vim emulation with AutoHotkey, everywhere in Windows."
 VimHomepage := "https://github.com/rcmdnk/vim_ahk"
 
 ; Ini file
@@ -24,22 +24,25 @@ VimIconDisabled := % A_AhkPath
 VimGroupDel := ","
 
 ; Enable vim mode for following applications
-VimGroup_TT := "Set one application per one line."
+VimGroup_TT := "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).`n`nTo reflect deleting items, you need to Reload This Script (in the right click menu of tray icon)."
+;VimGroupList_TT := VimGroup_TT
 VimGroupText_TT := VimGroup_TT
-VimGroup := "ahk_exe notepad.exe"   ; NotePad
-VimGroup := VimGroup . VimGroupDel . "ahk_exe wordpad.exe"   ; WordPad
-VimGroup := VimGroup . VimGroupDel . "ahk_exe TeraPad.exe"   ; TeraPad
-VimGroup := VimGroup . VimGroupDel . "ahk_exe explorer.exe"  ; Explorer
-VimGroup := VimGroup . VimGroupDel . "作成"                  ;Thunderbird, 日本語
-VimGroup := VimGroup . VimGroupDel . "Write:"                ;Thuderbird, English
-VimGroup := VimGroup . VimGroupDel . "ahk_exe POWERPNT.exe"  ; PowerPoint
-VimGroup := VimGroup . VimGroupDel . "ahk_exe WINWORD.exe"   ; Word
-VimGroup := VimGroup . VimGroupDel . "ahk_exe Evernote.exe"  ; Evernote
-VimGroup := VimGroup . VimGroupDel . "ahk_exe Code.exe"      ; Visual Studio Code
-VimGroup := VimGroup . VimGroupDel . "ahk_exe onenote.exe"   ; OneNote Desktop
-VimGroup := VimGroup . VimGroupDel . "OneNote"               ; OneNote in Windows 10
-VimGroup := VimGroup . VimGroupDel . "ahk_exe texworks.exe"  ; TexWork
-VimGroup := VimGroup . VimGroupDel . "ahk_exe texstudio.exe" ; TexStudio
+VimGroupIni := "ahk_exe notepad.exe"   ; NotePad
+VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe wordpad.exe"   ; WordPad
+VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe TeraPad.exe"   ; TeraPad
+VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe explorer.exe"  ; Explorer
+VimGroupIni := VimGroupIni . VimGroupDel . "作成"                  ;Thunderbird, 日本語
+VimGroupIni := VimGroupIni . VimGroupDel . "Write:"                ;Thuderbird, English
+VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe POWERPNT.exe"  ; PowerPoint
+VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe WINWORD.exe"   ; Word
+VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe Evernote.exe"  ; Evernote
+VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe Code.exe"      ; Visual Studio Code
+VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe onenote.exe"   ; OneNote Desktop
+VimGroupIni := VimGroupIni . VimGroupDel . "OneNote"               ; OneNote in Windows 10
+VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe texworks.exe"  ; TexWork
+VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe texstudio.exe" ; TexStudio
+
+VimGroup := VimGroupIni
 
 ; Following application select the line break at Shift + End.
 GroupAdd, VimLBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
@@ -57,9 +60,29 @@ GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
 ; First check if they are already set (in mother script).
 ; Second read settings if it exits.
 
+; If IME status is restored or not at entering insert mode. 1 for restoring. 0 for not to restore (always IME off at enterng insert mode).
+VimRestoreIMEIni := 1
+if VimRestoreIME is not integer
+  VimRestoreIME := VimRestoreIMEIni
+VimRestoreIME_TT := "Check to restore IME status at entering insert mode."
+
+; Set 1 to asign jj to enter Normal mode
+VimJJIni := 0
+if VimJJ is not integer
+  VimJJ := VimJJIni
+VimJJ_TT := "Check to asign jj to enter Normal mode"
+
+; Set 1 to enable Tray Icon for Vim Modes`nSet 0 for original Icon
+VimIconIni := 1
+if VimIcon is not integer
+  VimIcon := VimIconIni
+VimIcon_TT := "Check to enable tray icon for Vim Modes"
+VimAhkGitHub_TT := VimHomepage
+
 ; Verbose level, 1: No pop up, 2: Minimum tool tips of status, 3: More info in tool tips, 4: Debug mode with a message box, which doesn't disappear automatically
+VimVerboseIni := 1
 if VimVerbose is not integer
-  VimVerbose := 1
+  VimVerbose := VimVerboseIni
 VimVerbose1 := "1: No pop up"
 VimVerbose2 := "2: Minimum tool tips"
 VimVerbose3 := "3: Tool tips"
@@ -69,21 +92,10 @@ VimVerboseValue := ""
 VimVerboseValue_TT := "Verbose level`n`n1: No pop up`n2: Minimum tool tips of status`n: More info in tool tips`n4: Debug mode with a message box, which doesn't disappear automatically"
 VimVerboseLevel_TT := VimVerboseValue_TT
 
-; If IME status is restored or not at entering insert mode. 1 for restoring. 0 for not to restore (always IME off at enterng insert mode).
-if VimRestoreIME is not integer
-  VimRestoreIME := 1
-VimRestoreIME_TT := "Check to restore IME status at entering insert mode."
-
-; Set 1 to asign jj to enter Normal mode
-if VimJJ is not integer
-  VimJJ := 0
-VimJJ_TT := "Check to asign jj to enter Normal mode"
-
-; Set 1 to enable Tray Icon for Vim Modes`nSet 0 for original Icon
-if VimIcon is not integer
-  VimIcon := 1
-VimIcon_TT := "Check to enable Tray Icon for Vim Modes"
-VimAhkGitHub_TT := VimHomepage
+; Explanations for buttons
+VimGuiSettingsOK_TT := "Reflect changes and exit"
+VimGuiSettingsReset_TT := "Reset to the default values"
+VimGuiSettingsCancel_TT := "Don't change and exit"
 
 ; Read Ini
 VimReadIni()
@@ -97,6 +109,9 @@ Vim_g := 0
 Vim_n := 0
 VimLineCopy := 0
 VimLastIME := 0
+
+VimCurrControl := ""
+VimPrevControl := ""
 
 ; Menu
 ;Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
@@ -151,13 +166,10 @@ MenuVimSettings:
   Gui, VimGuiSettings:+LabelVimGuiSettings
   Gui, VimGuiSettings:-MinimizeBox
   Gui, VimGuiSettings:-Resize
-  Gui, VimGuiSettings:Add, Text, Y+20 vVimGroupText, Applications
-  StringReplace, VimgroupList, VimGroup, %VimGroupDel%, `n, All
-  Gui, VimGuiSettings:Add, Edit, R10 Multi vVimGroupList, %VimGroupList%
   if(VimRestoreIME == 1){
-    Gui, VimGuiSettings:Add, Checkbox, xm Y+20 Checked vVimRestoreIME, Restore IIME
+    Gui, VimGuiSettings:Add, Checkbox, xm Y+20 Checked vVimRestoreIME, Restore IME
   }else{
-    Gui, VimGuiSettings:Add, Checkbox, xm Y+20 vVimRestoreIME, Restore IIME
+    Gui, VimGuiSettings:Add, Checkbox, xm Y+20 vVimRestoreIME, Restore IME
   }
   if(VimJJ == 1){
     Gui, VimGuiSettings:Add, Checkbox, xm Checked vVimJJ, JJ
@@ -169,40 +181,47 @@ MenuVimSettings:
   }else{
     Gui, VimGuiSettings:Add, Checkbox, xm vVimIcon, Icon
   }
-  Gui, VimGuiSettings:Add, Text, Y+20 vVimVerboseLevel, Verbose level
+  Gui, VimGuiSettings:Add, Text, Y+20 gVimVerboseLevel vVimVerboseLevel, Verbose level
   Gui, VimGuiSettings:Add, DropDownList, vVimVerboseValue Choose%VimVerbose%, %VimVerbose1%|%VimVerbose2%|%VimVerbose3%|%VimVerbose4%
+  Gui, VimGuiSettings:Add, Text, xm Y+20 gVimGroupText vVimGroupText, Applications
+  StringReplace, VimGroupList, VimGroup, %VimGroupDel%, `n, All
+  Gui, VimGuiSettings:Add, Edit, xm R10 W300 Multi vVimGroupList, %VimGroupList%
   Gui, VimGuiSettings:Add, Text, Y+20, Check
   Gui, VimGuiSettings:Font, Underline
   Gui, VimGuiSettings:Add, Text, X+5 cBlue gVimAhkGitHub vVimAhkGitHub, HELP
   Gui, VimGuiSettings:Font, Norm
   Gui, VimGuiSettings:Add, Text, X+5, for further information.
-  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsOK xm W100 X45 Y+20 Default ,OK
-  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsCannel W100 X+10, Cancel
-  Gui, VimGuiSettings:Show, W300, Vim Ahk Settings
+  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsOK vVimGuiSettingsOK xm W100 X45 Y+20 Default ,OK
+  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsReset vVimGuiSettingsReset W100 X+10, Reset
+  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsCancel vVimGuiSettingsCancel W100 X+10, Cancel
+  Gui, VimGuiSettings:Show, W410, Vim Ahk Settings
   OnMessage(0x200, "VimMouseMove")
 Return
 
 VimMouseMove(){
-  static CurrControl, PrevControl, _TT
-  CurrControl := A_GuiControl
-  if(CurrControl != PrevControl and not InStr(CurrControl, " ")){
+  global VimCurrControl, VimPrevControl
+  VimCurrControl := A_GuiControl
+  if(VimCurrControl != VimPrevControl){
+    VimPrevControl := VimCurrControl
     ToolTip
-    SetTimer, VimDisplayToolTip, 1000
-    PrevControl := CurrControl
+    if(VimCurrControl != "" && InStr(VimCurrControl, " ") == 0){
+      SetTimer, VimDisplayToolTip, 1000
+      VimPrevControl := VimCurrControl
+    }
   }
   Return
+}
 
-  VimDisplayToolTip:
+VimDisplayToolTip:
   SetTimer, VimDisplayToolTip, Off
-  ToolTip % %CurrControl%_TT
+  ToolTip % %VimCurrControl%_TT
   SetTimer, VimRemoveToolTip, 60000
-  return
+Return
 
-  VimRemoveToolTip:
+VimRemoveToolTip:
   SetTimer, VimRemoveToolTip, Off
   ToolTip
-  return
-}
+Return
 
 VimGuiSettingsOK:
   Gui, VimGuiSettings:Submit
@@ -214,10 +233,29 @@ VimGuiSettingsOK:
     }
   }
   VimWriteIni()
-VimGuiSettingsCannel:
+VimGuiSettingsCancel:
 VimGuiSettingsClose:
 VimGuiSettingsEscape:
+  ToolTip
   Gui, VimGuiSettings:Destroy
+Return
+
+VimGuiSettingsReset:
+  IfExist, %VimIni%
+    FileDelete, %VimIni%
+
+  VimGroup := VimGroupIni
+  VimRestoreIME := VimRestoreIMEIni
+  VimJJ := VimJJIni
+  VimIcon := VimIconIni
+  VimVerbose := VimVerboseIni
+
+  ToolTip
+  Gui, VimGuiSettings:Destroy
+  Gosub, MenuVimSettings
+Return
+
+VimGroupText: ; Dummy to assign Gui Control
 Return
 
 VimVerboseLevel: ; Dummy to assign Gui Control
@@ -420,25 +458,19 @@ VimRemoveStatus:
   Tooltip
 Return
 
-VimReadIni(ini=""){
+VimReadIni(){
   global
-  if(ini == ""){
-    ini := VimIni
-  }
-  IniRead, VimGroup, %ini%, %VimSection%, VimGroup, %VimGroup%
-  IniRead, VimRestoreIME, %ini%, %VimSection%, VimRestoreIME, %VimRestoreIME%
-  IniRead, VimJJ, %ini%, %VimSection%, VimJJ, %VimJJ%
-  IniRead, VimIcon, %ini%, %VimSection%, VimIcon, %VimIcon%
-  IniRead, VimVerbose, %ini%, %VimSection%, VimVerbose, %VimVerbose%
+  IniRead, VimGroup, %VimIni%, %VimSection%, VimGroup, %VimGroup%
+  IniRead, VimRestoreIME, %VimIni%, %VimSection%, VimRestoreIME, %VimRestoreIME%
+  IniRead, VimJJ, %VimIni%, %VimSection%, VimJJ, %VimJJ%
+  IniRead, VimIcon, %VimIni%, %VimSection%, VimIcon, %VimIcon%
+  IniRead, VimVerbose, %VimIni%, %VimSection%, VimVerbose, %VimVerbose%
 }
 
-VimWriteIni(ini=""){
+VimWriteIni(){
   global
-  if(ini == ""){
-    ini := VimIni
-  }
-  IfNotExist, %ini%\..\
-    FileCreateDir, %ini%\..\
+  IfNotExist, %VimIniDir%
+    FileCreateDir, %VimIniDir%
 
   VimGroup := ""
   Loop, Parse, VimGroupList, `n
@@ -452,11 +484,11 @@ VimWriteIni(ini=""){
     }
   }
   VimSetGroup()
-  IniWrite, % VimGroup, % ini, % VimSection, VimGroup
-  IniWrite, % VimRestoreIME, % ini, % VimSection, VimRestoreIME
-  IniWrite, % VimJJ, % ini, % VimSection, VimJJ
-  IniWrite, % VimIcon, % ini, % VimSection, VimIcon
-  IniWrite, % VimVerbose, % ini, % VimSection, VimVerbose
+  IniWrite, % VimGroup, % VimIni, % VimSection, VimGroup
+  IniWrite, % VimRestoreIME, % VimIni, % VimSection, VimRestoreIME
+  IniWrite, % VimJJ, % VimIni, % VimSection, VimJJ
+  IniWrite, % VimIcon, % VimIni, % VimSection, VimIcon
+  IniWrite, % VimVerbose, % VimIni, % VimSection, VimVerbose
 }
 
 VimSetGuiOffset(offset=0){
