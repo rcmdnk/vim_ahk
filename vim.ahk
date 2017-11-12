@@ -382,7 +382,6 @@ VimSetGroup() {
   Loop, Parse, VimGroup, % VimGroupDel
   {
     if(A_LoopField != "" && InStr(VimGroupAll, A_LoopField) == 0){
-      Msgbox, % A_LoopField
       GroupAdd VimGroup, %A_LoopField%
       VimGroupAll := VimGroupAll . VimGroupDel . A_LoopField
     }
@@ -637,13 +636,9 @@ u::Send,^z
   Send, +{Right}^x
   ClipWait, 1
   if(Clipboard is lower){
-    ;Msgbox, , Vim Ahk, %Clipboard% is lower
     StringUpper, Clipboard, Clipboard
   }else if(Clipboard is upper){
-    ;Msgbox, , Vim Ahk, %Clipboard% is upper
     StringLower, Clipboard, Clipboard
-  }else{
-    ;Msgbox, , Vim Ahk, %Clipboard% is others
   }
   Send, ^v
   Clipboard := bak
