@@ -38,10 +38,14 @@ The default setting enables vim-mode for the following applications:
 * TexWork
 * TexStudio
 
-If you want to change applications, add `GroupAdd VimGroup` lines at the top of vim.ahk
+You can change them from the right click menu of task tray icon (find `VimMenu`-`Settings` in the list),
+or launch the setting window by `Ctrl-Alt-Shift-v`.
+
+If you want to change applications directly in the script, add `GroupAdd VimGroup` lines at the top of vim.ahk
 (Window title/class can be seen by window spy in AutoHotkey), like:
 
     GroupAdd VimGroup, ahk_exe notepad.exe ; NotePad
+
 
 ## Options
 
