@@ -54,6 +54,8 @@ If you want to change applications directly in the script, add `GroupAdd VimGrou
 |VimRestoreIME|If 1, IME status is restored at entering insert mode.|1|
 |VimJJ|If 1, `jj` changes mode to Normal from Insert.|0|
 |VimIcon|If 1, task tray icon is changed when mode is changed.|1|
+|VimIconCheck|If 1, check window periodically and update tray icon.|1|
+|VimIconCheckInterval|Interval to check window (ms).|1000|
 |VimVerbose|Verbose level (see below for details).|0|
 
 Verbose level:

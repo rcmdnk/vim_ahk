@@ -1,7 +1,7 @@
 ﻿; Auto-execute section {{{
 ; About vim_ahk
-VimVersion := "v0.1.1"
-VimDate := "12/Nov/2017"
+VimVersion := "v0.2.0"
+VimDate := "22/Nov/2017"
 VimAuthor := "rcmdnk"
 VimDescription := "Vim emulation with AutoHotkey, everywhere in Windows."
 VimHomepage := "https://github.com/rcmdnk/vim_ahk"
@@ -17,7 +17,8 @@ VimIconNormal := % A_LineFile . "\..\icons\normal.ico"
 VimIconInsert := % A_LineFile . "\..\icons\insert.ico"
 VimIconVisual := % A_LineFile . "\..\icons\visual.ico"
 VimIconCommand := % A_LineFile . "\..\icons\command.ico"
-VimIconDisabled := % A_AhkPath
+VimIconDisabled := % A_LineFile . "\..\icons\disabled.ico"
+VimIconDefault := % A_AhkPath
 
 ; Application groups {{{
 
@@ -79,6 +80,20 @@ if VimIcon is not integer
   VimIcon := VimIconIni
 VimIcon_TT := "Enable tray icon for Vim Modes"
 
+; Set 1 to enable Tray Icon check
+VimIconCheckIni := 1
+if VimIconCheck is not integer
+  VimIconCheck := VimIconCheckIni
+VimIconCheck_TT := "Enable tray icon check"
+
+; Tray Icon check interval
+VimIconCheckIntervalIni := 1000
+if VimIconCheckInterval is not integer
+  VimIconCheckInterval := VimIconCheckIntervalIni
+VimIconCheckInterval_TT := "Interval (ms) to check if current window is for Ahk Vim or not,`nand set tray icon."
+VimIconCheckIntervalText_TT := VimIconCheckInterval_TT
+VimIconCheckIntervalEdit_TT := VimIconCheckInterval_TT
+
 ; Verbose level, 1: No pop up, 2: Minimum tool tips of status, 3: More info in tool tips, 4: Debug mode with a message box, which doesn't disappear automatically
 VimVerboseIni := 1
 if VimVerbose is not integer
@@ -127,6 +142,11 @@ Menu, Tray, Add, VimMenu, :VimSubMenu
 ; Set initial icon
 VimSetIcon(VimMode)
 
+; Set Timer for status check
+if(VimIconCheck == 1){
+  SetTimer, VimStatusCheckTimer, %VimIconCheckInterval%
+}
+
 Return
 
 ; }}}
@@ -168,21 +188,26 @@ MenuVimSettings:
   Gui, VimGuiSettings:-MinimizeBox
   Gui, VimGuiSettings:-Resize
   Gui, VimGuiSettings:Add, GroupBox, xm X+10 YM+10 Section w370 h330, Settings
+  Gui, VimGuiSettings:Add, Checkbox, XS+10 YS+30 vVimRestoreIME, Restore IME at Insert mode
   if(VimRestoreIME == 1){
-    Gui, VimGuiSettings:Add, Checkbox, XS+10 YS+30 Checked vVimRestoreIME, Restore IME
-  }else{
-    Gui, VimGuiSettings:Add, Checkbox, XS+10 YS+30 vVimRestoreIME, Restore IME
+    GuiControl, VimGuiSettings:, VimRestoreIME, 1
   }
+  Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimJJ, JJ to enter Normal mode
   if(VimJJ == 1){
-    Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 Checked vVimJJ, JJ
-  }else{
-    Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimJJ, JJ
+    GuiControl, VimGuiSettings:, VimJJ, 1
   }
+  Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimIcon, Enable tray icon
   if(VimIcon == 1){
-    Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 Checked vVimIcon, Icon
-  }else{
-    Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimIcon, Icon
+    GuiControl, VimGuiSettings:, VimIcon, 1
   }
+  Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimIconCheck, Enable icon check
+  if(VimIconCheck == 1){
+    GuiControl, VimGuiSettings:, VimIconCheck, 1
+  }
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimIconCheckIntervalText vVimIconCheckIntervalText, Icon check interval (ms)
+  Gui, VimGuiSettings:Add, Edit, gVimIconCheckIntervalEdit vVimIconCheckIntervalEdit
+  Gui, VimGuiSettings:Add, UpDown, vVimIconCheckInterval Range100-1000000, %VimIconCheckInterval%
+
   Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimVerboseLevel vVimVerboseLevel, Verbose level
   Gui, VimGuiSettings:Add, DropDownList, vVimVerboseValue Choose%VimVerbose%, %VimVerbose1%|%VimVerbose2%|%VimVerbose3%|%VimVerbose4%
   Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimGroupText vVimGroupText, Applications
@@ -225,8 +250,7 @@ VimRemoveToolTip:
   ToolTip
 Return
 
-VimGuiSettingsOK:
-  Gui, VimGuiSettings:Submit
+VimGuiSettingsApply:
   VimSetGroup()
   Loop, %VimVerboseMax% {
     if(VimVerboseValue == VimVerbose%A_Index%){
@@ -234,6 +258,21 @@ VimGuiSettingsOK:
       Break
     }
   }
+  if(VimIcon == 1){
+     VimSetIcon(VimMode)
+  }else{
+     VimSetIcon("Default")
+  }
+  if(VimIconCheck == 1){
+    SetTimer, VimStatusCheckTimer, %VimIconCheckInterval%
+  }else{
+    SetTimer, VimStatusCheckTimer, OFF
+  }
+Return
+
+VimGuiSettingsOK:
+  Gui, VimGuiSettings:Submit
+  Gosub, VimGuiSettingsApply
   VimWriteIni()
 VimGuiSettingsCancel:
 VimGuiSettingsClose:
@@ -251,7 +290,11 @@ VimGuiSettingsReset:
   VimRestoreIME := VimRestoreIMEIni
   VimJJ := VimJJIni
   VimIcon := VimIconIni
+  VimIconCheck := VimIconCheckIni
+  VimIconCheckInterval := VimIconCheckIntervalIni
   VimVerbose := VimVerboseIni
+
+  Gosub, VimGuiSettingsApply
 
   SetTimer, VimDisplayToolTip, Off
   ToolTip
@@ -260,6 +303,12 @@ VimGuiSettingsReset:
 Return
 
 VimGroupText: ; Dummy to assign Gui Control
+Return
+
+VimIconCheckIntervalText: ; Dummy to assign Gui Control
+Return
+
+VimIconCheckIntervalEdit: ; Dummy to assign Gui Control
 Return
 
 VimVerboseLevel: ; Dummy to assign Gui Control
@@ -393,7 +442,7 @@ VimSetGroup() {
 }
 
 VimSetIcon(Mode=""){
-  global VimIcon, VimIconNormal, VimIconInsert, VimIconVisual, VimIconCommand, VimIconDisabled
+  global VimIcon, VimIconNormal, VimIconInsert, VimIconVisual, VimIconCommand, VimIconDisabled, VimIconDefault
   icon :=
   if InStr(Mode, "Normal"){
     icon := VimIconNormal
@@ -405,13 +454,18 @@ VimSetIcon(Mode=""){
     icon := VimIconCommand
   }else if InStr(Mode, "Disabled"){
     icon := VimIconDisabled
+  }else if InStr(Mode, "Default"){
+    icon := VimIconDefault
   }
   if FileExist(icon){
-    Menu, VimSubMenu, Icon, Status, %icon%
-    if(VimIcon !=1 ){
-      Return
+    if(InStr(Mode, "Default")){
+      Menu, Tray, Icon, %icon%
+    }else{
+      Menu, VimSubMenu, Icon, Status, %icon%
+      if(VimIcon == 1){
+        Menu, Tray, Icon, %icon%
+      }
     }
-    Menu, Tray, Icon, %icon%
   }
 }
 
@@ -470,6 +524,8 @@ VimReadIni(){
   IniRead, VimRestoreIME, %VimIni%, %VimSection%, VimRestoreIME, %VimRestoreIME%
   IniRead, VimJJ, %VimIni%, %VimSection%, VimJJ, %VimJJ%
   IniRead, VimIcon, %VimIni%, %VimSection%, VimIcon, %VimIcon%
+  IniRead, VimIconCheck, %VimIni%, %VimSection%, VimIconCheck, %VimIconCheck%
+  IniRead, VimIconCheckInterval, %VimIni%, %VimSection%, VimIconCheckInterval, %VimIconCheckInterval%
   IniRead, VimVerbose, %VimIni%, %VimSection%, VimVerbose, %VimVerbose%
 }
 
@@ -494,6 +550,8 @@ VimWriteIni(){
   IniWrite, % VimRestoreIME, % VimIni, % VimSection, VimRestoreIME
   IniWrite, % VimJJ, % VimIni, % VimSection, VimJJ
   IniWrite, % VimIcon, % VimIni, % VimSection, VimIcon
+  IniWrite, % VimIconCheck, % VimIni, % VimSection, VimIconCheck
+  IniWrite, % VimIconCheckInterval, % VimIni, % VimSection, VimIconCheckInterval
   IniWrite, % VimVerbose, % VimIni, % VimSection, VimVerbose
 }
 
@@ -502,6 +560,23 @@ VimSetGuiOffset(offset=0){
   VimGuiSettings := offset + 2
   VimGuiVerbose := offset + 3
 }
+
+VimStatusCheckTimer:
+  if WinActive("ahk_group " . VimGroupName)
+  {
+    VimSetIcon(VimMode)
+  }else{
+    VimSetIcon("Disabled")
+  }
+Return
+
+VimStartStatusCheck:
+  SetTimer, VimStatusCheckTimer, off
+Return
+
+VimStopStatusCheck:
+  SetTimer, VimStatusCheckTimer, off
+Return
 ; }}}
 
 ; Vim mode {{{
