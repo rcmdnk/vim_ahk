@@ -28,7 +28,7 @@ VimGroupN := 0
 VimGroup_TT := "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon)."
 ;VimGroupList_TT := VimGroup_TT
 VimGroupText_TT := VimGroup_TT
-VimGroupIni := "ahk_exe notepad.exe"   ; NotePad
+VimGroupIni :=                             "ahk_exe notepad.exe"   ; NotePad
 VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe wordpad.exe"   ; WordPad
 VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe TeraPad.exe"   ; TeraPad
 VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe explorer.exe"  ; Explorer
@@ -65,20 +65,19 @@ GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
 VimRestoreIMEIni := 1
 if VimRestoreIME is not integer
   VimRestoreIME := VimRestoreIMEIni
-VimRestoreIME_TT := "Check to restore IME status at entering insert mode."
+VimRestoreIME_TT := "Restore IME status at entering insert mode."
 
 ; Set 1 to asign jj to enter Normal mode
 VimJJIni := 0
 if VimJJ is not integer
   VimJJ := VimJJIni
-VimJJ_TT := "Check to asign jj to enter Normal mode"
+VimJJ_TT := "Asign jj to enter Normal mode"
 
 ; Set 1 to enable Tray Icon for Vim Modes`nSet 0 for original Icon
 VimIconIni := 1
 if VimIcon is not integer
   VimIcon := VimIconIni
-VimIcon_TT := "Check to enable tray icon for Vim Modes"
-VimAhkGitHub_TT := VimHomepage
+VimIcon_TT := "Enable tray icon for Vim Modes"
 
 ; Verbose level, 1: No pop up, 2: Minimum tool tips of status, 3: More info in tool tips, 4: Debug mode with a message box, which doesn't disappear automatically
 VimVerboseIni := 1
@@ -93,10 +92,11 @@ VimVerboseValue := ""
 VimVerboseValue_TT := "Verbose level`n`n1: No pop up`n2: Minimum tool tips of status`n: More info in tool tips`n4: Debug mode with a message box, which doesn't disappear automatically"
 VimVerboseLevel_TT := VimVerboseValue_TT
 
-; Explanations for buttons
+; Other explanations for settings
 VimGuiSettingsOK_TT := "Reflect changes and exit"
 VimGuiSettingsReset_TT := "Reset to the default values"
 VimGuiSettingsCancel_TT := "Don't change and exit"
+VimAhkGitHub_TT := VimHomepage
 
 ; Read Ini
 VimReadIni()
@@ -140,7 +140,7 @@ Return
 ;  WinGet, name, ProcessName, ahk_pid %process%
 ;  WinGetClass, class, ahk_pid %process%
 ;  WinGetTitle, title, ahk_pid %process%
-;  if WInActive("ahk_group VimGroup"){
+;  if WinActive("ahk_group VimGroup"){
 ;    Msgbox, 0x40, Vim Ahk,
 ;    (
 ;      Supported
@@ -514,7 +514,7 @@ Return
 
 ; }}}
 
-#If WInActive("ahk_group " . VimGroupName)
+#If WinActive("ahk_group " . VimGroupName)
 ; Check Mode {{{
 ^!+c::
   VimCheckMode(VimVerboseMax, VimMode)
@@ -560,7 +560,7 @@ Return
   }
 Return
 
-#If WInActive("ahk_group " . VimGroupName) and (InStr(VimMode, "Insert")) and (VimJJ == 1)
+#If WinActive("ahk_group " . VimGroupName) and (InStr(VimMode, "Insert")) and (VimJJ == 1)
 ~j up:: ; jj: go to Normal mode.
   Input, jout, I T0.1 V L1, j
   if(ErrorLevel == "EndKey:J"){
@@ -571,7 +571,7 @@ Return
 ; }}}
 
 ; Enter vim insert mode (Exit vim normal mode) {{{
-#If WInActive("ahk_group " . VimGroupName) && (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimGroupName) && (VimMode == "Vim_Normal")
 i::VimSetMode("Insert")
 
 +i::
@@ -604,7 +604,7 @@ Return
 ; }}}
 
 ; Repeat {{{
-#If WInActive("ahk_group " . VimGroupName) and (InStr(VimMode,"Vim_"))
+#If WinActive("ahk_group " . VimGroupName) and (InStr(VimMode,"Vim_"))
 1::
 2::
 3::
@@ -618,7 +618,7 @@ Return
   VimSetMode("", 0, n_repeat)
 Return
 
-#If WInActive("ahk_group " . VimGroupName) and (InStr(VimMode,"Vim_")) and (Vim_n > 0)
+#If WinActive("ahk_group " . VimGroupName) and (InStr(VimMode,"Vim_")) and (Vim_n > 0)
 0:: ; 0 is used as {Home} for Vim_n=0
   n_repeat := Vim_n*10 + A_ThisHotkey
   VimSetMode("", 0, n_repeat)
@@ -626,7 +626,7 @@ Return
 ; }}}
 
 ; Normal Mode Basic {{{
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
 ; Undo/Redo
 u::Send,^z
 ^r::Send,^y
@@ -650,7 +650,7 @@ u::Send,^z
 Return
 
 +z::VimSetMode("Z")
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Z")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Z")
 +z::
   Send, ^s
   Send, !{F4}
@@ -662,7 +662,7 @@ Return
   VimSetMode("Vim_Normal")
 Return
 
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
 Space::Send, {Right}
 
 ; period
@@ -670,11 +670,11 @@ Space::Send, {Right}
 ; }}}
 
 ; Replace {{{
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
 r::VimSetMode("r_once")
 +r::VimSetMode("r_repeat")
 
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "r_once")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "r_once")
 ~a::
 ~b::
 ~c::
@@ -750,7 +750,7 @@ Return
   VimSetMode("Vim_Normal")
 Return
 
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "r_repeat")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "r_repeat")
 ~a::
 ~b::
 ~c::
@@ -827,7 +827,7 @@ Return
 
 ; Move {{{
 ; g {{{
-#If WInActive("ahk_group " . VimGroupName) and (InStr(VimMode,"Vim_")) and (not Vim_g)
+#If WinActive("ahk_group " . VimGroupName) and (InStr(VimMode,"Vim_")) and (not Vim_g)
 g::VimSetMode("", 1)
 ; }}}
 
@@ -929,7 +929,7 @@ VimMoveLoop(key="", shift=0){
     VimMove(key, shift)
   }
 }
-#If WInActive("ahk_group " . VimGroupName) and (InStr(VimMode,"Vim_"))
+#If WinActive("ahk_group " . VimGroupName) and (InStr(VimMode,"Vim_"))
 ; 1 character
 h::VimMoveLoop("h")
 j::VimMoveLoop("j")
@@ -960,13 +960,13 @@ b::VimMoveLoop("b")
 ; G
 +g::VimMove("+g")
 ; gg
-#If WInActive("ahk_group " . VimGroupName) and (InStr(VimMode, "Vim_")) and (Vim_g)
+#If WinActive("ahk_group " . VimGroupName) and (InStr(VimMode, "Vim_")) and (Vim_g)
 g::VimMove("g")
 ; }}} Move
 
 ; Copy/Cut/Paste (ydcxp){{{
 ; YDC
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
 y::VimSetMode("Vim_ydc_y", 0, -1, 0)
 d::VimSetMode("Vim_ydc_d", 0, -1, 0)
 c::VimSetMode("Vim_ydc_c", 0, -1, 0)
@@ -1005,7 +1005,7 @@ Return
   }
 Return
 
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Vim_ydc_y")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_ydc_y")
 y::
   VimLineCopy := 1
   if WinActive("ahk_group VimDoubleHomeGroup"){
@@ -1020,7 +1020,7 @@ y::
   Send, {Left}{Home}
 Return
 
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Vim_ydc_d")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_ydc_d")
 d::
   VimLineCopy := 1
   if WinActive("ahk_group DoubleHome"){
@@ -1034,7 +1034,7 @@ d::
   }
 Return
 
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Vim_ydc_c")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_ydc_c")
 c::
   VimLineCopy := 1
   if WinActive("ahk_group DoubleHome"){
@@ -1048,13 +1048,13 @@ c::
   }
 Return
 
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
 ; X
 x::Send, {Delete}
 +x::Send, {BS}
 
 ; Paste
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
 p::
   ;i:=0
   ;;Send, {p Up}
@@ -1108,7 +1108,7 @@ Return
 ; Vim visual mode {{{
 
 ; Visual Char/Block/Line
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
 v::VimSetMode("Vim_VisualChar")
 ^v::
   Send, ^b
@@ -1121,7 +1121,7 @@ Return
 Return
 
 ; ydc
-#If WInActive("ahk_group " . VimGroupName) and (InStr(VimMode, "Visual"))
+#If WinActive("ahk_group " . VimGroupName) and (InStr(VimMode, "Visual"))
 y::
   Clipboard :=
   Send, ^c
@@ -1181,7 +1181,7 @@ Return
 ; }}} Vim visual mode
 
 ; Search {{{
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
 /::
   Send, ^f
   VimSetMode("Inseret")
@@ -1203,10 +1203,10 @@ n::Send, {F3}
 ; }}} Search
 
 ; Vim comamnd mode {{{
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
 :::VimSetMode("Command") ;(:)
 `;::VimSetMode("Command") ;(;)
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Command")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Command")
 w::VimSetMode("Command_w")
 q::VimSetMode("Command_q")
 h::
@@ -1214,7 +1214,7 @@ h::
   VimSetMode("Vim_Normal")
 Return
 
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Command_w")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Command_w")
 Return::
   Send, ^s
   VimSetMode("Insert")
@@ -1231,7 +1231,7 @@ Space::
   VimSetMode("Insert")
 Return
 
-#If WInActive("ahk_group " . VimGroupName) and (VimMode == "Command_q")
+#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Command_q")
 Return::
   Send, !{F4}
   VimSetMode("Insert")
@@ -1239,7 +1239,7 @@ Return
 ; }}} Vim command mode
 
 ; Disable other keys {{{
-#If WInActive("ahk_group " . VimGroupName) and (InStr(VimMode, "ydc") or InStr(VimMode, "Command") or (VimMode == "Z"))
+#If WinActive("ahk_group " . VimGroupName) and (InStr(VimMode, "ydc") or InStr(VimMode, "Command") or (VimMode == "Z"))
 *a::
 *b::
 *c::
@@ -1310,7 +1310,7 @@ Space::
   VimSetMode("Vim_Normal")
 Return
 
-#If WInActive("ahk_group " . VimGroupName) and (InStr(VimMode,"Vim_") or (1 == 2))
+#If WinActive("ahk_group " . VimGroupName) and (InStr(VimMode,"Vim_") or (1 == 2))
 *a::
 *b::
 *c::
