@@ -68,6 +68,15 @@ Verbose level:
 You can change these options from the right click menu of task tray icon (find `VimMenu`-`Settings` in the list),
 or launch the setting window by `Ctrl-Alt-Shift-v`.
 
+![trymenu](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/trymenu.jpg "trymenu")
+
+![settings](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/settings.jpg "settings")
+
+If `Icon` is enabled, the task try icon is changed following the mode.
+
+![tryicon](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/tryicon.gif "tryicon")
+
+
 ## Main Modes
 Here are the main modes.
 
