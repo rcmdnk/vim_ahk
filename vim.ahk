@@ -66,7 +66,7 @@ GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
 VimRestoreIMEIni := 1
 if VimRestoreIME is not integer
   VimRestoreIME := VimRestoreIMEIni
-VimRestoreIME_TT := "Restore IME status at entering insert mode."
+VimRestoreIME_TT := "Restore IME status at entering Insert mode."
 
 ; Set 1 to asign jj to enter Normal mode
 VimJJIni := 0
@@ -85,6 +85,18 @@ VimIconCheckIni := 1
 if VimIconCheck is not integer
   VimIconCheck := VimIconCheckIni
 VimIconCheck_TT := "Enable tray icon check"
+
+; Disable unused keys in Normal mode
+VimDisableUnusedIni := 3
+if VimDisableUnused is not integer
+  VimDisableUnused := VimDisableUnusedIni
+VimDisableUnused1 := "1: Do not disable unused keys"
+VimDisableUnused2 := "2: Disable alphabets (+shift) and symbols"
+VimDisableUnused3 := "3: Disable all including keys with modifiers (e.g. Ctrl+Z)"
+vimDisableUnusedMax := 3
+VimDisableUnusedValue := ""
+VimDisableUnusedValue_TT := "Disable unused keys in Normal mode"
+VimDisableUnusedLevel_TT := VimDisableUnusedValue_TT
 
 ; Tray Icon check interval
 VimIconCheckIntervalIni := 1000
@@ -187,8 +199,8 @@ MenuVimSettings:
   Gui, VimGuiSettings:+LabelVimGuiSettings
   Gui, VimGuiSettings:-MinimizeBox
   Gui, VimGuiSettings:-Resize
-  Gui, VimGuiSettings:Add, GroupBox, xm X+10 YM+10 Section w370 h330, Settings
-  Gui, VimGuiSettings:Add, Checkbox, XS+10 YS+30 vVimRestoreIME, Restore IME at Insert mode
+  Gui, VimGuiSettings:Add, GroupBox, xm X+10 YM+10 Section w370 h470, Settings
+  Gui, VimGuiSettings:Add, Checkbox, XS+10 YS+30 vVimRestoreIME, Restore IME at entering Insert mode
   if(VimRestoreIME == 1){
     GuiControl, VimGuiSettings:, VimRestoreIME, 1
   }
@@ -204,10 +216,11 @@ MenuVimSettings:
   if(VimIconCheck == 1){
     GuiControl, VimGuiSettings:, VimIconCheck, 1
   }
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimDisableUnusedLevel vVimDisableUnusedLevel, Disable unused keys in Normal mode
+  Gui, VimGuiSettings:Add, DropDownList, W320 vVimDisableUnusedValue Choose%VimDisableUnused%, %VimDisableUnused1%|%VimDisableUnused2%|%VimDisableUnused3%
   Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimIconCheckIntervalText vVimIconCheckIntervalText, Icon check interval (ms)
   Gui, VimGuiSettings:Add, Edit, gVimIconCheckIntervalEdit vVimIconCheckIntervalEdit
   Gui, VimGuiSettings:Add, UpDown, vVimIconCheckInterval Range100-1000000, %VimIconCheckInterval%
-
   Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimVerboseLevel vVimVerboseLevel, Verbose level
   Gui, VimGuiSettings:Add, DropDownList, vVimVerboseValue Choose%VimVerbose%, %VimVerbose1%|%VimVerbose2%|%VimVerbose3%|%VimVerbose4%
   Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimGroupText vVimGroupText, Applications
@@ -252,6 +265,12 @@ Return
 
 VimGuiSettingsApply:
   VimSetGroup()
+  Loop, %VimDisableUnusedMax% {
+    if(VimDisableUnusedValue == VimDisableUnused%A_Index%){
+      VimDisableUnused := A_Index
+      Break
+    }
+  }
   Loop, %VimVerboseMax% {
     if(VimVerboseValue == VimVerbose%A_Index%){
       VimVerbose := A_Index
@@ -287,6 +306,7 @@ VimGuiSettingsReset:
     FileDelete, %VimIni%
 
   VimGroup := VimGroupIni
+  VimDisableUnused := VimDisableUnusedIni
   VimRestoreIME := VimRestoreIMEIni
   VimJJ := VimJJIni
   VimIcon := VimIconIni
@@ -309,6 +329,9 @@ VimIconCheckIntervalText: ; Dummy to assign Gui Control
 Return
 
 VimIconCheckIntervalEdit: ; Dummy to assign Gui Control
+Return
+
+VimDisableUnusedLevel: ; Dummy to assign Gui Control
 Return
 
 VimVerboseLevel: ; Dummy to assign Gui Control
@@ -521,6 +544,7 @@ Return
 VimReadIni(){
   global
   IniRead, VimGroup, %VimIni%, %VimSection%, VimGroup, %VimGroup%
+  IniRead, VimDisableUnused, %VimIni%, %VimSection%, VimDisableUnused, %VimDisableUnused%
   IniRead, VimRestoreIME, %VimIni%, %VimSection%, VimRestoreIME, %VimRestoreIME%
   IniRead, VimJJ, %VimIni%, %VimSection%, VimJJ, %VimJJ%
   IniRead, VimIcon, %VimIni%, %VimSection%, VimIcon, %VimIcon%
@@ -547,6 +571,7 @@ VimWriteIni(){
   }
   VimSetGroup()
   IniWrite, % VimGroup, % VimIni, % VimSection, VimGroup
+  IniWrite, % VimDisableUnused, % VimIni, % VimSection, VimDisableUnused
   IniWrite, % VimRestoreIME, % VimIni, % VimSection, VimRestoreIME
   IniWrite, % VimJJ, % VimIni, % VimSection, VimJJ
   IniWrite, % VimIcon, % VimIni, % VimSection, VimIcon
@@ -1385,7 +1410,103 @@ Space::
   VimSetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimGroupName) and (InStr(VimMode,"Vim_") or (1 == 2))
+#If WinActive("ahk_group " . VimGroupName) and InStr(VimMode,"Vim_") and (VimDisableUnused == 2)
+a::
+b::
+c::
+d::
+e::
+f::
+g::
+h::
+i::
+j::
+k::
+l::
+m::
+n::
+o::
+p::
+q::
+r::
+s::
+t::
+u::
+v::
+w::
+x::
+y::
+z::
++a::
++b::
++c::
++d::
++e::
++f::
++g::
++h::
++i::
++j::
++k::
++l::
++m::
++n::
++o::
++p::
++q::
++r::
++s::
++t::
++u::
++v::
++w::
++x::
++y::
++z::
+0::
+1::
+2::
+3::
+4::
+5::
+6::
+7::
+8::
+9::
+`::
+~::
+!::
+@::
+#::
+$::
+%::
+^::
+&::
+*::
+(::
+)::
+-::
+_::
+=::
++::
+[::
+{::
+]::
+}::
+\::
+|::
+:::
+`;::
+'::
+"::
+,::
+<::
+.::
+>::
+Space::
+Return
+
+#If WinActive("ahk_group " . VimGroupName) and InStr(VimMode,"Vim_") and (VimDisableUnused == 3)
 *a::
 *b::
 *c::
