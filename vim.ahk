@@ -649,14 +649,6 @@ Return
 #If WinActive("ahk_group " . VimGroupName) && (VimMode == "Vim_Normal")
 i::VimSetMode("Insert")
 
-; MS Office lets you interact with "the ribbon" (toolbar) via keyboard by 
-; pressing and releaseing the Alt key, then pressing additional shortcut keys
-; that appear on the ribbon.
-$Alt::
-    Send {Alt}
-    VimSetMode("Insert")
-Return
-
 +i::
   Send, {Home}
   Sleep, 200
