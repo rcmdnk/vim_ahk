@@ -8,7 +8,7 @@ vim.exe is a standalone application made from vim.ahk.
 
 This is vim emulation for Windows.
 If you are interesting in same settings for Mac,
-try Vim emulation for Karabiner-Elements: [Karabiner-Elements complex_modifications rules by rcmdnk](https://rcmdnk.com/KE-complex_modifications/).
+try Vim emulation for [Karabiner - Software for macOS](https://pqrs.org/osx/karabiner/): [Karabiner-Elements complex_modifications rules by rcmdnk](https://rcmdnk.com/KE-complex_modifications/).
 
 ## Installation
 If you've already installed AutoHotKey, just open vim.ahk with AutoHotkey.
