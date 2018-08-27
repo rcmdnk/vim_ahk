@@ -1,7 +1,7 @@
 ﻿; Auto-execute section {{{
 ; About vim_ahk
-VimVersion := "v0.3.0"
-VimDate := "15/Apr/2018"
+VimVersion := "v0.4.0"
+VimDate := "27/Aug/2018"
 VimAuthor := "rcmdnk"
 VimDescription := "Vim emulation with AutoHotkey, everywhere in Windows."
 VimHomepage := "https://github.com/rcmdnk/vim_ahk"
@@ -73,6 +73,18 @@ VimJJIni := 0
 if VimJJ is not integer
   VimJJ := VimJJIni
 VimJJ_TT := "Asign jj to enter Normal mode"
+
+; Set 1 to asign jk to enter Normal mode
+VimJKIni := 0
+if VimJK is not integer
+  VimJK := VimJKIni
+VimJK_TT := "Asign jk to enter Normal mode"
+
+; Set 1 to asign sd to enter Normal mode
+VimSDIni := 0
+if VimSD is not integer
+  VimSD := VimSDIni
+VimSD_TT := "Asign sd to enter Normal mode"
 
 ; Set 1 to enable Tray Icon for Vim Modes`nSet 0 for original Icon
 VimIconIni := 1
@@ -199,14 +211,22 @@ MenuVimSettings:
   Gui, VimGuiSettings:+LabelVimGuiSettings
   Gui, VimGuiSettings:-MinimizeBox
   Gui, VimGuiSettings:-Resize
-  Gui, VimGuiSettings:Add, GroupBox, xm X+10 YM+10 Section w370 h470, Settings
-  Gui, VimGuiSettings:Add, Checkbox, XS+10 YS+30 vVimRestoreIME, Restore IME at entering Insert mode
+  Gui, VimGuiSettings:Add, GroupBox, xm X+10 YM+10 Section w370 h455, Settings
+  Gui, VimGuiSettings:Add, Checkbox, XS+10 YS+20 vVimRestoreIME, Restore IME at entering Insert mode
   if(VimRestoreIME == 1){
     GuiControl, VimGuiSettings:, VimRestoreIME, 1
   }
   Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimJJ, JJ to enter Normal mode
   if(VimJJ == 1){
     GuiControl, VimGuiSettings:, VimJJ, 1
+  }
+  Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimJK, JK to enter Normal mode
+  if(VimJK == 1){
+    GuiControl, VimGuiSettings:, VimJK, 1
+  }
+  Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimSD, SD to enter Normal mode
+  if(VimSD == 1){
+    GuiControl, VimGuiSettings:, VimSD, 1
   }
   Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimIcon, Enable tray icon
   if(VimIcon == 1){
@@ -216,22 +236,22 @@ MenuVimSettings:
   if(VimIconCheck == 1){
     GuiControl, VimGuiSettings:, VimIconCheck, 1
   }
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimDisableUnusedLevel vVimDisableUnusedLevel, Disable unused keys in Normal mode
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+10 gVimDisableUnusedLevel vVimDisableUnusedLevel, Disable unused keys in Normal mode
   Gui, VimGuiSettings:Add, DropDownList, W320 vVimDisableUnusedValue Choose%VimDisableUnused%, %VimDisableUnused1%|%VimDisableUnused2%|%VimDisableUnused3%
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimIconCheckIntervalText vVimIconCheckIntervalText, Icon check interval (ms)
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+10 gVimIconCheckIntervalText vVimIconCheckIntervalText, Icon check interval (ms)
   Gui, VimGuiSettings:Add, Edit, gVimIconCheckIntervalEdit vVimIconCheckIntervalEdit
   Gui, VimGuiSettings:Add, UpDown, vVimIconCheckInterval Range100-1000000, %VimIconCheckInterval%
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimVerboseLevel vVimVerboseLevel, Verbose level
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+10 gVimVerboseLevel vVimVerboseLevel, Verbose level
   Gui, VimGuiSettings:Add, DropDownList, vVimVerboseValue Choose%VimVerbose%, %VimVerbose1%|%VimVerbose2%|%VimVerbose3%|%VimVerbose4%
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimGroupText vVimGroupText, Applications
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+10 gVimGroupText vVimGroupText, Applications
   StringReplace, VimGroupList, VimGroup, %VimGroupDel%, `n, All
   Gui, VimGuiSettings:Add, Edit, XS+10 Y+10 R10 W300 Multi vVimGroupList, %VimGroupList%
-  Gui, VimGuiSettings:Add, Text, XM+20 Y+35, Check
+  Gui, VimGuiSettings:Add, Text, XM+20 Y+20, Check
   Gui, VimGuiSettings:Font, Underline
   Gui, VimGuiSettings:Add, Text, X+5 cBlue gVimAhkGitHub vVimAhkGitHub, HELP
   Gui, VimGuiSettings:Font, Norm
   Gui, VimGuiSettings:Add, Text, X+5, for further information.
-  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsOK vVimGuiSettingsOK xm W100 X45 Y+30 Default, &OK
+  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsOK vVimGuiSettingsOK xm W100 X45 Y+10 Default, &OK
   Gui, VimGuiSettings:Add, Button, gVimGuiSettingsReset vVimGuiSettingsReset W100 X+10, &Reset
   Gui, VimGuiSettings:Add, Button, gVimGuiSettingsCancel vVimGuiSettingsCancel W100 X+10, &Cancel
   Gui, VimGuiSettings:Show, W410, Vim Ahk Settings
@@ -309,6 +329,8 @@ VimGuiSettingsReset:
   VimDisableUnused := VimDisableUnusedIni
   VimRestoreIME := VimRestoreIMEIni
   VimJJ := VimJJIni
+  VimJK := VimJKIni
+  VimSD := VimSDIni
   VimIcon := VimIconIni
   VimIconCheck := VimIconCheckIni
   VimIconCheckInterval := VimIconCheckIntervalIni
@@ -547,6 +569,8 @@ VimReadIni(){
   IniRead, VimDisableUnused, %VimIni%, %VimSection%, VimDisableUnused, %VimDisableUnused%
   IniRead, VimRestoreIME, %VimIni%, %VimSection%, VimRestoreIME, %VimRestoreIME%
   IniRead, VimJJ, %VimIni%, %VimSection%, VimJJ, %VimJJ%
+  IniRead, VimJK, %VimIni%, %VimSection%, VimJK, %VimJK%
+  IniRead, VimSD, %VimIni%, %VimSection%, VimSD, %VimSD%
   IniRead, VimIcon, %VimIni%, %VimSection%, VimIcon, %VimIcon%
   IniRead, VimIconCheck, %VimIni%, %VimSection%, VimIconCheck, %VimIconCheck%
   IniRead, VimIconCheckInterval, %VimIni%, %VimSection%, VimIconCheckInterval, %VimIconCheckInterval%
@@ -574,6 +598,8 @@ VimWriteIni(){
   IniWrite, % VimDisableUnused, % VimIni, % VimSection, VimDisableUnused
   IniWrite, % VimRestoreIME, % VimIni, % VimSection, VimRestoreIME
   IniWrite, % VimJJ, % VimIni, % VimSection, VimJJ
+  IniWrite, % VimJK, % VimIni, % VimSection, VimJK
+  IniWrite, % VimSD, % VimIni, % VimSection, VimSD
   IniWrite, % VimIcon, % VimIni, % VimSection, VimIcon
   IniWrite, % VimIconCheck, % VimIni, % VimSection, VimIconCheck
   IniWrite, % VimIconCheckInterval, % VimIni, % VimSection, VimIconCheckInterval
@@ -622,12 +648,7 @@ Return
 ; }}}
 
 ; Enter vim normal mode {{{
-Esc:: ; Just send Esc at converting, long press for normal Esc.
-  KeyWait, Esc, T0.5
-  if (ErrorLevel){ ; long press
-    Send,{Esc}
-    Return
-  }
+VimSetNormal(){
   VimLastIME := VIM_IME_Get()
   if(VimLastIME){
     if(VIM_IME_GetConverting(A)){
@@ -639,25 +660,16 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
   }else{
     VimSetMode("Vim_Normal")
   }
-Return
+}
 
+Esc:: ; Just send Esc at converting, long press for normal Esc.
 ^[:: ; Go to Normal mode (for vim) with IME off even at converting.
-  KeyWait, [, T0.5
+  KeyWait, Esc, T0.5
   if(ErrorLevel){ ; long press to Esc
-    Send, {Esc}
+    Send,{Esc}
     Return
   }
-  VimLastIME:=VIM_IME_Get()
-  if(VimLastIME){
-    if(VIM_IME_GetConverting(A)){
-      Send,{Esc}
-    }else{
-      VIM_IME_SET()
-      VimSetMode("Vim_Normal")
-    }
-  }else{
-    VimSetMode("Vim_Normal")
-  }
+  VimSetNormal()
 Return
 
 #If WinActive("ahk_group " . VimGroupName) and (InStr(VimMode, "Insert")) and (VimJJ == 1)
@@ -665,8 +677,24 @@ Return
   Input, jout, I T0.1 V L1, j
   if(ErrorLevel == "EndKey:J"){
     SendInput, {BackSpace 2}
-    VimSetMode("Vim_Normal")
+    VimSetNormal()
   }
+Return
+; }}}
+
+#If WinActive("ahk_group " . VimGroupName) and (InStr(VimMode, "Insert")) and (VimJK == 1)
+j & k::
+k & j::
+  SendInput, {BackSpace 1}
+  VimSetNormal()
+Return
+; }}}
+
+#If WinActive("ahk_group " . VimGroupName) and (InStr(VimMode, "Insert")) and (VimSD == 1)
+s & d::
+d & s::
+  SendInput, {BackSpace 1}
+  VimSetNormal()
 Return
 ; }}}
 
