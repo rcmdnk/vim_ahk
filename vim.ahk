@@ -1040,7 +1040,7 @@ VimMove(key="", shift=0){
     Send, ^x
     ClipWait, 1
     VimSetMode("Vim_Normal")
-  }else if(VimMode == ="Vim_ydc_c"){
+  }else if(VimMode == "Vim_ydc_c"){
     Clipboard :=
     Send, ^x
     ClipWait, 1
