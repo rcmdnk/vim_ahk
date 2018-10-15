@@ -767,6 +767,18 @@ Return
   VimSetMode("Vim_Normal")
 Return
 
+;MS Word - Tab Right
+>::
+  Send, ^m
+  VimSetMode("Vim_Normal")
+Return
+
+;MS Word - Tab Left
+<::
+  Send, ^+m
+  VimSetMode("Vim_Normal")
+Return
+
 ; }}}
 
 ; Enter vim insert mode (Exit vim normal mode) {{{
