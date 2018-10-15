@@ -1345,7 +1345,7 @@ Return
 #If WinActive("ahk_group " . VimGroupName) and (VimMode == "Command_w")
 Return::
   Send, ^s
-  VimSetMode("Insert")
+  VimSetMode("Vim_Normal")
 Return
 
 q::
