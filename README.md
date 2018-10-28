@@ -79,13 +79,13 @@ Disable level:
 You can change these options from the right click menu of task tray icon (find `VimMenu`-`Settings` in the list),
 or launch the setting window by `Ctrl-Alt-Shift-v`.
 
-![trymenu](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/trymenu.jpg "trymenu")
+![traymenu](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/traymenu.jpg "traymenu")
 
 ![settings](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/settings.jpg "settings")
 
-If `Icon` is enabled, the task try icon is changed following the mode.
+If `Icon` is enabled, the task tray icon is changed following the mode.
 
-![tryicon](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/tryicon.gif "tryicon")
+![trayicon](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/trayicon.gif "trayicon")
 
 
 ## Main Modes
