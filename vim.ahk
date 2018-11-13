@@ -184,7 +184,7 @@ Return
 ;  WinGet, name, ProcessName, ahk_pid %process%
 ;  WinGetClass, class, ahk_pid %process%
 ;  WinGetTitle, title, ahk_pid %process%
-;  if WinActive("ahk_group VimGroup"){
+;  if WinActive("ahk_group" . VimGroupName){
 ;    Msgbox, 0x40, Vim Ahk,
 ;    (
 ;      Supported
