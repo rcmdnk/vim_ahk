@@ -1658,5 +1658,8 @@ Return
 ; }}}
 ; }}} Vim Mode
 
+; Reset the condition
+#If
+
 ; vim: foldmethod=marker
 ; vim: foldmarker={{{,}}}
