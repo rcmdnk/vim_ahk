@@ -1,5 +1,5 @@
-﻿; This script requires vim installed on the computer. It effectively diffs the results of sending the keys below to a new onenote page vs to a new vim document.
-; This may also be true of e, w and b, due to the way onenote handles words (treating punctuation as a word)
+﻿; This script requires vim installed on the computer. It effectively diffs the results of sending the keys below to a new notepad page vs to a new vim document.
+; This may also be true of e, w and b, due to the way notepad handles words (treating punctuation as a word)
 
 ; Results are outputed as the current time and date in %A_ScriptDir%\testlogs
 
@@ -42,22 +42,22 @@ run, cmd.exe /r gvim,,,VimPID
 WaitForWindowToActivate("- GVIM ") ; Wait for vim to start
 SetWorkingDir %A_ScriptDir%  
 send :imap jj <esc>{return} ; Prepare vim    
-;TODO: Check if onenote already open. Or just ignore? multiple windows may cause problems.
+;TODO: Check if notepad already open. Or just ignore? multiple windows may cause problems.
 ;       May be fixed by making the switch specific to the test page.
-Run, OneNote,,,OneNotePID
-WaitForWindowToActivate("OneNote ") ; Wait for onenote to start
+Run, Notepad,,,NotepadPID
+WaitForWindowToActivate("Notepad ") ; Wait for notepad to start
 sleep, 200
-WinActivate,OneNote
-WaitForWindowToActivate("OneNote")
+WinActivate,Notepad
+WaitForWindowToActivate("Notepad")
 sleep, 300
-send ^nVim Onenote Test{return} ; Create a new page in onenote, name it, move to text section
-WinMaximize,OneNote
+send ^nVim Notepad Test{return} ; Create a new page in notepad, name it, move to text section
+WinMaximize,Notepad
 
-run, %A_ScriptDir%/vim_onenote.ahk,,, AHKVimPID ; Run our vim emulator script.
+run, %A_ScriptDir%/vim_notepad.ahk,,, AHKVimPID ; Run our vim emulator script.
 
 ; Set all our scripts and two testing programs to Above normal priority, for test reliability.
 Process, Priority, ,A ; This script
-Process, Priority, OneNotePID,A
+Process, Priority, NotepadPID,A
 Process, Priority, VimPID,A
 Process, Priority, AHKVimPID,A
 ; They all get killed on script end anyway.
@@ -74,7 +74,7 @@ The fourth line contains     some additional whitespace.
 What should I put on the 5th line?A missing space, perhaps
 This line 6 should be longer than the line before it and after it to test kj
 No line, including 7, can be longer than 80 characters.
-This is because onenote wraps automatically, (line 8)
+This is because notepad wraps automatically, (line 8)
 And treats a wrapped line as separate lines (line 9)
 )
 
@@ -118,15 +118,15 @@ SwitchToVim(){
     WaitForWindowToActivate(" - GVIM")
 }
 
-SwitchToOnenote(){
-    WinActivate,OneNote
-    WaitForWindowToActivate("OneNote")
+SwitchToNotepad(){
+    WinActivate,Notepad
+    WaitForWindowToActivate("Notepad")
 }
 
-SendTestToOnenoteAndReturnResult(test){
+SendTestToNotepadAndReturnResult(test){
     Global SampleText
-    SwitchToOnenote()
-    ; Make sure at start of body of onenote, and it's empty.
+    SwitchToNotepad()
+    ; Make sure at start of body of notepad, and it's empty.
     send ^a^a{delete}
     ; Ensure insert mode for the sample text.
     sendevent i{backspace}
@@ -175,20 +175,20 @@ SendTestToVimAndReturnResult(test){
 
 TestAndCompareOutput(test){
     global Log
-    OnenoteOutput := SendTestToOnenoteAndReturnResult(test)
+    NotepadOutput := SendTestToNotepadAndReturnResult(test)
     VimOutput := SendTestToVimAndReturnResult(test)
-    CompareStrings(OnenoteOutput, VimOutput, test)
+    CompareStrings(NotepadOutput, VimOutput, test)
 }
 
 ; Use a diff, then log the result in temp files
-CompareStrings(OnenoteOutput, VIMOutput, CurrentTest){
+CompareStrings(NotepadOutput, VIMOutput, CurrentTest){
     Global LogFileName
     Global TestsFailed
     ; Store files in separate dir.
     SetWorkingDir %A_ScriptDir%\TestingLogs  
-    file1 := FileOpen("OnenoteOutput", "w")
+    file1 := FileOpen("NotepadOutput", "w")
     file2 := FileOpen("VIMOutput", "w")
-    file1.write(OnenoteOutput)
+    file1.write(NotepadOutput)
     file2.write(VIMOutput)
     file1.close()
     file2.close()
@@ -196,7 +196,7 @@ CompareStrings(OnenoteOutput, VIMOutput, CurrentTest){
     ; This line runs the DOS fc (file compare) program and enters the reults in a file.
     ; Could also consider using comp.exe /AL instead, to compare individual characters. Possibly more useful.
     ; Comp sucks. Wow. Using fc, but only shows two lines: the different one and the one after. Hard to see, but it'll do for now.
-    DiffResult := ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c fc.exe /LB2 /N OnenoteOutput VIMOutput").StdOut.ReadAll() 
+    DiffResult := ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c fc.exe /LB2 /N NotepadOutput VIMOutput").StdOut.ReadAll() 
     IfNotInString,DiffResult, FC: no differences encountered
     {
         TestsFailed := True
@@ -206,7 +206,7 @@ CompareStrings(OnenoteOutput, VIMOutput, CurrentTest){
         LogFile.Write(LogEntry) ; "Test = ""%CurrentTest%""`n%DiffResult%`n`n")
         LogFile.Close()
     }
-    FileDelete, OnenoteOutput
+    FileDelete, NotepadOutput
     FileDelete, VIMOutput
     FileDelete, _.sw*
 }
@@ -215,8 +215,8 @@ CompareStrings(OnenoteOutput, VIMOutput, CurrentTest){
 EndTesting(){
     Global TestsFailed
     Global LogFileName
-    ; Delete the new page in onenote, close onenote
-    SwitchToOnenote()
+    ; Delete the new page in notepad, close notepad
+    SwitchToNotepad()
     send ^+A
     send {delete}
     send !{f4}
@@ -246,10 +246,10 @@ EndTesting(){
 
 
 EndScript(exitCode){
-    Global OneNotePID
+    Global NotepadPID
     Global AHKVimPID
     Global VimPID
-    process, Close, %OneNotePID%
+    process, Close, %NotepadPID%
     process, Close, %AHKVimPID%
     process, Close, %VimPID%
     if exitCode = 1
