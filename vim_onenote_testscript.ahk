@@ -38,22 +38,21 @@ LogFileName = testLogs\%A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
 
 ; Initialise the programs
 SetWorkingDir %A_ScriptDir%\testLogs  ; Temp vim files are put out of the way.
-run, cmd.exe /r gvim,,,VimPID
-WaitForWindowToActivate("- GVIM ") ; Wait for vim to start
-SetWorkingDir %A_ScriptDir%  
-send :imap jj <esc>{return} ; Prepare vim    
-;TODO: Check if notepad already open. Or just ignore? multiple windows may cause problems.
-;       May be fixed by making the switch specific to the test page.
+run, cmd.exe /r gvim -u NONE,,,VimPID
+WaitForWindowToActivate("VIM") ; Wait for vim to start
+SetWorkingDir %A_ScriptDir%
+
+send :imap jj <esc>{return} ; Prepare vim
+
 Run, Notepad,,,NotepadPID
-WaitForWindowToActivate("Notepad ") ; Wait for notepad to start
+WaitForWindowToActivate("Notepad") ; Wait for notepad to start
 sleep, 200
 WinActivate,Notepad
 WaitForWindowToActivate("Notepad")
 sleep, 300
-send ^nVim Notepad Test{return} ; Create a new page in notepad, name it, move to text section
 WinMaximize,Notepad
 
-run, %A_ScriptDir%/vim_notepad.ahk,,, AHKVimPID ; Run our vim emulator script.
+run, %A_ScriptDir%/vim.ahk,,, AHKVimPID ; Run our vim emulator script.
 
 ; Set all our scripts and two testing programs to Above normal priority, for test reliability.
 Process, Priority, ,A ; This script
@@ -215,11 +214,9 @@ CompareStrings(NotepadOutput, VIMOutput, CurrentTest){
 EndTesting(){
     Global TestsFailed
     Global LogFileName
-    ; Delete the new page in notepad, close notepad
     SwitchToNotepad()
-    send ^+A
-    send {delete}
     send !{f4}
+    send n
     SwitchToVim()
     send :q{!}
     send {return} ; Exit vim.
