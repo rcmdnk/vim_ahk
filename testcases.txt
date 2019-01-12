@@ -3,7 +3,9 @@
 ; Use {esc} to send an escape key, and {return} to send a newline.
 ; Otherwise it is best to avoid {} characters.
 ; Please put a comment at the end of your test case stating what it tests.
-; Sample text (reference only, see testscript for actual text.)
+;
+; Sample text (reference only, see testscript for actual text):
+;
 ;This is the first line of the test, and contains a comma and a period.
 ;Second line here
 ;3rd line. The second line is shorter than both 1st and 3rd line.
@@ -14,6 +16,7 @@
 ;This is because onenote wraps automatically, (line 8)
 ;And treats a wrapped line as separate lines (line 9)
 ;
+; First sample line is actually blank. Tests no input/metatest.
 
 iAt start of first lin.{esc}ie{esc}IWord ; i,I
 ahe {esc}A Also this.; a, A
