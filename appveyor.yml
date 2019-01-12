@@ -1,0 +1,81 @@
+version: 0.5.{build}
+
+#branches:
+#  only:
+#    - master
+
+
+#clone_folder: C:\Users\appveyor\Desktop
+
+environment:
+  # APPVEYOR_RDP_PASSWORD=""
+  github_access:
+    secure: qls7CpW54Nf3d/r2FRdxQJVsZEOZRIKnUNLmEV+OmiYv7jl3y+hZjTZF7hL4XUgw
+  git_email:
+    secure: Ai43hWJZMaTrKY0n/9bALQtFCURXqb8aCE3ZMPzjpoU=
+  git_user:
+    secure: 6y/91jUe4skCVkd8DQpFkA==
+  #appveyor_rdp_password:
+    #secure: iBRjDfC6MdkPoDujAvgkYiHHmM3hXHFHok2iK+RqQ3LIRU9GagEaeEVNRfjmQkej
+
+artifacts:
+  - path: vim_ahk.exe
+    name: Main executable
+  - path: vim_ime.exe
+    name: IME Executable
+  - path: testLogs/*
+    name: failed test logs
+
+init:
+  # Initialise remote desktop stuff
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+  # Set env variables
+  # - cmd: setx rdpPass %appveyor_rdp_password%
+ 
+
+install:
+  # Chocolaty install autohotkey and vim for testing
+  - cinst autohotkey.install
+  - cinst vim
+  - cmd: refreshenv
+
+
+# Build.bat includes logic for running test program.
+# Will fail if test fails.
+
+build_script:
+  # - cmd: start /w "C:\\Program Files\\AutoHotkey\\Autohotkey.exe" "%APPVEYOR_BUILD_FOLDER%\\appveyor_setup.ahk" && build.bat /t
+  - cmd: build.bat /t
+
+after_test:
+  - git status
+  - git config --global credential.helper store
+  - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access):x-oauth-basic@github.com`n"
+  - git config --global user.email %git_email%
+  - git config --global user.name %git_user%
+  - git config --list
+  - git remote add upstream https://github.com/%APPVEYOR_REPO_NAME%
+  - git fetch upstream
+  - git checkout upstream/master
+  - git add .
+    #- git commit -a -m "[skip ci] Appveyor build"
+    #- git push origin HEAD:master
+
+deploy:
+  release: vim_ahk-v$(appveyor_build_version)
+  description: 'Latest CI build (add own description and update release name)'
+  provider: GitHub
+  auth_token: $(github_access) # your encrypted token from GitHub
+  artifact: Executable
+  draft: true
+  prerelease: true
+  on:
+    appveyor_repo_tag: true        # deploy on tag push only
+    #branch: master                 # release from master branch only
+
+# Allow remote desktop access
+on_finish:
+  # - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+test: off
