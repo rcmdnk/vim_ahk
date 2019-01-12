@@ -10,10 +10,10 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
 #warn
 sendlevel, 1 ; So these commands get triggered by autohotkey.
-SetTitleMatchMode 2 ; window title functions will match by containing the match text. 
+SetTitleMatchMode 2 ; window title functions will match by containing the match text.
 SetKeyDelay, 50 ; Only affects sendevent, used for sending the test
 ; (gives vim script time to react).
-DetectHiddenWindows, on 
+DetectHiddenWindows, on
 
 ; Contains clipboard related functions, among others.
 #include %A_ScriptDir%\utility_functions.ahk
@@ -139,11 +139,11 @@ SendTestToNotepadAndReturnResult(test){
     Clipwait
     sendevent ^v ; Paste, for some reason normal send won't work.
     RestoreClipboard()
-    sleep,50 
+    sleep,50
     ; Make sure we are in normal mode to start with, at start of text.
     send {esc}
     sleep, 50
-    send ^{home} 
+    send ^{home}
     sendevent %test%
     sleep, 50
     send ^a^a^a ; Ensure we select all of the inserted text.
@@ -193,7 +193,7 @@ CompareStrings(NotepadOutput, VIMOutput, CurrentTest){
     Global LogFileName
     Global TestsFailed
     ; Store files in separate dir.
-    SetWorkingDir %A_ScriptDir%\TestingLogs  
+    SetWorkingDir %A_ScriptDir%\TestingLogs
     file1 := FileOpen("NotepadOutput", "w")
     file2 := FileOpen("VIMOutput", "w")
     file1.write(NotepadOutput)
@@ -204,7 +204,7 @@ CompareStrings(NotepadOutput, VIMOutput, CurrentTest){
     ; This line runs the DOS fc (file compare) program and enters the reults in a file.
     ; Could also consider using comp.exe /AL instead, to compare individual characters. Possibly more useful.
     ; Comp sucks. Wow. Using fc, but only shows two lines: the different one and the one after. Hard to see, but it'll do for now.
-    DiffResult := ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c fc.exe /LB2 /N NotepadOutput VIMOutput").StdOut.ReadAll() 
+    DiffResult := ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c fc.exe /LB2 /N NotepadOutput VIMOutput").StdOut.ReadAll()
     IfNotInString,DiffResult, FC: no differences encountered
     {
         TestsFailed := True
@@ -233,7 +233,7 @@ EndTesting(){
     if (TestsFailed == True)
     {
         if not isQuiet() {
-            msgbox,4,,At least one test has failed!`nResults are in %LogFileName%`nOpen log? 
+            msgbox,4,,At least one test has failed!`nResults are in %LogFileName%`nOpen log?
             IfMsgBox Yes
             {
                 run %LogFileName%
