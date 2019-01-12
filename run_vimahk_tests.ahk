@@ -157,15 +157,15 @@ SendTestToVimAndReturnResult(test){
     Global SampleText
     SwitchToVim()
     ; Ensure insert mode for the sample text.
-    send i{backspace}
-    send %SampleText%
+    ; send i{backspace}
+    ; send %SampleText%
     ; Paste sample text. Faster, more reliable.
-    ; SaveClipboard()
-    ; Clipboard :=""
-    ; Clipboard := SampleText
-    ; Clipwait
-    ; send `"+p ; Paste
-    ; RestoreClipboard()
+    SaveClipboard()
+    Clipboard :=""
+    Clipboard := SampleText
+    Clipwait
+    send "*p ; Paste
+    RestoreClipboard()
     sleep, 50
     ; Make sure we are in normal mode to start with, at start of text.
     send {esc}^{home}
