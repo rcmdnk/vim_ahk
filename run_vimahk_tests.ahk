@@ -9,7 +9,7 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
 #warn
-sendlevel, 1 ; So these commands get triggered by autohotkey.
+sendlevel, 1 ; So vim commands get triggered by this script
 SetTitleMatchMode 2 ; window title functions will match by containing the match text.
 SetKeyDelay, 50 ; Only affects sendevent, used for sending the test
 ; (gives vim script time to react).
@@ -40,6 +40,7 @@ LogFileName = testLogs\%A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
 SetWorkingDir %A_ScriptDir%\testLogs  ; Temp vim files are put out of the way.
 run, cmd.exe /r gvim -u NONE,,,VimPID
 WaitForWindowToActivate("VIM") ; Wait for vim to start
+WinMaximize,VIM
 SetWorkingDir %A_ScriptDir%
 
 send :imap jj <esc>{return} ; Prepare vim
@@ -130,14 +131,14 @@ SendTestToNotepadAndReturnResult(test){
     ; Make sure at start of body of notepad, and it's empty.
     send ^a^a{delete}
     ; Ensure insert mode for the sample text.
-    sendevent i{backspace}
+    send i{backspace}
     sleep, 20
     ; Paste sample text. Faster, more reliable.
     SaveClipboard()
     Clipboard :=""
     Clipboard := SampleText
     Clipwait
-    sendevent ^v ; Paste, for some reason normal send won't work.
+    send ^v ; Paste
     RestoreClipboard()
     sleep,50
     ; Make sure we are in normal mode to start with, at start of text.
@@ -146,7 +147,8 @@ SendTestToNotepadAndReturnResult(test){
     send ^{home}
     sendevent %test%
     sleep, 50
-    send ^a^a^a ; Ensure we select all of the inserted text.
+    send i{backspace}^a ; Ensure we select all of the inserted text.
+    sleep, 50
     output := GetSelectedText()
     ; Delete text ready for next test
     send {backspace}
