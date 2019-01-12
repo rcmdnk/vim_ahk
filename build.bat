@@ -20,4 +20,8 @@ if errorlevel 1 (
 )
 REM You need intall ahk2exe, this script assumes it is at \bin_drop\ahk2exe
 "%AHKPath%\compiler\ahk2exe.exe" /in vim.ahk /out vim_ahk.exe
+<<<<<<< HEAD
 REM "%AHKPath%\compiler\ahk2exe.exe" /in IME.ahk /out vim_ime.exe
+=======
+"%AHKPath%\compiler\ahk2exe.exe" /in IME.ahk /out vim_ime.exe
+>>>>>>> 6bf032a... Remove executables and add buildscript + appveyor setup
