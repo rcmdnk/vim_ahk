@@ -19,13 +19,14 @@
 ; First sample line is actually blank. Tests no input/metatest.
 
 iAt start of first lin.{esc}ie{esc}IWord ; i,I
-ahe {esc}A Also this.; a, A
-w$^ihBOL; ^, no whitespace
-w$0ihBOL; 0, no whitespace
+ahe {esc}{esc}A Also this.; a, A, double esc
+w$^iBOL; ^, no whitespace
+I    {esc}$^ialmostBOL; ^, whitespace
+w$0iBOL; 0, no whitespace
 $bbbi[3rd word from end]; b with punctuation?
-; dd{control down}{end}{control up}p; delete line, paste linewise at final line.
-dw; d with single motion
-d4w; d with repeat motion
 GiEOF; G, go to end of file.
 GiEOF{esc}ggiBOF; gg (go to beginning of file)
-;5ggi5th line; go to line
+ddGp; delete line, paste linewise at final line.
+dw; d with single motion
+d4w; d with repeat motion
+5ggi5th line; go to line

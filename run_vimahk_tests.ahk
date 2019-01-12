@@ -132,7 +132,9 @@ SendTestToNotepadAndReturnResult(test){
     Global SampleText
     SwitchToNotepad()
     ; Make sure at start of body of notepad, and it's empty.
-    send ^a^a{delete}
+    send {esc}
+    sleep, 50
+    send i^a^a{delete}
     ; Ensure insert mode for the sample text.
     send i{backspace}
     sleep, 20
@@ -150,8 +152,10 @@ SendTestToNotepadAndReturnResult(test){
     send ^{home}
     sendevent %test%
     sleep, 50
-    send i{backspace}^a ; Ensure we select all of the inserted text.
+    ; Ensure we select all of the inserted text.
+    send {esc}
     sleep, 50
+    send i^a
     output := GetSelectedText()
     ; Delete text ready for next test
     send {backspace}
