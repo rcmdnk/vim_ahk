@@ -35,10 +35,13 @@ Paste(){
 }
 
 RestoreClipboard(){
+    global ClipSaved
+    if (ClipSaved = ""){
+        return
+    }
     ; empty clip so clipwait works
     Clipboard :=
     ;restore original clipboard
-    global ClipSaved
     Clipboard := ClipSaved
     ClipWait
     ClipSaved := ; free memory
@@ -55,11 +58,13 @@ GetSelectedText(){
 ; It doesn't.
 ;  regex f&r: s/WinWaitActive,([\w -]+)/WaitForWindowToActivate("$1")/g
 WaitForWindowToActivate(WindowTitle){
-    while not WinActive(WindowTitle){
-       sleep, 20
-    }
-    sleep, 100
-    return True
+    WinWaitActive %WindowTitle%
+    return
+    ; while not WinActive(WindowTitle){
+    ;    sleep, 20
+    ; }
+    ; sleep, 100
+    ; return True
 }
 
 HackWinActivate(WindowTitle){
