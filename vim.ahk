@@ -58,45 +58,43 @@ GroupAdd, VimOneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
 GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
 ; }}}
 
-; Setting variables
-; First check if they are already set (in mother script).
-; Second read settings if it exits.
+; Setting variables {{{
 
 ; If IME status is restored or not at entering insert mode. 1 for restoring. 0 for not to restore (always IME off at enterng insert mode).
-VimRestoreIMEIni := 1
-if VimRestoreIME is not integer
-  VimRestoreIME := VimRestoreIMEIni
-VimRestoreIME_TT := "Restore IME status at entering Insert mode."
+settings := [{name: "VimRestoreIME"
+, default: 1
+, descriptionLong: "Restore IME status at entering Insert mode"
+, descriptionShort: "Restore IME status at entering Insert mode."}]
 
 ; Set 1 to asign jj to enter Normal mode
-VimJJIni := 0
-if VimJJ is not integer
-  VimJJ := VimJJIni
-VimJJ_TT := "Asign jj to enter Normal mode"
+settings.push({name: "VimJJ"
+, default: 0
+, descriptionShort: "jj enters Normal mode"
+, descriptionLong: "Asign jj to enter Normal mode."})
 
 ; Set 1 to asign jk to enter Normal mode
-VimJKIni := 0
-if VimJK is not integer
-  VimJK := VimJKIni
-VimJK_TT := "Asign jk to enter Normal mode"
+settings.push({name: "VimJK"
+, default: 0
+, descriptionShort: "jk enters Normal mode"
+, descriptionLong: "Asign jk to enter Normal mode."})
 
 ; Set 1 to asign sd to enter Normal mode
-VimSDIni := 0
-if VimSD is not integer
-  VimSD := VimSDIni
-VimSD_TT := "Asign sd to enter Normal mode"
+settings.push({name: "VimSD"
+, default: 0
+, descriptionShort: "sd enters Normal mode"
+, descriptionLong: "Asign sd to enter Normal mode."})
 
 ; Set 1 to enable Tray Icon for Vim Modes`nSet 0 for original Icon
-VimIconIni := 1
-if VimIcon is not integer
-  VimIcon := VimIconIni
-VimIcon_TT := "Enable tray icon for Vim Modes"
+settings.push({name: "VimIcon"
+, default: 1
+, descriptionShort: "Enable tray icon"
+, descriptionLong: "Enable tray icon for Vim Modes."})
 
 ; Set 1 to enable Tray Icon check
-VimIconCheckIni := 1
-if VimIconCheck is not integer
-  VimIconCheck := VimIconCheckIni
-VimIconCheck_TT := "Enable tray icon check"
+settings.push({name: "VimIconCheck"
+, default: 1
+, descriptionShort: "Enable tray icon check"
+, descriptionLong: "Enable tray icon check."})
 
 ; Disable unused keys in Normal mode
 VimDisableUnusedIni := 3
@@ -136,6 +134,8 @@ VimGuiSettingsOK_TT := "Reflect changes and exit"
 VimGuiSettingsReset_TT := "Reset to the default values"
 VimGuiSettingsCancel_TT := "Don't change and exit"
 VimAhkGitHub_TT := VimHomepage
+
+; }}} settings
 
 ; Read Ini
 VimReadIni()
@@ -208,33 +208,18 @@ MenuVimStatus:
 Return
 
 MenuVimSettings:
+  global boxCreated
   Gui, VimGuiSettings:+LabelVimGuiSettings
   Gui, VimGuiSettings:-MinimizeBox
   Gui, VimGuiSettings:-Resize
-  Gui, VimGuiSettings:Add, GroupBox, xm X+10 YM+10 Section w370 h455, Settings
-  Gui, VimGuiSettings:Add, Checkbox, XS+10 YS+20 vVimRestoreIME, Restore IME at entering Insert mode
-  if(VimRestoreIME == 1){
-    GuiControl, VimGuiSettings:, VimRestoreIME, 1
-  }
-  Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimJJ, JJ to enter Normal mode
-  if(VimJJ == 1){
-    GuiControl, VimGuiSettings:, VimJJ, 1
-  }
-  Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimJK, JK to enter Normal mode
-  if(VimJK == 1){
-    GuiControl, VimGuiSettings:, VimJK, 1
-  }
-  Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimSD, SD to enter Normal mode
-  if(VimSD == 1){
-    GuiControl, VimGuiSettings:, VimSD, 1
-  }
-  Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimIcon, Enable tray icon
-  if(VimIcon == 1){
-    GuiControl, VimGuiSettings:, VimIcon, 1
-  }
-  Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 vVimIconCheck, Enable icon check
-  if(VimIconCheck == 1){
-    GuiControl, VimGuiSettings:, VimIconCheck, 1
+  boxCreated=false
+  for i, s in settings {
+    ; if (s["type"] = "checkbox"){
+      addCheckbox(s["name"], s["default"], s["descriptionShort"], s["descriptionLong"])
+    ; }else{
+    ;   if warn
+    ;     msgbox % "Warning: Invalid setting type specified"
+    ; }
   }
   Gui, VimGuiSettings:Add, Text, XS+10 Y+10 gVimDisableUnusedLevel vVimDisableUnusedLevel, Disable unused keys in Normal mode
   Gui, VimGuiSettings:Add, DropDownList, W320 vVimDisableUnusedValue Choose%VimDisableUnused%, %VimDisableUnused1%|%VimDisableUnused2%|%VimDisableUnused3%
@@ -325,14 +310,12 @@ VimGuiSettingsReset:
   IfExist, %VimIni%
     FileDelete, %VimIni%
 
+  for i, s in settings {
+    name := s["name"]
+    %name% := s["default"]
+  }
   VimGroup := VimGroupIni
   VimDisableUnused := VimDisableUnusedIni
-  VimRestoreIME := VimRestoreIMEIni
-  VimJJ := VimJJIni
-  VimJK := VimJKIni
-  VimSD := VimSDIni
-  VimIcon := VimIconIni
-  VimIconCheck := VimIconCheckIni
   VimIconCheckInterval := VimIconCheckIntervalIni
   VimVerbose := VimVerboseIni
 
@@ -628,6 +611,47 @@ Return
 VimStopStatusCheck:
   SetTimer, VimStatusCheckTimer, off
 Return
+
+; Adds a setting to the UI and default ini.
+; name: name to use for the setting
+; DefaultVal: The value to use before setting and when resetting
+; descriptionShort: Label in the UI
+; descriptionLong: Tooltip text in UI.
+addSetting(name, defaultVal, descriptionShort, descriptionLong, type="checkbox"){
+  ; global %name%
+  global
+  ; msgbox % "Y = "Y
+  ; msgbox % "XS = "XS
+  %name%Ini := defaultVal
+  ; Blank variables are unset
+  if (%name% = ""){
+    %name% := defaultVal
+  }
+  %name%_TT := descriptionLong
+
+  ; if (type = "checkbox"){
+  ;   addCheckbox(name, defaultVal, descriptionShort, descriptionLong)
+  ; }else{
+  ;   if warn
+  ;     msgbox % "Warning: Invalid setting type specified"
+  ; }
+}
+
+addCheckbox(name, defaultVal, descriptionShort, descriptionLong){
+  global boxCreated
+  global settings
+  checkboxRows := settings.Length() + 1
+  if boxCreated=false
+  {
+    Gui, VimGuiSettings:Add, GroupBox, w320 R%checkboxRows% Section, Settings
+    boxCreated=true
+  }
+
+  Gui, VimGuiSettings:Add, Checkbox, xs+10 yp+20 v%name%, %descriptionShort%
+  if(%name% == 1){
+    GuiControl, VimGuiSettings:, %name%, 1
+  }
+}
 ; }}}
 
 ; Vim mode {{{
