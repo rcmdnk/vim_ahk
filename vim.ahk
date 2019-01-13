@@ -676,7 +676,7 @@ i::VimSetMode("Insert")
 
 +i::
   Send, {Home}
-  ; Sleep, 200
+  Sleep, 200
   VimSetMode("Insert")
 Return
 
@@ -687,7 +687,7 @@ Return
 
 +a::
   Send, {End}
-  ; Sleep, 200
+  Sleep, 200
   VimSetMode("Insert")
 Return
 
@@ -698,7 +698,7 @@ Return
 
 +o::
   Send, {Up}{End}{Enter}
-  ; Sleep, 200
+  Sleep, 200
   VimSetMode("Insert")
 Return
 ; }}}
@@ -949,7 +949,7 @@ VimMove(key="", shift=0){
     }else if(key == "$"){
       Send, {End}
     }else if(key == "^"){
-      Send, {Home}^{right}^{left}
+      Send, {End}^{Right}
     ; Words
     }else if(key == "w"){
       Send, ^{Right}
