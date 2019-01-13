@@ -14,7 +14,7 @@ SetTitleMatchMode 2 ; window title functions will match by containing the match 
 ; Only affects sendevent, used for sending the test one key at a time.
 ; Gives the vim script time to interpret it, also useful to increase when
 ; debugging failures.
-SetKeyDelay, 50
+SetKeyDelay, 80
 ; (gives vim script time to react).
 DetectHiddenWindows, on
 
