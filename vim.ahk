@@ -61,40 +61,41 @@ GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
 ; Setting variables {{{
 
 ; If IME status is restored or not at entering insert mode. 1 for restoring. 0 for not to restore (always IME off at enterng insert mode).
-settings := [{name: "VimRestoreIME"
-, default: 1
-, descriptionLong: "Restore IME status at entering Insert mode"
-, descriptionShort: "Restore IME status at entering Insert mode."}]
+VimCheckboxes := [{name: "VimRestoreIME", default: 1
+, description: "Restore IME status at entering Insert mode"
+, popup: "Restore IME status at entering Insert mode."}]
 
 ; Set 1 to asign jj to enter Normal mode
-settings.push({name: "VimJJ"
-, default: 0
-, descriptionShort: "jj enters Normal mode"
-, descriptionLong: "Asign jj to enter Normal mode."})
+VimCheckboxes.push({name: "VimJJ", default: 0
+, description: "JJ enters Normal mode"
+, popup: "Assign JJ enters Normal mode."})
 
 ; Set 1 to asign jk to enter Normal mode
-settings.push({name: "VimJK"
-, default: 0
-, descriptionShort: "jk enters Normal mode"
-, descriptionLong: "Asign jk to enter Normal mode."})
+VimCheckboxes.push({name: "VimJK", default: 0
+, description: "JK enters Normal mode"
+, popup: "Assign JK enters Normal mode."})
 
 ; Set 1 to asign sd to enter Normal mode
-settings.push({name: "VimSD"
-, default: 0
-, descriptionShort: "sd enters Normal mode"
-, descriptionLong: "Asign sd to enter Normal mode."})
+VimCheckboxes.push({name: "VimSD", default: 0
+, description: "SD enters Normal mode"
+, popup: "Assign SD enters Normal mode."})
 
-; Set 1 to enable Tray Icon for Vim Modes`nSet 0 for original Icon
-settings.push({name: "VimIcon"
-, default: 1
-, descriptionShort: "Enable tray icon"
-, descriptionLong: "Enable tray icon for Vim Modes."})
+;; Set 1 to enable Tray Icon for Vim Modes. Set 0 for original Icon
+VimCheckboxes.push({name: "VimIcon", default: 1
+, description: "Enable tray icon"
+, popup: "Enable tray icon for Vim Modes."})
 
 ; Set 1 to enable Tray Icon check
-settings.push({name: "VimIconCheck"
-, default: 1
-, descriptionShort: "Enable tray icon check"
-, descriptionLong: "Enable tray icon check."})
+VimCheckboxes.push({name: "VimIconCheck", default: 1
+, description: "Enable tray icon check"
+, popup: "Enable tray icon check."})
+
+for i, s in VimCheckboxes {
+  name := s["name"]
+  %name%_TT := s["popup"]
+  if %name% is not integer
+  %name% := s["default"]
+}
 
 ; Disable unused keys in Normal mode
 VimDisableUnusedIni := 3
@@ -135,7 +136,7 @@ VimGuiSettingsReset_TT := "Reset to the default values"
 VimGuiSettingsCancel_TT := "Don't change and exit"
 VimAhkGitHub_TT := VimHomepage
 
-; }}} settings
+; }}} Setting variables
 
 ; Read Ini
 VimReadIni()
@@ -208,30 +209,28 @@ MenuVimStatus:
 Return
 
 MenuVimSettings:
-  global boxCreated
+  global VimCheckboxesCreated
   Gui, VimGuiSettings:+LabelVimGuiSettings
   Gui, VimGuiSettings:-MinimizeBox
   Gui, VimGuiSettings:-Resize
-  boxCreated=false
-  for i, s in settings {
-    ; if (s["type"] = "checkbox"){
-      addCheckbox(s["name"], s["default"], s["descriptionShort"], s["descriptionLong"])
-    ; }else{
-    ;   if warn
-    ;     msgbox % "Warning: Invalid setting type specified"
-    ; }
+  checkboxes_rows := VimCheckboxes.Length()
+  height := checkboxes_rows * 22 + 370
+  Gui, VimGuiSettings:Add, GroupBox, xm X+10 YM+10 Section W370 H%height%, Settings
+  VimCheckboxesCreated := 0
+  for i, s in VimCheckboxes {
+    VimAddCheckbox(s["name"], s["default"], s["description"])
   }
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+10 gVimDisableUnusedLevel vVimDisableUnusedLevel, Disable unused keys in Normal mode
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimDisableUnusedLevel vVimDisableUnusedLevel, Disable unused keys in Normal mode
   Gui, VimGuiSettings:Add, DropDownList, W320 vVimDisableUnusedValue Choose%VimDisableUnused%, %VimDisableUnused1%|%VimDisableUnused2%|%VimDisableUnused3%
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+10 gVimIconCheckIntervalText vVimIconCheckIntervalText, Icon check interval (ms)
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimIconCheckIntervalText vVimIconCheckIntervalText, Icon check interval (ms)
   Gui, VimGuiSettings:Add, Edit, gVimIconCheckIntervalEdit vVimIconCheckIntervalEdit
   Gui, VimGuiSettings:Add, UpDown, vVimIconCheckInterval Range100-1000000, %VimIconCheckInterval%
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+10 gVimVerboseLevel vVimVerboseLevel, Verbose level
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimVerboseLevel vVimVerboseLevel, Verbose level
   Gui, VimGuiSettings:Add, DropDownList, vVimVerboseValue Choose%VimVerbose%, %VimVerbose1%|%VimVerbose2%|%VimVerbose3%|%VimVerbose4%
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+10 gVimGroupText vVimGroupText, Applications
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimGroupText vVimGroupText, Applications
   StringReplace, VimGroupList, VimGroup, %VimGroupDel%, `n, All
   Gui, VimGuiSettings:Add, Edit, XS+10 Y+10 R10 W300 Multi vVimGroupList, %VimGroupList%
-  Gui, VimGuiSettings:Add, Text, XM+20 Y+20, Check
+  Gui, VimGuiSettings:Add, Text, XM+20 Y+30, Check
   Gui, VimGuiSettings:Font, Underline
   Gui, VimGuiSettings:Add, Text, X+5 cBlue gVimAhkGitHub vVimAhkGitHub, HELP
   Gui, VimGuiSettings:Font, Norm
@@ -310,7 +309,7 @@ VimGuiSettingsReset:
   IfExist, %VimIni%
     FileDelete, %VimIni%
 
-  for i, s in settings {
+  for i, s in VimCheckboxes {
     name := s["name"]
     %name% := s["default"]
   }
@@ -612,42 +611,15 @@ VimStopStatusCheck:
   SetTimer, VimStatusCheckTimer, off
 Return
 
-; Adds a setting to the UI and default ini.
-; name: name to use for the setting
-; DefaultVal: The value to use before setting and when resetting
-; descriptionShort: Label in the UI
-; descriptionLong: Tooltip text in UI.
-addSetting(name, defaultVal, descriptionShort, descriptionLong, type="checkbox"){
-  ; global %name%
-  global
-  ; msgbox % "Y = "Y
-  ; msgbox % "XS = "XS
-  %name%Ini := defaultVal
-  ; Blank variables are unset
-  if (%name% = ""){
-    %name% := defaultVal
-  }
-  %name%_TT := descriptionLong
-
-  ; if (type = "checkbox"){
-  ;   addCheckbox(name, defaultVal, descriptionShort, descriptionLong)
-  ; }else{
-  ;   if warn
-  ;     msgbox % "Warning: Invalid setting type specified"
-  ; }
-}
-
-addCheckbox(name, defaultVal, descriptionShort, descriptionLong){
-  global boxCreated
-  global settings
-  checkboxRows := settings.Length() + 1
-  if boxCreated=false
-  {
-    Gui, VimGuiSettings:Add, GroupBox, w320 R%checkboxRows% Section, Settings
-    boxCreated=true
+VimAddCheckbox(name, defaultVal, description){
+  global VimCheckboxesCreated
+  if(VimCheckboxesCreated == 0){
+    Gui, VimGuiSettings:Add, Checkbox, XS+10 YS+20 v%name%, %description%
+    VimCheckboxesCreated  := 1
+  }else{
+    Gui, VimGuiSettings:Add, Checkbox, XS+10 Y+10 v%name%, %description%
   }
 
-  Gui, VimGuiSettings:Add, Checkbox, xs+10 yp+20 v%name%, %descriptionShort%
   if(%name% == 1){
     GuiControl, VimGuiSettings:, %name%, 1
   }
