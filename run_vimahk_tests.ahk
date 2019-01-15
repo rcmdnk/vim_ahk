@@ -42,8 +42,9 @@ LogFileName = testLogs\%A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
 ; Initialise the programs
 SetWorkingDir %A_ScriptDir%\testLogs  ; Temp vim files are put out of the way.
 run, cmd.exe /r gvim -u NONE,,,VimPID
-WaitForWindowToActivate("VIM") ; Wait for vim to start
-WinMaximize,VIM
+sleep, 200
+WaitForWindowToActivate("ahk_class Vim") ; Wait for vim to start
+WinMaximize,ahk_class Vim
 SetWorkingDir %A_ScriptDir%
 
 send :imap jj <esc>{return} ; Prepare vim
@@ -51,12 +52,9 @@ send :imap jj <esc>{return} ; Prepare vim
 send :imap ^q`r^q`n ^q{return 2}
 
 Run, Notepad,,,NotepadPID
-WaitForWindowToActivate("Notepad") ; Wait for notepad to start
 sleep, 200
-WinActivate,Notepad
-WaitForWindowToActivate("Notepad")
-sleep, 300
-WinMaximize,Notepad
+WaitForWindowToActivate("ahk_class Notepad") ; Wait for notepad to start
+WinMaximize, ahk_class Notepad
 
 run, %A_ScriptDir%/vim.ahk --testing,,, AHKVimPID ; Run our vim emulator script.
 
@@ -119,13 +117,13 @@ RunTests(){
 }
 
 SwitchToVim(){
-    WinActivate, - GVIM
-    WaitForWindowToActivate(" - GVIM")
+    WinActivate, ahk_class Vim
+    WaitForWindowToActivate("ahk_class Vim")
 }
 
 SwitchToNotepad(){
-    WinActivate,Notepad
-    WaitForWindowToActivate("Notepad")
+    WinActivate, ahk_class Notepad
+    WaitForWindowToActivate("ahk_class Notepad")
 }
 
 SendTestToNotepadAndReturnResult(test){
