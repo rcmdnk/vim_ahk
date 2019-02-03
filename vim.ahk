@@ -1427,7 +1427,7 @@ Return
 #If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
 /::
   Send, ^f
-  VimSetMode("Inseret")
+  VimSetMode("Insert")
 Return
 
 *::
@@ -1438,7 +1438,7 @@ Return
   Send, ^f
   Send, ^v!f
   clipboard := bak
-  VimSetMode("Inseret")
+  VimSetMode("Insert")
 Return
 
 n::Send, {F3}
