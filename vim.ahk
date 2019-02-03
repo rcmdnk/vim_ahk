@@ -700,6 +700,9 @@ i::VimSetMode("Insert")
 
 +i::
   Send, {Home}
+  If (VimRestoreIME == 1){
+    sleep, 200
+  }
   VimSetMode("Insert")
 Return
 
@@ -710,6 +713,9 @@ Return
 
 +a::
   Send, {End}
+  If (VimRestoreIME == 1){
+    sleep, 200
+  }
   VimSetMode("Insert")
 Return
 
