@@ -20,4 +20,4 @@ if errorlevel 1 (
 )
 REM You need intall ahk2exe, this script assumes it is at \bin_drop\ahk2exe
 "%AHKPath%\compiler\ahk2exe.exe" /in vim.ahk /out vim_ahk.exe
-"%AHKPath%\compiler\ahk2exe.exe" /in IME.ahk /out vim_ime.exe
+REM "%AHKPath%\compiler\ahk2exe.exe" /in IME.ahk /out vim_ime.exe
