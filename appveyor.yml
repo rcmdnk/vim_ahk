@@ -46,7 +46,8 @@ install:
 
 build_script:
   # - cmd: start /w "C:\\Program Files\\AutoHotkey\\Autohotkey.exe" "%APPVEYOR_BUILD_FOLDER%\\appveyor_setup.ahk" && build.bat /t
-  - cmd: build.bat /t
+  - cmd: build.bat
+  # - cmd: build.bat /t
 
 after_test:
   - git status
