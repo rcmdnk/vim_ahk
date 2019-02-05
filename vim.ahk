@@ -209,7 +209,6 @@ MenuVimStatus:
 Return
 
 MenuVimSettings:
-  global VimCheckboxesCreated
   Gui, VimGuiSettings:+LabelVimGuiSettings
   Gui, VimGuiSettings:-MinimizeBox
   Gui, VimGuiSettings:-Resize
@@ -535,6 +534,7 @@ VimCheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
 }
 
 VimStatus(Title, lines=1){
+  global
   WinGetPos, , , W, H, A
   Tooltip, %Title%, W - 110, H - 30 - (lines) * 20
   SetTimer, VimRemoveStatus, 1000
@@ -586,12 +586,6 @@ VimWriteIni(){
   IniWrite, % VimIconCheck, % VimIni, % VimSection, VimIconCheck
   IniWrite, % VimIconCheckInterval, % VimIni, % VimSection, VimIconCheckInterval
   IniWrite, % VimVerbose, % VimIni, % VimSection, VimVerbose
-}
-
-VimSetGuiOffset(offset=0){
-  VimGuiAbout := offset + 1
-  VimGuiSettings := offset + 2
-  VimGuiVerbose := offset + 3
 }
 
 VimStatusCheckTimer:
