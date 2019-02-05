@@ -701,7 +701,6 @@ i::VimSetMode("Insert")
 
 +i::
   Send, {Home}
-  Sleep, 200
   VimSetMode("Insert")
 Return
 
@@ -712,7 +711,6 @@ Return
 
 +a::
   Send, {End}
-  Sleep, 200
   VimSetMode("Insert")
 Return
 
@@ -723,7 +721,6 @@ Return
 
 +o::
   Send, {Up}{End}{Enter}
-  Sleep, 200
   VimSetMode("Insert")
 Return
 ; }}}
