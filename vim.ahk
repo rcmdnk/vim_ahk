@@ -645,6 +645,7 @@ Return
 
 ; Enter vim normal mode {{{
 VimSetNormal(){
+  global VimLastIME
   VimLastIME := VIM_IME_Get()
   if(VimLastIME){
     if(VIM_IME_GetConverting(A)){
