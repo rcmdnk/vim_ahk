@@ -64,6 +64,9 @@ GroupAdd, VimOneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
 
 ; Need Home twice
 GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
+
+; Followings can emulate ^. For others, ^ works as same as 0
+GroupAdd, VimCaretMove, ahk_exe notepad.exe ; NotePad
 ; }}}
 
 ; Setting variables {{{
@@ -1066,13 +1069,21 @@ Return
 g::VimSetMode("", 1)
 ; }}}
 
-VimMove(key="", shift=0){
+VimMove(key=""){
   global
-  if(VimStrIsInCurrentVimMode( "Visual") or VimStrIsInCurrentVimMode( "ydc") or shift == 1){
+  shift = 0
+  if(VimStrIsInCurrentVimMode( "Visual") or VimStrIsInCurrentVimMode( "ydc")){
+    shift := 1
+  }
+  if(shift == 1){
     Send, {Shift Down}
   }
   ; Left/Right
   if(not VimStrIsInCurrentVimMode( "Line")){
+    ; For some cases, need '+' directly to continue to select
+    ; especially for cases using shift as original keys
+    ; For now, caret does not work even add + directly
+
     ; 1 character
     if(key == "h"){
       Send, {Left}
@@ -1082,14 +1093,42 @@ VimMove(key="", shift=0){
     }else if(key == "0"){
       Send, {Home}
     }else if(key == "$"){
-      Send, {End}
+      if(shift == 1){
+        Send, +{End}
+      }else{
+        Send, {End}
+      }
     }else if(key == "^"){
-      Send, {Home}^{Right}^{Left}
+      if(shift == 1){
+        if WinActive("ahk_group VimCaretMove"){
+          Send, {Home}
+          Send, ^{Right}
+          Send, ^{Left}
+        }else{
+          Send, {Home}
+        }
+      }else{
+        if WinActive("ahk_group VimCaretMove"){
+          Send, +{Home}
+          Send, +^{Right}
+          Send, +^{Left}
+        }else{
+          Send, +{Home}
+        }
+      }
     ; Words
     }else if(key == "w"){
-      Send, ^{Right}
+      if(shift == 1){
+        Send, +^{Right}
+      }else{
+        Send, ^{Right}
+      }
     }else if(key == "b"){
-      Send, ^{Left}
+      if(shift == 1){
+        Send, +^{Left}
+      }else{
+        Send, ^{Left}
+      }
     }
   }
   ; Up/Down
@@ -1155,13 +1194,13 @@ VimMove(key="", shift=0){
   }
   VimSetMode("", 0, 0)
 }
-VimMoveLoop(key="", shift=0){
+VimMoveLoop(key=""){
   global
   if(Vim_n == 0){
     Vim_n := 1
   }
   Loop, %Vim_n%{
-    VimMove(key, shift)
+    VimMove(key)
   }
 }
 #If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode("Vim_"))
