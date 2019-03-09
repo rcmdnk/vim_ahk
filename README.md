@@ -1,11 +1,14 @@
-vim_ahk
-=======
+# vim_ahk
 
 Setting file/exe file of AutoHotkey for Vim emulation.
 
 vim.ahk is the setting file for [AutoHotkey](http://www.autohotkey.com/)(Autohotkey_L).
 
 vim.exe is a standalone application made from vim.ahk.
+
+This is vim emulation for Windows.
+If you are interesting in same settings for Mac,
+try Vim emulation for [Karabiner - Software for macOS](https://pqrs.org/osx/karabiner/): [Karabiner-Elements complex_modifications rules by rcmdnk](https://rcmdnk.com/KE-complex_modifications/).
 
 ## Installation
 If you've already installed AutoHotKey, just open vim.ahk with AutoHotkey.
@@ -53,6 +56,8 @@ If you want to change applications directly in the script, add `GroupAdd VimGrou
 |:-----|:----------|:------|
 |VimRestoreIME|If 1, IME status is restored at entering insert mode.|1|
 |VimJJ|If 1, `jj` changes mode to Normal from Insert.|0|
+|VimJK|If 1, `jk` changes mode to Normal from Insert.|0|
+|VimSD|If 1, `sd` changes mode to Normal from Insert.|0|
 |VimIcon|If 1, task tray icon is changed when mode is changed.|1|
 |VimDisableUnused|Disable level of unused keys in Normal mode (see below for details).|3|
 |VimIconCheck|If 1, check window periodically and update tray icon.|1|
@@ -74,13 +79,13 @@ Disable level:
 You can change these options from the right click menu of task tray icon (find `VimMenu`-`Settings` in the list),
 or launch the setting window by `Ctrl-Alt-Shift-v`.
 
-![trymenu](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/trymenu.jpg "trymenu")
+![traymenu](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/traymenu.jpg "traymenu")
 
 ![settings](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/settings.jpg "settings")
 
-If `Icon` is enabled, the task try icon is changed following the mode.
+If `Icon` is enabled, the task tray icon is changed following the mode.
 
-![tryicon](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/tryicon.gif "tryicon")
+![trayicon](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/trayicon.gif "trayicon")
 
 
 ## Main Modes
@@ -108,12 +113,14 @@ After pressing `:`, a few commands to save/quit are available.
 |:----------:|:-------|
 |ESC/Ctrl-[| Enter Normal Mode. Holding (0.5s) these keys emulate normal ESC.|
 |jj|Enter Normal Mode.|
+|jk|Enter Normal Mode.|
+|sd|Enter Normal Mode.|
 
 ESC/Ctrl-[ switch off IME if IME is on.
 ESC acts as ESC when IME is on and converting instructions.
 Ctrl-[ switches off IME and enters Normal Mode even if IME is on.
 
-jj is optional one, which is enabled when VimJJ = 1.
+jj, jk or sd is optional one, which is enabled when VimJJ/VimJK/VimSK = 1, respectively.
 
 ## Available commands in Normal Mode
 ### Mode Change
@@ -192,6 +199,21 @@ y/d/c+Move Command can be used, too.
 |h | Open help of the application|
 
 
-# Bonus
+## Bonus
 vim_ime.exe is an executable file which automatically switches IME off on Vim (when switching from Insert Mode to Normal Mode).
 The setting file can be found in this [gist](https://gist.github.com/rcmdnk/6147672).
+
+## References (Japanese)
+
+
+* [vim_ahkでウィンドウを定期的にチェックしてトレイアイコンを変えられる様にした](https://rcmdnk.com/blog/2017/11/22/computer-autohotkey-vim/)
+* [vim_ahkで有効にするアプリの変更もメニューから出来る様にした](https://rcmdnk.com/blog/2017/11/14/computer-windows-autohotkey/)
+* [vim_ahkでメニューから設定変更出来る様にした](https://rcmdnk.com/blog/2017/11/11/computer-windows-autohotkey/)
+* [AutoHotkeyでToolTipを出す](https://rcmdnk.com/blog/2017/11/10/computer-windows-autohotkey/)
+* [AutoHotkeyで設定ファイルの読み書きをする](https://rcmdnk.com/blog/2017/11/08/computer-windows-autohotkey/)
+* [AutoHotkeyでのGUI操作](https://rcmdnk.com/blog/2017/11/07/computer-windows-autohotkey/)
+* [AutoHotkeyでのメニューの追加](https://rcmdnk.com/blog/2017/11/06/computer-windows-autohotkey/)
+* [AutoHotkeyで短い連続入力を認識させる方法](https://rcmdnk.com/blog/2017/11/05/computer-windows-autohotkey/)
+* [AutoHotkeyで特定の条件下で設定したキー以外全てを無効にする簡単な方法](https://rcmdnk.com/blog/2017/09/03/computer-windows-autohotkey/)
+* [Vim以外でVimする: Windows+AutoHotkey編](https://rcmdnk.com/blog/2013/08/03/computer-windows-autohotkey/)
+

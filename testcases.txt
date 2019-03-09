@@ -1,0 +1,32 @@
+; Text after a semicolon are treated as comments and ignored.
+; The test will be sent as written from normal mode, with the cursor at the start of the sample text.
+; Use {esc} to send an escape key, and {return} to send a newline.
+; Otherwise it is best to avoid {} characters.
+; Please put a comment at the end of your test case stating what it tests.
+;
+; Sample text (reference only, see testscript for actual text):
+;
+;This is the first line of the test, and contains a comma and a period.
+;Second line here
+;3rd line. The second line is shorter than both 1st and 3rd line.
+;The fourth line contains     some additional whitespace.
+;What should I put on the 5th line?A missing space, perhaps
+;This line 6 should be longer than the line before it and after it to test kj
+;No line, including 7, can be longer than 80 characters.
+;This is because onenote wraps automatically, (line 8)
+;And treats a wrapped line as separate lines (line 9)
+;
+; First sample line is actually blank. Tests no input/metatest.
+
+iAt start of first lin.{esc}ie{esc}IWord ; i,I
+ahe {esc}{esc}A Also this.; a, A, double esc
+w$^iBOL; ^, no whitespace
+I    {esc}$^ialmostBOL; ^, whitespace
+w$0iBOL; 0, no whitespace
+$bbbi[3rd word from end]; b with punctuation?
+GiEOF; G, go to end of file.
+GiEOF{esc}ggiBOF; gg (go to beginning of file)
+ddGp; delete line, paste linewise at final line.
+dw; d with single motion
+d4w; d with repeat motion
+5ggi5th line; go to line

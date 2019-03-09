@@ -49,6 +49,7 @@ build_script:
   - cmd: build.bat
   # - cmd: build.bat /t
 
+
 after_test:
   - git status
   - git config --global credential.helper store
