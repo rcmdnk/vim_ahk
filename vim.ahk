@@ -1,7 +1,7 @@
 ﻿; Auto-execute section {{{
 ; About vim_ahk
-VimVersion := "v0.4.2"
-VimDate := "16/Nov/2018"
+VimVersion := "v0.4.3"
+VimDate := "03/Aug/2019"
 VimAuthor := "rcmdnk"
 VimDescription := "Vim emulation with AutoHotkey, everywhere in Windows."
 VimHomepage := "https://github.com/rcmdnk/vim_ahk"
@@ -38,9 +38,9 @@ VimGroup_TT := "Set one application per line.`n`nIt can be any of Window Title, 
 ;VimGroupList_TT := VimGroup_TT
 VimGroupText_TT := VimGroup_TT
 VimGroupIni :=                             "ahk_exe notepad.exe"   ; NotePad
+VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe explorer.exe"  ; Explorer
 VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe wordpad.exe"   ; WordPad
 VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe TeraPad.exe"   ; TeraPad
-VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe explorer.exe"  ; Explorer
 VimGroupIni := VimGroupIni . VimGroupDel . "作成"                  ;Thunderbird, 日本語
 VimGroupIni := VimGroupIni . VimGroupDel . "Write:"                ;Thuderbird, English
 VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe POWERPNT.exe"  ; PowerPoint
@@ -67,6 +67,11 @@ GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
 
 ; Followings can emulate ^. For others, ^ works as same as 0
 GroupAdd, VimCaretMove, ahk_exe notepad.exe ; NotePad
+
+; Followings start cursor from the same place after selection.
+; Others start right/left (by cursor) point of the selection
+GroupAdd, VimCursorSameAfterSelect, ahk_exe notepad.exe ; NotePad
+GroupAdd, VimCursorSameAfterSelect, ahk_exe exproloer.exe ; Explorer
 ; }}}
 
 ; Setting variables {{{
@@ -714,13 +719,18 @@ VimSetNormal(){
   if(VimLastIME){
     if(VIM_IME_GetConverting(A)){
       Send,{Esc}
+      Return
     }else{
       VIM_IME_SET()
-      VimSetMode("Vim_Normal")
     }
-  }else{
-    VimSetMode("Vim_Normal")
   }
+  if(VimStrIsInCurrentVimMode( "Visual") or VimStrIsInCurrentVimMode( "ydc")){
+    Send, {Right}
+    if WinActive("ahk_group VimCursorSameAfterSelect"){
+      Send, {Left}
+    }
+  }
+  VimSetMode("Vim_Normal")
 }
 
 Esc:: ; Just send Esc at converting, long press for normal Esc.
@@ -1400,7 +1410,9 @@ y::
   Clipboard :=
   Send, ^c
   Send, {Right}
-  Send, {Left}
+  if WinActive("ahk_group VimCursorSameAfterSelect"){
+    Send, {Left}
+  }
   ClipWait, 1
   if(VimStrIsInCurrentVimMode( "Line")){
     VimSetMode("Vim_Normal", 0, 0, 1)
