@@ -18,10 +18,7 @@ build_script:
 
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
-  description: |
-    $(APPVEYOR_REPO_COMMIT_MESSAGE)
-
-    $(APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)
+  description: ''
   provider: GitHub
   auth_token: $(github_access) # your encrypted token from GitHub
   artifact: /.*Executable/
