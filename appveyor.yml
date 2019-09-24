@@ -1,10 +1,8 @@
 version: 0.5.{build}
 
 artifacts:
-  - path: vim_ahk.exe
+  - path: ./build/vim_ahk.exe
     name: Main Executable
-#  - path: testLogs/*
-#    name: failed test logs
 
 init:
   # Initialise remote desktop stuff
@@ -13,12 +11,10 @@ init:
 install:
   # Chocolaty install autohotkey and vim for testing
   - cinst autohotkey.install
-#  - cinst vim
   - cmd: refreshenv
 
 build_script:
-  # - cmd: start /w "C:\\Program Files\\AutoHotkey\\Autohotkey.exe" "%APPVEYOR_BUILD_FOLDER%\\appveyor_setup.ahk" && build.bat /t
-  - cmd: build.bat
+  - cmd: ./build/build.bat
 
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)

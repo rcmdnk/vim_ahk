@@ -18,5 +18,4 @@ if errorlevel 1 (
     echo   .
     exit /b %errorlevel%
 )
-REM You need intall ahk2exe, this script assumes it is at \bin_drop\ahk2exe
-"%AHKPath%\compiler\ahk2exe.exe" /in vim.ahk /out vim_ahk.exe
+"%AHKPath%\compiler\ahk2exe.exe" /in vim.ahk /out build/vim_ahk.exe
