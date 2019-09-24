@@ -3,8 +3,6 @@ version: 0.5.{build}
 artifacts:
   - path: vim_ahk.exe
     name: Main Executable
-  - path: vim_ime.exe
-    name: IME Executable
 #  - path: testLogs/*
 #    name: failed test logs
 
