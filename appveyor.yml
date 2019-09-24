@@ -25,13 +25,10 @@ deploy:
   provider: GitHub
   auth_token: $(github_access) # your encrypted token from GitHub
   artifact: /.*Executable/
-  draft: true
-  prerelease: true
+  draft: false
+  prerelease: false
   skip_tags: true
   on:
-    #appveyor_repo_tag: true        # deploy on tag push only
-    #branch: master                 # release from master branch only
-    #branch: ci-pull-check
     APPVEYOR_REPO_TAG: true
 
 test: off
