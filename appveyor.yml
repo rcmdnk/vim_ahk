@@ -1,0 +1,43 @@
+version: 0.5.{build}
+
+artifacts:
+  - path: vim_ahk.exe
+    name: Main Executable
+  - path: vim_ime.exe
+    name: IME Executable
+#  - path: testLogs/*
+#    name: failed test logs
+
+init:
+  # Initialise remote desktop stuff
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+install:
+  # Chocolaty install autohotkey and vim for testing
+  - cinst autohotkey.install
+#  - cinst vim
+  - cmd: refreshenv
+
+build_script:
+  # - cmd: start /w "C:\\Program Files\\AutoHotkey\\Autohotkey.exe" "%APPVEYOR_BUILD_FOLDER%\\appveyor_setup.ahk" && build.bat /t
+  - cmd: build.bat
+
+deploy:
+  release: $(APPVEYOR_REPO_TAG_NAME)
+  description: |
+    $(APPVEYOR_REPO_COMMIT_MESSAGE)
+
+    $(APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)
+  provider: GitHub
+  auth_token: $(github_access) # your encrypted token from GitHub
+  artifact: /.*Executable/
+  draft: true
+  prerelease: true
+  skip_tags: true
+  on:
+    #appveyor_repo_tag: true        # deploy on tag push only
+    #branch: master                 # release from master branch only
+    #branch: ci-pull-check
+    APPVEYOR_REPO_TAG: true
+
+test: off
