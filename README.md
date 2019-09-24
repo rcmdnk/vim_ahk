@@ -4,16 +4,17 @@ Setting file/exe file of AutoHotkey for Vim emulation.
 
 vim.ahk is the setting file for [AutoHotkey](http://www.autohotkey.com/)(Autohotkey_L).
 
-vim.exe is a standalone application made from vim.ahk.
+vim.exe is a standalone application made from vim.ahk (available in [the releases page](https://github.com/rcmdnk/vim_ahk/releases)).
 
 This is vim emulation for Windows.
 If you are interesting in same settings for Mac,
 try Vim emulation for [Karabiner - Software for macOS](https://pqrs.org/osx/karabiner/): [Karabiner-Elements complex_modifications rules by rcmdnk](https://rcmdnk.com/KE-complex_modifications/).
 
 ## Installation
-If you've already installed AutoHotKey, just open vim.ahk with AutoHotkey.
 
-You can also use vim.exe, which can work standalone w/o AutoHotKey.
+### Scripts
+
+If you've already installed AutoHotKey, just open vim.ahk with AutoHotkey.
 
 If you are running AutoHotKey with another script,
 you can include it in your script using AutoHotKey...
@@ -24,6 +25,13 @@ and add the following line in AutoHotkey.ahk or your script:
     #Include  %A_LineFile%\..\vim.ahk
 
 at the end of the <a href="http://www.autohotkey.com/docs/Scripts.htm#auto">Auto-execute section</a>.
+
+### Executable
+
+You can also use vim.exe, which can work standalone w/o AutoHotKey.
+
+To get executable, go to [the releases page](https://github.com/rcmdnk/vim_ahk/releases)
+and download the latest one.
 
 ## Applications
 The default setting enables vim-mode for the following applications:
