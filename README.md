@@ -206,13 +206,7 @@ y/d/c+Move Command can be used, too.
 |q | Quit |
 |h | Open help of the application|
 
-
-## Bonus
-vim_ime.exe is an executable file which automatically switches IME off on Vim (when switching from Insert Mode to Normal Mode).
-The setting file can be found in this [gist](https://gist.github.com/rcmdnk/6147672).
-
 ## References (Japanese)
-
 
 * [vim_ahkでウィンドウを定期的にチェックしてトレイアイコンを変えられる様にした](https://rcmdnk.com/blog/2017/11/22/computer-autohotkey-vim/)
 * [vim_ahkで有効にするアプリの変更もメニューから出来る様にした](https://rcmdnk.com/blog/2017/11/14/computer-windows-autohotkey/)
