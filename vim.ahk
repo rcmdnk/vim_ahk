@@ -1,7 +1,7 @@
 ﻿; Auto-execute section {{{
 ; About vim_ahk
-VimVersion := "v0.4.3"
-VimDate := "03/Aug/2019"
+VimVersion := "v0.5.0"
+VimDate := "24/Sep/2019"
 VimAuthor := "rcmdnk"
 VimDescription := "Vim emulation with AutoHotkey, everywhere in Windows."
 VimHomepage := "https://github.com/rcmdnk/vim_ahk"
