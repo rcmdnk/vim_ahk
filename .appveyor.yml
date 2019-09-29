@@ -1,0 +1,31 @@
+version: 0.5.{build}
+
+artifacts:
+  - path: ./build/vim_ahk.exe
+    name: Main Executable
+
+init:
+  # Initialise remote desktop stuff
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+install:
+  # Chocolaty install autohotkey and vim for testing
+  - cinst autohotkey.install
+  - cmd: refreshenv
+
+build_script:
+  - cmd: ./build/build.bat
+
+deploy:
+  release: $(APPVEYOR_REPO_TAG_NAME)
+  description: ''
+  provider: GitHub
+  auth_token: $(github_access) # your encrypted token from GitHub
+  artifact: /.*Executable/
+  draft: false
+  prerelease: false
+  skip_tags: true
+  on:
+    APPVEYOR_REPO_TAG: true
+
+test: off
