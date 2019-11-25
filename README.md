@@ -53,10 +53,11 @@ You can change them from the right click menu of task tray icon (find `VimMenu`-
 or launch the setting window by `Ctrl-Alt-Shift-v`.
 
 If you want to change applications directly in the script, add `GroupAdd VimGroup` lines at the top of vim.ahk
-(Window title/class can be seen by window spy in AutoHotkey), like:
+(Window title/class can be checked by Window spy of AutoHotkey), like:
 
-    GroupAdd VimGroup, ahk_exe notepad.exe ; NotePad
+    GroupAdd VimGroup, ahk_exe chrome.exe ; Google Chrome
 
+Or you can use GUI option setting described below.
 
 ## Options
 
@@ -84,12 +85,17 @@ Disable level:
 * 2: Disable alphabets (+shift) and symbols
 * 3: Disable all including keys with modifiers (e.g. Ctrl+Z)
 
+## GUI Option Setting Window
+
 You can change these options from the right click menu of task tray icon (find `VimMenu`-`Settings` in the list),
 or launch the setting window by `Ctrl-Alt-Shift-v`.
 
 ![traymenu](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/traymenu.jpg "traymenu")
 
 ![settings](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/settings.jpg "settings")
+
+Here, you can add **
+
 
 If `Icon` is enabled, the task tray icon is changed following the mode.
 
