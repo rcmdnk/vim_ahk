@@ -59,6 +59,20 @@ If you want to change applications directly in the script, add `GroupAdd VimGrou
 
 Or you can use GUI option setting described below.
 
+Note: It may not work on OneNote. OneNote may has window name like **User's Notebook - OneNote**, instead of **OneNote**.
+
+In that case, you need to check OneNote's window title with Window spy.
+
+Window spy will give you about Window Title, Class and Process like:
+
+    User's Notebook - OneNote
+    ahk_class ApplicationFrameWindow
+    ahk_exe ApplicationFrameHost.exe
+
+If you add any of above lines to VimGroup, vim_ahk works on OneNote.
+But if you set `ahk_class ApplicationFrameWindow` or `ahk_exe ApplicationFrameHost.exe`,
+vim_ahk also works on other applications which use these Class/Process name (most of applications installed from Microsoft Store).
+
 ## Options
 
 |Option|Description|Default|
