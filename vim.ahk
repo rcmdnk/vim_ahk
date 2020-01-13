@@ -306,6 +306,13 @@ VimGuiSettingsApply:
   }else{
     SetTimer, VimStatusCheckTimer, OFF
   }
+  twoLetterNormalIsSet:=True
+  ; Must used &&, not and.
+  hotkey If, WinActive("ahk_group " . VimGroupName) && (VimStrIsInCurrentVimMode( "Insert")) && twoLetterNormalIsSet
+  hotkey, j & a,vimTwoletterEnterNormal
+  hotkey, m,controlFunc
+  hotkey, ',controlTwo
+  hotkey If
 Return
 
 VimGuiSettingsOK:
@@ -693,6 +700,14 @@ VimAddCheckbox(name, defaultVal, description){
     GuiControl, VimGuiSettings:, %name%, 1
   }
 }
+
+shouldUseTwoLetterNormal(hkName){
+  global twoLetterNormalIsSet
+  msgbox % hkName
+  return 0
+  ; return (WinActive("ahk_group " . VimGroupName) && (VimStrIsInCurrentVimMode( "Insert")) && twoLetterNormalIsSet)
+}
+
 ; }}}
 
 ; Vim mode {{{
@@ -743,6 +758,27 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
   VimSetNormal()
 Return
 
+; This is not the actual checked #if expression for these hotkeys, but needs to
+; exist here. Must used &&, not and.
+; See https://www.autohotkey.com/docs/Hotkey.htm for why.
+#If, WinActive("ahk_group " . VimGroupName) && (VimStrIsInCurrentVimMode( "Insert")) && twoLetterNormalIsSet
+vimTwoletterEnterNormal: ;(){
+  l1 = "j"
+  l2 = "d"
+  msgbox, here!
+  if (A_Priorhotkey == l1 && A_ThisHotkey == l2){
+  SendInput, {BackSpace 1}
+  VimSetNormal()
+  }
+  return
+; }
+controlFunc(){
+  msgbox, control
+return
+}
+controlTwo:
+  msgbox, ctrl2
+return
 #If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimJJ == 1)
 ~j up:: ; jj: go to Normal mode.
   Input, jout, I T0.1 V L1, j
