@@ -30,9 +30,19 @@ VimIconDefault := % A_AhkPath
 
 ; Application groups {{{
 
+; Delimiter
 VimGroupDel := ","
 VimGroupN := 0
+VimTwoLetterEscDel := ","
+VimTwoLetterEscN := 0
 
+; Enable vim mode for following applications
+VimTwoLetterEsc_TT := "Set one per line.`n`nMust only be two letters, not 1 or >3.`nThe two letters must be different"
+;VimTwoLetterEscList_TT := VimTwoLetterEsc_TT
+VimTwoLetterEscIni :=""
+VimTwoLetterEsc := VimTwoLetterEscIni
+
+VimGroupText_TT := VimGroup_TT
 ; Enable vim mode for following applications
 VimGroup_TT := "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon)."
 ;VimGroupList_TT := VimGroup_TT
@@ -242,6 +252,9 @@ MenuVimSettings:
   Gui, VimGuiSettings:Add, UpDown, vVimIconCheckInterval Range100-1000000, %VimIconCheckInterval%
   Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimVerboseLevel vVimVerboseLevel, Verbose level
   Gui, VimGuiSettings:Add, DropDownList, vVimVerboseValue Choose%VimVerbose%, %VimVerbose1%|%VimVerbose2%|%VimVerbose3%|%VimVerbose4%
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimTwoLetterEscText vVimTwoLetterEscText, Two-letter insert-mode <esc> hotkey (set normal mode)
+  StringReplace, VimTwoLetterEscList, VimTwoLetterEsc, %VimTwoLetterEscDel%, `n, All
+  Gui, VimGuiSettings:Add, Edit, XS+10 Y+10 R10 W300 Multi vVimTwoLetterEscList, %VimTwoLetterEscList%
   Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimGroupText vVimGroupText, Applications
   StringReplace, VimGroupList, VimGroup, %VimGroupDel%, `n, All
   Gui, VimGuiSettings:Add, Edit, XS+10 Y+10 R10 W300 Multi vVimGroupList, %VimGroupList%
@@ -306,13 +319,6 @@ VimGuiSettingsApply:
   }else{
     SetTimer, VimStatusCheckTimer, OFF
   }
-  twoLetterNormalIsSet:=True
-  ; Must used &&, not and.
-  hotkey If, WinActive("ahk_group " . VimGroupName) && (VimStrIsInCurrentVimMode( "Insert")) && twoLetterNormalIsSet
-  hotkey, j & a,vimTwoletterEnterNormal
-  hotkey, m,controlFunc
-  hotkey, ',controlTwo
-  hotkey If
 Return
 
 VimGuiSettingsOK:
@@ -335,6 +341,7 @@ VimGuiSettingsReset:
     name := s["name"]
     %name% := s["default"]
   }
+  VimTwoLetterEsc := VimTwoLetterEscIni
   VimGroup := VimGroupIni
   VimDisableUnused := VimDisableUnusedIni
   VimIconCheckInterval := VimIconCheckIntervalIni
@@ -349,6 +356,9 @@ VimGuiSettingsReset:
 Return
 
 VimGroupText: ; Dummy to assign Gui Control
+Return
+
+VimTwoLetterEscText: ; Dummy to assign Gui Control
 Return
 
 VimIconCheckIntervalText: ; Dummy to assign Gui Control
@@ -486,6 +496,18 @@ VimSetGroup() {
   {
     if(A_LoopField != ""){
       GroupAdd, %VimGroupName%, %A_LoopField%
+    }
+  }
+}
+
+VimSetTwoLetterEscMaps() {
+  global
+  VimTwoLetterEscN++
+  VimTwoLetterEscName := "VimTwoLetterEsc" . VimTwoLetterEscN
+  Loop, Parse, VimTwoLetterEsc, % VimTwoLetterEscDel
+  {
+    if(A_LoopField != ""){
+      GroupAdd, %VimVimTwoLetterEscName%, %A_LoopField%
     }
   }
 }
@@ -629,6 +651,7 @@ Return
 
 VimReadIni(){
   global
+  IniRead, VimTwoLetterEsc, %VimIni%, %VimSection%, VimTwoLetterEsc, %VimTwoLetterEsc%
   IniRead, VimGroup, %VimIni%, %VimSection%, VimGroup, %VimGroup%
   IniRead, VimDisableUnused, %VimIni%, %VimSection%, VimDisableUnused, %VimDisableUnused%
   IniRead, VimRestoreIME, %VimIni%, %VimSection%, VimRestoreIME, %VimRestoreIME%
@@ -641,22 +664,29 @@ VimReadIni(){
   IniRead, VimVerbose, %VimIni%, %VimSection%, VimVerbose, %VimVerbose%
 }
 
+VimWriteIniFromList(varname, list, del){
+  %varname% := ""
+  Loop, Parse, list, `n
+  {
+    if(! InStr(%varname%, A_LoopField)){
+      if(%varname% == ""){
+        %varname% := A_LoopField
+      }else{
+        %varname% := %varname% . del . A_LoopField
+      }
+    }
+  }
+}
+
 VimWriteIni(){
   global
   IfNotExist, %VimIniDir%
     FileCreateDir, %VimIniDir%
 
-  VimGroup := ""
-  Loop, Parse, VimGroupList, `n
-  {
-    if(! InStr(VimGroup, A_LoopField)){
-      if(VimGroup == ""){
-        VimGroup := A_LoopField
-      }else{
-        VimGroup := VimGroup . VimGroupDel . A_LoopField
-      }
-    }
-  }
+  VimWriteIniFromList("VimTwoLetterEsc", VimTwoLetterEscList, VimTwoLetterEscDel)
+  VimSetTwoLetterEscMaps()
+  IniWrite, % VimTwoLetterEsc, % VimIni, % VimSection, VimTwoLetterEsc
+  VimWriteIniFromList("VimGroup", VimGroupList, VimGroupDel)
   VimSetGroup()
   IniWrite, % VimGroup, % VimIni, % VimSection, VimGroup
   IniWrite, % VimDisableUnused, % VimIni, % VimSection, VimDisableUnused
@@ -699,13 +729,6 @@ VimAddCheckbox(name, defaultVal, description){
   if(%name% == 1){
     GuiControl, VimGuiSettings:, %name%, 1
   }
-}
-
-shouldUseTwoLetterNormal(hkName){
-  global twoLetterNormalIsSet
-  msgbox % hkName
-  return 0
-  ; return (WinActive("ahk_group " . VimGroupName) && (VimStrIsInCurrentVimMode( "Insert")) && twoLetterNormalIsSet)
 }
 
 ; }}}
@@ -762,23 +785,10 @@ Return
 ; exist here. Must used &&, not and.
 ; See https://www.autohotkey.com/docs/Hotkey.htm for why.
 #If, WinActive("ahk_group " . VimGroupName) && (VimStrIsInCurrentVimMode( "Insert")) && twoLetterNormalIsSet
-vimTwoletterEnterNormal: ;(){
-  l1 = "j"
-  l2 = "d"
-  msgbox, here!
-  if (A_Priorhotkey == l1 && A_ThisHotkey == l2){
+vimTwoletterEnterNormal(){
   SendInput, {BackSpace 1}
   VimSetNormal()
-  }
-  return
-; }
-controlFunc(){
-  msgbox, control
-return
 }
-controlTwo:
-  msgbox, ctrl2
-return
 #If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimJJ == 1)
 ~j up:: ; jj: go to Normal mode.
   Input, jout, I T0.1 V L1, j
