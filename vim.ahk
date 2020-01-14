@@ -35,6 +35,7 @@ VimGroupDel := ","
 VimGroupN := 0
 VimTwoLetterEscDel := ","
 VimTwoLetterEscN := 0
+twoLetterNormalIsSet := 0
 
 ; Enable vim mode for following applications
 VimTwoLetterEsc_TT := "Set one per line.`n`nMust only be two letters, not 1 or >3.`nThe two letters must be different"
@@ -166,6 +167,9 @@ VimAhkGitHub_TT := VimHomepage
 
 ; Read Ini
 VimReadIni()
+
+; Set two-letter escape maps from stored ini.
+VimSetTwoLetterEscMaps()
 
 ; Set group
 VimSetGroup()
@@ -502,12 +506,19 @@ VimSetGroup() {
 
 VimSetTwoLetterEscMaps() {
   global
-  VimTwoLetterEscN++
-  VimTwoLetterEscName := "VimTwoLetterEsc" . VimTwoLetterEscN
+  twoLetterNormalIsSet:=False
   Loop, Parse, VimTwoLetterEsc, % VimTwoLetterEscDel
   {
     if(A_LoopField != ""){
-      GroupAdd, %VimVimTwoLetterEscName%, %A_LoopField%
+      twoLetterNormalIsSet:=True
+      ; substring from 1st char of length 1.
+      key1 := SubStr(A_LoopField, 1, 1)
+      key2 := SubStr(A_LoopField, 2, 1)
+      ; Must used &&, not and.
+      hotkey If, WinActive("ahk_group " . VimGroupName) && (VimStrIsInCurrentVimMode( "Insert")) && twoLetterNormalIsSet
+      hotkey, %key1% & %key2%, vimTwoletterEnterNormal
+      hotkey, %key2% & %key1%, vimTwoletterEnterNormal
+      hotkey If
     }
   }
 }
@@ -789,6 +800,7 @@ vimTwoletterEnterNormal(){
   SendInput, {BackSpace 1}
   VimSetNormal()
 }
+
 #If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimJJ == 1)
 ~j up:: ; jj: go to Normal mode.
   Input, jout, I T0.1 V L1, j
@@ -799,20 +811,6 @@ vimTwoletterEnterNormal(){
 Return
 ; }}}
 
-#If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimJK == 1)
-j & k::
-k & j::
-  SendInput, {BackSpace 1}
-  VimSetNormal()
-Return
-; }}}
-
-#If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimSD == 1)
-s & d::
-d & s::
-  SendInput, {BackSpace 1}
-  VimSetNormal()
-Return
 ; }}}
 
 ; Enter vim insert mode (Exit vim normal mode) {{{
