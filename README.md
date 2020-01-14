@@ -64,13 +64,12 @@ If you want to change applications directly in the script, add `GroupAdd VimGrou
 |:-----|:----------|:------|
 |VimRestoreIME|If 1, IME status is restored at entering insert mode.|1|
 |VimJJ|If 1, `jj` changes mode to Normal from Insert.|0|
-|VimJK|If 1, `jk` changes mode to Normal from Insert.|0|
-|VimSD|If 1, `sd` changes mode to Normal from Insert.|0|
 |VimIcon|If 1, task tray icon is changed when mode is changed.|1|
 |VimDisableUnused|Disable level of unused keys in Normal mode (see below for details).|3|
 |VimIconCheck|If 1, check window periodically and update tray icon.|1|
 |VimIconCheckInterval|Interval to check window (ms).|1000|
 |VimVerbose|Verbose level (see below for details).|0|
+|VimTwoLetterEsc|A list of character pairs to press together during insert mode to get to normal mode. For example, a value of `jk` means pressing `j` and `k` at the same time will enter normal mode.||
 
 Verbose level:
 
@@ -120,15 +119,12 @@ After pressing `:`, a few commands to save/quit are available.
 |Key/Commands|Function|
 |:----------:|:-------|
 |ESC/Ctrl-[| Enter Normal Mode. Holding (0.5s) these keys emulate normal ESC.|
-|jj|Enter Normal Mode.|
-|jk|Enter Normal Mode.|
-|sd|Enter Normal Mode.|
+|jj|Enter Normal Mode, if enabled.|
+|Custom|If two-letter mapping is set|
 
 ESC/Ctrl-[ switch off IME if IME is on.
 ESC acts as ESC when IME is on and converting instructions.
 Ctrl-[ switches off IME and enters Normal Mode even if IME is on.
-
-jj, jk or sd is optional one, which is enabled when VimJJ/VimJK/VimSK = 1, respectively.
 
 ## Available commands in Normal Mode
 ### Mode Change
