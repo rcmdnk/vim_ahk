@@ -34,12 +34,13 @@ VimIconDefault := % A_AhkPath
 VimGroupDel := ","
 VimGroupN := 0
 VimTwoLetterEscDel := ","
-VimTwoLetterEscN := 0
 twoLetterNormalIsSet := 0
 
+; TODO: Move tooltips to sit beside their gui entries. Doesn't make sense
+; having them separate from the GUI title.
 ; Enable vim mode for following applications
-VimTwoLetterEsc_TT := "Set one per line.`n`nMust only be two letters, not 1 or >3.`nThe two letters must be different"
-;VimTwoLetterEscList_TT := VimTwoLetterEsc_TT
+VimTwoLetterEsc_TT := "When these two letters are pressed together in insert mode, enters normal mode.`n`nSet one per line, exactly two letters per line.`nThe two letters must be different."
+VimTwoLetterEscList_TT := VimTwoLetterEsc_TT
 VimTwoLetterEscIni :=""
 VimTwoLetterEsc := VimTwoLetterEscIni
 
@@ -96,16 +97,6 @@ VimCheckboxes := [{name: "VimRestoreIME", default: 1
 VimCheckboxes.push({name: "VimJJ", default: 0
 , description: "JJ enters Normal mode"
 , popup: "Assign JJ enters Normal mode."})
-
-; Set 1 to asign jk to enter Normal mode
-VimCheckboxes.push({name: "VimJK", default: 0
-, description: "JK enters Normal mode"
-, popup: "Assign JK enters Normal mode."})
-
-; Set 1 to asign sd to enter Normal mode
-VimCheckboxes.push({name: "VimSD", default: 0
-, description: "SD enters Normal mode"
-, popup: "Assign SD enters Normal mode."})
 
 ;; Set 1 to enable Tray Icon for Vim Modes. Set 0 for original Icon
 VimCheckboxes.push({name: "VimIcon", default: 1
@@ -256,7 +247,7 @@ MenuVimSettings:
   Gui, VimGuiSettings:Add, UpDown, vVimIconCheckInterval Range100-1000000, %VimIconCheckInterval%
   Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimVerboseLevel vVimVerboseLevel, Verbose level
   Gui, VimGuiSettings:Add, DropDownList, vVimVerboseValue Choose%VimVerbose%, %VimVerbose1%|%VimVerbose2%|%VimVerbose3%|%VimVerbose4%
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimTwoLetterEscText vVimTwoLetterEscText, Two-letter insert-mode <esc> hotkey (set normal mode)
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimTwoLetterEscText vVimTwoLetterEscText, Two-letter insert-mode <esc> hotkey (sets normal mode)
   StringReplace, VimTwoLetterEscList, VimTwoLetterEsc, %VimTwoLetterEscDel%, `n, All
   Gui, VimGuiSettings:Add, Edit, XS+10 Y+10 R10 W300 Multi vVimTwoLetterEscList, %VimTwoLetterEscList%
   Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimGroupText vVimGroupText, Applications
@@ -667,8 +658,6 @@ VimReadIni(){
   IniRead, VimDisableUnused, %VimIni%, %VimSection%, VimDisableUnused, %VimDisableUnused%
   IniRead, VimRestoreIME, %VimIni%, %VimSection%, VimRestoreIME, %VimRestoreIME%
   IniRead, VimJJ, %VimIni%, %VimSection%, VimJJ, %VimJJ%
-  IniRead, VimJK, %VimIni%, %VimSection%, VimJK, %VimJK%
-  IniRead, VimSD, %VimIni%, %VimSection%, VimSD, %VimSD%
   IniRead, VimIcon, %VimIni%, %VimSection%, VimIcon, %VimIcon%
   IniRead, VimIconCheck, %VimIni%, %VimSection%, VimIconCheck, %VimIconCheck%
   IniRead, VimIconCheckInterval, %VimIni%, %VimSection%, VimIconCheckInterval, %VimIconCheckInterval%
@@ -703,8 +692,6 @@ VimWriteIni(){
   IniWrite, % VimDisableUnused, % VimIni, % VimSection, VimDisableUnused
   IniWrite, % VimRestoreIME, % VimIni, % VimSection, VimRestoreIME
   IniWrite, % VimJJ, % VimIni, % VimSection, VimJJ
-  IniWrite, % VimJK, % VimIni, % VimSection, VimJK
-  IniWrite, % VimSD, % VimIni, % VimSection, VimSD
   IniWrite, % VimIcon, % VimIni, % VimSection, VimIcon
   IniWrite, % VimIconCheck, % VimIni, % VimSection, VimIconCheck
   IniWrite, % VimIconCheckInterval, % VimIni, % VimSection, VimIconCheckInterval
