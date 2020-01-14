@@ -234,8 +234,8 @@ MenuVimSettings:
   Gui, VimGuiSettings:-MinimizeBox
   Gui, VimGuiSettings:-Resize
   checkboxes_rows := VimCheckboxes.Length()
-  height := checkboxes_rows * 22 + 370
-  Gui, VimGuiSettings:Add, GroupBox, xm X+10 YM+10 Section W370 H%height%, Settings
+  boxheight := checkboxes_rows * 22 + 470
+  Gui, VimGuiSettings:Add, GroupBox, xm X+10 YM+10 Section W370 H%boxheight%, Settings
   VimCheckboxesCreated := 0
   for i, s in VimCheckboxes {
     VimAddCheckbox(s["name"], s["default"], s["description"])
@@ -247,9 +247,9 @@ MenuVimSettings:
   Gui, VimGuiSettings:Add, UpDown, vVimIconCheckInterval Range100-1000000, %VimIconCheckInterval%
   Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimVerboseLevel vVimVerboseLevel, Verbose level
   Gui, VimGuiSettings:Add, DropDownList, vVimVerboseValue Choose%VimVerbose%, %VimVerbose1%|%VimVerbose2%|%VimVerbose3%|%VimVerbose4%
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimTwoLetterEscText vVimTwoLetterEscText, Two-letter insert-mode <esc> hotkey (sets normal mode)
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+10 gVimTwoLetterEscText vVimTwoLetterEscText, Two-letter insert-mode <esc> hotkey (sets normal mode)
   StringReplace, VimTwoLetterEscList, VimTwoLetterEsc, %VimTwoLetterEscDel%, `n, All
-  Gui, VimGuiSettings:Add, Edit, XS+10 Y+10 R10 W300 Multi vVimTwoLetterEscList, %VimTwoLetterEscList%
+  Gui, VimGuiSettings:Add, Edit, XS+10 Y+10 R4 W100 Multi vVimTwoLetterEscList, %VimTwoLetterEscList%
   Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimGroupText vVimGroupText, Applications
   StringReplace, VimGroupList, VimGroup, %VimGroupDel%, `n, All
   Gui, VimGuiSettings:Add, Edit, XS+10 Y+10 R10 W300 Multi vVimGroupList, %VimGroupList%
