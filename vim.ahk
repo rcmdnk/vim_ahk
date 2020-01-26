@@ -28,6 +28,28 @@ class VimAhkIcon{
                  , Command: A_LineFile . "\..\icons\command.ico"
                  , Disabled: A_LineFile . "\..\icons\disabled.ico"
                  , Default: A_AhkPath}
+  SetIcon(Mode="", VimIcon=1){
+    icon :=
+    if (VimIcon == 0){
+      icon := VimAhkIcon.Icons["Default"]
+    }else if InStr(Mode, "Normal"){
+      icon := VimAhkIcon.Icons["Normal"]
+    }else if InStr(Mode, "Insert"){
+      icon := VimAhkIcon.Icons["Insert"]
+    }else if InStr(Mode, "Visual"){
+      icon := VimAhkIcon.Icons["Visual"]
+    }else if InStr(Mode, "Command"){
+      icon := VimAhkIcon.Icons["Command"]
+    }else if InStr(Mode, "Disabled"){
+      icon := VimAhkIcon.Icons["Disabled"]
+    }
+    if FileExist(icon){
+      Menu, Tray, Icon, %icon%
+      if (VimIcon == 1){
+        Menu, VimSubMenu, Icon, Status, %icon%
+      }
+    }
+  }
 }
 
 ; Application groups {{{
@@ -35,7 +57,7 @@ class VimAhkGroup{
   static GroupDel := ","
   __New(){
     this.GroupN := 0
-    this.VimGroupName := "VimGroup" . GroupN
+    this.GroupName := "VimGroup" . GroupN
 
     ; Enable vim mode for following applications
     this.Group :=                                     "ahk_exe notepad.exe"   ; NotePad
@@ -75,12 +97,11 @@ class VimAhkGroup{
 
   SetGroup(group){
     this.GroupN++
-    this.VimGroupName := "VimGroup" . GroupN
+    this.GroupName := "VimGroup" . GroupN
     Loop, Parse, % group, % this.GroupDel
     {
       if(A_LoopField != ""){
-        MsgBox % this.VimGroupName ", " A_LoopField
-        GroupAdd, % this.VimGroupName, %A_LoopField%
+        GroupAdd, % this.GroupName, %A_LoopField%
       }
     }
   }
@@ -89,6 +110,7 @@ class VimAhkGroup{
 
 class VimAhk{
   __New(){
+    this.Icon := new VimAhkIcon()
     this.Group := new VimAhkGroup()
   }
 }
@@ -200,7 +222,7 @@ Menu, Tray, Add
 Menu, Tray, Add, VimMenu, :VimSubMenu
 
 ; Set initial icon
-VimSetIcon(VimMode)
+VimAhkObj.Icon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
 
 ; Set Timer for status check
 if(VimConf["VimIconCheck"]["val"] == 1){
@@ -324,11 +346,7 @@ VimV2Conf(){
 
 VimSet(){
   global
-  if(VimConf["VimIcon"]["val"] == 1){
-     VimSetIcon(VimMode)
-  }else{
-     VimSetIcon("Default")
-  }
+  VimAhkObj.Icon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
   if(VimConf["VimIconCheck"]["val"] == 1){
     SetTimer, VimStatusCheckTimer, % VimConf["VimIconCheckInterval"]["val"]
   }else{
@@ -390,7 +408,7 @@ MenuVimCheck(){
   WinGet, name, ProcessName, ahk_pid %process%
   WinGetClass, class, ahk_pid %process%
   WinGetTitle, title, ahk_pid %process%
-  if WinActive("ahk_group" . VimAhkObj.Group.VimGroupName){
+  if WinActive("ahk_group" . VimAhkObj.Group.GroupName){
     Msgbox, 0x40, Vim Ahk,
     (
       Supported
@@ -530,35 +548,6 @@ VIM_IME_SET(SetSts=0, WinTitle="A"){
 ; }}}
 
 ; Basic Functions {{{
-VimSetIcon(Mode=""){
-  global VimConf
-  icon :=
-  if InStr(Mode, "Normal"){
-    icon := VimAhkIcon.Icons["Normal"]
-  }else if InStr(Mode, "Insert"){
-    icon := VimAhkIcon.Icons["Insert"]
-  }else if InStr(Mode, "Visual"){
-    icon := VimAhkIcon.Icons["Visual"]
-  }else if InStr(Mode, "Command"){
-    icon := VimAhkIcon.Icons["Command"]
-  }else if InStr(Mode, "Disabled"){
-    icon := VimAhkIcon.Icons["Disabled"]
-  }else if InStr(Mode, "Default"){
-    icon := VimAhkIcon.Icons["Default"]
-  }
-  ;MsgBox % Mode ", " icon
-  if FileExist(icon){
-    if(InStr(Mode, "Default")){
-      Menu, Tray, Icon, %icon%
-    }else{
-      Menu, VimSubMenu, Icon, Status, %icon%
-      if(VimConf["VimIcon"]["val"] == 1){
-        Menu, Tray, Icon, %icon%
-      }
-    }
-  }
-}
-
 VimCheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
   global
 
@@ -585,7 +574,7 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
     If(Mode == "Insert") and (VimConf["VimRestoreIME"]["val"] == 1){
       VIM_IME_SET(VimLastIME)
     }
-    VimSetIcon(VimMode)
+    VimAhkObj.Icon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
   }
   if(g != -1){
     Vim_g := g
@@ -687,11 +676,11 @@ VimWriteIni(){
 
 VimStatusCheckTimer(){
   global VimAhkObj, VimMode
-  if WinActive("ahk_group " . VimAhkObj.Group.VimGroupName)
+  if WinActive("ahk_group " . VimAhkObj.Group.GroupName)
   {
-    VimSetIcon(VimMode)
+    VimAhkObj.Icon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
   }else{
-    VimSetIcon("Disabled")
+    VimAhkObj.Icon.SetIcon("Disabled", VimConf["VimIcon"]["val"])
   }
 }
 
@@ -713,7 +702,7 @@ Return
 
 ; }}}
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName)
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName)
 ; Check Mode {{{
 ^!+c::
   VimCheckMode(VimVerboseMax, VimMode)
@@ -751,7 +740,7 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
   VimSetNormal()
 Return
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConf["VimJJ"]["val"] == 1)
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConf["VimJJ"]["val"] == 1)
 ~j up:: ; jj: go to Normal mode.
   Input, jout, I T0.1 V L1, j
   if(ErrorLevel == "EndKey:J"){
@@ -761,7 +750,7 @@ Return
 Return
 ; }}}
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConf["VimJK"]["val"] == 1)
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConf["VimJK"]["val"] == 1)
 j & k::
 k & j::
   SendInput, {BackSpace 1}
@@ -769,7 +758,7 @@ k & j::
 Return
 ; }}}
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConf["VimSD"]["val"] == 1)
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConf["VimSD"]["val"] == 1)
 s & d::
 d & s::
   SendInput, {BackSpace 1}
@@ -778,7 +767,7 @@ Return
 ; }}}
 
 ; Enter vim insert mode (Exit vim normal mode) {{{
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) && (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) && (VimMode == "Vim_Normal")
 i::VimSetMode("Insert")
 
 +i::
@@ -808,7 +797,7 @@ Return
 ; }}}
 
 ; Repeat {{{
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode("Vim_"))
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimStrIsInCurrentVimMode("Vim_"))
 1::
 2::
 3::
@@ -822,7 +811,7 @@ Return
   VimSetMode("", 0, n_repeat)
 Return
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (Vim_n > 0)
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (Vim_n > 0)
 0:: ; 0 is used as {Home} for Vim_n=0
   n_repeat := Vim_n*10 + A_ThisHotkey
   VimSetMode("", 0, n_repeat)
@@ -830,7 +819,7 @@ Return
 ; }}}
 
 ; Normal Mode Basic {{{
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Vim_Normal")
 ; Undo/Redo
 u::Send,^z
 ^r::Send,^y
@@ -854,7 +843,7 @@ u::Send,^z
 Return
 
 +z::VimSetMode("Z")
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Z")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Z")
 +z::
   Send, ^s
   Send, !{F4}
@@ -866,7 +855,7 @@ Return
   VimSetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Vim_Normal")
 Space::Send, {Right}
 
 ; period
@@ -874,11 +863,11 @@ Space::Send, {Right}
 ; }}}
 
 ; Replace {{{
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Vim_Normal")
 r::VimSetMode("r_once")
 +r::VimSetMode("r_repeat")
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "r_once")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "r_once")
 ~a::
 ~+a::
 ~b::
@@ -980,7 +969,7 @@ Return
   VimSetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "r_repeat")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "r_repeat")
 ~a::
 ~+a::
 ~b::
@@ -1083,7 +1072,7 @@ Return
 
 ; Move {{{
 ; g {{{
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (not Vim_g)
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (not Vim_g)
 g::VimSetMode("", 1)
 ; }}}
 
@@ -1221,7 +1210,7 @@ VimMoveLoop(key=""){
     VimMove(key)
   }
 }
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode("Vim_"))
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimStrIsInCurrentVimMode("Vim_"))
 ; 1 character
 h::VimMoveLoop("h")
 j::VimMoveLoop("j")
@@ -1252,13 +1241,13 @@ b::VimMoveLoop("b")
 ; G
 +g::VimMove("+g")
 ; gg
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode( "Vim_")) and (Vim_g)
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimStrIsInCurrentVimMode( "Vim_")) and (Vim_g)
 g::VimMove("g")
 ; }}} Move
 
 ; Copy/Cut/Paste (ydcxp){{{
 ; YDC
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Vim_Normal")
 y::VimSetMode("Vim_ydc_y", 0, -1, 0)
 d::VimSetMode("Vim_ydc_d", 0, -1, 0)
 c::VimSetMode("Vim_ydc_c", 0, -1, 0)
@@ -1297,7 +1286,7 @@ Return
   }
 Return
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_ydc_y")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Vim_ydc_y")
 y::
   VimLineCopy := 1
   if WinActive("ahk_group VimDoubleHomeGroup"){
@@ -1312,7 +1301,7 @@ y::
   Send, {Left}{Home}
 Return
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_ydc_d")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Vim_ydc_d")
 d::
   VimLineCopy := 1
   if WinActive("ahk_group DoubleHome"){
@@ -1326,7 +1315,7 @@ d::
   }
 Return
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_ydc_c")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Vim_ydc_c")
 c::
   VimLineCopy := 1
   if WinActive("ahk_group DoubleHome"){
@@ -1340,13 +1329,13 @@ c::
   }
 Return
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Vim_Normal")
 ; X
 x::Send, {Delete}
 +x::Send, {BS}
 
 ; Paste
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Vim_Normal")
 p::
   ;i:=0
   ;;Send, {p Up}
@@ -1400,7 +1389,7 @@ Return
 ; Vim visual mode {{{
 
 ; Visual Char/Block/Line
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Vim_Normal")
 v::VimSetMode("Vim_VisualChar")
 ^v::
   Send, ^b
@@ -1413,7 +1402,7 @@ Return
 Return
 
 ; ydc
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode( "Visual"))
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimStrIsInCurrentVimMode( "Visual"))
 y::
   Clipboard :=
   Send, ^c
@@ -1475,7 +1464,7 @@ Return
 ; }}} Vim visual mode
 
 ; Search {{{
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Vim_Normal")
 /::
   Send, ^f
   VimSetMode("Insert")
@@ -1497,10 +1486,10 @@ n::Send, {F3}
 ; }}} Search
 
 ; Vim comamnd mode {{{
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Vim_Normal")
 :::VimSetMode("Command") ;(:)
 `;::VimSetMode("Command") ;(;)
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Command")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Command")
 w::VimSetMode("Command_w")
 q::VimSetMode("Command_q")
 h::
@@ -1508,7 +1497,7 @@ h::
   VimSetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Command_w")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Command_w")
 Return::
   Send, ^s
   VimSetMode("Vim_Normal")
@@ -1525,7 +1514,7 @@ Space::
   VimSetMode("Insert")
 Return
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Command_q")
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimMode == "Command_q")
 Return::
   Send, !{F4}
   VimSetMode("Insert")
@@ -1533,7 +1522,7 @@ Return
 ; }}} Vim command mode
 
 ; Disable other keys {{{
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode( "ydc") or VimStrIsInCurrentVimMode( "Command") or (VimMode == "Z"))
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and (VimStrIsInCurrentVimMode( "ydc") or VimStrIsInCurrentVimMode( "Command") or (VimMode == "Z"))
 *a::
 *b::
 *c::
@@ -1604,7 +1593,7 @@ Space::
   VimSetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimConf["VimDisableUnused"]["val"] == 2)
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimConf["VimDisableUnused"]["val"] == 2)
 a::
 b::
 c::
@@ -1700,7 +1689,7 @@ _::
 Space::
 Return
 
-#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimConf["VimDisableUnused"]["val"] == 3)
+#If WinActive("ahk_group " . VimAhkObj.Group.GroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimConf["VimDisableUnused"]["val"] == 3)
 *a::
 *b::
 *c::
