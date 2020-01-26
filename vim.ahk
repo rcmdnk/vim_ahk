@@ -8,15 +8,7 @@ VimIni.ReadIni()
 VimConfObj.SetGroup(VimConfObj.Conf["VimGroup"]["val"])
 
 ; Menu
-;Menu, VimSubMenu, Add, Settings, MenuVimSettings
-;Menu, VimSubMenu, Add
-;Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
-;Menu, VimSubMenu, Add, Status, MenuVimStatus
-;Menu, VimSubMenu, Add, About vim_ahk, MenuVimAbout
-;
-;Menu, Tray, Add
-;Menu, Tray, Add, VimMenu, :VimSubMenu
-VimMenu.SetMenu()
+VimMenu.SetMenu(VimConfObj.Verbose.Length())
 
 ; Set initial icon
 VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
@@ -38,17 +30,58 @@ Return
 #Include %A_LineFile%\..\lib\vim_state.ahk
 
 class VimMenu{
-  SetMenu(){
-    global VimConfObj
+  SetMenu(NVerbose){
+    MenuVimStatus := ObjBindMethod(VimMenu, "Status", NVerbose)
+    MenuVimAbout := ObjBindMethod(VimMenu, "About")
     Menu, VimSubMenu, Add, Settings, MenuVimSettings
     Menu, VimSubMenu, Add
     Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
-    Menu, VimSubMenu, Add, Status, MenuVimStatus
-    Menu, VimSubMenu, Add, About vim_ahk, MenuVimAbout
+    Menu, VimSubMenu, Add, Status, % MenuVimStatus
+    Menu, VimSubMenu, Add, About vim_ahk, % MenuVimAbout
 
     Menu, Tray, Add
     Menu, Tray, Add, VimMenu, :VimSubMenu
   }
+  Status(NVerbose){
+    VimCheckMode(NVerbose, , , , 1)
+  }
+
+  About(){
+    VimGuiAboutOK := ObjBindMethod(VimMenu, "AboutOK")
+    Gui, New, +HwndVimGuiAbout
+    VimMenu.VimGuiAbout := VimGuiAbout
+    Gui, % VimGuiAbout . ":-MinimizeBox"
+    Gui, % VimGuiAbout . ":-Resize"
+    Gui, % VimGuiAbout . ":Add", Text, , % "Vim Ahk (vim_ahk):`n" VimAbout.Description
+    Gui, % VimGuiAbout . ":Font", Underline
+    Gui, % VimGuiAbout . ":Add", Text, Y+0 cBlue gVimGitHub, Homepage
+    Gui, % VimGuiAbout . ":Font", Norm
+    Gui, % VimGuiAbout . ":Add", Text, , % "Author: " VimAbout.Author
+    Gui, % VimGuiAbout . ":Add", Text, , % "Version: " VimAbout.Version
+    Gui, % VimGuiAbout . ":Add", Text, Y+0, % "Last update: " VimAbout.Date
+    Gui, % VimGuiAbout . ":Add", Text, , Script path:`n%A_LineFile%
+    Gui, % VimGuiAbout . ":Add", Text, , % "Setting file:`n" VimIni.Ini
+    Gui, % VimGuiAbout . ":Add", Button, +HwndVimGuiAboutOKId X200 W100 Default, &OK
+    GuiControl, +G, % VimGuiAboutOKId, % VimGuiAboutOK
+    Gui, % VimGuiAbout . ":Show", W500, Vim Ahk
+    ; This does not work
+    ;OnMessage(0x10, ObjBindMethod(VimMenu, "AboutClose"))
+  }
+
+  AboutOK(){
+    Gui, % VimMenu.VimGuiAbout . ":Destroy"
+  }
+  ;AboutClose(wParam, lParam, msg, hwnd){
+  ;  MsgBox "AboutClose"
+  ;  if(hwnd != VimMenu.VimGuiAbout){
+  ;    Return
+  ;  }
+  ;  MsgBox % "AboutClose: Close" VimMenuVimGuiAbout
+  ;  Gui, % VimMenu.VimGuiAbout . ":Destroy"
+  ;}
+  ;AboutEscape(){
+  ;  Gui, VimGuiAbout:Destroy
+  ;}
 }
 ; Class }}}
 
@@ -176,7 +209,7 @@ VimSet(){
   VimConfObj.SetGroup(VimConfObj.Conf["VimGroup"]["val"])
 }
 
-VimGuiSettings(){
+VimGuiSettingsDestroy(){
   SetTimer, VimDisplayToolTip, Off
   ToolTip
   Gui, VimGuiSettings:Destroy
@@ -185,16 +218,16 @@ VimGuiSettingsOK(){
   Gui, VimGuiSettings:Submit
   VimV2Conf()
   VimIni.WriteIni()
-  VimGuiSettings()
+  VimGuiSettingsDestroy()
 }
 VimGuiSettingsCancel(){
-  VimGuiSettings()
+  VimGuiSettingsDestroy()
 }
 VimGuiSettingsClose(){
-  VimGuiSettings()
+  VimGuiSettingsDestroy()
 }
 VimGuiSettingsEscape(){
-  VimGuiSettings()
+  VimGuiSettingsDestroy()
 }
 
 VimGuiSettingsReset(){
@@ -208,9 +241,7 @@ VimGuiSettingsReset(){
 
   VimSet()
 
-  SetTimer, VimDisplayToolTip, Off
-  ToolTip
-  Gui, VimGuiSettings:Destroy
+  VimGuiSettingsDestroy()
   MenuVimSettings()
 }
 
@@ -246,37 +277,6 @@ MenuVimCheck(){
   }
 }
 
-MenuVimStatus(){
-  global VimVerboseMax
-  VimCheckMode(VimVerboseMax, , , , 1)
-}
-
-MenuVimAbout(){
-  Gui, VimGuiAbout:+LabelVimGuiAbout
-  Gui, VimGuiAbout:-MinimizeBox
-  Gui, VimGuiAbout:-Resize
-  Gui, VimGuiAbout:Add, Text, , % "Vim Ahk (vim_ahk):`n" VimAbout.Description
-  Gui, VimGuiAbout:Font, Underline
-  Gui, VimGuiAbout:Add, Text, Y+0 cBlue gVimGitHub, Homepage
-  Gui, VimGuiAbout:Font, Norm
-  Gui, VimGuiAbout:Add, Text, , % "Author: " VimAbout.Author
-  Gui, VimGuiAbout:Add, Text, , % "Version: " VimAbout.Version
-  Gui, VimGuiAbout:Add, Text, Y+0, % "Last update: " VimAbout.Date
-  Gui, VimGuiAbout:Add, Text, , Script path:`n%A_LineFile%
-  Gui, VimGuiAbout:Add, Text, , % "Setting file:`n" VimIni.Ini
-  Gui, VimGuiAbout:Add, Button, gVimGuiAboutOK X200 W100 Default, &OK
-  Gui, VimGuiAbout:Show, W500, Vim Ahk
-}
-
-VimGuiAboutOK(){
-  Gui, VimGuiAbout:Destroy
-}
-VimGuiAboutClose(){
-  Gui, VimGuiAbout:Destroy
-}
-VimGuiAboutEscape(){
-  Gui, VimGuiAbout:Destroy
-}
 ; }}}
 
 ; AutoHotkey settings {{{
