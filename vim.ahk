@@ -81,7 +81,7 @@ VimPopup["VimAhkGitHub"] := VimAhkAbout.Homepage
 ; }}} Setting variables
 
 ; Read Ini
-VimAhkObj.Ini.ReadIni()
+VimAhkIni.ReadIni()
 
 ; Set group
 VimAhkObj.Group.SetGroup(VimConf["VimGroup"]["val"])
@@ -107,7 +107,7 @@ Menu, Tray, Add
 Menu, Tray, Add, VimMenu, :VimSubMenu
 
 ; Set initial icon
-VimAhkObj.Icon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
+VimAhkIcon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
 
 ; Set Timer for status check
 if(VimConf["VimIconCheck"]["val"] == 1){
@@ -133,6 +133,26 @@ class VimAhkDebug{
   , "Vim_ydc_c", "Vim_ydc_d", "Vim_VisualLine", "Vim_VisualFirst"
   , "Vim_VisualChar", "Command", "Command_w", "Command_q", "Z", ""
   , "r_once", "r_repeat", "Vim_VisualLineFirst"]
+
+  CheckValidMode(Mode, FullMatch=true){
+    if (VimAhkDebug.CheckModeValue == false){
+      Return
+    }
+    try {
+      InOrBlank:= (not full_match) ? "in " : ""
+      if not VimHasValue(VimAhkDebug.PossibleVimModes, Mode, FullMatch){
+        throw Exception("Invalid mode specified",-2,
+        ( Join
+  "'" Mode "' is not " InOrBlank " a valid mode as defined by the VimPossibleVimModes
+   array at the top of vim.ahk. This may be a typo.
+   Fix this error by using an existing mode,
+   or adding your mode to the array.")
+        )
+      }
+    }catch e{
+      MsgBox % "Warning: " e.Message "`n" e.Extra "`n`n Called in " e.What " at line " e.Line
+    }
+  }
 }
 
 class VimAhkIni{
@@ -250,8 +270,6 @@ class VimAhkGroup{
 
 class VimAhk{
   __New(){
-    this.Ini := new VimAhkIni()
-    this.Icon := new VimAhkIcon()
     this.Group := new VimAhkGroup()
   }
 }
@@ -370,7 +388,7 @@ VimV2Conf(){
 
 VimSet(){
   global VimAhkObj, VimMode, VimConf
-  VimAhkObj.Icon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
+  VimAhkIcon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
   if(VimConf["VimIconCheck"]["val"] == 1){
     SetTimer, VimStatusCheckTimer, % VimConf["VimIconCheckInterval"]["val"]
   }else{
@@ -387,7 +405,7 @@ VimGuiSettings(){
 VimGuiSettingsOK(){
   Gui, VimGuiSettings:Submit
   VimV2Conf()
-  VimAhkObj.Ini.WriteIni()
+  VimAhkIni.WriteIni()
   VimGuiSettings()
 }
 VimGuiSettingsCancel(){
@@ -587,15 +605,13 @@ VimCheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
 
 VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
   global VimMode, VimConf, VimLastIME, VimAhkObj, Vim_g, Vim_n, VimLineCopy, VimVerbose
-  if VimAhkDebug.CheckModeValue {
-    VimCheckValidMode(mode)
-  }
+  VimAhkDebug.CheckValidMode(Mode)
   if(Mode != ""){
     VimMode := Mode
     If(Mode == "Insert") and (VimConf["VimRestoreIME"]["val"] == 1){
       VIM_IME_SET(VimLastIME)
     }
-    VimAhkObj.Icon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
+    VimAhkIcon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
   }
   if(g != -1){
     Vim_g := g
@@ -612,17 +628,13 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
 
 VimIsCurrentVimMode(mode){
   global VimMode
-  if VimAhkDebug.CheckModeValue {
-    VimCheckValidMode(mode)
-  }
+  VimAhkDebug.CheckValidMode(mode)
   return (mode == VimMode)
 }
 
 VimStrIsInCurrentVimMode(str){
   global VimMode
-  if VimAhkDebug.CheckModeValue {
-    VimCheckValidMode(str, false)
-  }
+  VimAhkDebug.CheckValidMode(str, false)
   return (inStr(VimMode, str))
 }
 
@@ -646,23 +658,6 @@ VimHasValue(haystack, needle, full_match = true){
   return false
 }
 
-VimCheckValidMode(mode, full_match := true){
-  try {
-    inOrBlank:= (not full_match) ? "in " : ""
-    if not VimHasValue(VimAhkDebug.PossibleVimModes, mode, full_match){
-      throw Exception("Invalid mode specified",-2,
-      ( Join
-"'" mode "' is not " inOrBlank "a valid mode as defined by the VimPossibleVimModes
- array at the top of vim.ahk. This may be a typo.
- Fix this error by using an existing mode,
- or adding your mode to the array.")
-      )
-    }
-  }catch e{
-    MsgBox % "Warning: " e.Message "`n" e.Extra "`n`n Called in " e.What " at line " e.Line
-  }
-}
-
 VimStatus(Title, lines=1){
   WinGetPos, , , W, H, A
   Tooltip, %Title%, W - 110, H - 30 - (lines) * 20
@@ -678,9 +673,9 @@ VimStatusCheckTimer(){
   global VimAhkObj, VimMode
   if WinActive("ahk_group " . VimAhkObj.Group.GroupName)
   {
-    VimAhkObj.Icon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
+    VimAhkIcon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
   }else{
-    VimAhkObj.Icon.SetIcon("Disabled", VimConf["VimIcon"]["val"])
+    VimAhkIcon.SetIcon("Disabled", VimConf["VimIcon"]["val"])
   }
 }
 
