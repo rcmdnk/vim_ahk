@@ -369,7 +369,7 @@ VimV2Conf(){
 }
 
 VimSet(){
-  global
+  global VimAhkObj, VimMode, VimConf
   VimAhkObj.Icon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
   if(VimConf["VimIconCheck"]["val"] == 1){
     SetTimer, VimStatusCheckTimer, % VimConf["VimIconCheckInterval"]["val"]
@@ -380,13 +380,11 @@ VimSet(){
 }
 
 VimGuiSettings(){
-  global
   SetTimer, VimDisplayToolTip, Off
   ToolTip
   Gui, VimGuiSettings:Destroy
 }
 VimGuiSettingsOK(){
-  global
   Gui, VimGuiSettings:Submit
   VimV2Conf()
   VimAhkObj.Ini.WriteIni()
@@ -457,7 +455,6 @@ MenuVimStatus(){
 }
 
 MenuVimAbout(){
-  global
   Gui, VimGuiAbout:+LabelVimGuiAbout
   Gui, VimGuiAbout:-MinimizeBox
   Gui, VimGuiAbout:-Resize
@@ -573,7 +570,7 @@ VIM_IME_SET(SetSts=0, WinTitle="A"){
 
 ; Basic Functions {{{
 VimCheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
-  global
+  global VimMode, Vim_g, Vim_n, VimLineCopy
 
   if(force == 0) and ((verbose <= 1) or ((Mode == "") and (g == 0) and (n == 0) and (LineCopy == -1))){
     Return
@@ -589,7 +586,7 @@ VimCheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
 }
 
 VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
-  global
+  global VimMode, VimConf, VimLastIME, VimAhkObj, Vim_g, Vim_n, VimLineCopy, VimVerbose
   if VimAhkDebug.CheckModeValue {
     VimCheckValidMode(mode)
   }
@@ -667,7 +664,6 @@ VimCheckValidMode(mode, full_match := true){
 }
 
 VimStatus(Title, lines=1){
-  global
   WinGetPos, , , W, H, A
   Tooltip, %Title%, W - 110, H - 30 - (lines) * 20
   SetTimer, VimRemoveStatus, 1000
@@ -1081,7 +1077,7 @@ g::VimSetMode("", 1)
 ; }}}
 
 VimMove(key=""){
-  global
+  global VimMode, VimLineCopy
   shift = 0
   if(VimStrIsInCurrentVimMode( "Visual") or VimStrIsInCurrentVimMode( "ydc")){
     shift := 1
@@ -1206,7 +1202,7 @@ VimMove(key=""){
   VimSetMode("", 0, 0)
 }
 VimMoveLoop(key=""){
-  global
+  global Vim_n
   if(Vim_n == 0){
     Vim_n := 1
   }
