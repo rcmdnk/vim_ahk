@@ -27,217 +27,186 @@ Return
 #Include %A_LineFile%\..\lib\vim_debug.ahk
 #Include %A_LineFile%\..\lib\vim_icon_mng.ahk
 #Include %A_LineFile%\..\lib\vim_ini.ahk
+#Include %A_LineFile%\..\lib\vim_menu.ahk
 #Include %A_LineFile%\..\lib\vim_state.ahk
 
-class VimMenu{
-  SetMenu(NVerbose){
-    MenuVimStatus := ObjBindMethod(VimMenu, "Status", NVerbose)
-    MenuVimAbout := ObjBindMethod(VimMenu, "About")
-    Menu, VimSubMenu, Add, Settings, MenuVimSettings
-    Menu, VimSubMenu, Add
-    Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
-    Menu, VimSubMenu, Add, Status, % MenuVimStatus
-    Menu, VimSubMenu, Add, About vim_ahk, % MenuVimAbout
+class VimSetting{
+  Menu(){
+    ;global VimConfObj
+    global
+    Gui, New, % "+HwndVimGuiSetting +Label" . VimSetting.__Class . ".Menu"
+    VimSetting.VimGuiSetting := VimGuiSetting
+    Gui, %VimGuiSetting%:-MinimizeBox
+    Gui, %VimGuiSetting%:-Resize
+    VimSettingHeight := VimConfObj.Checkboxes.Length() * 22 + 370
+    Gui, %VimGuiSetting%:Add, GroupBox, xm X+10 YM+10 Section W370 H%VimSettingHeight%, Settings
+    VimCheckboxesCreated := 0
+    for i, k in VimConfObj.Checkboxes {
+      if(VimCheckboxesCreated == 0){
+        y := "YS+20"
+      }else{
+        y := "Y+10"
+      }
+      Gui, %VimGuiSetting%:Add, Checkbox, XS+10 %y% v%k%, % VimConfObj.Conf[k]["description"]
+      VimCheckboxesCreated  := 1
+      if(VimConfObj.Conf[k]["val"] == 1){
+        GuiControl, %VimGuiSetting%:, %k%, 1
+      }
+    }
+    Gui, %VimGuiSetting%:Add, Text, % "XS+10 Y+20 g" . VimSetting.__Class . ".DisableUnusedLevel v" . VimSetting.__Class . "DisableUnusedLevel", % VimConfObj.Conf["VimDisableUnused"]["description"]
+    DisableUnused := VimConfObj.DisableUnused
+    Gui, %VimGuiSetting%:Add, DropDownList, % "W320 vVimDisableUnusedValue Choose"VimConfObj.Conf["VimDisableUnused"]["val"], % DisableUnused[1]"|"DisableUnused[2]"|"DisableUnused[3]
+    Gui, %VimGuiSetting%:Add, Text, % "XS+10 Y+20 g" . VimSetting.__Class . ".IconCheckIntervalText v" . VimSetting.__Class . "IconCheckIntervalText", % VimConfObj.Conf["VimIconCheckInterval"]["description"]
+    Gui, %VimGuiSetting%:Add, Edit, vVimIconCheckIntervalEdit
+    Gui, %VimGuiSetting%:Add, UpDown, vVimIconCheckInterval Range100-1000000, % VimConfObj.Conf["VimIconCheckInterval"]["val"]
+    Gui, %VimGuiSetting%:Add, Text, % "XS+10 Y+20 g" . VimSetting.__Class . ".VerboseLevel v" . VimSetting.__Class . "VerboseLevel", % VimConfObj.Conf["VimVerbose"]["description"]
+    Verbose := VimConfObj.Verbose
+    Gui, %VimGuiSetting%:Add, DropDownList, % "vVimVerboseValue Choose"VimConfObj.Conf["VimVerbose"]["val"], % Verbose[1]"|"Verbose[2]"|"Verbose[3]"|"Verbose[4]
+    Gui, %VimGuiSetting%:Add, Text, % "XS+10 Y+20 g" . VimSetting.__Class . ".GroupText v" . VimSetting.__Class . "GroupText", % VimConfObj.Conf["VimGroup"]["description"]
+    StringReplace, VimGroupList, % VimConfObj.Conf["VimGroup"]["val"], % VimConfObj.GroupDel, `n, All
+    Gui, %VimGuiSetting%:Add, Edit, XS+10 Y+10 R10 W300 Multi vVimGroupList, %VimGroupList%
+    Gui, %VimGuiSetting%:Add, Text, XM+20 Y+30, Check
+    Gui, %VimGuiSetting%:Font, Underline
+    Gui, %VimGuiSetting%:Add, Text, X+5 cBlue gVimGitHub vVimGitHub, HELP
+    Gui, %VimGuiSetting%:Font, Norm
+    Gui, %VimGuiSetting%:Add, Text, X+5, for further information.
+    Gui, %VimGuiSetting%:Add, Button, +HwndVimGuiSettingOKId xm W100 X45 Y+10 Default, &OK
+    VimGuiSettingOK := ObjBindMethod(VimSetting, "MenuOK")
+    GuiControl, +G, % VimGuiSettingOKId, % VimGuiSettingOK
+    Gui, %VimGuiSetting%:Add, Button, +HwndVimGuiSettingResetId W100 X+10, &Reset
+    VimGuiSettingReset := ObjBindMethod(VimSetting, "MenuReset")
+    GuiControl, +G, % VimGuiSettingResetId, % VimGuiSettingReset
+    Gui, %VimGuiSetting%:Add, Button, +HwndVimGuiSettingCancelId W100 X+10, &Cancel
+    VimGuiSettingCancel := ObjBindMethod(VimSetting, "MenuCancel")
+    GuiControl, +G, % VimGuiSettingCancelId, % VimGuiSettingCancel
+    Gui, %VimGuiSetting%:Show, W410, Vim Ahk Settings
+    OnMessage(0x200, ObjBindMethod(VimSetting, "MouseMove"))
+  }
 
-    Menu, Tray, Add
-    Menu, Tray, Add, VimMenu, :VimSubMenu
+  ; Dummy Labels, to enable popup over the text
+  DisableUnusedLevel(){
   }
-  Status(NVerbose){
-    VimCheckMode(NVerbose, , , , 1)
+  IconCheckIntervalText(){
   }
-
-  About(){
-    VimGuiAboutOK := ObjBindMethod(VimMenu, "AboutOK")
-    Gui, New, % "+HwndVimGuiAbout +Label" . VimMenu.__Class . ".About"
-    VimMenu.VimGuiAbout := VimGuiAbout
-    Gui, %VimGuiAbout%:-MinimizeBox
-    Gui, %VimGuiAbout%:-Resize
-    Gui, %VimGuiAbout%:Add, Text, , % "Vim Ahk (vim_ahk):`n" VimAbout.Description
-    Gui, %VimGuiAbout%:Font, Underline
-    Gui, %VimGuiAbout%:Add, Text, Y+0 cBlue gVimGitHub, Homepage
-    Gui, %VimGuiAbout%:Font, Norm
-    Gui, %VimGuiAbout%:Add, Text, , % "Author: " VimAbout.Author
-    Gui, %VimGuiAbout%:Add, Text, , % "Version: " VimAbout.Version
-    Gui, %VimGuiAbout%:Add, Text, Y+0, % "Last update: " VimAbout.Date
-    Gui, %VimGuiAbout%:Add, Text, , Script path:`n%A_LineFile%
-    Gui, %VimGuiAbout%:Add, Text, , % "Setting file:`n" VimIni.Ini
-    Gui, %VimGuiAbout%:Add, Button, +HwndVimGuiAboutOKId X200 W100 Default, &OK
-    GuiControl, +G, % VimGuiAboutOKId, % VimGuiAboutOK
-    Gui, %VimGuiAbout%:Show, W500, Vim Ahk
+  VerboseLevel(){
+  }
+  GroupText(){
   }
 
-  AboutOK(){
-    Gui, % VimMenu.VimGuiAbout . ":Destroy"
+  MouseMove(){
+    VimState.CurrControl := A_GuiControl
+    if(VimState.CurrControl != VimState.PrevControl){
+      VimState.PrevControl := VimState.CurrControl
+      ToolTip
+      if(VimState.CurrControl != "" && InStr(VimState.CurrControl, " ") == 0){
+        f := ObjBindMethod(VimSetting, "VimDisplayToolTip")
+        SetTimer, %f%, 1000
+      }
+    }
+    Return
   }
-  AboutClose(){
-    Gui, % VimMenu.VimGuiAbout . ":Destroy"
+
+  VimDisplayToolTip(){
+    global VimConfObj
+    f := ObjBindMethod(VimSetting, "VimDisplayToolTip")
+    SetTimer, %f%, Off
+    if(VimConfObj.Popup.HasKey(VimState.CurrControl)){
+      ToolTip % VimConfObj.Popup[VimState.CurrControl]
+      f := ObjBindMethod(VimSetting, "VimRemoveToolTip")
+      SetTimer, %f%, 60000
+    }
   }
-  AboutEscape(){
-    Gui, % VimMenu.VimGuiAbout . ":Destroy"
+
+  VimRemoveToolTip(){
+    f := ObjBindMethod(VimSetting, "VimRemoveToolTip")
+    SetTimer, %f%, Off
+    ToolTip
   }
+
+  VimV2Conf(){
+    global
+    Loop, % VimConfObj.DisableUnused.Length() {
+      if(VimDisableUnusedValue == VimConfObj.DisableUnused[A_Index]){
+        VimDisableUnused := A_Index
+        Break
+      }
+    }
+    Loop, % VimConfObj.Verbose.Length() {
+      if(VimVerboseValue == VimConfObj.Verbose[A_Index]){
+        VimVerbose := A_Index
+        Break
+      }
+    }
+    VimGroup := ""
+    Loop, Parse, VimGroupList, `n
+    {
+      if(! InStr(VimGroup, A_LoopField)){
+        if(VimGroup == ""){
+          VimGroup := A_LoopField
+        }else{
+          VimGroup := VimGroup . VimConfObj.GroupDel . A_LoopField
+        }
+      }
+    }
+    for k, v in VimConfObj.Conf {
+      v["val"] := %k%
+    }
+    VimSetting.VimSet()
+  }
+
+  VimSet(){
+    global VimConfObj
+    VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
+    if(VimConfObj.Conf["VimIconCheck"]["val"] == 1){
+      SetTimer, VimStatusCheckTimer, % VimConfObj.Conf["VimIconCheckInterval"]["val"]
+    }else{
+      SetTimer, VimStatusCheckTimer, Off
+    }
+    VimConfObj.SetGroup(VimConfObj.Conf["VimGroup"]["val"])
+  }
+
+  Destroy(){
+    f := ObjBindMethod(VimSetting, "VimDisplayToolTip")
+    SetTimer, %f%, Off
+    ToolTip
+    Gui, % VimSetting.VimGuiSetting . ":Destroy"
+    VimSetting.VimGuiSetting := VimGuiSetting
+  }
+  MenuOK(){
+    Gui, % VimSetting.VimGuiSetting . ":Submit"
+    VimSetting.VimV2Conf()
+    VimIni.WriteIni()
+    VimSetting.Destroy()
+  }
+  MenuCancel(){
+    VimSetting.Destroy()
+  }
+  MenuClose(){
+    VimSetting.Destroy()
+  }
+  MenuEscape(){
+    VimSetting.Destroy()
+  }
+
+  MenuReset(){
+    global VimConfObj
+    IfExist, VimIni.Ini
+      FileDelete, VimIni.Ini
+
+    for k, v in VimConfObj.Conf {
+      VimConfObj.Conf[k]["val"] := v["default"]
+    }
+
+    VimSetting.VimSet()
+
+    VimSetting.Destroy()
+    VimSetting.Menu()
+  }
+
 }
 ; Class }}}
 
 ; Menu functions {{{
-MenuVimSettings(){
-  ;global VimConfObj
-  global
-  Gui, VimGuiSettings:+LabelVimGuiSettings
-  Gui, VimGuiSettings:-MinimizeBox
-  Gui, VimGuiSettings:-Resize
-  VimSettingHeight := VimConfObj.Checkboxes.Length() * 22 + 370
-  Gui, VimGuiSettings:Add, GroupBox, xm X+10 YM+10 Section W370 H%VimSettingHeight%, Settings
-  VimCheckboxesCreated := 0
-  for i, k in VimConfObj.Checkboxes {
-    if(VimCheckboxesCreated == 0){
-      y := "YS+20"
-    }else{
-      y := "Y+10"
-    }
-    Gui, VimGuiSettings:Add, Checkbox, XS+10 %y% v%k%, % VimConfObj.Conf[k]["description"]
-    VimCheckboxesCreated  := 1
-    if(VimConfObj.Conf[k]["val"] == 1){
-      GuiControl, VimGuiSettings:, %k%, 1
-    }
-  }
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimDisableUnusedLevel vVimDisableUnusedLevel, % VimConfObj.Conf["VimDisableUnused"]["description"]
-  DisableUnused := VimConfObj.DisableUnused
-  Gui, VimGuiSettings:Add, DropDownList, % "W320 vVimDisableUnusedValue Choose"VimConfObj.Conf["VimDisableUnused"]["val"], % DisableUnused[1]"|"DisableUnused[2]"|"DisableUnused[3]
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimIconCheckIntervalText vVimIconCheckIntervalText, % VimConfObj.Conf["VimIconCheckInterval"]["description"]
-  Gui, VimGuiSettings:Add, Edit, vVimIconCheckIntervalEdit
-  Gui, VimGuiSettings:Add, UpDown, vVimIconCheckInterval Range100-1000000, % VimConfObj.Conf["VimIconCheckInterval"]["val"]
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimVerboseLevel vVimVerboseLevel, % VimConfObj.Conf["VimVerbose"]["description"]
-  Verbose := VimConfObj.Verbose
-  Gui, VimGuiSettings:Add, DropDownList, % "vVimVerboseValue Choose"VimConfObj.Conf["VimVerbose"]["val"], % Verbose[1]"|"Verbose[2]"|"Verbose[3]"|"Verbose[4]
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimGroupText vVimGroupText, % VimConfObj.Conf["VimGroup"]["description"]
-  StringReplace, VimGroupList, % VimConfObj.Conf["VimGroup"]["val"], % VimConfObj.GroupDel, `n, All
-  Gui, VimGuiSettings:Add, Edit, XS+10 Y+10 R10 W300 Multi vVimGroupList, %VimGroupList%
-  Gui, VimGuiSettings:Add, Text, XM+20 Y+30, Check
-  Gui, VimGuiSettings:Font, Underline
-  Gui, VimGuiSettings:Add, Text, X+5 cBlue gVimGitHub vVimGitHub, HELP
-  Gui, VimGuiSettings:Font, Norm
-  Gui, VimGuiSettings:Add, Text, X+5, for further information.
-  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsOK vVimGuiSettingsOK xm W100 X45 Y+10 Default, &OK
-  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsReset vVimGuiSettingsReset W100 X+10, &Reset
-  Gui, VimGuiSettings:Add, Button, gVimGuiSettingsCancel vVimGuiSettingsCancel W100 X+10, &Cancel
-  Gui, VimGuiSettings:Show, W410, Vim Ahk Settings
-  OnMessage(0x200, "VimMouseMove")
-}
-
-; Dummy Labels, to enable popup over the text
-VimDisableUnusedLevel(){
-}
-VimIconCheckIntervalText(){
-}
-VimVerboseLevel(){
-}
-VimGroupText(){
-}
-
-VimMouseMove(){
-  VimState.CurrControl := A_GuiControl
-  if(VimState.CurrControl != VimState.PrevControl){
-    VimState.PrevControl := VimState.CurrControl
-    ToolTip
-    if(VimState.CurrControl != "" && InStr(VimState.CurrControl, " ") == 0){
-      SetTimer, VimDisplayToolTip, 1000
-    }
-  }
-  Return
-}
-
-VimDisplayToolTip(){
-  global VimConfObj
-  SetTimer, VimDisplayToolTip, Off
-  if(VimConfObj.Popup.HasKey(VimState.CurrControl)){
-    ToolTip % VimConfObj.Popup[VimState.CurrControl]
-    SetTimer, VimRemoveToolTip, 60000
-  }
-}
-
-VimRemoveToolTip(){
-  SetTimer, VimRemoveToolTip, Off
-  ToolTip
-}
-
-VimV2Conf(){
-  global
-  Loop, % VimConfObj.DisableUnused.Length() {
-    if(VimDisableUnusedValue == VimConfObj.DisableUnused[A_Index]){
-      VimDisableUnused := A_Index
-      Break
-    }
-  }
-  Loop, % VimConfObj.Verbose.Length() {
-    if(VimVerboseValue == VimConfObj.Verbose[A_Index]){
-      VimVerbose := A_Index
-      Break
-    }
-  }
-  VimGroup := ""
-  Loop, Parse, VimGroupList, `n
-  {
-    if(! InStr(VimGroup, A_LoopField)){
-      if(VimGroup == ""){
-        VimGroup := A_LoopField
-      }else{
-        VimGroup := VimGroup . VimConfObj.GroupDel . A_LoopField
-      }
-    }
-  }
-  for k, v in VimConfObj.Conf {
-    v["val"] := %k%
-  }
-  VimSet()
-}
-
-VimSet(){
-  global VimConfObj
-  VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
-  if(VimConfObj.Conf["VimIconCheck"]["val"] == 1){
-    SetTimer, VimStatusCheckTimer, % VimConfObj.Conf["VimIconCheckInterval"]["val"]
-  }else{
-    SetTimer, VimStatusCheckTimer, OFF
-  }
-  VimConfObj.SetGroup(VimConfObj.Conf["VimGroup"]["val"])
-}
-
-VimGuiSettingsDestroy(){
-  SetTimer, VimDisplayToolTip, Off
-  ToolTip
-  Gui, VimGuiSettings:Destroy
-}
-VimGuiSettingsOK(){
-  Gui, VimGuiSettings:Submit
-  VimV2Conf()
-  VimIni.WriteIni()
-  VimGuiSettingsDestroy()
-}
-VimGuiSettingsCancel(){
-  VimGuiSettingsDestroy()
-}
-VimGuiSettingsClose(){
-  VimGuiSettingsDestroy()
-}
-VimGuiSettingsEscape(){
-  VimGuiSettingsDestroy()
-}
-
-VimGuiSettingsReset(){
-  global VimConfObj
-  IfExist, VimIni.Ini
-    FileDelete, VimIni.Ini
-
-  for k, v in VimConfObj.Conf {
-    VimConfObj.Conf[k]["val"] := v["default"]
-  }
-
-  VimSet()
-
-  VimGuiSettingsDestroy()
-  MenuVimSettings()
-}
-
 VimGitHub(){
   Run % VimAbout.Homepage
 }
@@ -460,7 +429,7 @@ VimStopStatusCheck(){
 
 ; Launch Settings {{{
 ^!+v::
-  MenuVimSettings()
+  VimSetting.Menu()
 Return
 
 ; }}}
