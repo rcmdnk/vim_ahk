@@ -1,4 +1,124 @@
 ﻿; Auto-execute section {{{
+VimAhkObj := new VimAhk()
+
+; Setting variables {{{
+VimConf := {VimRestoreIME: {default: 1, val: 1
+    , description: "Restore IME status at entering Insert mode"
+    , popup: "Restore IME status at entering Insert mode."}
+  , VimJJ: {default: 0, val: 0
+    , description: "JJ enters Normal mode"
+    , popup: "Assign JJ enters Normal mode."}
+  , VimJK: {default: 0, val: 0
+    , description: "JK enters Normal mode"
+    , popup: "Assign JK enters Normal mode."}
+  , VimSD: {default: 0, val: 0
+    , description: "SD enters Normal mode"
+    , popup: "Assign SD enters Normal mode."}
+  , VimIcon: {default: 1, val: 1
+    , description: "Enable tray icon"
+    , popup: "Enable tray icon for Vim Modes."}
+  , VimIconCheck: {default: 1, val: 1
+    , description: "Enable tray icon check"
+    , popup: "Enable tray icon check for Vim Modes."}
+  , VimDisableUnused: {default: 1, val: 1
+    , description: "Disable unused keys in Normal mode"
+    , popup: "Set how to disable unused keys in Normal mode."}
+  , VimIconCheckInterval: {default: 1000, val: 1000
+    , description: "Icon check interval (ms)"
+    , popup: "Interval (ms) to check if current window is for Ahk Vim or not,`nand set tray icon."}
+  , VimVerbose: {default: 1, val: 1
+    , description: "Verbose level"
+    , popup: "Verbose level`n`n1: No pop up`n2: Minimum tool tips of status`n: More info in tool tips`n4: Debug mode with a message box, which doesn't disappear automatically"}
+  , VimGroup: {default: VimAhkObj.Group.Group, val: VimAhkObj.Group.Group
+    , description: "Application"
+    , popup: "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon)."}}
+VimCheckBoxes := ["VimRestoreIME", "VimJJ", "VimJK", "VimSD", "VimIcon", "VimIconCheck"]
+
+; Check user's default settings
+for k, v in VimConf {
+  if(%k% != ""){
+    VimConf[k][val] := %k%
+  }
+}
+
+VimPopup := {}
+for k, v in VimConf {
+  VimPopup[k] := v["popup"]
+}
+
+VimPopup["VimGroupText"] := VimConf["VimGroup"]["popup"]
+VimPopup["VimGroupList"] := VimConf["VimGroup"]["popup"]
+
+; Disable unused keys in Normal mode
+VimDisableUnused1 := "1: Do not disable unused keys"
+VimDisableUnused2 := "2: Disable alphabets (+shift) and symbols"
+VimDisableUnused3 := "3: Disable all including keys with modifiers (e.g. Ctrl+Z)"
+VimDisableUnusedMax := 3
+VimDisableUnusedValue := ""
+VimPopup["VimDisableUnusedValue"] := VimConf["VimDisableUnused"]["popup"]
+VimPopup["VimDisableUnusedLevel"] := VimConf["VimDisableUnused"]["popup"]
+
+; Tray Icon check interval
+VimPopup["VimIconCheckIntervalText"] := VimConf["VimIconCheckInterval"]["popup"]
+VimPopup["VimIconCheckIntervalEdit"] := VimConf["VimIconCheckInterval"]["popup"]
+
+; Verbose level, 1: No pop up, 2: Minimum tool tips of status, 3: More info in tool tips, 4: Debug mode with a message box, which doesn't disappear automatically
+VimVerbose1 := "1: No pop up"
+VimVerbose2 := "2: Minimum tool tips"
+VimVerbose3 := "3: Tool tips"
+VimVerbose4 := "4: Popup message"
+vimVerboseMax := 4
+VimVerboseValue := ""
+VimPopup["VimVerboseValue"] := VimConf["VimVerbose"]["popup"]
+VimPopup["VimVerboseLevel"] := VimConf["VimVerbose"]["popup"]
+
+; Other explanations for settings
+VimPopup["VimGuiSettingsOK"] := "Reflect changes and exit"
+VimPopup["VimGuiSettingsReset"] := "Reset to the default values"
+VimPopup["VimGuiSettingsCancel"] := "Don't change and exit"
+VimPopup["VimAhkGitHub"] := VimAhkAbout.Homepage
+
+; }}} Setting variables
+
+; Read Ini
+VimAhkObj.Ini.ReadIni()
+
+; Set group
+VimAhkObj.Group.SetGroup(VimConf["VimGroup"]["val"])
+
+; Starting variables
+VimMode := "Insert"
+Vim_g := 0
+Vim_n := 0
+VimLineCopy := 0
+VimLastIME := 0
+
+VimCurrControl := ""
+VimPrevControl := ""
+
+; Menu
+Menu, VimSubMenu, Add, Settings, MenuVimSettings
+Menu, VimSubMenu, Add
+Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
+Menu, VimSubMenu, Add, Status, MenuVimStatus
+Menu, VimSubMenu, Add, About vim_ahk, MenuVimAbout
+
+Menu, Tray, Add
+Menu, Tray, Add, VimMenu, :VimSubMenu
+
+; Set initial icon
+VimAhkObj.Icon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
+
+; Set Timer for status check
+if(VimConf["VimIconCheck"]["val"] == 1){
+  SetTimer, VimStatusCheckTimer, % VimConf["VimIconCheckInterval"]["val"]
+}
+
+Return
+
+; }}}
+
+; Class {{{
 class VimAhkAbout{
   static Version := "v0.5.0"
   static Date := "24/Sep/2019"
@@ -19,6 +139,26 @@ class VimAhkIni{
   static IniDir := A_AppData . "\AutoHotkey"
   static Ini := A_AppData . "\AutoHotkey"  . "\vim_ahk.ini"
   static Section := "Vim Ahk Settings"
+
+  ReadIni(){
+    global VimConf
+    for k, v in VimConf {
+      current := v["val"]
+      IniRead, val, % VimAhkIni.Ini, % VimAhkIni.Section, %k%, %current%
+      %k% := val
+      v["val"] := val
+    }
+  }
+
+  WriteIni(){
+    global VimConf
+    IfNotExist, VimAhkIni.IniDir
+      FileCreateDir, VimAhkIni.IniDir
+
+    for k, v in VimConf {
+      IniWrite, % v["val"], % VimAhkIni.Ini, % VimAhkIni.Section, %k%
+    }
+  }
 }
 
 class VimAhkIcon{
@@ -110,128 +250,12 @@ class VimAhkGroup{
 
 class VimAhk{
   __New(){
+    this.Ini := new VimAhkIni()
     this.Icon := new VimAhkIcon()
     this.Group := new VimAhkGroup()
   }
 }
-VimAhkObj := new VimAhk()
-
-; Setting variables {{{
-VimConf := {VimRestoreIME: {default: 1, val: 1
-    , description: "Restore IME status at entering Insert mode"
-    , popup: "Restore IME status at entering Insert mode."}
-  , VimJJ: {default: 0, val: 0
-    , description: "JJ enters Normal mode"
-    , popup: "Assign JJ enters Normal mode."}
-  , VimJK: {default: 0, val: 0
-    , description: "JK enters Normal mode"
-    , popup: "Assign JK enters Normal mode."}
-  , VimSD: {default: 0, val: 0
-    , description: "SD enters Normal mode"
-    , popup: "Assign SD enters Normal mode."}
-  , VimIcon: {default: 1, val: 1
-    , description: "Enable tray icon"
-    , popup: "Enable tray icon for Vim Modes."}
-  , VimIconCheck: {default: 1, val: 1
-    , description: "Enable tray icon check"
-    , popup: "Enable tray icon check for Vim Modes."}
-  , VimDisableUnused: {default: 1, val: 1
-    , description: "Disable unused keys in Normal mode"
-    , popup: "Set how to disable unused keys in Normal mode."}
-  , VimIconCheckInterval: {default: 1000, val: 1000
-    , description: "Icon check interval (ms)"
-    , popup: "Interval (ms) to check if current window is for Ahk Vim or not,`nand set tray icon."}
-  , VimVerbose: {default: 1, val: 1
-    , description: "Verbose level"
-    , popup: "Verbose level`n`n1: No pop up`n2: Minimum tool tips of status`n: More info in tool tips`n4: Debug mode with a message box, which doesn't disappear automatically"}
-  , VimGroup: {default: VimAhkObj.Group.Group, val: VimAhkObj.Group.Group
-    , description: "Application"
-    , popup: "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon)."}}
-VimCheckBoxes := ["VimRestoreIME", "VimJJ", "VimJK", "VimSD", "VimIcon", "VimIconCheck"]
-
-; Check user's default settings
-for k, v in VimConf {
-  if(%k% != ""){
-    VimConf[k][val] := %k%
-  }
-}
-
-VimPopup := {}
-for k, v in VimConf {
-  VimPopup[k] := v["popup"]
-}
-
-VimPopup["VimGroupText"] := VimConf["VimGroup"]["popup"]
-VimPopup["VimGroupList"] := VimConf["VimGroup"]["popup"]
-
-; Disable unused keys in Normal mode
-VimDisableUnused1 := "1: Do not disable unused keys"
-VimDisableUnused2 := "2: Disable alphabets (+shift) and symbols"
-VimDisableUnused3 := "3: Disable all including keys with modifiers (e.g. Ctrl+Z)"
-VimDisableUnusedMax := 3
-VimDisableUnusedValue := ""
-VimPopup["VimDisableUnusedValue"] := VimConf["VimDisableUnused"]["popup"]
-VimPopup["VimDisableUnusedLevel"] := VimConf["VimDisableUnused"]["popup"]
-
-; Tray Icon check interval
-VimPopup["VimIconCheckIntervalText"] := VimConf["VimIconCheckInterval"]["popup"]
-VimPopup["VimIconCheckIntervalEdit"] := VimConf["VimIconCheckInterval"]["popup"]
-
-; Verbose level, 1: No pop up, 2: Minimum tool tips of status, 3: More info in tool tips, 4: Debug mode with a message box, which doesn't disappear automatically
-VimVerbose1 := "1: No pop up"
-VimVerbose2 := "2: Minimum tool tips"
-VimVerbose3 := "3: Tool tips"
-VimVerbose4 := "4: Popup message"
-vimVerboseMax := 4
-VimVerboseValue := ""
-VimPopup["VimVerboseValue"] := VimConf["VimVerbose"]["popup"]
-VimPopup["VimVerboseLevel"] := VimConf["VimVerbose"]["popup"]
-
-; Other explanations for settings
-VimPopup["VimGuiSettingsOK"] := "Reflect changes and exit"
-VimPopup["VimGuiSettingsReset"] := "Reset to the default values"
-VimPopup["VimGuiSettingsCancel"] := "Don't change and exit"
-VimPopup["VimAhkGitHub"] := VimAhkAbout.Homepage
-
-; }}} Setting variables
-
-; Read Ini
-VimReadIni()
-
-; Set group
-VimAhkObj.Group.SetGroup(VimConf["VimGroup"]["val"])
-
-; Starting variables
-VimMode := "Insert"
-Vim_g := 0
-Vim_n := 0
-VimLineCopy := 0
-VimLastIME := 0
-
-VimCurrControl := ""
-VimPrevControl := ""
-
-; Menu
-Menu, VimSubMenu, Add, Settings, MenuVimSettings
-Menu, VimSubMenu, Add
-Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
-Menu, VimSubMenu, Add, Status, MenuVimStatus
-Menu, VimSubMenu, Add, About vim_ahk, MenuVimAbout
-
-Menu, Tray, Add
-Menu, Tray, Add, VimMenu, :VimSubMenu
-
-; Set initial icon
-VimAhkObj.Icon.SetIcon(VimMode, VimConf["VimIcon"]["val"])
-
-; Set Timer for status check
-if(VimConf["VimIconCheck"]["val"] == 1){
-  SetTimer, VimStatusCheckTimer, % VimConf["VimIconCheckInterval"]["val"]
-}
-
-Return
-
-; }}}
+; Class }}}
 
 ; Menu functions {{{
 MenuVimSettings(){
@@ -365,7 +389,7 @@ VimGuiSettingsOK(){
   global
   Gui, VimGuiSettings:Submit
   VimV2Conf()
-  VimWriteIni()
+  VimAhkObj.Ini.WriteIni()
   VimGuiSettings()
 }
 VimGuiSettingsCancel(){
@@ -652,26 +676,6 @@ VimStatus(Title, lines=1){
 VimRemoveStatus(){
   SetTimer, VimRemoveStatus, off
   Tooltip
-}
-
-VimReadIni(){
-  global VimConf
-  for k, v in VimConf {
-    current := v["val"]
-    IniRead, val, % VimAhkIni.Ini, % VimAhkIni.Section, %k%, %current%
-    %k% := val
-    v["val"] := val
-  }
-}
-
-VimWriteIni(){
-  global VimConf
-  IfNotExist, VimAhkIni.IniDir
-    FileCreateDir, VimAhkIni.IniDir
-
-  for k, v in VimConf {
-    IniWrite, % v["val"], % VimAhkIni.Ini, % VimAhkIni.Section, %k%
-  }
 }
 
 VimStatusCheckTimer(){
