@@ -1,25 +1,27 @@
 ﻿; Auto-execute section {{{
-class VimAhk{
-  ; About vim_ahk
+class VimAhkAbout{
   static Version := "v0.5.0"
   static Date := "24/Sep/2019"
   static Author := "rcmdnk"
   static Description := "Vim emulation with AutoHotkey, everywhere in Windows."
   static Homepage := "https://github.com/rcmdnk/vim_ahk"
+}
 
-  ; Debug setting to check mode names
+class VimAhkDebug{
   static CheckModeValue := true
   static PossibleVimModes := ["Vim_Normal", "Insert", "Replace", "Vim_ydc_y"
   , "Vim_ydc_c", "Vim_ydc_d", "Vim_VisualLine", "Vim_VisualFirst"
   , "Vim_VisualChar", "Command", "Command_w", "Command_q", "Z", ""
   , "r_once", "r_repeat", "Vim_VisualLineFirst"]
+}
 
-  ; Ini file
+class VimAhkIni{
   static IniDir := A_AppData . "\AutoHotkey"
   static Ini := A_AppData . "\AutoHotkey"  . "\vim_ahk.ini"
   static Section := "Vim Ahk Settings"
+}
 
-  ; Icon places
+class VimAhkIcon{
   static Icons := {Normal: A_LineFile . "\..\icons\normal.ico"
                  , Insert: A_LineFile .  "\..\icons\insert.ico"
                  , Visual: A_LineFile . "\..\icons\visual.ico"
@@ -28,6 +30,8 @@ class VimAhk{
                  , Default: A_AhkPath}
 }
 
+class VimAhk{
+}
 VimAhkObj = new VimAhk()
 
 ; Application groups {{{
@@ -147,7 +151,7 @@ VimPopup["VimVerboseLevel"] := VimConf["VimVerbose"]["popup"]
 VimPopup["VimGuiSettingsOK"] := "Reflect changes and exit"
 VimPopup["VimGuiSettingsReset"] := "Reset to the default values"
 VimPopup["VimGuiSettingsCancel"] := "Don't change and exit"
-VimPopup["VimAhkGitHub"] := VimAhk.Homepage
+VimPopup["VimAhkGitHub"] := VimAhkAbout.Homepage
 
 ; }}} Setting variables
 
@@ -340,8 +344,8 @@ VimGuiSettingsEscape(){
 
 VimGuiSettingsReset(){
   global VimConf
-  IfExist, VimAhk.Ini
-    FileDelete, VimAhk.Ini
+  IfExist, VimAhkIni.Ini
+    FileDelete, VimAhkIni.Ini
 
   for k, v in VimConf {
     v["val"] := v["default"]
@@ -356,7 +360,7 @@ VimGuiSettingsReset(){
 }
 
 VimAhkGitHub(){
-  Run % VimAhk.Homepage
+  Run % VimAhkAbout.Homepage
 }
 
 MenuVimCheck(){
@@ -397,15 +401,15 @@ MenuVimAbout(){
   Gui, VimGuiAbout:+LabelVimGuiAbout
   Gui, VimGuiAbout:-MinimizeBox
   Gui, VimGuiAbout:-Resize
-  Gui, VimGuiAbout:Add, Text, , % "Vim Ahk (vim_ahk):`n" VimAhk.Description
+  Gui, VimGuiAbout:Add, Text, , % "Vim Ahk (vim_ahk):`n" VimAhkAbout.Description
   Gui, VimGuiAbout:Font, Underline
   Gui, VimGuiAbout:Add, Text, Y+0 cBlue gVimAhkGitHub, Homepage
   Gui, VimGuiAbout:Font, Norm
-  Gui, VimGuiAbout:Add, Text, , % "Author: " VimAhk.Author
-  Gui, VimGuiAbout:Add, Text, , % "Version: " VimAhk.Version
-  Gui, VimGuiAbout:Add, Text, Y+0, % "Last update: " VimAhk.Date
+  Gui, VimGuiAbout:Add, Text, , % "Author: " VimAhkAbout.Author
+  Gui, VimGuiAbout:Add, Text, , % "Version: " VimAhkAbout.Version
+  Gui, VimGuiAbout:Add, Text, Y+0, % "Last update: " VimAhkAbout.Date
   Gui, VimGuiAbout:Add, Text, , Script path:`n%A_LineFile%
-  Gui, VimGuiAbout:Add, Text, , % "Setting file:`n" VimAhk.Ini
+  Gui, VimGuiAbout:Add, Text, , % "Setting file:`n" VimAhkIni.Ini
   Gui, VimGuiAbout:Add, Button, gVimGuiAboutOK X200 W100 Default, &OK
   Gui, VimGuiAbout:Show, W500, Vim Ahk
 }
@@ -524,17 +528,17 @@ VimSetIcon(Mode=""){
   global VimConf
   icon :=
   if InStr(Mode, "Normal"){
-    icon := VimAhk.Icons["Normal"]
+    icon := VimAhkIcon.Icons["Normal"]
   }else if InStr(Mode, "Insert"){
-    icon := VimAhk.Icons["Insert"]
+    icon := VimAhkIcon.Icons["Insert"]
   }else if InStr(Mode, "Visual"){
-    icon := VimAhk.Icons["Visual"]
+    icon := VimAhkIcon.Icons["Visual"]
   }else if InStr(Mode, "Command"){
-    icon := VimAhk.Icons["Command"]
+    icon := VimAhkIcon.Icons["Command"]
   }else if InStr(Mode, "Disabled"){
-    icon := VimAhk.Icons["Disabled"]
+    icon := VimAhkIcon.Icons["Disabled"]
   }else if InStr(Mode, "Default"){
-    icon := VimAhk.Icons["Default"]
+    icon := VimAhkIcon.Icons["Default"]
   }
   ;MsgBox % Mode ", " icon
   if FileExist(icon){
@@ -567,7 +571,7 @@ VimCheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
 
 VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
   global
-  if VimAhk.CheckModeValue {
+  if VimAhkDebug.CheckModeValue {
     VimCheckValidMode(mode)
   }
   if(Mode != ""){
@@ -592,7 +596,7 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
 
 VimIsCurrentVimMode(mode){
   global VimMode
-  if VimAhk.CheckModeValue {
+  if VimAhkDebug.CheckModeValue {
     VimCheckValidMode(mode)
   }
   return (mode == VimMode)
@@ -600,7 +604,7 @@ VimIsCurrentVimMode(mode){
 
 VimStrIsInCurrentVimMode(str){
   global VimMode
-  if VimAhk.CheckModeValue {
+  if VimAhkDebug.CheckModeValue {
     VimCheckValidMode(str, false)
   }
   return (inStr(VimMode, str))
@@ -629,7 +633,7 @@ VimHasValue(haystack, needle, full_match = true){
 VimCheckValidMode(mode, full_match := true){
   try {
     inOrBlank:= (not full_match) ? "in " : ""
-    if not VimHasValue(VimAhk.PossibleVimModes, mode, full_match){
+    if not VimHasValue(VimAhkDebug.PossibleVimModes, mode, full_match){
       throw Exception("Invalid mode specified",-2,
       ( Join
 "'" mode "' is not " inOrBlank "a valid mode as defined by the VimPossibleVimModes
@@ -659,7 +663,7 @@ VimReadIni(){
   global VimConf
   for k, v in VimConf {
     current := v["val"]
-    IniRead, val, % VimAhk.Ini, % VimAhk.Section, %k%, %current%
+    IniRead, val, % VimAhkIni.Ini, % VimAhkIni.Section, %k%, %current%
     %k% := val
     v["val"] := val
   }
@@ -667,11 +671,11 @@ VimReadIni(){
 
 VimWriteIni(){
   global VimConf
-  IfNotExist, VimAhk.IniDir
-    FileCreateDir, VimAhk.IniDir
+  IfNotExist, VimAhkIni.IniDir
+    FileCreateDir, VimAhkIni.IniDir
 
   for k, v in VimConf {
-    IniWrite, % v["val"], % VimAhk.Ini, % VimAhk.Section, %k%
+    IniWrite, % v["val"], % VimAhkIni.Ini, % VimAhkIni.Section, %k%
   }
 }
 
