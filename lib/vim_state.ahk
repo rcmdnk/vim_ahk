@@ -1,4 +1,4 @@
-class VimState{
+﻿class VimState{
   static Mode := "Insert"
   static g := 0
   static n := 0

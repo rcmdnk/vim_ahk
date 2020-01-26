@@ -1,4 +1,4 @@
-class VimDebug{
+﻿class VimDebug{
   static CheckModeValue := true
   static PossibleVimModes := ["Vim_Normal", "Insert", "Replace", "Vim_ydc_y"
   , "Vim_ydc_c", "Vim_ydc_d", "Vim_VisualLine", "Vim_VisualFirst"
