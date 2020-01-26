@@ -1,9 +1,9 @@
 class VimIconMng{
-  static Icons := {Normal: A_LineFile . "\..\icons\normal.ico"
-                 , Insert: A_LineFile .  "\..\icons\insert.ico"
-                 , Visual: A_LineFile . "\..\icons\visual.ico"
-                 , Command: A_LineFile . "\..\icons\command.ico"
-                 , Disabled: A_LineFile . "\..\icons\disabled.ico"
+  static Icons := {Normal: A_LineFile . "\..\..\icons\normal.ico"
+                 , Insert: A_LineFile .  "\..\..\icons\insert.ico"
+                 , Visual: A_LineFile . "\..\..\icons\visual.ico"
+                 , Command: A_LineFile . "\..\..\icons\command.ico"
+                 , Disabled: A_LineFile . "\..\..\icons\disabled.ico"
                  , Default: A_AhkPath}
   SetIcon(Mode="", TryIcon=1){
     icon :=
