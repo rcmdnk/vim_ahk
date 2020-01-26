@@ -21,12 +21,12 @@ VimIni := % VimIniDir . "\vim_ahk.ini"
 VimSection := "Vim Ahk Settings"
 
 ; Icon places
-VimIconNormal := % A_LineFile . "\..\icons\normal.ico"
-VimIconInsert := % A_LineFile . "\..\icons\insert.ico"
-VimIconVisual := % A_LineFile . "\..\icons\visual.ico"
-VimIconCommand := % A_LineFile . "\..\icons\command.ico"
-VimIconDisabled := % A_LineFile . "\..\icons\disabled.ico"
-VimIconDefault := % A_AhkPath
+VimIcons := {Normal: A_LineFile . "\..\icons\normal.ico"
+           , Insert: A_LineFile .  "\..\icons\insert.ico"
+           , Visual: A_LineFile . "\..\icons\visual.ico"
+           , Command: A_LineFile . "\..\icons\command.ico"
+           , Disabled: A_LineFile . "\..\icons\disabled.ico"
+           , Default: A_AhkPath}
 
 ; Application groups {{{
 
@@ -257,7 +257,6 @@ VimMouseMove(){
 VimDisplayToolTip(){
   global VimCurrControl, VimPopup
   SetTimer, VimDisplayToolTip, Off
-  ;Msgbox % VimCurrControl ", " VimPopup[VimCurrControl]
   if(VimPopup.HasKey(VimCurrControl)){
     ToolTip % VimPopup[VimCurrControl]
     SetTimer, VimRemoveToolTip, 60000
@@ -522,21 +521,22 @@ VimSetGroup(){
 }
 
 VimSetIcon(Mode=""){
-  global VimConf, VimIconNormal, VimIconInsert, VimIconVisual, VimIconCommand, VimIconDisabled, VimIconDefault
+  global VimConf, VimIcons
   icon :=
   if InStr(Mode, "Normal"){
-    icon := VimIconNormal
+    icon := VimIcons["Normal"]
   }else if InStr(Mode, "Insert"){
-    icon := VimIconInsert
+    icon := VimIcons["Insert"]
   }else if InStr(Mode, "Visual"){
-    icon := VimIconVisual
+    icon := VimIcons["Visual"]
   }else if InStr(Mode, "Command"){
-    icon := VimIconCommand
+    icon := VimIcons["Command"]
   }else if InStr(Mode, "Disabled"){
-    icon := VimIconDisabled
+    icon := VimIcons["Disabled"]
   }else if InStr(Mode, "Default"){
-    icon := VimIconDefault
+    icon := VimIcons["Default"]
   }
+  ;MsgBox % Mode ", " icon
   if FileExist(icon){
     if(InStr(Mode, "Default")){
       Menu, Tray, Icon, %icon%
@@ -692,7 +692,7 @@ VimStartStatusCheck(){
   SetTimer, VimStatusCheckTimer, off
 }
 
-VimStopStatusCheck{
+VimStopStatusCheck(){
   SetTimer, VimStatusCheckTimer, off
 }
 
