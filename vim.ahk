@@ -8,14 +8,15 @@ VimIni.ReadIni()
 VimConfObj.SetGroup(VimConfObj.Conf["VimGroup"]["val"])
 
 ; Menu
-Menu, VimSubMenu, Add, Settings, MenuVimSettings
-Menu, VimSubMenu, Add
-Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
-Menu, VimSubMenu, Add, Status, MenuVimStatus
-Menu, VimSubMenu, Add, About vim_ahk, MenuVimAbout
-
-Menu, Tray, Add
-Menu, Tray, Add, VimMenu, :VimSubMenu
+;Menu, VimSubMenu, Add, Settings, MenuVimSettings
+;Menu, VimSubMenu, Add
+;Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
+;Menu, VimSubMenu, Add, Status, MenuVimStatus
+;Menu, VimSubMenu, Add, About vim_ahk, MenuVimAbout
+;
+;Menu, Tray, Add
+;Menu, Tray, Add, VimMenu, :VimSubMenu
+VimMenu.SetMenu()
 
 ; Set initial icon
 VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
@@ -35,6 +36,20 @@ Return
 #Include %A_LineFile%\..\lib\vim_icon_mng.ahk
 #Include %A_LineFile%\..\lib\vim_ini.ahk
 #Include %A_LineFile%\..\lib\vim_state.ahk
+
+class VimMenu{
+  SetMenu(){
+    global VimConfObj
+    Menu, VimSubMenu, Add, Settings, MenuVimSettings
+    Menu, VimSubMenu, Add
+    Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
+    Menu, VimSubMenu, Add, Status, MenuVimStatus
+    Menu, VimSubMenu, Add, About vim_ahk, MenuVimAbout
+
+    Menu, Tray, Add
+    Menu, Tray, Add, VimMenu, :VimSubMenu
+  }
+}
 ; Class }}}
 
 ; Menu functions {{{
