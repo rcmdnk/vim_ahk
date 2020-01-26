@@ -101,6 +101,7 @@ class VimSetting{
       if(VimState.CurrControl != "" && InStr(VimState.CurrControl, " ") == 0){
         f := ObjBindMethod(VimSetting, "VimDisplayToolTip")
         SetTimer, %f%, 1000
+        VimState.VimPrevControl := VimState.VimCurrControl
       }
     }
     Return
