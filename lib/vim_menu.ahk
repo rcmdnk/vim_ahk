@@ -1,11 +1,12 @@
 ﻿class VimMenu{
   SetMenu(NVerbose){
+    MenuVimSetting := ObjBindMethod(VimSetting, "Menu")
+    MenuVimCheck := ObjBindMethod(VimCheck, "Menu")
     MenuVimStatus := ObjBindMethod(VimMenu, "Status", NVerbose)
     MenuVimAbout := ObjBindMethod(VimAbout, "Menu")
-    MenuVimSetting := ObjBindMethod(VimSetting, "Menu")
     Menu, VimSubMenu, Add, Settings, % MenuVimSetting
     Menu, VimSubMenu, Add
-    Menu, VimSubMenu, Add, Vim Check, MenuVimCheck
+    Menu, VimSubMenu, Add, Vim Check, % MenuVimCheck
     Menu, VimSubMenu, Add, Status, % MenuVimStatus
     Menu, VimSubMenu, Add, About vim_ahk, % MenuVimAbout
 
