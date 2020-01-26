@@ -1,4 +1,4 @@
-class VimAbout{
+﻿class VimAbout{
   static Version := "v0.5.0"
   static Date := "24/Sep/2019"
   static Author := "rcmdnk"

@@ -1,4 +1,4 @@
-class VimConf{
+﻿class VimConf{
   __New(){
     this.GroupDel := ","
     this.GroupN := 0

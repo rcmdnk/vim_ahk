@@ -1,4 +1,4 @@
-class VimIni{
+﻿class VimIni{
   static IniDir := A_AppData . "\AutoHotkey"
   static Ini := A_AppData . "\AutoHotkey"  . "\vim_ahk.ini"
   static Section := "Vim Ahk Settings"

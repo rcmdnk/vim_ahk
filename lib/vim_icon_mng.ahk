@@ -1,4 +1,4 @@
-class VimIconMng{
+﻿class VimIconMng{
   static Icons := {Normal: A_LineFile . "\..\..\icons\normal.ico"
                  , Insert: A_LineFile .  "\..\..\icons\insert.ico"
                  , Visual: A_LineFile . "\..\..\icons\visual.ico"
