@@ -48,40 +48,33 @@ class VimMenu{
 
   About(){
     VimGuiAboutOK := ObjBindMethod(VimMenu, "AboutOK")
-    Gui, New, +HwndVimGuiAbout
+    Gui, New, % "+HwndVimGuiAbout +Label" . VimMenu.__Class . ".About"
     VimMenu.VimGuiAbout := VimGuiAbout
-    Gui, % VimGuiAbout . ":-MinimizeBox"
-    Gui, % VimGuiAbout . ":-Resize"
-    Gui, % VimGuiAbout . ":Add", Text, , % "Vim Ahk (vim_ahk):`n" VimAbout.Description
-    Gui, % VimGuiAbout . ":Font", Underline
-    Gui, % VimGuiAbout . ":Add", Text, Y+0 cBlue gVimGitHub, Homepage
-    Gui, % VimGuiAbout . ":Font", Norm
-    Gui, % VimGuiAbout . ":Add", Text, , % "Author: " VimAbout.Author
-    Gui, % VimGuiAbout . ":Add", Text, , % "Version: " VimAbout.Version
-    Gui, % VimGuiAbout . ":Add", Text, Y+0, % "Last update: " VimAbout.Date
-    Gui, % VimGuiAbout . ":Add", Text, , Script path:`n%A_LineFile%
-    Gui, % VimGuiAbout . ":Add", Text, , % "Setting file:`n" VimIni.Ini
-    Gui, % VimGuiAbout . ":Add", Button, +HwndVimGuiAboutOKId X200 W100 Default, &OK
+    Gui, %VimGuiAbout%:-MinimizeBox
+    Gui, %VimGuiAbout%:-Resize
+    Gui, %VimGuiAbout%:Add, Text, , % "Vim Ahk (vim_ahk):`n" VimAbout.Description
+    Gui, %VimGuiAbout%:Font, Underline
+    Gui, %VimGuiAbout%:Add, Text, Y+0 cBlue gVimGitHub, Homepage
+    Gui, %VimGuiAbout%:Font, Norm
+    Gui, %VimGuiAbout%:Add, Text, , % "Author: " VimAbout.Author
+    Gui, %VimGuiAbout%:Add, Text, , % "Version: " VimAbout.Version
+    Gui, %VimGuiAbout%:Add, Text, Y+0, % "Last update: " VimAbout.Date
+    Gui, %VimGuiAbout%:Add, Text, , Script path:`n%A_LineFile%
+    Gui, %VimGuiAbout%:Add, Text, , % "Setting file:`n" VimIni.Ini
+    Gui, %VimGuiAbout%:Add, Button, +HwndVimGuiAboutOKId X200 W100 Default, &OK
     GuiControl, +G, % VimGuiAboutOKId, % VimGuiAboutOK
-    Gui, % VimGuiAbout . ":Show", W500, Vim Ahk
-    ; This does not work
-    ;OnMessage(0x10, ObjBindMethod(VimMenu, "AboutClose"))
+    Gui, %VimGuiAbout%:Show, W500, Vim Ahk
   }
 
   AboutOK(){
     Gui, % VimMenu.VimGuiAbout . ":Destroy"
   }
-  ;AboutClose(wParam, lParam, msg, hwnd){
-  ;  MsgBox "AboutClose"
-  ;  if(hwnd != VimMenu.VimGuiAbout){
-  ;    Return
-  ;  }
-  ;  MsgBox % "AboutClose: Close" VimMenuVimGuiAbout
-  ;  Gui, % VimMenu.VimGuiAbout . ":Destroy"
-  ;}
-  ;AboutEscape(){
-  ;  Gui, VimGuiAbout:Destroy
-  ;}
+  AboutClose(){
+    Gui, % VimMenu.VimGuiAbout . ":Destroy"
+  }
+  AboutEscape(){
+    Gui, % VimMenu.VimGuiAbout . ":Destroy"
+  }
 }
 ; Class }}}
 
