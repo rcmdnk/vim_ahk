@@ -1,11 +1,11 @@
 ﻿; Auto-execute section {{{
-VimAhkConfObj := new VimAhkConf()
+VimConfObj := new VimConf()
 
 ; Read Ini
-VimAhkIni.ReadIni()
+VimIni.ReadIni()
 
 ; Set group
-VimAhkConfObj.SetGroup(VimAhkConfObj.Conf["VimGroup"]["val"])
+VimConfObj.SetGroup(VimConfObj.Conf["VimGroup"]["val"])
 
 ; Menu
 Menu, VimSubMenu, Add, Settings, MenuVimSettings
@@ -18,19 +18,18 @@ Menu, Tray, Add
 Menu, Tray, Add, VimMenu, :VimSubMenu
 
 ; Set initial icon
-VimAhkIcon.SetIcon(VimAhkState.Mode, VimAhkConfObj.Conf["VimIcon"]["val"])
+VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
 
 ; Set Timer for status check
-if(VimAhkConfObj.Conf["VimIconCheck"]["val"] == 1){
-  SetTimer, VimStatusCheckTimer, % VimAhkConfObj.Conf["VimIconCheckInterval"]["val"]
+if(VimConfObj.Conf["VimIconCheck"]["val"] == 1){
+  SetTimer, VimStatusCheckTimer, % VimConfObj.Conf["VimIconCheckInterval"]["val"]
 }
 
 Return
-
 ; }}}
 
 ; Class {{{
-class VimAhkAbout{
+class VimAbout{
   static Version := "v0.5.0"
   static Date := "24/Sep/2019"
   static Author := "rcmdnk"
@@ -38,7 +37,7 @@ class VimAhkAbout{
   static Homepage := "https://github.com/rcmdnk/vim_ahk"
 }
 
-class VimAhkDebug{
+class VimDebug{
   static CheckModeValue := true
   static PossibleVimModes := ["Vim_Normal", "Insert", "Replace", "Vim_ydc_y"
   , "Vim_ydc_c", "Vim_ydc_d", "Vim_VisualLine", "Vim_VisualFirst"
@@ -46,12 +45,12 @@ class VimAhkDebug{
   , "r_once", "r_repeat", "Vim_VisualLineFirst"]
 
   CheckValidMode(Mode, FullMatch=true){
-    if (VimAhkDebug.CheckModeValue == false){
+    if (VimDebug.CheckModeValue == false){
       Return
     }
     try {
       InOrBlank:= (not full_match) ? "in " : ""
-      if not VimHasValue(VimAhkDebug.PossibleVimModes, Mode, FullMatch){
+      if not VimHasValue(VimDebug.PossibleVimModes, Mode, FullMatch){
         throw Exception("Invalid mode specified",-2,
         ( Join
   "'" Mode "' is not " InOrBlank " a valid mode as defined by the VimPossibleVimModes
@@ -66,64 +65,64 @@ class VimAhkDebug{
   }
 }
 
-class VimAhkIni{
+class VimIni{
   static IniDir := A_AppData . "\AutoHotkey"
   static Ini := A_AppData . "\AutoHotkey"  . "\vim_ahk.ini"
   static Section := "Vim Ahk Settings"
 
   ReadIni(){
-    global VimAhkConfObj
-    for k, v in VimAhkConfObj.Conf {
+    global VimConfObj
+    for k, v in VimConfObj.Conf {
       current := v["val"]
-      IniRead, val, % VimAhkIni.Ini, % VimAhkIni.Section, %k%, %current%
+      IniRead, val, % VimIni.Ini, % VimIni.Section, %k%, %current%
       %k% := val
       v["val"] := val
     }
   }
 
   WriteIni(){
-    global VimAhkConfObj
-    IfNotExist, VimAhkIni.IniDir
-      FileCreateDir, VimAhkIni.IniDir
+    global VimConfObj
+    IfNotExist, VimIni.IniDir
+      FileCreateDir, VimIni.IniDir
 
-    for k, v in VimAhkConfObj.Conf {
-      IniWrite, % v["val"], % VimAhkIni.Ini, % VimAhkIni.Section, %k%
+    for k, v in VimConfObj.Conf {
+      IniWrite, % v["val"], % VimIni.Ini, % VimIni.Section, %k%
     }
   }
 }
 
-class VimAhkIcon{
+class VimIconMng{
   static Icons := {Normal: A_LineFile . "\..\icons\normal.ico"
                  , Insert: A_LineFile .  "\..\icons\insert.ico"
                  , Visual: A_LineFile . "\..\icons\visual.ico"
                  , Command: A_LineFile . "\..\icons\command.ico"
                  , Disabled: A_LineFile . "\..\icons\disabled.ico"
                  , Default: A_AhkPath}
-  SetIcon(Mode="", VimIcon=1){
+  SetIcon(Mode="", TryIcon=1){
     icon :=
-    if (VimIcon == 0){
-      icon := VimAhkIcon.Icons["Default"]
+    if (TryIcon == 0){
+      icon := VimIconMng.Icons["Default"]
     }else if InStr(Mode, "Normal"){
-      icon := VimAhkIcon.Icons["Normal"]
+      icon := VimIconMng.Icons["Normal"]
     }else if InStr(Mode, "Insert"){
-      icon := VimAhkIcon.Icons["Insert"]
+      icon := VimIconMng.Icons["Insert"]
     }else if InStr(Mode, "Visual"){
-      icon := VimAhkIcon.Icons["Visual"]
+      icon := VimIconMng.Icons["Visual"]
     }else if InStr(Mode, "Command"){
-      icon := VimAhkIcon.Icons["Command"]
+      icon := VimIconMng.Icons["Command"]
     }else if InStr(Mode, "Disabled"){
-      icon := VimAhkIcon.Icons["Disabled"]
+      icon := VimIconMng.Icons["Disabled"]
     }
     if FileExist(icon){
       Menu, Tray, Icon, %icon%
-      if (VimIcon == 1){
+      if (TryIcon == 1){
         Menu, VimSubMenu, Icon, Status, %icon%
       }
     }
   }
 }
 
-class VimAhkConf{
+class VimConf{
   __New(){
     this.GroupDel := ","
     this.GroupN := 0
@@ -216,7 +215,7 @@ class VimAhkConf{
     this.Popup["VimGuiSettingsOK"] := "Reflect changes and exit"
     this.Popup["VimGuiSettingsReset"] := "Reset to the default values"
     this.Popup["VimGuiSettingsCancel"] := "Don't change and exit"
-    this.Popup["VimAhkGitHub"] := VimAhkAbout.Homepage
+    this.Popup["VimGitHub"] := VimAbout.Homepage
 
     ; Disable unused keys in Normal mode
     this.DisableUnused := ["1: Do not disable unused keys"
@@ -252,11 +251,7 @@ class VimAhkConf{
   }
 }
 
-
-; }}} Setting variables
-
-
-class VimAhkState{
+class VimState{
   static Mode := "Insert"
   static g := 0
   static n := 0
@@ -270,41 +265,41 @@ class VimAhkState{
 
 ; Menu functions {{{
 MenuVimSettings(){
-  ;global VimAhkConfObj
+  ;global VimConfObj
   global
   Gui, VimGuiSettings:+LabelVimGuiSettings
   Gui, VimGuiSettings:-MinimizeBox
   Gui, VimGuiSettings:-Resize
-  VimSettingHeight := VimAhkConfObj.Checkboxes.Length() * 22 + 370
+  VimSettingHeight := VimConfObj.Checkboxes.Length() * 22 + 370
   Gui, VimGuiSettings:Add, GroupBox, xm X+10 YM+10 Section W370 H%VimSettingHeight%, Settings
   VimCheckboxesCreated := 0
-  for i, k in VimAhkConfObj.Checkboxes {
+  for i, k in VimConfObj.Checkboxes {
     if(VimCheckboxesCreated == 0){
       y := "YS+20"
     }else{
       y := "Y+10"
     }
-    Gui, VimGuiSettings:Add, Checkbox, XS+10 %y% v%k%, % VimAhkConfObj.Conf[k]["description"]
+    Gui, VimGuiSettings:Add, Checkbox, XS+10 %y% v%k%, % VimConfObj.Conf[k]["description"]
     VimCheckboxesCreated  := 1
-    if(VimAhkConfObj.Conf[k]["val"] == 1){
+    if(VimConfObj.Conf[k]["val"] == 1){
       GuiControl, VimGuiSettings:, %k%, 1
     }
   }
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimDisableUnusedLevel vVimDisableUnusedLevel, % VimAhkConfObj.Conf["VimDisableUnused"]["description"]
-  DisableUnused := VimAhkConfObj.DisableUnused
-  Gui, VimGuiSettings:Add, DropDownList, % "W320 vVimDisableUnusedValue Choose"VimAhkConfObj.Conf["VimDisableUnused"]["val"], % DisableUnused[1]"|"DisableUnused[2]"|"DisableUnused[3]
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimIconCheckIntervalText vVimIconCheckIntervalText, % VimAhkConfObj.Conf["VimIconCheckInterval"]["description"]
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimDisableUnusedLevel vVimDisableUnusedLevel, % VimConfObj.Conf["VimDisableUnused"]["description"]
+  DisableUnused := VimConfObj.DisableUnused
+  Gui, VimGuiSettings:Add, DropDownList, % "W320 vVimDisableUnusedValue Choose"VimConfObj.Conf["VimDisableUnused"]["val"], % DisableUnused[1]"|"DisableUnused[2]"|"DisableUnused[3]
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimIconCheckIntervalText vVimIconCheckIntervalText, % VimConfObj.Conf["VimIconCheckInterval"]["description"]
   Gui, VimGuiSettings:Add, Edit, vVimIconCheckIntervalEdit
-  Gui, VimGuiSettings:Add, UpDown, vVimIconCheckInterval Range100-1000000, % VimAhkConfObj.Conf["VimIconCheckInterval"]["val"]
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimVerboseLevel vVimVerboseLevel, % VimAhkConfObj.Conf["VimVerbose"]["description"]
-  Verbose := VimAhkConfObj.Verbose
-  Gui, VimGuiSettings:Add, DropDownList, % "vVimVerboseValue Choose"VimAhkConfObj.Conf["VimVerbose"]["val"], % Verbose[1]"|"Verbose[2]"|"Verbose[3]"|"Verbose[4]
-  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimGroupText vVimGroupText, % VimAhkConfObj.Conf["VimGroup"]["description"]
-  StringReplace, VimGroupList, % VimAhkConfObj.Conf["VimGroup"]["val"], % VimAhkConfObj.GroupDel, `n, All
+  Gui, VimGuiSettings:Add, UpDown, vVimIconCheckInterval Range100-1000000, % VimConfObj.Conf["VimIconCheckInterval"]["val"]
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimVerboseLevel vVimVerboseLevel, % VimConfObj.Conf["VimVerbose"]["description"]
+  Verbose := VimConfObj.Verbose
+  Gui, VimGuiSettings:Add, DropDownList, % "vVimVerboseValue Choose"VimConfObj.Conf["VimVerbose"]["val"], % Verbose[1]"|"Verbose[2]"|"Verbose[3]"|"Verbose[4]
+  Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimGroupText vVimGroupText, % VimConfObj.Conf["VimGroup"]["description"]
+  StringReplace, VimGroupList, % VimConfObj.Conf["VimGroup"]["val"], % VimConfObj.GroupDel, `n, All
   Gui, VimGuiSettings:Add, Edit, XS+10 Y+10 R10 W300 Multi vVimGroupList, %VimGroupList%
   Gui, VimGuiSettings:Add, Text, XM+20 Y+30, Check
   Gui, VimGuiSettings:Font, Underline
-  Gui, VimGuiSettings:Add, Text, X+5 cBlue gVimAhkGitHub vVimAhkGitHub, HELP
+  Gui, VimGuiSettings:Add, Text, X+5 cBlue gVimGitHub vVimGitHub, HELP
   Gui, VimGuiSettings:Font, Norm
   Gui, VimGuiSettings:Add, Text, X+5, for further information.
   Gui, VimGuiSettings:Add, Button, gVimGuiSettingsOK vVimGuiSettingsOK xm W100 X45 Y+10 Default, &OK
@@ -325,11 +320,11 @@ VimGroupText(){
 }
 
 VimMouseMove(){
-  VimAhkState.CurrControl := A_GuiControl
-  if(VimAhkState.CurrControl != VimAhkState.PrevControl){
-    VimAhkState.PrevControl := VimAhkState.CurrControl
+  VimState.CurrControl := A_GuiControl
+  if(VimState.CurrControl != VimState.PrevControl){
+    VimState.PrevControl := VimState.CurrControl
     ToolTip
-    if(VimAhkState.CurrControl != "" && InStr(VimAhkState.CurrControl, " ") == 0){
+    if(VimState.CurrControl != "" && InStr(VimState.CurrControl, " ") == 0){
       SetTimer, VimDisplayToolTip, 1000
     }
   }
@@ -337,10 +332,10 @@ VimMouseMove(){
 }
 
 VimDisplayToolTip(){
-  global VimAhkConfObj
+  global VimConfObj
   SetTimer, VimDisplayToolTip, Off
-  if(VimAhkConfObj.Popup.HasKey(VimAhkState.CurrControl)){
-    ToolTip % VimAhkConfObj.Popup[VimAhkState.CurrControl]
+  if(VimConfObj.Popup.HasKey(VimState.CurrControl)){
+    ToolTip % VimConfObj.Popup[VimState.CurrControl]
     SetTimer, VimRemoveToolTip, 60000
   }
 }
@@ -352,14 +347,14 @@ VimRemoveToolTip(){
 
 VimV2Conf(){
   global
-  Loop, % VimAhkConfObj.DisableUnused.Length() {
-    if(VimDisableUnusedValue == VimAhkConfObj.DisableUnused[A_Index]){
+  Loop, % VimConfObj.DisableUnused.Length() {
+    if(VimDisableUnusedValue == VimConfObj.DisableUnused[A_Index]){
       VimDisableUnused := A_Index
       Break
     }
   }
-  Loop, % VimAhkConfObj.Verbose.Length() {
-    if(VimVerboseValue == VimAhkConfObj.Verbose[A_Index]){
+  Loop, % VimConfObj.Verbose.Length() {
+    if(VimVerboseValue == VimConfObj.Verbose[A_Index]){
       VimVerbose := A_Index
       Break
     }
@@ -371,25 +366,25 @@ VimV2Conf(){
       if(VimGroup == ""){
         VimGroup := A_LoopField
       }else{
-        VimGroup := VimGroup . VimAhkConfObj.GroupDel . A_LoopField
+        VimGroup := VimGroup . VimConfObj.GroupDel . A_LoopField
       }
     }
   }
-  for k, v in VimAhkConfObj.Conf {
+  for k, v in VimConfObj.Conf {
     v["val"] := %k%
   }
   VimSet()
 }
 
 VimSet(){
-  global VimAhkConfObj
-  VimAhkIcon.SetIcon(VimAhkState.Mode, VimAhkConfObj.Conf["VimIcon"]["val"])
-  if(VimAhkConfObj.Conf["VimIconCheck"]["val"] == 1){
-    SetTimer, VimStatusCheckTimer, % VimAhkConfObj.Conf["VimIconCheckInterval"]["val"]
+  global VimConfObj
+  VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
+  if(VimConfObj.Conf["VimIconCheck"]["val"] == 1){
+    SetTimer, VimStatusCheckTimer, % VimConfObj.Conf["VimIconCheckInterval"]["val"]
   }else{
     SetTimer, VimStatusCheckTimer, OFF
   }
-  VimAhkConfObj.SetGroup(VimAhkConfObj.Conf["VimGroup"]["val"])
+  VimConfObj.SetGroup(VimConfObj.Conf["VimGroup"]["val"])
 }
 
 VimGuiSettings(){
@@ -400,7 +395,7 @@ VimGuiSettings(){
 VimGuiSettingsOK(){
   Gui, VimGuiSettings:Submit
   VimV2Conf()
-  VimAhkIni.WriteIni()
+  VimIni.WriteIni()
   VimGuiSettings()
 }
 VimGuiSettingsCancel(){
@@ -414,12 +409,12 @@ VimGuiSettingsEscape(){
 }
 
 VimGuiSettingsReset(){
-  global VimAhkConfObj
-  IfExist, VimAhkIni.Ini
-    FileDelete, VimAhkIni.Ini
+  global VimConfObj
+  IfExist, VimIni.Ini
+    FileDelete, VimIni.Ini
 
-  for k, v in VimAhkConfObj.Conf {
-    VimAhkConfObj.Conf[k]["val"] := v["default"]
+  for k, v in VimConfObj.Conf {
+    VimConfObj.Conf[k]["val"] := v["default"]
   }
 
   VimSet()
@@ -430,12 +425,12 @@ VimGuiSettingsReset(){
   MenuVimSettings()
 }
 
-VimAhkGitHub(){
-  Run % VimAhkAbout.Homepage
+VimGitHub(){
+  Run % VimAbout.Homepage
 }
 
 MenuVimCheck(){
-  global VimAhkConfObj
+  global VimConfObj
   ; Additional message is necessary before checking current window.
   ; Otherwise process name cannot be retrieved...?
   Msgbox, , Vim Ahk, Checking current window...
@@ -443,7 +438,7 @@ MenuVimCheck(){
   WinGet, name, ProcessName, ahk_pid %process%
   WinGetClass, class, ahk_pid %process%
   WinGetTitle, title, ahk_pid %process%
-  if WinActive("ahk_group" . VimAhkConfObj.GroupName){
+  if WinActive("ahk_group" . VimConfObj.GroupName){
     Msgbox, 0x40, Vim Ahk,
     (
       Supported
@@ -471,15 +466,15 @@ MenuVimAbout(){
   Gui, VimGuiAbout:+LabelVimGuiAbout
   Gui, VimGuiAbout:-MinimizeBox
   Gui, VimGuiAbout:-Resize
-  Gui, VimGuiAbout:Add, Text, , % "Vim Ahk (vim_ahk):`n" VimAhkAbout.Description
+  Gui, VimGuiAbout:Add, Text, , % "Vim Ahk (vim_ahk):`n" VimAbout.Description
   Gui, VimGuiAbout:Font, Underline
-  Gui, VimGuiAbout:Add, Text, Y+0 cBlue gVimAhkGitHub, Homepage
+  Gui, VimGuiAbout:Add, Text, Y+0 cBlue gVimGitHub, Homepage
   Gui, VimGuiAbout:Font, Norm
-  Gui, VimGuiAbout:Add, Text, , % "Author: " VimAhkAbout.Author
-  Gui, VimGuiAbout:Add, Text, , % "Version: " VimAhkAbout.Version
-  Gui, VimGuiAbout:Add, Text, Y+0, % "Last update: " VimAhkAbout.Date
+  Gui, VimGuiAbout:Add, Text, , % "Author: " VimAbout.Author
+  Gui, VimGuiAbout:Add, Text, , % "Version: " VimAbout.Version
+  Gui, VimGuiAbout:Add, Text, Y+0, % "Last update: " VimAbout.Date
   Gui, VimGuiAbout:Add, Text, , Script path:`n%A_LineFile%
-  Gui, VimGuiAbout:Add, Text, , % "Setting file:`n" VimAhkIni.Ini
+  Gui, VimGuiAbout:Add, Text, , % "Setting file:`n" VimIni.Ini
   Gui, VimGuiAbout:Add, Button, gVimGuiAboutOK X200 W100 Default, &OK
   Gui, VimGuiAbout:Show, W500, Vim Ahk
 }
@@ -586,47 +581,47 @@ VimCheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
   if(force == 0) and ((verbose <= 1) or ((Mode == "") and (g == 0) and (n == 0) and (LineCopy == -1))){
     Return
   }else if(verbose == 2){
-    VimStatus(VimAhkState.Mode, 1) ; 1 sec is minimum for TrayTip
+    VimStatus(VimState.Mode, 1) ; 1 sec is minimum for TrayTip
   }else if(verbose == 3){
-    VimStatus(VimAhkState.Mode "`r`ng=" VimAhkState.g "`r`nn=" VimAhkState.n "`r`nLineCopy=" VimAhkState.LineCopy, 4)
+    VimStatus(VimState.Mode "`r`ng=" VimState.g "`r`nn=" VimState.n "`r`nLineCopy=" VimState.LineCopy, 4)
   }
   if(verbose >= 4){
-    Msgbox, , Vim Ahk, % "Mode: " . VimAhkState.Mode . "`nVim_g: " . VimAhkState.g . "`nVim_n: " . VimAhkState.n . "`nVimLineCopy: " . VimAhkState.LineCopy
+    Msgbox, , Vim Ahk, % "Mode: " . VimState.Mode . "`nVim_g: " . VimState.g . "`nVim_n: " . VimState.n . "`nVimLineCopy: " . VimState.LineCopy
   }
   Return
 }
 
 VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
-  global VimAhkConfObj
-  VimAhkDebug.CheckValidMode(Mode)
+  global VimConfObj
+  VimDebug.CheckValidMode(Mode)
   if(Mode != ""){
-    VimAhkState.Mode := Mode
-    If(Mode == "Insert") and (VimAhkConfObj.Conf["VimRestoreIME"]["val"] == 1){
-      VIM_IME_SET(VimAhkState.LastIME)
+    VimState.Mode := Mode
+    If(Mode == "Insert") and (VimConfObj.Conf["VimRestoreIME"]["val"] == 1){
+      VIM_IME_SET(VimState.LastIME)
     }
-    VimAhkIcon.SetIcon(VimAhkState.Mode, VimAhkConfObj.Conf["VimIcon"]["val"])
+    VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
   }
   if(g != -1){
-    VimAhkState.g := g
+    VimState.g := g
   }
   if(n != -1){
-    VimAhkState.n := n
+    VimState.n := n
   }
   if(LineCopy!=-1){
-    VimAhkState.LineCopy := LineCopy
+    VimState.LineCopy := LineCopy
   }
-  VimCheckMode(VimAhkConfObj.Conf["VimVerbose"]["val"], Mode, g, n, LineCopy)
+  VimCheckMode(VimConfObj.Conf["VimVerbose"]["val"], Mode, g, n, LineCopy)
   Return
 }
 
 VimIsCurrentVimMode(mode){
-  VimAhkDebug.CheckValidMode(mode)
-  return (mode == VimAhkState.Mode)
+  VimDebug.CheckValidMode(mode)
+  return (mode == VimState.Mode)
 }
 
 VimStrIsInCurrentVimMode(str){
-  VimAhkDebug.CheckValidMode(str, false)
-  return (inStr(VimAhkState.Mode, str))
+  VimDebug.CheckValidMode(str, false)
+  return (inStr(VimState.Mode, str))
 }
 
 VimHasValue(haystack, needle, full_match = true){
@@ -661,12 +656,12 @@ VimRemoveStatus(){
 }
 
 VimStatusCheckTimer(){
-  global VimAhkConfObj
-  if WinActive("ahk_group " . VimAhkConfObj.GroupName)
+  global VimConfObj
+  if WinActive("ahk_group " . VimConfObj.GroupName)
   {
-    VimAhkIcon.SetIcon(VimAhkState.Mode, VimAhkConfObj.Conf["VimIcon"]["val"])
+    VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
   }else{
-    VimAhkIcon.SetIcon("Disabled", VimAhkConfObj.Conf["VimIcon"]["val"])
+    VimIconMng.SetIcon("Disabled", VimConfObj.Conf["VimIcon"]["val"])
   }
 }
 
@@ -688,17 +683,17 @@ Return
 
 ; }}}
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName)
+#If WinActive("ahk_group " . VimConfObj.GroupName)
 ; Check Mode {{{
 ^!+c::
-  VimCheckMode(VimVerboseMax, VimAhkState.Mode)
+  VimCheckMode(VimVerboseMax, VimState.Mode)
 Return
 ; }}}
 
 ; Enter vim normal mode {{{
 VimSetNormal(){
-  VimAhkState.LastIME := VIM_IME_Get()
-  if(VimAhkState.LastIME){
+  VimState.LastIME := VIM_IME_Get()
+  if(VimState.LastIME){
     if(VIM_IME_GetConverting(A)){
       Send,{Esc}
       Return
@@ -725,7 +720,7 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
   VimSetNormal()
 Return
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimAhkConfObj.Conf["VimJJ"]["val"] == 1)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConfObj.Conf["VimJJ"]["val"] == 1)
 ~j up:: ; jj: go to Normal mode.
   Input, jout, I T0.1 V L1, j
   if(ErrorLevel == "EndKey:J"){
@@ -735,7 +730,7 @@ Return
 Return
 ; }}}
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimAhkConfObj.Conf["VimJK"]["val"] == 1)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConfObj.Conf["VimJK"]["val"] == 1)
 j & k::
 k & j::
   SendInput, {BackSpace 1}
@@ -743,7 +738,7 @@ k & j::
 Return
 ; }}}
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimAhkConfObj.Conf["VimSD"]["val"] == 1)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConfObj.Conf["VimSD"]["val"] == 1)
 s & d::
 d & s::
   SendInput, {BackSpace 1}
@@ -752,7 +747,7 @@ Return
 ; }}}
 
 ; Enter vim insert mode (Exit vim normal mode) {{{
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) && (VimAhkState.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . VimConfObj.GroupName) && (VimState.Mode == "Vim_Normal")
 i::VimSetMode("Insert")
 
 +i::
@@ -782,7 +777,7 @@ Return
 ; }}}
 
 ; Repeat {{{
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimStrIsInCurrentVimMode("Vim_"))
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode("Vim_"))
 1::
 2::
 3::
@@ -792,19 +787,19 @@ Return
 7::
 8::
 9::
-  n_repeat := VimAhkState.n*10 + A_ThisHotkey
+  n_repeat := VimState.n*10 + A_ThisHotkey
   VimSetMode("", 0, n_repeat)
 Return
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (VimAhkState.n > 0)
-0:: ; 0 is used as {Home} for VimAhkState.n=0
-  n_repeat := VimAhkState.n*10 + A_ThisHotkey
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (VimState.n > 0)
+0:: ; 0 is used as {Home} for VimState.n=0
+  n_repeat := VimState.n*10 + A_ThisHotkey
   VimSetMode("", 0, n_repeat)
 Return
 ; }}}
 
 ; Normal Mode Basic {{{
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
 ; Undo/Redo
 u::Send,^z
 ^r::Send,^y
@@ -828,7 +823,7 @@ u::Send,^z
 Return
 
 +z::VimSetMode("Z")
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Z")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Z")
 +z::
   Send, ^s
   Send, !{F4}
@@ -840,7 +835,7 @@ Return
   VimSetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
 Space::Send, {Right}
 
 ; period
@@ -848,11 +843,11 @@ Space::Send, {Right}
 ; }}}
 
 ; Replace {{{
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
 r::VimSetMode("r_once")
 +r::VimSetMode("r_repeat")
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "r_once")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "r_once")
 ~a::
 ~+a::
 ~b::
@@ -954,7 +949,7 @@ Return
   VimSetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "r_repeat")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "r_repeat")
 ~a::
 ~+a::
 ~b::
@@ -1057,7 +1052,7 @@ Return
 
 ; Move {{{
 ; g {{{
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (not VimAhkState.g)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (not VimState.g)
 g::VimSetMode("", 1)
 ; }}}
 
@@ -1123,16 +1118,16 @@ VimMove(key=""){
     }
   }
   ; Up/Down
-  if(VimAhkState.Mode == "Vim_VisualLineFirst") and (key == "k" or key == "^u" or key == "^b" or key == "g"){
+  if(VimState.Mode == "Vim_VisualLineFirst") and (key == "k" or key == "^u" or key == "^b" or key == "g"){
     Send, {Shift Up}{End}{Home}{Shift Down}{Up}
     VimSetMode("Vim_VisualLine")
   }
   if(VimStrIsInCurrentVimMode( "Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
-    VimAhkState.LineCopy := 1
+    VimState.LineCopy := 1
     Send,{Shift Up}{Home}{Down}{Shift Down}{Up}
   }
   if(VimStrIsInCurrentVimMode("Vim_ydc")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
-    VimAhkState.LineCopy := 1
+    VimState.LineCopy := 1
     Send,{Shift Up}{Home}{Shift Down}{Down}
   }
 
@@ -1167,17 +1162,17 @@ VimMove(key=""){
   }
   Send,{Shift Up}
 
-  if(VimAhkState.Mode == "Vim_ydc_y"){
+  if(VimState.Mode == "Vim_ydc_y"){
     Clipboard :=
     Send, ^c
     ClipWait, 1
     VimSetMode("Vim_Normal")
-  }else if(VimAhkState.Mode == "Vim_ydc_d"){
+  }else if(VimState.Mode == "Vim_ydc_d"){
     Clipboard :=
     Send, ^x
     ClipWait, 1
     VimSetMode("Vim_Normal")
-  }else if(VimAhkState.Mode == "Vim_ydc_c"){
+  }else if(VimState.Mode == "Vim_ydc_c"){
     Clipboard :=
     Send, ^x
     ClipWait, 1
@@ -1186,14 +1181,14 @@ VimMove(key=""){
   VimSetMode("", 0, 0)
 }
 VimMoveLoop(key=""){
-  if(VimAhkState.n == 0){
-    VimAhkState.n := 1
+  if(VimState.n == 0){
+    VimState.n := 1
   }
-  Loop, % VimAhkState.n {
+  Loop, % VimState.n {
     VimMove(key)
   }
 }
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimStrIsInCurrentVimMode("Vim_"))
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode("Vim_"))
 ; 1 character
 h::VimMoveLoop("h")
 j::VimMoveLoop("j")
@@ -1224,13 +1219,13 @@ b::VimMoveLoop("b")
 ; G
 +g::VimMove("+g")
 ; gg
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Vim_")) and (VimAhkState.g)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Vim_")) and (VimState.g)
 g::VimMove("g")
 ; }}} Move
 
 ; Copy/Cut/Paste (ydcxp){{{
 ; YDC
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
 y::VimSetMode("Vim_ydc_y", 0, -1, 0)
 d::VimSetMode("Vim_ydc_d", 0, -1, 0)
 c::VimSetMode("Vim_ydc_c", 0, -1, 0)
@@ -1269,9 +1264,9 @@ Return
   }
 Return
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Vim_ydc_y")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_ydc_y")
 y::
-  VimAhkState.LineCopy := 1
+  VimState.LineCopy := 1
   if WinActive("ahk_group VimDoubleHomeGroup"){
     Send, {Home}
   }
@@ -1284,9 +1279,9 @@ y::
   Send, {Left}{Home}
 Return
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Vim_ydc_d")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_ydc_d")
 d::
-  VimAhkState.LineCopy := 1
+  VimState.LineCopy := 1
   if WinActive("ahk_group DoubleHome"){
     Send, {Home}
   }
@@ -1298,9 +1293,9 @@ d::
   }
 Return
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Vim_ydc_c")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_ydc_c")
 c::
-  VimAhkState.LineCopy := 1
+  VimState.LineCopy := 1
   if WinActive("ahk_group DoubleHome"){
     Send, {Home}
   }
@@ -1312,13 +1307,13 @@ c::
   }
 Return
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
 ; X
 x::Send, {Delete}
 +x::Send, {BS}
 
 ; Paste
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
 p::
   ;i:=0
   ;;Send, {p Up}
@@ -1326,7 +1321,7 @@ p::
   ;  if !GetKeyState("p", "P"){
   ;    break
   ;  }
-  ;  if(VimAhkState.LineCopy == 1){
+  ;  if(VimState.LineCopy == 1){
   ;    Send, {End}{Enter}^v{BS}{Home}
   ;  }else{
   ;    Send, {Right}
@@ -1346,7 +1341,7 @@ p::
   ;  i+=1
   ;  break
   ;}
-  if(VimAhkState.LineCopy == 1){
+  if(VimState.LineCopy == 1){
     Send, {End}{Enter}^v{BS}{Home}
   }else{
     Send, {Right}
@@ -1359,7 +1354,7 @@ p::
 Return
 
 +p::
-  if(VimAhkState.LineCopy == 1){
+  if(VimState.LineCopy == 1){
     Send, {Up}{End}{Enter}^v{BS}{Home}
   }else{
     Send, ^v
@@ -1372,7 +1367,7 @@ Return
 ; Vim visual mode {{{
 
 ; Visual Char/Block/Line
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
 v::VimSetMode("Vim_VisualChar")
 ^v::
   Send, ^b
@@ -1385,7 +1380,7 @@ Return
 Return
 
 ; ydc
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Visual"))
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Visual"))
 y::
   Clipboard :=
   Send, ^c
@@ -1447,7 +1442,7 @@ Return
 ; }}} Vim visual mode
 
 ; Search {{{
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
 /::
   Send, ^f
   VimSetMode("Insert")
@@ -1469,10 +1464,10 @@ n::Send, {F3}
 ; }}} Search
 
 ; Vim comamnd mode {{{
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
 :::VimSetMode("Command") ;(:)
 `;::VimSetMode("Command") ;(;)
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Command")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Command")
 w::VimSetMode("Command_w")
 q::VimSetMode("Command_q")
 h::
@@ -1480,7 +1475,7 @@ h::
   VimSetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Command_w")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Command_w")
 Return::
   Send, ^s
   VimSetMode("Vim_Normal")
@@ -1497,7 +1492,7 @@ Space::
   VimSetMode("Insert")
 Return
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimAhkState.Mode == "Command_q")
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Command_q")
 Return::
   Send, !{F4}
   VimSetMode("Insert")
@@ -1505,7 +1500,7 @@ Return
 ; }}} Vim command mode
 
 ; Disable other keys {{{
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and (VimStrIsInCurrentVimMode( "ydc") or VimStrIsInCurrentVimMode( "Command") or (VimAhkState.Mode == "Z"))
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode( "ydc") or VimStrIsInCurrentVimMode( "Command") or (VimState.Mode == "Z"))
 *a::
 *b::
 *c::
@@ -1576,7 +1571,7 @@ Space::
   VimSetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimAhkConfObj.Conf["VimDisableUnused"]["val"] == 2)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimConfObj.Conf["VimDisableUnused"]["val"] == 2)
 a::
 b::
 c::
@@ -1672,7 +1667,7 @@ _::
 Space::
 Return
 
-#If WinActive("ahk_group " . VimAhkConfObj.GroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimAhkConfObj.Conf["VimDisableUnused"]["val"] == 3)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimConfObj.Conf["VimDisableUnused"]["val"] == 3)
 *a::
 *b::
 *c::
