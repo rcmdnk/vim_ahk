@@ -30,51 +30,69 @@ class VimAhkIcon{
                  , Default: A_AhkPath}
 }
 
-class VimAhk{
-}
-VimAhkObj = new VimAhk()
-
 ; Application groups {{{
-VimGroupDel := ","
-VimGroupN := 0
+class VimAhkGroup{
+  static GroupDel := ","
+  __New(){
+    this.GroupN := 0
+    this.VimGroupName := "VimGroup" . GroupN
 
-; Enable vim mode for following applications
-VimGroupIni :=                             "ahk_exe notepad.exe"   ; NotePad
-VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe explorer.exe"  ; Explorer
-VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe wordpad.exe"   ; WordPad
-VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe TeraPad.exe"   ; TeraPad
-VimGroupIni := VimGroupIni . VimGroupDel . "作成"                  ;Thunderbird, 日本語
-VimGroupIni := VimGroupIni . VimGroupDel . "Write:"                ;Thuderbird, English
-VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe POWERPNT.exe"  ; PowerPoint
-VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe WINWORD.exe"   ; Word
-VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe Evernote.exe"  ; Evernote
-VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe Code.exe"      ; Visual Studio Code
-VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe onenote.exe"   ; OneNote Desktop
-VimGroupIni := VimGroupIni . VimGroupDel . "OneNote"               ; OneNote in Windows 10
-VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe texworks.exe"  ; TexWork
-VimGroupIni := VimGroupIni . VimGroupDel . "ahk_exe texstudio.exe" ; TexStudio
+    ; Enable vim mode for following applications
+    this.Group :=                                     "ahk_exe notepad.exe"   ; NotePad
+    this.Group := this.Group . VimAhkGroup.GroupDel . "ahk_exe explorer.exe"  ; Explorer
+    this.Group := this.Group . VimAhkGroup.GroupDel . "ahk_exe wordpad.exe"   ; WordPad
+    this.Group := this.Group . VimAhkGroup.GroupDel . "ahk_exe TeraPad.exe"   ; TeraPad
+    this.Group := this.Group . VimAhkGroup.GroupDel . "作成"                  ;Thunderbird, 日本語
+    this.Group := this.Group . VimAhkGroup.GroupDel . "Write:"                ;Thuderbird, English
+    this.Group := this.Group . VimAhkGroup.GroupDel . "ahk_exe POWERPNT.exe"  ; PowerPoint
+    this.Group := this.Group . VimAhkGroup.GroupDel . "ahk_exe WINWORD.exe"   ; Word
+    this.Group := this.Group . VimAhkGroup.GroupDel . "ahk_exe Evernote.exe"  ; Evernote
+    this.Group := this.Group . VimAhkGroup.GroupDel . "ahk_exe Code.exe"      ; Visual Studio Code
+    this.Group := this.Group . VimAhkGroup.GroupDel . "ahk_exe onenote.exe"   ; OneNote Desktop
+    this.Group := this.Group . VimAhkGroup.GroupDel . "OneNote"               ; OneNote in Windows 10
+    this.Group := this.Group . VimAhkGroup.GroupDel . "ahk_exe texworks.exe"  ; TexWork
+    this.Group := this.Group . VimAhkGroup.GroupDel . "ahk_exe texstudio.exe" ; TexStudio
 
-VimGroup := VimGroupIni
+    ; Following application select the line break at Shift + End.
+    GroupAdd, VimLBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
+    GroupAdd, VimLBSelectGroup, ahk_exe WINWORD.exe  ; Word
+    GroupAdd, VimLBSelectGroup, ahk_exe wordpad.exe  ; WordPad
 
-; Following application select the line break at Shift + End.
-GroupAdd, VimLBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
-GroupAdd, VimLBSelectGroup, ahk_exe WINWORD.exe  ; Word
-GroupAdd, VimLBSelectGroup, ahk_exe wordpad.exe  ; WordPad
+    ; OneNote before Windows 10
+    GroupAdd, VimOneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
 
-; OneNote before Windows 10
-GroupAdd, VimOneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
+    ; Need Home twice
+    GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
 
-; Need Home twice
-GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
+    ; Followings can emulate ^. For others, ^ works as same as 0
+    GroupAdd, VimCaretMove, ahk_exe notepad.exe ; NotePad
 
-; Followings can emulate ^. For others, ^ works as same as 0
-GroupAdd, VimCaretMove, ahk_exe notepad.exe ; NotePad
+    ; Followings start cursor from the same place after selection.
+    ; Others start right/left (by cursor) point of the selection
+    GroupAdd, VimCursorSameAfterSelect, ahk_exe notepad.exe ; NotePad
+    GroupAdd, VimCursorSameAfterSelect, ahk_exe exproloer.exe ; Explorer
+  }
 
-; Followings start cursor from the same place after selection.
-; Others start right/left (by cursor) point of the selection
-GroupAdd, VimCursorSameAfterSelect, ahk_exe notepad.exe ; NotePad
-GroupAdd, VimCursorSameAfterSelect, ahk_exe exproloer.exe ; Explorer
-; }}}
+  SetGroup(group){
+    this.GroupN++
+    this.VimGroupName := "VimGroup" . GroupN
+    Loop, Parse, % group, % this.GroupDel
+    {
+      if(A_LoopField != ""){
+        MsgBox % this.VimGroupName ", " A_LoopField
+        GroupAdd, % this.VimGroupName, %A_LoopField%
+      }
+    }
+  }
+
+}
+
+class VimAhk{
+  __New(){
+    this.Group := new VimAhkGroup()
+  }
+}
+VimAhkObj := new VimAhk()
 
 ; Setting variables {{{
 VimConf := {VimRestoreIME: {default: 1, val: 1
@@ -104,12 +122,12 @@ VimConf := {VimRestoreIME: {default: 1, val: 1
   , VimVerbose: {default: 1, val: 1
     , description: "Verbose level"
     , popup: "Verbose level`n`n1: No pop up`n2: Minimum tool tips of status`n: More info in tool tips`n4: Debug mode with a message box, which doesn't disappear automatically"}
-  , VimGroup: {default: VimGroupIni, val: VimGroup
+  , VimGroup: {default: VimAhkObj.Group.Group, val: VimAhkObj.Group.Group
     , description: "Application"
     , popup: "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon)."}}
 VimCheckBoxes := ["VimRestoreIME", "VimJJ", "VimJK", "VimSD", "VimIcon", "VimIconCheck"]
 
-VimNCheckbox := 0
+; Check user's default settings
 for k, v in VimConf {
   if(%k% != ""){
     VimConf[k][val] := %k%
@@ -159,7 +177,7 @@ VimPopup["VimAhkGitHub"] := VimAhkAbout.Homepage
 VimReadIni()
 
 ; Set group
-VimSetGroup()
+VimAhkObj.Group.SetGroup(VimConf["VimGroup"]["val"])
 
 ; Starting variables
 VimMode := "Insert"
@@ -222,7 +240,7 @@ MenuVimSettings(){
   Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimVerboseLevel vVimVerboseLevel, % VimConf["VimVerbose"]["description"]
   Gui, VimGuiSettings:Add, DropDownList, % "vVimVerboseValue Choose"VimConf["VimVerbose"]["val"], %VimVerbose1%|%VimVerbose2%|%VimVerbose3%|%VimVerbose4%
   Gui, VimGuiSettings:Add, Text, XS+10 Y+20 gVimGroupText vVimGroupText, % VimConf["VimGroup"]["description"]
-  StringReplace, VimGroupList, % VimConf["VimGroup"]["val"], %VimGroupDel%, `n, All
+  StringReplace, VimGroupList, % VimConf["VimGroup"]["val"], % VimAhkGroup.GroupDel, `n, All
   Gui, VimGuiSettings:Add, Edit, XS+10 Y+10 R10 W300 Multi vVimGroupList, %VimGroupList%
   Gui, VimGuiSettings:Add, Text, XM+20 Y+30, Check
   Gui, VimGuiSettings:Font, Underline
@@ -294,7 +312,7 @@ VimV2Conf(){
       if(VimGroup == ""){
         VimGroup := A_LoopField
       }else{
-        VimGroup := VimGroup . VimGroupDel . A_LoopField
+        VimGroup := VimGroup . VimAhkGroup.GroupDel . A_LoopField
       }
     }
   }
@@ -316,7 +334,7 @@ VimSet(){
   }else{
     SetTimer, VimStatusCheckTimer, OFF
   }
-  VimSetGroup()
+  VimAhkObj.Group.SetGroup(VimConf["VimGroup"]["val"])
 }
 
 VimGuiSettings(){
@@ -364,7 +382,7 @@ VimAhkGitHub(){
 }
 
 MenuVimCheck(){
-  global VimGroupName
+  global VimAhkObj
   ; Additional message is necessary before checking current window.
   ; Otherwise process name cannot be retrieved...?
   Msgbox, , Vim Ahk, Checking current window...
@@ -372,7 +390,7 @@ MenuVimCheck(){
   WinGet, name, ProcessName, ahk_pid %process%
   WinGetClass, class, ahk_pid %process%
   WinGetTitle, title, ahk_pid %process%
-  if WinActive("ahk_group" . VimGroupName){
+  if WinActive("ahk_group" . VimAhkObj.Group.VimGroupName){
     Msgbox, 0x40, Vim Ahk,
     (
       Supported
@@ -512,18 +530,6 @@ VIM_IME_SET(SetSts=0, WinTitle="A"){
 ; }}}
 
 ; Basic Functions {{{
-VimSetGroup(){
-  global
-  VimGroupN++
-  VimGroupName := "VimGroup" . VimGroupN
-  Loop, Parse, % VimConf["VimGroup"]["val"], % VimGroupDel
-  {
-    if(A_LoopField != ""){
-      GroupAdd, %VimGroupName%, %A_LoopField%
-    }
-  }
-}
-
 VimSetIcon(Mode=""){
   global VimConf
   icon :=
@@ -680,8 +686,8 @@ VimWriteIni(){
 }
 
 VimStatusCheckTimer(){
-  global VimGroupName, VimMode
-  if WinActive("ahk_group " . VimGroupName)
+  global VimAhkObj, VimMode
+  if WinActive("ahk_group " . VimAhkObj.Group.VimGroupName)
   {
     VimSetIcon(VimMode)
   }else{
@@ -707,7 +713,7 @@ Return
 
 ; }}}
 
-#If WinActive("ahk_group " . VimGroupName)
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName)
 ; Check Mode {{{
 ^!+c::
   VimCheckMode(VimVerboseMax, VimMode)
@@ -745,7 +751,7 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
   VimSetNormal()
 Return
 
-#If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConf["VimJJ"]["val"] == 1)
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConf["VimJJ"]["val"] == 1)
 ~j up:: ; jj: go to Normal mode.
   Input, jout, I T0.1 V L1, j
   if(ErrorLevel == "EndKey:J"){
@@ -755,7 +761,7 @@ Return
 Return
 ; }}}
 
-#If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConf["VimJK"]["val"] == 1)
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConf["VimJK"]["val"] == 1)
 j & k::
 k & j::
   SendInput, {BackSpace 1}
@@ -763,7 +769,7 @@ k & j::
 Return
 ; }}}
 
-#If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConf["VimSD"]["val"] == 1)
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConf["VimSD"]["val"] == 1)
 s & d::
 d & s::
   SendInput, {BackSpace 1}
@@ -772,7 +778,7 @@ Return
 ; }}}
 
 ; Enter vim insert mode (Exit vim normal mode) {{{
-#If WinActive("ahk_group " . VimGroupName) && (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) && (VimMode == "Vim_Normal")
 i::VimSetMode("Insert")
 
 +i::
@@ -802,7 +808,7 @@ Return
 ; }}}
 
 ; Repeat {{{
-#If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode("Vim_"))
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode("Vim_"))
 1::
 2::
 3::
@@ -816,7 +822,7 @@ Return
   VimSetMode("", 0, n_repeat)
 Return
 
-#If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (Vim_n > 0)
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (Vim_n > 0)
 0:: ; 0 is used as {Home} for Vim_n=0
   n_repeat := Vim_n*10 + A_ThisHotkey
   VimSetMode("", 0, n_repeat)
@@ -824,7 +830,7 @@ Return
 ; }}}
 
 ; Normal Mode Basic {{{
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
 ; Undo/Redo
 u::Send,^z
 ^r::Send,^y
@@ -848,7 +854,7 @@ u::Send,^z
 Return
 
 +z::VimSetMode("Z")
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Z")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Z")
 +z::
   Send, ^s
   Send, !{F4}
@@ -860,7 +866,7 @@ Return
   VimSetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
 Space::Send, {Right}
 
 ; period
@@ -868,11 +874,11 @@ Space::Send, {Right}
 ; }}}
 
 ; Replace {{{
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
 r::VimSetMode("r_once")
 +r::VimSetMode("r_repeat")
 
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "r_once")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "r_once")
 ~a::
 ~+a::
 ~b::
@@ -974,7 +980,7 @@ Return
   VimSetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "r_repeat")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "r_repeat")
 ~a::
 ~+a::
 ~b::
@@ -1077,7 +1083,7 @@ Return
 
 ; Move {{{
 ; g {{{
-#If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (not Vim_g)
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (not Vim_g)
 g::VimSetMode("", 1)
 ; }}}
 
@@ -1215,7 +1221,7 @@ VimMoveLoop(key=""){
     VimMove(key)
   }
 }
-#If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode("Vim_"))
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode("Vim_"))
 ; 1 character
 h::VimMoveLoop("h")
 j::VimMoveLoop("j")
@@ -1246,13 +1252,13 @@ b::VimMoveLoop("b")
 ; G
 +g::VimMove("+g")
 ; gg
-#If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode( "Vim_")) and (Vim_g)
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode( "Vim_")) and (Vim_g)
 g::VimMove("g")
 ; }}} Move
 
 ; Copy/Cut/Paste (ydcxp){{{
 ; YDC
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
 y::VimSetMode("Vim_ydc_y", 0, -1, 0)
 d::VimSetMode("Vim_ydc_d", 0, -1, 0)
 c::VimSetMode("Vim_ydc_c", 0, -1, 0)
@@ -1291,7 +1297,7 @@ Return
   }
 Return
 
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_ydc_y")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_ydc_y")
 y::
   VimLineCopy := 1
   if WinActive("ahk_group VimDoubleHomeGroup"){
@@ -1306,7 +1312,7 @@ y::
   Send, {Left}{Home}
 Return
 
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_ydc_d")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_ydc_d")
 d::
   VimLineCopy := 1
   if WinActive("ahk_group DoubleHome"){
@@ -1320,7 +1326,7 @@ d::
   }
 Return
 
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_ydc_c")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_ydc_c")
 c::
   VimLineCopy := 1
   if WinActive("ahk_group DoubleHome"){
@@ -1334,13 +1340,13 @@ c::
   }
 Return
 
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
 ; X
 x::Send, {Delete}
 +x::Send, {BS}
 
 ; Paste
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
 p::
   ;i:=0
   ;;Send, {p Up}
@@ -1394,7 +1400,7 @@ Return
 ; Vim visual mode {{{
 
 ; Visual Char/Block/Line
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
 v::VimSetMode("Vim_VisualChar")
 ^v::
   Send, ^b
@@ -1407,7 +1413,7 @@ Return
 Return
 
 ; ydc
-#If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode( "Visual"))
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode( "Visual"))
 y::
   Clipboard :=
   Send, ^c
@@ -1469,7 +1475,7 @@ Return
 ; }}} Vim visual mode
 
 ; Search {{{
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
 /::
   Send, ^f
   VimSetMode("Insert")
@@ -1491,10 +1497,10 @@ n::Send, {F3}
 ; }}} Search
 
 ; Vim comamnd mode {{{
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Vim_Normal")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Vim_Normal")
 :::VimSetMode("Command") ;(:)
 `;::VimSetMode("Command") ;(;)
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Command")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Command")
 w::VimSetMode("Command_w")
 q::VimSetMode("Command_q")
 h::
@@ -1502,7 +1508,7 @@ h::
   VimSetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Command_w")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Command_w")
 Return::
   Send, ^s
   VimSetMode("Vim_Normal")
@@ -1519,7 +1525,7 @@ Space::
   VimSetMode("Insert")
 Return
 
-#If WinActive("ahk_group " . VimGroupName) and (VimMode == "Command_q")
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimMode == "Command_q")
 Return::
   Send, !{F4}
   VimSetMode("Insert")
@@ -1527,7 +1533,7 @@ Return
 ; }}} Vim command mode
 
 ; Disable other keys {{{
-#If WinActive("ahk_group " . VimGroupName) and (VimStrIsInCurrentVimMode( "ydc") or VimStrIsInCurrentVimMode( "Command") or (VimMode == "Z"))
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and (VimStrIsInCurrentVimMode( "ydc") or VimStrIsInCurrentVimMode( "Command") or (VimMode == "Z"))
 *a::
 *b::
 *c::
@@ -1598,7 +1604,7 @@ Space::
   VimSetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimGroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimConf["VimDisableUnused"]["val"] == 2)
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimConf["VimDisableUnused"]["val"] == 2)
 a::
 b::
 c::
@@ -1694,7 +1700,7 @@ _::
 Space::
 Return
 
-#If WinActive("ahk_group " . VimGroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimConf["VimDisableUnused"]["val"] == 3)
+#If WinActive("ahk_group " . VimAhkObj.Group.VimGroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimConf["VimDisableUnused"]["val"] == 3)
 *a::
 *b::
 *c::
