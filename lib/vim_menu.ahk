@@ -1,8 +1,8 @@
 ﻿class VimMenu{
-  SetMenu(NVerbose){
+  SetMenu(){
     MenuVimSetting := ObjBindMethod(VimSetting, "Menu")
     MenuVimCheck := ObjBindMethod(VimCheck, "Menu")
-    MenuVimStatus := ObjBindMethod(VimMenu, "Status", NVerbose)
+    MenuVimStatus := ObjBindMethod(VimState, "FullStatus")
     MenuVimAbout := ObjBindMethod(VimAbout, "Menu")
     Menu, VimSubMenu, Add, Settings, % MenuVimSetting
     Menu, VimSubMenu, Add
@@ -12,8 +12,5 @@
 
     Menu, Tray, Add
     Menu, Tray, Add, VimMenu, :VimSubMenu
-  }
-  Status(NVerbose){
-    VimCheckMode(NVerbose, , , , 1)
   }
 }
