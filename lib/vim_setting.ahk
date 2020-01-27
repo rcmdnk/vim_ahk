@@ -1,35 +1,35 @@
 ﻿class VimSetting{
   Menu(){
-    ;global VimConfObj
     global
+    local height, created, i, k, y, disableUnused, verbose, ok, reset, cancel
     Gui, New, % "+HwndVimGuiSetting +Label" . VimSetting.__Class . ".Menu"
     VimSetting.VimGuiSetting := VimGuiSetting
     Gui, %VimGuiSetting%:-MinimizeBox
     Gui, %VimGuiSetting%:-Resize
-    VimSettingHeight := VimConfObj.Checkboxes.Length() * 22 + 370
-    Gui, %VimGuiSetting%:Add, GroupBox, xm X+10 YM+10 Section W370 H%VimSettingHeight%, Settings
-    VimCheckboxesCreated := 0
+    height := VimConfObj.Checkboxes.Length() * 22 + 370
+    Gui, %VimGuiSetting%:Add, GroupBox, xm X+10 YM+10 Section W370 H%height%, Settings
+    created := 0
     for i, k in VimConfObj.Checkboxes {
-      if(VimCheckboxesCreated == 0){
+      if(created == 0){
         y := "YS+20"
       }else{
         y := "Y+10"
       }
       Gui, %VimGuiSetting%:Add, Checkbox, XS+10 %y% v%k%, % VimConfObj.Conf[k]["description"]
-      VimCheckboxesCreated  := 1
+      created  := 1
       if(VimConfObj.Conf[k]["val"] == 1){
         GuiControl, %VimGuiSetting%:, %k%, 1
       }
     }
     Gui, %VimGuiSetting%:Add, Text, % "XS+10 Y+20 g" . VimSetting.__Class . ".DisableUnusedLevel vVimDisableUnusedLevel", % VimConfObj.Conf["VimDisableUnused"]["description"]
-    DisableUnused := VimConfObj.DisableUnused
-    Gui, %VimGuiSetting%:Add, DropDownList, % "W320 vVimDisableUnusedValue Choose"VimConfObj.Conf["VimDisableUnused"]["val"], % DisableUnused[1]"|"DisableUnused[2]"|"DisableUnused[3]
+    disableUnused := VimConfObj.DisableUnused
+    Gui, %VimGuiSetting%:Add, DropDownList, % "W320 vVimDisableUnusedValue Choose"VimConfObj.Conf["VimDisableUnused"]["val"], % disableUnused[1]"|"disableUnused[2]"|"disableUnused[3]
     Gui, %VimGuiSetting%:Add, Text, % "XS+10 Y+20 g" . VimSetting.__Class . ".IconCheckIntervalText vVimIconCheckIntervalText", % VimConfObj.Conf["VimIconCheckInterval"]["description"]
     Gui, %VimGuiSetting%:Add, Edit, vVimIconCheckIntervalEdit
     Gui, %VimGuiSetting%:Add, UpDown, vVimIconCheckInterval Range100-1000000, % VimConfObj.Conf["VimIconCheckInterval"]["val"]
     Gui, %VimGuiSetting%:Add, Text, % "XS+10 Y+20 g" . VimSetting.__Class . ".VerboseLevel vVimVerboseLevel", % VimConfObj.Conf["VimVerbose"]["description"]
-    Verbose := VimConfObj.Verbose
-    Gui, %VimGuiSetting%:Add, DropDownList, % "vVimVerboseValue Choose"VimConfObj.Conf["VimVerbose"]["val"], % Verbose[1]"|"Verbose[2]"|"Verbose[3]"|"Verbose[4]
+    verbose := VimConfObj.Verbose
+    Gui, %VimGuiSetting%:Add, DropDownList, % "vVimVerboseValue Choose"VimConfObj.Conf["VimVerbose"]["val"], % verbose[1]"|"verbose[2]"|"verbose[3]"|"verbose[4]
     Gui, %VimGuiSetting%:Add, Text, % "XS+10 Y+20 g" . VimSetting.__Class . ".GroupText vVimGroupText", % VimConfObj.Conf["VimGroup"]["description"]
     StringReplace, VimGroupList, % VimConfObj.Conf["VimGroup"]["val"], % VimConfObj.GroupDel, `n, All
     Gui, %VimGuiSetting%:Add, Edit, XS+10 Y+10 R10 W300 Multi vVimGroupList, %VimGroupList%
@@ -39,14 +39,14 @@
     Gui, %VimGuiSetting%:Font, Norm
     Gui, %VimGuiSetting%:Add, Text, X+5, for further information.
     Gui, %VimGuiSetting%:Add, Button, +HwndVimGuiSettingOKId xm W100 X45 Y+10 Default, &OK
-    VimGuiSettingOK := ObjBindMethod(VimSetting, "MenuOK")
-    GuiControl, +G, % VimGuiSettingOKId, % VimGuiSettingOK
+    ok := ObjBindMethod(VimSetting, "MenuOK")
+    GuiControl, +G, % VimGuiSettingOKId, % ok
     Gui, %VimGuiSetting%:Add, Button, +HwndVimGuiSettingResetId W100 X+10, &Reset
-    VimGuiSettingReset := ObjBindMethod(VimSetting, "MenuReset")
-    GuiControl, +G, % VimGuiSettingResetId, % VimGuiSettingReset
+    reset := ObjBindMethod(VimSetting, "MenuReset")
+    GuiControl, +G, % VimGuiSettingResetId, % reset
     Gui, %VimGuiSetting%:Add, Button, +HwndVimGuiSettingCancelId W100 X+10, &Cancel
-    VimGuiSettingCancel := ObjBindMethod(VimSetting, "MenuCancel")
-    GuiControl, +G, % VimGuiSettingCancelId, % VimGuiSettingCancel
+    cancel := ObjBindMethod(VimSetting, "MenuCancel")
+    GuiControl, +G, % VimGuiSettingCancelId, % cancel
     Gui, %VimGuiSetting%:Show, W410, Vim Ahk Settings
     OnMessage(0x200, ObjBindMethod(VimSetting, "MouseMove"))
   }
@@ -93,7 +93,7 @@
   ;}
 
   VimV2Conf(){
-    global
+    global VimConfObj, VimDisableUnused, VimDisableUnusedValue, VimVerbose, VimVerboseValue, VimGroup, VimGroupList
     Loop, % VimConfObj.DisableUnused.Length() {
       if(VimDisableUnusedValue == VimConfObj.DisableUnused[A_Index]){
         VimDisableUnused := A_Index
