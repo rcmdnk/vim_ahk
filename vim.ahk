@@ -1,28 +1,13 @@
 ﻿; Auto-execute section {{{
-testCount := 0
 VimConfObj := new VimConf()
 
-; Read Ini
-VimIni.ReadIni()
-
-; Set group
-VimConfObj.SetGroup(VimConfObj.Conf["VimGroup"]["val"])
-
-; Menu
-VimMenu.SetMenu()
-
-; Set initial icon
-VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
-
-; Set Timer for status check
-if(VimConfObj.Conf["VimIconCheck"]["val"] == 1){
-  SetTimer, VimStatusCheckTimer, % VimConfObj.Conf["VimIconCheckInterval"]["val"]
-}
-
 Return
-; }}}
+; }}} Auto-execute section
 
-; Class {{{
+; Include {{{
+#Include %A_LineFile%\..\lib\vim_ahk_setting.ahk
+#Include %A_LineFile%\..\lib\vim_ime.ahk
+
 #Include %A_LineFile%\..\lib\vim_about.ahk
 #Include %A_LineFile%\..\lib\vim_check.ahk
 #Include %A_LineFile%\..\lib\vim_conf.ahk
@@ -31,19 +16,7 @@ Return
 #Include %A_LineFile%\..\lib\vim_menu.ahk
 #Include %A_LineFile%\..\lib\vim_setting.ahk
 #Include %A_LineFile%\..\lib\vim_state.ahk
-
-#Include %A_LineFile%\..\lib\vim_ime.ahk
-; Class }}}
-
-; AutoHotkey settings {{{
-
-#UseHook On ; Make it a bit slow, but can avoid infinitude loop
-            ; Same as "$" for each hotkey
-#InstallKeybdHook ; For checking key history
-                  ; Use ~500kB memory?
-#HotkeyInterval 2000 ; Hotkey interval (default 2000 milliseconds).
-#MaxHotkeysPerInterval 70 ; Max hotkeys per interval (default 50).
-;}}}
+; Include }}}
 
 ; Vim mode {{{
 #If
@@ -52,14 +25,14 @@ Return
 ^!+v::
   VimSetting.Menu()
 Return
-; }}}
+; }}} Launch Settings
 
 #If WinActive("ahk_group " . VimConfObj.GroupName)
 ; Check Mode {{{
 ^!+c::
   VimState.CheckMode(VimConfObj.Verbose.Length(), VimState.Mode)
 Return
-; }}}
+; }}} Check Mode
 
 ; Enter vim normal mode {{{
 VimSetNormal(){
@@ -113,7 +86,7 @@ d & s::
   SendInput, {BackSpace 1}
   VimSetNormal()
 Return
-; }}}
+; }}} Enter vim normal mode
 
 ; Enter vim insert mode (Exit vim normal mode) {{{
 #If WinActive("ahk_group " . VimConfObj.GroupName) && (VimState.Mode == "Vim_Normal")
@@ -143,7 +116,7 @@ Return
   Send, {Up}{End}{Enter}
   VimState.SetMode("Insert")
 Return
-; }}}
+; }}} Enter vim insert mode (Exit vim normal mode)
 
 ; Repeat {{{
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode("Vim_"))
@@ -165,7 +138,7 @@ Return
   n_repeat := VimState.n*10 + A_ThisHotkey
   VimState.SetMode("", 0, n_repeat)
 Return
-; }}}
+; }}} Repeat
 
 ; Normal Mode Basic {{{
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
@@ -209,7 +182,7 @@ Space::Send, {Right}
 
 ; period
 .::Send, +^{Right}{BS}^v
-; }}}
+; }}} Normal Mode Basic
 
 ; Replace {{{
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
@@ -417,13 +390,13 @@ Return
 :::
   Send, {:}{Del}
 Return
-; }}}
+; }}} Replace
 
 ; Move {{{
 ; g {{{
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode("Vim_")) and (not VimState.g)
 g::VimState.SetMode("", 1)
-; }}}
+; }}} g
 
 VimMove(key=""){
   shift = 0
@@ -1105,7 +1078,7 @@ _::
 >::
 Space::
 Return
-; }}}
+; }}} Disable other keys
 ; }}} Vim Mode
 
 ; Reset the condition

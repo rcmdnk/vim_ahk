@@ -1,5 +1,5 @@
 ﻿class VimConf{
-  __New(){
+  __New(setup=true){
     this.GroupDel := ","
     this.GroupN := 0
     this.GroupName := "VimGroup" . GroupN
@@ -105,12 +105,16 @@
       , "3: Tool tips" ,"4: Popup message"]
 
     this.CheckUserDefault()
+
+    if(setup==true){
+      this.Setup()
+    }
   }
 
   CheckUserDefault(){
     for k, v in this.Conf {
       if(%k% != ""){
-        this.Conf[k][val] := %k%
+        this.Conf[k]["val"] := %k%
       }
     }
   }
@@ -123,6 +127,16 @@
       if(A_LoopField != ""){
         GroupAdd, % this.GroupName, %A_LoopField%
       }
+    }
+  }
+
+  Setup(){
+    VimIni.ReadIni()
+    this.SetGroup(this.Conf["VimGroup"]["val"])
+    VimMenu.SetMenu()
+    VimIconMng.SetIcon(VimState.Mode, this.Conf["VimIcon"]["val"])
+    if(this.Conf["VimIconCheck"]["val"] == 1){
+      SetTimer, VimStatusCheckTimer, % this.Conf["VimIconCheckInterval"]["val"]
     }
   }
 }
