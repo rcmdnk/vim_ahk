@@ -19,41 +19,23 @@ Return
 ; Include }}}
 
 ; Vim mode {{{
-#If
 
 ; Launch Settings {{{
+#If
 ^!+v::
   VimSetting.Menu()
 Return
 ; }}} Launch Settings
 
-#If WinActive("ahk_group " . VimConfObj.GroupName)
 ; Check Mode {{{
+#If WinActive("ahk_group " . VimConfObj.GroupName)
 ^!+c::
   VimState.CheckMode(VimConfObj.Verbose.Length(), VimState.Mode)
 Return
 ; }}} Check Mode
 
 ; Enter vim normal mode {{{
-VimSetNormal(){
-  VimState.LastIME := VIM_IME_Get()
-  if(VimState.LastIME){
-    if(VIM_IME_GetConverting(A)){
-      Send,{Esc}
-      Return
-    }else{
-      VIM_IME_SET()
-    }
-  }
-  if(VimState.StrIsInCurrentVimMode( "Visual") or VimState.StrIsInCurrentVimMode( "ydc")){
-    Send, {Right}
-    if WinActive("ahk_group VimCursorSameAfterSelect"){
-      Send, {Left}
-    }
-  }
-  VimState.SetMode("Vim_Normal")
-}
-
+#If WinActive("ahk_group " . VimConfObj.GroupName)
 Esc:: ; Just send Esc at converting, long press for normal Esc.
 ^[:: ; Go to Normal mode (for vim) with IME off even at converting.
   KeyWait, Esc, T0.5
@@ -61,7 +43,7 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
     Send,{Esc}
     Return
   }
-  VimSetNormal()
+  VimState.SetNormal()
 Return
 
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode( "Insert")) and (VimConfObj.Conf["VimJJ"]["val"] == 1)
@@ -69,7 +51,7 @@ Return
   Input, jout, I T0.1 V L1, j
   if(ErrorLevel == "EndKey:J"){
     SendInput, {BackSpace 2}
-    VimSetNormal()
+    VimState.SetNormal()
   }
 Return
 
@@ -77,14 +59,14 @@ Return
 j & k::
 k & j::
   SendInput, {BackSpace 1}
-  VimSetNormal()
+  VimState.SetNormal()
 Return
 
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode( "Insert")) and (VimConfObj.Conf["VimSD"]["val"] == 1)
 s & d::
 d & s::
   SendInput, {BackSpace 1}
-  VimSetNormal()
+  VimState.SetNormal()
 Return
 ; }}} Enter vim normal mode
 
@@ -1079,7 +1061,7 @@ _::
 Space::
 Return
 ; }}} Disable other keys
-; }}} Vim Mode
+; }}} Vim mode
 
 ; Reset the condition
 #If
