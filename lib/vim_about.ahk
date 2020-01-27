@@ -12,7 +12,7 @@
     Gui, %VimGuiAbout%:-Resize
     Gui, %VimGuiAbout%:Add, Text, , % "Vim Ahk (vim_ahk):`n" VimAbout.Description
     Gui, %VimGuiAbout%:Font, Underline
-    Gui, %VimGuiAbout%:Add, Text, Y+0 cBlue gVimGitHub, Homepage
+    Gui, %VimGuiAbout%:Add, Text, % "Y+0 cBlue g" . VimAbout.__Class . ".OpenHomepage", Homepage
     Gui, %VimGuiAbout%:Font, Norm
     Gui, %VimGuiAbout%:Add, Text, , % "Author: " VimAbout.Author
     Gui, %VimGuiAbout%:Add, Text, , % "Version: " VimAbout.Version
@@ -33,5 +33,9 @@
   }
   MenuEscape(){
     Gui, % VimAbout.VimGuiAbout . ":Destroy"
+  }
+
+  OpenHomepage(){
+    Run % VimAbout.Homepage
   }
 }

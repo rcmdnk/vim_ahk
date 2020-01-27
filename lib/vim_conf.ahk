@@ -91,7 +91,7 @@
     this.Popup["VimGuiSettingsOK"] := "Reflect changes and exit"
     this.Popup["VimGuiSettingsReset"] := "Reset to the default values"
     this.Popup["VimGuiSettingsCancel"] := "Don't change and exit"
-    this.Popup["VimGitHub"] := VimAbout.Homepage
+    this.Popup["VimHomepage"] := VimAbout.Homepage
 
     ; Disable unused keys in Normal mode
     this.DisableUnused := ["1: Do not disable unused keys"

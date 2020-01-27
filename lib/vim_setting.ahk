@@ -35,7 +35,7 @@
     Gui, %VimGuiSetting%:Add, Edit, XS+10 Y+10 R10 W300 Multi vVimGroupList, %VimGroupList%
     Gui, %VimGuiSetting%:Add, Text, XM+20 Y+30, Check
     Gui, %VimGuiSetting%:Font, Underline
-    Gui, %VimGuiSetting%:Add, Text, X+5 cBlue gVimGitHub vVimGitHub, HELP
+    Gui, %VimGuiSetting%:Add, Text, % "X+5 cBlue g" . VimAbout.__Class . ".OpenHomepage vVimHomepage", HELP
     Gui, %VimGuiSetting%:Font, Norm
     Gui, %VimGuiSetting%:Add, Text, X+5, for further information.
     Gui, %VimGuiSetting%:Add, Button, +HwndVimGuiSettingOKId xm W100 X45 Y+10 Default, &OK
@@ -163,9 +163,7 @@
     for k, v in VimConfObj.Conf {
       VimConfObj.Conf[k]["val"] := v["default"]
     }
-
     VimSetting.VimSet()
-
     VimSetting.Destroy()
     VimSetting.Menu()
   }
