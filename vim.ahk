@@ -34,11 +34,7 @@ Return
 #Include %A_LineFile%\..\lib\vim_state.ahk
 
 #Include %A_LineFile%\..\lib\vim_ime.ahk
-
 ; Class }}}
-
-; Menu functions {{{
-; }}}
 
 ; AutoHotkey settings {{{
 
@@ -50,60 +46,6 @@ Return
 #MaxHotkeysPerInterval 70 ; Max hotkeys per interval (default 50).
 ;}}}
 
-; Basic Functions {{{
-VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
-  global VimConfObj
-  VimDebug.CheckValidMode(Mode)
-  if(Mode != ""){
-    VimState.Mode := Mode
-    If(Mode == "Insert") and (VimConfObj.Conf["VimRestoreIME"]["val"] == 1){
-      VIM_IME_SET(VimState.LastIME)
-    }
-    VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
-  }
-  if(g != -1){
-    VimState.g := g
-  }
-  if(n != -1){
-    VimState.n := n
-  }
-  if(LineCopy!=-1){
-    VimState.LineCopy := LineCopy
-  }
-  VimState.CheckMode(VimConfObj.Conf["VimVerbose"]["val"], Mode, g, n, LineCopy)
-  Return
-}
-
-VimIsCurrentVimMode(mode){
-  VimDebug.CheckValidMode(mode)
-  return (mode == VimState.Mode)
-}
-
-VimStrIsInCurrentVimMode(str){
-  VimDebug.CheckValidMode(str, false)
-  return (inStr(VimState.Mode, str))
-}
-
-VimHasValue(haystack, needle, full_match = true){
-  if(!isObject(haystack)){
-    return false
-  }else if(haystack.Length()==0){
-    return false
-  }
-  for index,value in haystack{
-    if full_match{
-      if (value==needle){
-        return true
-      }
-    }else{
-      if (inStr(value, needle)){
-        return true
-      }
-    }
-  }
-  return false
-}
-
 ; Vim mode {{{
 #If
 
@@ -111,7 +53,6 @@ VimHasValue(haystack, needle, full_match = true){
 ^!+v::
   VimSetting.Menu()
 Return
-
 ; }}}
 
 #If WinActive("ahk_group " . VimConfObj.GroupName)
@@ -132,13 +73,13 @@ VimSetNormal(){
       VIM_IME_SET()
     }
   }
-  if(VimStrIsInCurrentVimMode( "Visual") or VimStrIsInCurrentVimMode( "ydc")){
+  if(VimState.StrIsInCurrentVimMode( "Visual") or VimState.StrIsInCurrentVimMode( "ydc")){
     Send, {Right}
     if WinActive("ahk_group VimCursorSameAfterSelect"){
       Send, {Left}
     }
   }
-  VimSetMode("Vim_Normal")
+  VimState.SetMode("Vim_Normal")
 }
 
 Esc:: ; Just send Esc at converting, long press for normal Esc.
@@ -151,7 +92,7 @@ Esc:: ; Just send Esc at converting, long press for normal Esc.
   VimSetNormal()
 Return
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConfObj.Conf["VimJJ"]["val"] == 1)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode( "Insert")) and (VimConfObj.Conf["VimJJ"]["val"] == 1)
 ~j up:: ; jj: go to Normal mode.
   Input, jout, I T0.1 V L1, j
   if(ErrorLevel == "EndKey:J"){
@@ -159,17 +100,15 @@ Return
     VimSetNormal()
   }
 Return
-; }}}
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConfObj.Conf["VimJK"]["val"] == 1)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode( "Insert")) and (VimConfObj.Conf["VimJK"]["val"] == 1)
 j & k::
 k & j::
   SendInput, {BackSpace 1}
   VimSetNormal()
 Return
-; }}}
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Insert")) and (VimConfObj.Conf["VimSD"]["val"] == 1)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode( "Insert")) and (VimConfObj.Conf["VimSD"]["val"] == 1)
 s & d::
 d & s::
   SendInput, {BackSpace 1}
@@ -179,36 +118,36 @@ Return
 
 ; Enter vim insert mode (Exit vim normal mode) {{{
 #If WinActive("ahk_group " . VimConfObj.GroupName) && (VimState.Mode == "Vim_Normal")
-i::VimSetMode("Insert")
+i::VimState.SetMode("Insert")
 
 +i::
   Send, {Home}
-  VimSetMode("Insert")
+  VimState.SetMode("Insert")
 Return
 
 a::
   Send, {Right}
-  VimSetMode("Insert")
+  VimState.SetMode("Insert")
 Return
 
 +a::
   Send, {End}
-  VimSetMode("Insert")
+  VimState.SetMode("Insert")
 Return
 
 o::
   Send,{End}{Enter}
-  VimSetMode("Insert")
+  VimState.SetMode("Insert")
 Return
 
 +o::
   Send, {Up}{End}{Enter}
-  VimSetMode("Insert")
+  VimState.SetMode("Insert")
 Return
 ; }}}
 
 ; Repeat {{{
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode("Vim_"))
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode("Vim_"))
 1::
 2::
 3::
@@ -219,13 +158,13 @@ Return
 8::
 9::
   n_repeat := VimState.n*10 + A_ThisHotkey
-  VimSetMode("", 0, n_repeat)
+  VimState.SetMode("", 0, n_repeat)
 Return
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (VimState.n > 0)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode("Vim_")) and (VimState.n > 0)
 0:: ; 0 is used as {Home} for VimState.n=0
   n_repeat := VimState.n*10 + A_ThisHotkey
-  VimSetMode("", 0, n_repeat)
+  VimState.SetMode("", 0, n_repeat)
 Return
 ; }}}
 
@@ -253,17 +192,17 @@ u::Send,^z
   Clipboard := bak
 Return
 
-+z::VimSetMode("Z")
++z::VimState.SetMode("Z")
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Z")
 +z::
   Send, ^s
   Send, !{F4}
-  VimSetMode("Vim_Normal")
+  VimState.SetMode("Vim_Normal")
 Return
 
 +q::
   Send, !{F4}
-  VimSetMode("Vim_Normal")
+  VimState.SetMode("Vim_Normal")
 Return
 
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
@@ -275,8 +214,8 @@ Space::Send, {Right}
 
 ; Replace {{{
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
-r::VimSetMode("r_once")
-+r::VimSetMode("r_repeat")
+r::VimState.SetMode("r_once")
++r::VimState.SetMode("r_repeat")
 
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "r_once")
 ~a::
@@ -372,12 +311,12 @@ r::VimSetMode("r_once")
 ~>::
 ~Space::
   Send, {Del}
-  VimSetMode("Vim_Normal")
+  VimState.SetMode("Vim_Normal")
 Return
 
 ::: ; ":" can't be used with "~"?
   Send, {:}{Del}
-  VimSetMode("Vim_Normal")
+  VimState.SetMode("Vim_Normal")
 Return
 
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "r_repeat")
@@ -483,20 +422,20 @@ Return
 
 ; Move {{{
 ; g {{{
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode("Vim_")) and (not VimState.g)
-g::VimSetMode("", 1)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode("Vim_")) and (not VimState.g)
+g::VimState.SetMode("", 1)
 ; }}}
 
 VimMove(key=""){
   shift = 0
-  if(VimStrIsInCurrentVimMode( "Visual") or VimStrIsInCurrentVimMode( "ydc")){
+  if(VimState.StrIsInCurrentVimMode( "Visual") or VimState.StrIsInCurrentVimMode( "ydc")){
     shift := 1
   }
   if(shift == 1){
     Send, {Shift Down}
   }
   ; Left/Right
-  if(not VimStrIsInCurrentVimMode( "Line")){
+  if(not VimState.StrIsInCurrentVimMode( "Line")){
     ; For some cases, need '+' directly to continue to select
     ; especially for cases using shift as original keys
     ; For now, caret does not work even add + directly
@@ -551,13 +490,13 @@ VimMove(key=""){
   ; Up/Down
   if(VimState.Mode == "Vim_VisualLineFirst") and (key == "k" or key == "^u" or key == "^b" or key == "g"){
     Send, {Shift Up}{End}{Home}{Shift Down}{Up}
-    VimSetMode("Vim_VisualLine")
+    VimState.SetMode("Vim_VisualLine")
   }
-  if(VimStrIsInCurrentVimMode( "Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
+  if(VimState.StrIsInCurrentVimMode( "Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
     VimState.LineCopy := 1
     Send,{Shift Up}{Home}{Down}{Shift Down}{Up}
   }
-  if(VimStrIsInCurrentVimMode("Vim_ydc")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
+  if(VimState.StrIsInCurrentVimMode("Vim_ydc")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
     VimState.LineCopy := 1
     Send,{Shift Up}{Home}{Shift Down}{Down}
   }
@@ -597,19 +536,19 @@ VimMove(key=""){
     Clipboard :=
     Send, ^c
     ClipWait, 1
-    VimSetMode("Vim_Normal")
+    VimState.SetMode("Vim_Normal")
   }else if(VimState.Mode == "Vim_ydc_d"){
     Clipboard :=
     Send, ^x
     ClipWait, 1
-    VimSetMode("Vim_Normal")
+    VimState.SetMode("Vim_Normal")
   }else if(VimState.Mode == "Vim_ydc_c"){
     Clipboard :=
     Send, ^x
     ClipWait, 1
-    VimSetMode("Insert")
+    VimState.SetMode("Insert")
   }
-  VimSetMode("", 0, 0)
+  VimState.SetMode("", 0, 0)
 }
 VimMoveLoop(key=""){
   if(VimState.n == 0){
@@ -619,7 +558,7 @@ VimMoveLoop(key=""){
     VimMove(key)
   }
 }
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode("Vim_"))
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode("Vim_"))
 ; 1 character
 h::VimMoveLoop("h")
 j::VimMoveLoop("j")
@@ -650,18 +589,18 @@ b::VimMoveLoop("b")
 ; G
 +g::VimMove("+g")
 ; gg
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Vim_")) and (VimState.g)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode( "Vim_")) and (VimState.g)
 g::VimMove("g")
 ; }}} Move
 
 ; Copy/Cut/Paste (ydcxp){{{
 ; YDC
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
-y::VimSetMode("Vim_ydc_y", 0, -1, 0)
-d::VimSetMode("Vim_ydc_d", 0, -1, 0)
-c::VimSetMode("Vim_ydc_c", 0, -1, 0)
+y::VimState.SetMode("Vim_ydc_y", 0, -1, 0)
+d::VimState.SetMode("Vim_ydc_d", 0, -1, 0)
+c::VimState.SetMode("Vim_ydc_c", 0, -1, 0)
 +y::
-  VimSetMode("Vim_ydc_y", 0, 0, 1)
+  VimState.SetMode("Vim_ydc_y", 0, 0, 1)
   Sleep, 150 ; Need to wait (For variable change?)
   if WinActive("ahk_group VimDoubleHomeGroup"){
     Send, {Home}
@@ -676,7 +615,7 @@ c::VimSetMode("Vim_ydc_c", 0, -1, 0)
 Return
 
 +d::
-  VimSetMode("Vim_ydc_d", 0, 0, 0)
+  VimState.SetMode("Vim_ydc_d", 0, 0, 0)
   if not WinActive("ahk_group VimLBSelectGroup"){
     VimMove("$")
   }else{
@@ -686,7 +625,7 @@ Return
 Return
 
 +c::
-  VimSetMode("Vim_ydc_c",0,0,0)
+  VimState.SetMode("Vim_ydc_c",0,0,0)
   if not WinActive("ahk_group VimLBSelectGroup"){
     VimMove("$")
   }else{
@@ -799,19 +738,19 @@ Return
 
 ; Visual Char/Block/Line
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
-v::VimSetMode("Vim_VisualChar")
+v::VimState.SetMode("Vim_VisualChar")
 ^v::
   Send, ^b
-  VimSetMode("Vim_VisualChar")
+  VimState.SetMode("Vim_VisualChar")
 Return
 
 +v::
-  VimSetMode("Vim_VisualLineFirst")
+  VimState.SetMode("Vim_VisualLineFirst")
   Send, {Home}+{Down}
 Return
 
 ; ydc
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode( "Visual"))
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode( "Visual"))
 y::
   Clipboard :=
   Send, ^c
@@ -820,10 +759,10 @@ y::
     Send, {Left}
   }
   ClipWait, 1
-  if(VimStrIsInCurrentVimMode( "Line")){
-    VimSetMode("Vim_Normal", 0, 0, 1)
+  if(VimState.StrIsInCurrentVimMode( "Line")){
+    VimState.SetMode("Vim_Normal", 0, 0, 1)
   }else{
-    VimSetMode("Vim_Normal", 0, 0, 0)
+    VimState.SetMode("Vim_Normal", 0, 0, 0)
   }
 Return
 
@@ -831,10 +770,10 @@ d::
   Clipboard :=
   Send, ^x
   ClipWait, 1
-  if(VimStrIsInCurrentVimMode("Line")){
-    VimSetMode("Vim_Normal", 0, 0, 1)
+  if(VimState.StrIsInCurrentVimMode("Line")){
+    VimState.SetMode("Vim_Normal", 0, 0, 1)
   }else{
-    VimSetMode("Vim_Normal", 0, 0, 0)
+    VimState.SetMode("Vim_Normal", 0, 0, 0)
   }
 Return
 
@@ -842,10 +781,10 @@ x::
   Clipboard :=
   Send, ^x
   ClipWait, 1
-  if(VimStrIsInCurrentVimMode( "Line")){
-    VimSetMode("Vim_Normal", 0, 0, 1)
+  if(VimState.StrIsInCurrentVimMode( "Line")){
+    VimState.SetMode("Vim_Normal", 0, 0, 1)
   }else{
-    VimSetMode("Vim_Normal", 0, 0, 0)
+    VimState.SetMode("Vim_Normal", 0, 0, 0)
   }
 Return
 
@@ -853,10 +792,10 @@ c::
   Clipboard :=
   Send, ^x
   ClipWait, 1
-  if(VimStrIsInCurrentVimMode( "Line")){
-    VimSetMode("Insert", 0, 0, 1)
+  if(VimState.StrIsInCurrentVimMode( "Line")){
+    VimState.SetMode("Insert", 0, 0, 1)
   }else{
-    VimSetMode("Insert", 0, 0, 0)
+    VimState.SetMode("Insert", 0, 0, 0)
   }
 Return
 
@@ -868,7 +807,7 @@ Return
   Send, ^f
   Send, ^v!f
   clipboard := bak
-  VimSetMode("Vim_Normal")
+  VimState.SetMode("Vim_Normal")
 Return
 ; }}} Vim visual mode
 
@@ -876,7 +815,7 @@ Return
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
 /::
   Send, ^f
-  VimSetMode("Insert")
+  VimState.SetMode("Insert")
 Return
 
 *::
@@ -887,7 +826,7 @@ Return
   Send, ^f
   Send, ^v!f
   clipboard := bak
-  VimSetMode("Insert")
+  VimState.SetMode("Insert")
 Return
 
 n::Send, {F3}
@@ -896,42 +835,42 @@ n::Send, {F3}
 
 ; Vim comamnd mode {{{
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
-:::VimSetMode("Command") ;(:)
-`;::VimSetMode("Command") ;(;)
+:::VimState.SetMode("Command") ;(:)
+`;::VimState.SetMode("Command") ;(;)
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Command")
-w::VimSetMode("Command_w")
-q::VimSetMode("Command_q")
+w::VimState.SetMode("Command_w")
+q::VimState.SetMode("Command_q")
 h::
   Send, {F1}
-  VimSetMode("Vim_Normal")
+  VimState.SetMode("Vim_Normal")
 Return
 
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Command_w")
 Return::
   Send, ^s
-  VimSetMode("Vim_Normal")
+  VimState.SetMode("Vim_Normal")
 Return
 
 q::
   Send, ^s
   Send, !{F4}
-  VimSetMode("Insert")
+  VimState.SetMode("Insert")
 Return
 
 Space::
   Send, !fa
-  VimSetMode("Insert")
+  VimState.SetMode("Insert")
 Return
 
 #If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Command_q")
 Return::
   Send, !{F4}
-  VimSetMode("Insert")
+  VimState.SetMode("Insert")
 Return
 ; }}} Vim command mode
 
 ; Disable other keys {{{
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimStrIsInCurrentVimMode( "ydc") or VimStrIsInCurrentVimMode( "Command") or (VimState.Mode == "Z"))
+#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode( "ydc") or VimState.StrIsInCurrentVimMode( "Command") or (VimState.Mode == "Z"))
 *a::
 *b::
 *c::
@@ -999,10 +938,10 @@ _::
 .::
 >::
 Space::
-  VimSetMode("Vim_Normal")
+  VimState.SetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimConfObj.Conf["VimDisableUnused"]["val"] == 2)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and VimState.StrIsInCurrentVimMode("Vim_") and (VimConfObj.Conf["VimDisableUnused"]["val"] == 2)
 a::
 b::
 c::
@@ -1098,7 +1037,7 @@ _::
 Space::
 Return
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and VimStrIsInCurrentVimMode("Vim_") and (VimConfObj.Conf["VimDisableUnused"]["val"] == 3)
+#If WinActive("ahk_group " . VimConfObj.GroupName) and VimState.StrIsInCurrentVimMode("Vim_") and (VimConfObj.Conf["VimDisableUnused"]["val"] == 3)
 *a::
 *b::
 *c::
