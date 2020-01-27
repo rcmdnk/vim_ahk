@@ -60,6 +60,25 @@
     Return
   }
 
+  SetNormal(){
+    VimState.LastIME := VIM_IME_Get()
+    if(VimState.LastIME){
+      if(VIM_IME_GetConverting(A)){
+        Send,{Esc}
+        Return
+      }else{
+        VIM_IME_SET()
+      }
+    }
+    if(VimState.StrIsInCurrentVimMode( "Visual") or VimState.StrIsInCurrentVimMode( "ydc")){
+      Send, {Right}
+      if WinActive("ahk_group VimCursorSameAfterSelect"){
+        Send, {Left}
+      }
+    }
+    VimState.SetMode("Vim_Normal")
+  }
+
   IsCurrentVimMode(mode){
     VimState.CheckValidMode(mode)
     return (mode == VimState.Mode)
