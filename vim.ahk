@@ -38,11 +38,6 @@ Return
 ; Class }}}
 
 ; Menu functions {{{
-VimGitHub(){
-  VimRemoveToolTip()
-  Run % VimAbout.Homepage
-}
-
 ; }}}
 
 ; AutoHotkey settings {{{
