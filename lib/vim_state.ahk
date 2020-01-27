@@ -1,4 +1,10 @@
 ﻿class VimState{
+  static CheckModeValue := true
+  static PossibleVimModes := ["Vim_Normal", "Insert", "Replace", "Vim_ydc_y"
+  , "Vim_ydc_c", "Vim_ydc_d", "Vim_VisualLine", "Vim_VisualFirst"
+  , "Vim_VisualChar", "Command", "Command_w", "Command_q", "Z", ""
+  , "r_once", "r_repeat", "Vim_VisualLineFirst"]
+
   static Mode := "Insert"
   static g := 0
   static n := 0
@@ -30,6 +36,79 @@
   FullStatus(){
     VimState.CheckMode(4, , , , 1)
   }
+
+  SetMode(Mode="", g=0, n=0, LineCopy=-1){
+    global VimConfObj
+    VimState.CheckValidMode(Mode)
+    if(Mode != ""){
+      VimState.Mode := Mode
+      If(Mode == "Insert") and (VimConfObj.Conf["VimRestoreIME"]["val"] == 1){
+        VIM_IME_SET(VimState.LastIME)
+      }
+      VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
+    }
+    if(g != -1){
+      VimState.g := g
+    }
+    if(n != -1){
+      VimState.n := n
+    }
+    if(LineCopy!=-1){
+      VimState.LineCopy := LineCopy
+    }
+    VimState.CheckMode(VimConfObj.Conf["VimVerbose"]["val"], Mode, g, n, LineCopy)
+    Return
+  }
+
+  IsCurrentVimMode(mode){
+    VimState.CheckValidMode(mode)
+    return (mode == VimState.Mode)
+  }
+
+  StrIsInCurrentVimMode(mode){
+    VimState.CheckValidMode(mode, false)
+    return (inStr(VimState.Mode, mode))
+  }
+
+  CheckValidMode(Mode, FullMatch=true){
+    if (VimState.CheckModeValue == false){
+      Return
+    }
+    try {
+      InOrBlank:= (not full_match) ? "in " : ""
+      if not VimState.HasValue(VimState.PossibleVimModes, Mode, FullMatch){
+        throw Exception("Invalid mode specified",-2,
+        ( Join
+  "'" Mode "' is not " InOrBlank " a valid mode as defined by the VimPossibleVimModes
+   array at the top of vim.ahk. This may be a typo.
+   Fix this error by using an existing mode,
+   or adding your mode to the array.")
+        )
+      }
+    }catch e{
+      MsgBox % "Warning: " e.Message "`n" e.Extra "`n`n Called in " e.What " at line " e.Line
+    }
+  }
+
+  HasValue(haystack, needle, full_match = true){
+    if(!isObject(haystack)){
+      return false
+    }else if(haystack.Length()==0){
+      return false
+    }
+    for index,value in haystack{
+      if full_match{
+        if (value==needle){
+          return true
+        }
+      }else{
+        if (inStr(value, needle)){
+          return true
+        }
+      }
+    }
+    return false
+  }
 }
 
 VimRemoveStatus(){
@@ -46,4 +125,3 @@ VimStatusCheckTimer(){
     VimIconMng.SetIcon("Disabled", VimConfObj.Conf["VimIcon"]["val"])
   }
 }
-
