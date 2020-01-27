@@ -9,7 +9,7 @@ VimIni.ReadIni()
 VimConfObj.SetGroup(VimConfObj.Conf["VimGroup"]["val"])
 
 ; Menu
-VimMenu.SetMenu(VimConfObj.Verbose.Length())
+VimMenu.SetMenu()
 
 ; Set initial icon
 VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
@@ -51,20 +51,6 @@ Return
 ;}}}
 
 ; Basic Functions {{{
-VimCheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
-  if(force == 0) and ((verbose <= 1) or ((Mode == "") and (g == 0) and (n == 0) and (LineCopy == -1))){
-    Return
-  }else if(verbose == 2){
-    VimStatus(VimState.Mode, 1) ; 1 sec is minimum for TrayTip
-  }else if(verbose == 3){
-    VimStatus(VimState.Mode "`r`ng=" VimState.g "`r`nn=" VimState.n "`r`nLineCopy=" VimState.LineCopy, 4)
-  }
-  if(verbose >= 4){
-    Msgbox, , Vim Ahk, % "Mode: " . VimState.Mode . "`nVim_g: " . VimState.g . "`nVim_n: " . VimState.n . "`nVimLineCopy: " . VimState.LineCopy
-  }
-  Return
-}
-
 VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
   global VimConfObj
   VimDebug.CheckValidMode(Mode)
@@ -84,7 +70,7 @@ VimSetMode(Mode="", g=0, n=0, LineCopy=-1){
   if(LineCopy!=-1){
     VimState.LineCopy := LineCopy
   }
-  VimCheckMode(VimConfObj.Conf["VimVerbose"]["val"], Mode, g, n, LineCopy)
+  VimState.CheckMode(VimConfObj.Conf["VimVerbose"]["val"], Mode, g, n, LineCopy)
   Return
 }
 
@@ -118,35 +104,6 @@ VimHasValue(haystack, needle, full_match = true){
   return false
 }
 
-VimStatus(Title, lines=1){
-  WinGetPos, , , W, H, A
-  ToolTip, %Title%, W - 110, H - 30 - (lines) * 20
-  SetTimer, VimRemoveStatus, 1000
-}
-
-VimRemoveStatus(){
-  SetTimer, VimRemoveStatus, off
-  ToolTip
-}
-
-VimStatusCheckTimer(){
-  global VimConfObj
-  if WinActive("ahk_group " . VimConfObj.GroupName)
-  {
-    VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
-  }else{
-    VimIconMng.SetIcon("Disabled", VimConfObj.Conf["VimIcon"]["val"])
-  }
-}
-
-VimStartStatusCheck(){
-  SetTimer, VimStatusCheckTimer, off
-}
-
-VimStopStatusCheck(){
-  SetTimer, VimStatusCheckTimer, off
-}
-
 ; Vim mode {{{
 #If
 
@@ -160,7 +117,7 @@ Return
 #If WinActive("ahk_group " . VimConfObj.GroupName)
 ; Check Mode {{{
 ^!+c::
-  VimCheckMode(VimVerboseMax, VimState.Mode)
+  VimState.CheckMode(VimConfObj.Verbose.Length(), VimState.Mode)
 Return
 ; }}}
 
