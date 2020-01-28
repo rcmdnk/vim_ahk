@@ -18,7 +18,7 @@ If you've already installed AutoHotKey, just open vim.ahk with AutoHotkey.
 
 If you are running AutoHotKey with another script,
 you can include it in your script using AutoHotKey...
-Please put vim.ahk in `\Users\%username%\Documents`
+Please copy vim.ahk and lib directory in `\Users\%username%\Documents`
 or where the script is in,
 and add the following line in AutoHotkey.ahk or your script:
 
