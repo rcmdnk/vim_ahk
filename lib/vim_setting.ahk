@@ -3,6 +3,7 @@
     global
     local created, i, k, y, disableUnused, matchmode, matchmodefs, verbose, ok, reset, cancel
     Gui, New, % "+HwndVimGuiSetting +Label" . VimSetting.__Class . ".Menu"
+    VimSetting.Destroy()
     VimSetting.VimGuiSetting := VimGuiSetting
     Gui, %VimGuiSetting%:-MinimizeBox
     Gui, %VimGuiSetting%:-Resize
@@ -150,15 +151,17 @@
 
   Destroy(){
     VimRemoveToolTip()
-    Gui, % VimSetting.VimGuiSetting . ":Destroy"
+    if(VimSetting.VimGuiSetting != ""){
+      Gui, % VimSetting.VimGuiSetting . ":Destroy"
+    }
     VimSetting.VimGuiSetting := ""
   }
   MenuOK(){
     global VimConfObj
     Gui, % VimSetting.VimGuiSetting . ":Submit"
     VimSetting.VimV2Conf()
-    VimIni.WriteIni()
-    VimSetting.Destroy(VimConfObj)
+    VimIni.WriteIni(VimConfObj)
+    VimSetting.Destroy()
   }
   MenuCancel(){
     VimSetting.Destroy()

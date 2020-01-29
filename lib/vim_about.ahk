@@ -7,6 +7,7 @@
 
   Menu(){
     Gui, New, % "+HwndVimGuiAbout +Label" . VimAbout.__Class . ".Menu"
+    VimAbout.Destroy()
     VimAbout.VimGuiAbout := VimGuiAbout
     Gui, %VimGuiAbout%:-MinimizeBox
     Gui, %VimGuiAbout%:-Resize
@@ -25,14 +26,20 @@
     Gui, %VimGuiAbout%:Show, W500, Vim Ahk
   }
 
+  Destroy(){
+    if(VimAbout.VimGuiAbout != ""){
+      Gui, % VimAbout.VimGuiAbout . ":Destroy"
+    }
+    VimAbout.VimGuiAbout := ""
+  }
   MenuOK(){
-    Gui, % VimAbout.VimGuiAbout . ":Destroy"
+    VimAbout.Destroy()
   }
   MenuClose(){
-    Gui, % VimAbout.VimGuiAbout . ":Destroy"
+    VimAbout.Destroy()
   }
   MenuEscape(){
-    Gui, % VimAbout.VimGuiAbout . ":Destroy"
+    VimAbout.Destroy()
   }
 
   OpenHomepage(){
