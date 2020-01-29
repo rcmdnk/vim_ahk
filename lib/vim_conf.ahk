@@ -52,12 +52,6 @@
       , VimSD: {default: 0, val: 0
         , description: "SD enters Normal mode"
         , popup: "Assign SD enters Normal mode."}
-      , VimIcon: {default: 1, val: 1
-        , description: "Enable tray icon"
-        , popup: "Enable tray icon for Vim Modes."}
-      , VimIconCheck: {default: 1, val: 1
-        , description: "Enable tray icon check"
-        , popup: "Enable tray icon check for Vim Modes."}
       , VimDisableUnused: {default: 1, val: 1
         , description: "Disable unused keys in Normal mode"
         , popup: "Set how to disable unused keys in Normal mode."}
@@ -76,7 +70,7 @@
       , VimGroup: {default: this.Group, val: this.Group
         , description: "Application"
         , popup: "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon)."}}
-    this.CheckBoxes := ["VimRestoreIME", "VimJJ", "VimJK", "VimSD", "VimIcon", "VimIconCheck"]
+    this.CheckBoxes := ["VimRestoreIME", "VimJJ", "VimJK", "VimSD"]
 
     this.Popup := {}
     for k, v in this.Conf {

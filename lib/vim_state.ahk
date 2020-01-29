@@ -45,7 +45,7 @@
       If(Mode == "Insert") and (VimConfObj.Conf["VimRestoreIME"]["val"] == 1){
         VIM_IME_SET(VimState.LastIME)
       }
-      VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
+      VimIcon.SetIcon(VimState.Mode, VimConfObj.Conf["VimIconCheckInterval"]["val"])
     }
     if(g != -1){
       VimState.g := g
@@ -90,10 +90,10 @@
   }
 
   CheckValidMode(Mode, FullMatch=true){
-    if (VimState.CheckModeValue == false){
+    if(VimState.CheckModeValue == false){
       Return
     }
-    try {
+    try{
       InOrBlank:= (not full_match) ? "in " : ""
       if not VimState.HasValue(VimState.PossibleVimModes, Mode, FullMatch){
         throw Exception("Invalid mode specified",-2,
@@ -137,10 +137,9 @@ VimRemoveStatus(){
 
 VimStatusCheckTimer(){
   global VimConfObj
-  if WinActive("ahk_group " . VimConfObj.GroupName)
-  {
-    VimIconMng.SetIcon(VimState.Mode, VimConfObj.Conf["VimIcon"]["val"])
+  if WinActive("ahk_group " . VimConfObj.GroupName){
+    VimIcon.SetIcon(VimState.Mode, VimConfObj.Conf["VimIconCheckInterval"]["val"])
   }else{
-    VimIconMng.SetIcon("Disabled", VimConfObj.Conf["VimIcon"]["val"])
+    VimIcon.SetIcon("Disabled", VimConfObj.Conf["VimIconCheckInterval"]["val"])
   }
 }
