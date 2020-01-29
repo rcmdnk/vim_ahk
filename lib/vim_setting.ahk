@@ -38,7 +38,7 @@
     Gui, %VimGuiSetting%:Add, DropDownList, % "X+5 Y+-20 W70 vVimSetTitleMatchModeFS Choose"matchmodefs, Fast|Slow 
     Gui, %VimGuiSetting%:Add, Text, % "XM+10 Y+10 g" . VimSetting.__Class . ".IconCheckIntervalText vVimIconCheckIntervalText", % VimConfObj.Conf["VimIconCheckInterval"]["description"]
     Gui, %VimGuiSetting%:Add, Edit, X+5 Y+-16 W70 vVimIconCheckIntervalEdit
-    Gui, %VimGuiSetting%:Add, UpDown, vVimIconCheckInterval Range100-1000000, % VimConfObj.Conf["VimIconCheckInterval"]["val"]
+    Gui, %VimGuiSetting%:Add, UpDown, vVimIconCheckInterval Range0-1000000, % VimConfObj.Conf["VimIconCheckInterval"]["val"]
     Gui, %VimGuiSetting%:Add, Text, % "XM+10 Y+10 g" . VimSetting.__Class . ".VerboseText vVimVerboseText", % VimConfObj.Conf["VimVerbose"]["description"]
     verbose := VimConfObj.Verbose
     Gui, %VimGuiSetting%:Add, DropDownList, % "X+5 Y+-16 vVimVerboseValue Choose"VimConfObj.Conf["VimVerbose"]["val"], % verbose[1]"|"verbose[2]"|"verbose[3]"|"verbose[4]

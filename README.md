@@ -87,13 +87,16 @@ vim_ahk also works on other applications which use these Class/Process name (mos
 |VimJJ|If 1, `jj` changes mode to Normal from Insert.|0|
 |VimJK|If 1, `jk` changes mode to Normal from Insert.|0|
 |VimSD|If 1, `sd` changes mode to Normal from Insert.|0|
-|VimIcon|If 1, task tray icon is changed when mode is changed.|1|
 |VimDisableUnused|Disable level of unused keys in Normal mode (see below for details).|3|
 |VimSetTitleMatchMode|SetTitleMatchMode: 1: Start with, 2: Contain, 3: Exact match|2|
 |VimSetTitleMatchModeFS|SetTitleMatchMode: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow|Fast|
-|VimIconCheck|If 1, check window periodically and update tray icon.|1|
-|VimIconCheckInterval|Interval to check window (ms).|1000|
+|VimIconCheckInterval|Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set.|1000|
 |VimVerbose|Verbose level (see below for details).|0|
+
+
+VimIconCheckInterval:
+If it is set non-zero, the tray icon is immediately changed when the mode is changed.
+This interval defines the interval when the Window is changed (e.g. vim_ahk enabled window to disabled window).
 
 Verbose level:
 

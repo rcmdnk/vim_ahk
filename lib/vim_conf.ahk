@@ -57,13 +57,13 @@
         , popup: "Set how to disable unused keys in Normal mode."}
       , VimSetTitleMatchMode: {default: "2", val: "2"
         , description: "SetTitleMatchMode"
-        , popup: "[Mode] 1: Start with, 2: Contain, 3: Exact match`n[Fast/Slow] Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow"}
+        , popup: "[Mode] 1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow] Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow."}
       , VimSetTitleMatchModeFS: {default: "Fast", val: "Fast"
         , description: "SetTitleMatchMode"
-        , popup: "1: Start with, 2: Contain, 3: Exact match`n[Fast/Slow]: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow"}
+        , popup: "[Mode]1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow]: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow."}
       , VimIconCheckInterval: {default: 1000, val: 1000
         , description: "Icon check interval (ms)"
-        , popup: "Interval (ms) to check if current window is for Ahk Vim or not,`nand set tray icon."}
+        , popup: "Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set."}
       , VimVerbose: {default: 1, val: 1
         , description: "Verbose level"
         , popup: "Verbose level`n`n1: No pop up`n2: Minimum tool tips of status`n: More info in tool tips`n4: Debug mode with a message box, which doesn't disappear automatically"}
