@@ -1,6 +1,5 @@
 ﻿class VimCheck{
-  Menu() {
-    global VimConfObj
+  Menu(conf) {
     ; Additional message is necessary before checking current window.
     ; Otherwise process name cannot be retrieved...?
     Msgbox, , Vim Ahk, Checking current window...
@@ -8,7 +7,7 @@
     WinGet, name, ProcessName, ahk_pid %process%
     WinGetClass, class, ahk_pid %process%
     WinGetTitle, title, ahk_pid %process%
-    if WinActive("ahk_group" . VimConfObj.GroupName){
+    if WinActive("ahk_group" . conf.GroupName){
       Msgbox, 0x40, Vim Ahk,
       (
         Supported

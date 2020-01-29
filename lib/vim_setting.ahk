@@ -121,9 +121,11 @@
       }
     }
     VimGroup := ""
+    tmpArray := []
     Loop, Parse, VimGroupList, `n
     {
-      if(! InStr(VimGroup, A_LoopField)){
+      if(! tmpArray.Haskey(A_LoopField)){
+        tmpArray.push(A_LoopField)
         if(VimGroup == ""){
           VimGroup := A_LoopField
         }else{

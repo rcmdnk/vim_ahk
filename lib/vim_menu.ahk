@@ -1,7 +1,7 @@
 ﻿class VimMenu{
-  SetMenu(){
+  SetMenu(conf){
     MenuVimSetting := ObjBindMethod(VimSetting, "Menu")
-    MenuVimCheck := ObjBindMethod(VimCheck, "Menu")
+    MenuVimCheck := ObjBindMethod(VimCheck, "Menu", conf)
     MenuVimStatus := ObjBindMethod(VimState, "FullStatus")
     MenuVimAbout := ObjBindMethod(VimAbout, "Menu")
     Menu, VimSubMenu, Add, Settings, % MenuVimSetting

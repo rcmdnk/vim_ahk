@@ -140,7 +140,7 @@
   Setup(conf){
     VimIni.ReadIni(conf)
     this.SetGroup(conf["VimGroup"]["val"])
-    VimMenu.SetMenu()
+    VimMenu.SetMenu(conf)
     VimSetting.VimSet(conf)
   }
 }
