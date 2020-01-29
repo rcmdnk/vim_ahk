@@ -135,11 +135,10 @@ VimRemoveStatus(){
   ToolTip
 }
 
-VimStatusCheckTimer(){
-  global VimConfObj
-  if WinActive("ahk_group " . VimConfObj.GroupName){
-    VimIcon.SetIcon(VimState.Mode, VimConfObj.Conf["VimIconCheckInterval"]["val"])
+VimStatusCheckTimer(conf){
+  if WinActive("ahk_group " . conf.GroupName){
+    VimIcon.SetIcon(VimState.Mode, conf.Conf["VimIconCheckInterval"]["val"])
   }else{
-    VimIcon.SetIcon("Disabled", VimConfObj.Conf["VimIconCheckInterval"]["val"])
+    VimIcon.SetIcon("Disabled", conf.Conf["VimIconCheckInterval"]["val"])
   }
 }

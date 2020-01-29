@@ -142,11 +142,12 @@
   VimSet(conf){
     SetTitleMatchMode, % conf.Conf["VimSetTitleMatchMode"]["val"]
     SetTitleMatchMode, % conf.Conf["VimSetTitleMatchModeFS"]["val"]
+    check := Func("VimStatusCheckTimer").Bind(conf)
     if(conf.Conf["VimIconCheckInterval"]["val"] > 0){
-      SetTimer, VimStatusCheckTimer, % conf.Conf["VimIconCheckInterval"]["val"]
+      SetTimer, % check, % conf.Conf["VimIconCheckInterval"]["val"]
     }else{
       VimIcon.SetIcon("", 0)
-      SetTimer, VimStatusCheckTimer, Off
+      SetTimer, % check, Off
     }
     conf.SetGroup(conf.Conf["VimGroup"]["val"])
   }
