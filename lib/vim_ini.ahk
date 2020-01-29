@@ -3,9 +3,8 @@
   static Ini := A_AppData . "\AutoHotkey"  . "\vim_ahk.ini"
   static Section := "Vim Ahk Settings"
 
-  ReadIni(){
-    global VimConfObj
-    for k, v in VimConfObj.Conf {
+  ReadIni(conf){
+    for k, v in conf.Conf {
       current := v["val"]
       IniRead, val, % VimIni.Ini, % VimIni.Section, %k%, %current%
       %k% := val
@@ -13,12 +12,11 @@
     }
   }
 
-  WriteIni(){
-    global VimConfObj
+  WriteIni(conf){
     IfNotExist, VimIni.IniDir
       FileCreateDir, VimIni.IniDir
 
-    for k, v in VimConfObj.Conf {
+    for k, v in conf.Conf {
       IniWrite, % v["val"], % VimIni.Ini, % VimIni.Section, %k%
     }
   }

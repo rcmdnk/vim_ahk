@@ -59,6 +59,12 @@ If you want to change applications directly in the script, add `GroupAdd VimGrou
 
 Or you can use GUI option setting described below.
 
+The default setting of `VimSetTitleMatchMode` is 2, which makes matching methods as `Contain`.
+
+If you set `OneNote`, all windows with a title containing `OneNote` (e.g. `XXX's OneNote`) will be included.
+If you set `VimSetTitleMatchMode` as 3, only exact title of `OneNote` will be included.
+
+
 Note: It may not work on OneNote. OneNote may has window name like **User's Notebook - OneNote**, instead of **OneNote**.
 
 In that case, you need to check OneNote's window title with Window spy.
@@ -83,6 +89,8 @@ vim_ahk also works on other applications which use these Class/Process name (mos
 |VimSD|If 1, `sd` changes mode to Normal from Insert.|0|
 |VimIcon|If 1, task tray icon is changed when mode is changed.|1|
 |VimDisableUnused|Disable level of unused keys in Normal mode (see below for details).|3|
+|VimSetTitleMatchMode|SetTitleMatchMode: 1: Start with, 2: Contain, 3: Exact match|2|
+|VimSetTitleMatchModeFS|SetTitleMatchMode: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow|Fast|
 |VimIconCheck|If 1, check window periodically and update tray icon.|1|
 |VimIconCheckInterval|Interval to check window (ms).|1000|
 |VimVerbose|Verbose level (see below for details).|0|
