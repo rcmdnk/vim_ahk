@@ -1,30 +1,28 @@
 ﻿class VimSetting{
   Menu(){
     global
-    local height, created, i, k, y, disableUnused, matchmode, matchmodefs, verbose, ok, reset, cancel
+    local created, i, k, y, disableUnused, matchmode, matchmodefs, verbose, ok, reset, cancel
     Gui, New, % "+HwndVimGuiSetting +Label" . VimSetting.__Class . ".Menu"
     VimSetting.VimGuiSetting := VimGuiSetting
     Gui, %VimGuiSetting%:-MinimizeBox
     Gui, %VimGuiSetting%:-Resize
-    height := VimConfObj.Checkboxes.Length() * 22 + 270
-    Gui, %VimGuiSetting%:Add, GroupBox, xm X+10 YM+10 Section W370 H%height%, Settings
     created := 0
     for i, k in VimConfObj.Checkboxes {
       if(created == 0){
-        y := "YS+20"
+        y := "YM"
       }else{
         y := "Y+10"
       }
-      Gui, %VimGuiSetting%:Add, Checkbox, XS+10 %y% v%k%, % VimConfObj.Conf[k]["description"]
+      Gui, %VimGuiSetting%:Add, Checkbox, XM+10 %y% v%k%, % VimConfObj.Conf[k]["description"]
       created  := 1
       if(VimConfObj.Conf[k]["val"] == 1){
         GuiControl, %VimGuiSetting%:, %k%, 1
       }
     }
-    Gui, %VimGuiSetting%:Add, Text, % "XS+10 Y+15 g" . VimSetting.__Class . ".DisableUnusedText vVimDisableUnusedText", % VimConfObj.Conf["VimDisableUnused"]["description"]
+    Gui, %VimGuiSetting%:Add, Text, % "XM+10 Y+15 g" . VimSetting.__Class . ".DisableUnusedText vVimDisableUnusedText", % VimConfObj.Conf["VimDisableUnused"]["description"]
     disableUnused := VimConfObj.DisableUnused
     Gui, %VimGuiSetting%:Add, DropDownList, % "W320 vVimDisableUnusedValue Choose"VimConfObj.Conf["VimDisableUnused"]["val"], % disableUnused[1]"|"disableUnused[2]"|"disableUnused[3]
-    Gui, %VimGuiSetting%:Add, Text, % "XS+10 Y+15 g" . VimSetting.__Class . ".SetTitleMatchModeText vVimSetTitleMatchModeText", % VimConfObj.Conf["VimSetTitleMatchMode"]["description"]
+    Gui, %VimGuiSetting%:Add, Text, % "XM+10 Y+15 g" . VimSetting.__Class . ".SetTitleMatchModeText vVimSetTitleMatchModeText", % VimConfObj.Conf["VimSetTitleMatchMode"]["description"]
     if(VimConfObj.Conf["VimSetTitleMatchMode"]["val"] == "RegEx"){
       matchmode := 4
     }else{
@@ -37,16 +35,16 @@
       matchmodefs := 2
     }
     Gui, %VimGuiSetting%:Add, DropDownList, % "X+5 Y+-20 W70 vVimSetTitleMatchModeFS Choose"matchmodefs, Fast|Slow 
-    Gui, %VimGuiSetting%:Add, Text, % "XS+10 Y+10 g" . VimSetting.__Class . ".IconCheckIntervalText vVimIconCheckIntervalText", % VimConfObj.Conf["VimIconCheckInterval"]["description"]
+    Gui, %VimGuiSetting%:Add, Text, % "XM+10 Y+10 g" . VimSetting.__Class . ".IconCheckIntervalText vVimIconCheckIntervalText", % VimConfObj.Conf["VimIconCheckInterval"]["description"]
     Gui, %VimGuiSetting%:Add, Edit, X+5 Y+-16 W70 vVimIconCheckIntervalEdit
     Gui, %VimGuiSetting%:Add, UpDown, vVimIconCheckInterval Range100-1000000, % VimConfObj.Conf["VimIconCheckInterval"]["val"]
-    Gui, %VimGuiSetting%:Add, Text, % "XS+10 Y+10 g" . VimSetting.__Class . ".VerboseText vVimVerboseText", % VimConfObj.Conf["VimVerbose"]["description"]
+    Gui, %VimGuiSetting%:Add, Text, % "XM+10 Y+10 g" . VimSetting.__Class . ".VerboseText vVimVerboseText", % VimConfObj.Conf["VimVerbose"]["description"]
     verbose := VimConfObj.Verbose
     Gui, %VimGuiSetting%:Add, DropDownList, % "X+5 Y+-16 vVimVerboseValue Choose"VimConfObj.Conf["VimVerbose"]["val"], % verbose[1]"|"verbose[2]"|"verbose[3]"|"verbose[4]
-    Gui, %VimGuiSetting%:Add, Text, % "XS+10 Y+5 g" . VimSetting.__Class . ".GroupText vVimGroupText", % VimConfObj.Conf["VimGroup"]["description"]
+    Gui, %VimGuiSetting%:Add, Text, % "XM+10 Y+5 g" . VimSetting.__Class . ".GroupText vVimGroupText", % VimConfObj.Conf["VimGroup"]["description"]
     StringReplace, VimGroupList, % VimConfObj.Conf["VimGroup"]["val"], % VimConfObj.GroupDel, `n, All
-    Gui, %VimGuiSetting%:Add, Edit, XS+10 Y+5 R10 W300 Multi vVimGroupList, %VimGroupList%
-    Gui, %VimGuiSetting%:Add, Text, XS+10 Y+10, Check
+    Gui, %VimGuiSetting%:Add, Edit, XM+10 Y+5 R10 W300 Multi vVimGroupList, %VimGroupList%
+    Gui, %VimGuiSetting%:Add, Text, XM+10 Y+10, Check
     Gui, %VimGuiSetting%:Font, Underline
     Gui, %VimGuiSetting%:Add, Text, % "X+5 cBlue g" . VimAbout.__Class . ".OpenHomepage vVimHomepage", HELP
     Gui, %VimGuiSetting%:Font, Norm
