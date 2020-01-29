@@ -43,6 +43,7 @@
   }
 
   OpenHomepage(){
+    ToolTip
     Run % VimAbout.Homepage
   }
 }
