@@ -5,7 +5,7 @@
 Return
 
 ; Check Mode
-#If WinActive("ahk_group " . VimConfObj.GroupName)
+#If WinActive("ahk_group " . Vim.GroupName)
 ^!+c::
-  VimState.CheckMode(VimConfObj.Verbose.Length(), VimState.Mode)
+  Vim.State.CheckMode(Vim.Verbose.Length(), Vim.State.Mode)
 Return

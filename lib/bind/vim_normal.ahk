@@ -1,4 +1,4 @@
-﻿#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
+﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
 ; Undo/Redo
 u::Send,^z
 ^r::Send,^y
@@ -21,20 +21,20 @@ u::Send,^z
   Clipboard := bak
 Return
 
-+z::VimState.SetMode("Z")
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Z")
++z::Vim.State.SetMode("Z")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Z")
 +z::
   Send, ^s
   Send, !{F4}
-  VimState.SetMode("Vim_Normal")
+  Vim.State.SetMode("Vim_Normal")
 Return
 
 +q::
   Send, !{F4}
-  VimState.SetMode("Vim_Normal")
+  Vim.State.SetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
 Space::Send, {Right}
 
 ; period

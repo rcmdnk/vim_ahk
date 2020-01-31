@@ -1,27 +1,27 @@
-﻿#If WinActive("ahk_group " . VimConfObj.GroupName) && (VimState.Mode == "Vim_Normal")
-i::VimState.SetMode("Insert")
+﻿#If WinActive("ahk_group " . Vim.GroupName) && (Vim.State.Mode == "Vim_Normal")
+i::Vim.State.SetMode("Insert")
 
 +i::
   Send, {Home}
-  VimState.SetMode("Insert")
+  Vim.State.SetMode("Insert")
 Return
 
 a::
   Send, {Right}
-  VimState.SetMode("Insert")
+  Vim.State.SetMode("Insert")
 Return
 
 +a::
   Send, {End}
-  VimState.SetMode("Insert")
+  Vim.State.SetMode("Insert")
 Return
 
 o::
   Send,{End}{Enter}
-  VimState.SetMode("Insert")
+  Vim.State.SetMode("Insert")
 Return
 
 +o::
   Send, {Up}{End}{Enter}
-  VimState.SetMode("Insert")
+  Vim.State.SetMode("Insert")
 Return

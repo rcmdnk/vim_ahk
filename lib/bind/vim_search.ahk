@@ -1,7 +1,7 @@
-﻿#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
+﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
 /::
   Send, ^f
-  VimState.SetMode("Insert")
+  Vim.State.SetMode("Insert")
 Return
 
 *::
@@ -12,7 +12,7 @@ Return
   Send, ^f
   Send, ^v!f
   clipboard := bak
-  VimState.SetMode("Insert")
+  Vim.State.SetMode("Insert")
 Return
 
 n::Send, {F3}

@@ -1,14 +1,18 @@
 ﻿class VimMove{
+  __New(vim){
+    this.Vim := vim
+  }
+
   Move(key=""){
     shift = 0
-    if(VimState.StrIsInCurrentVimMode( "Visual") or VimState.StrIsInCurrentVimMode( "ydc")){
+    if(this.Vim.State.StrIsInCurrentVimMode( "Visual") or this.Vim.State.StrIsInCurrentVimMode( "ydc")){
       shift := 1
     }
     if(shift == 1){
       Send, {Shift Down}
     }
     ; Left/Right
-    if(not VimState.StrIsInCurrentVimMode( "Line")){
+    if(not this.Vim.State.StrIsInCurrentVimMode( "Line")){
       ; For some cases, need '+' directly to continue to select
       ; especially for cases using shift as original keys
       ; For now, caret does not work even add + directly
@@ -61,16 +65,16 @@
       }
     }
     ; Up/Down
-    if(VimState.Mode == "Vim_VisualLineFirst") and (key == "k" or key == "^u" or key == "^b" or key == "g"){
+    if(this.Vim.State.Mode == "Vim_VisualLineFirst") and (key == "k" or key == "^u" or key == "^b" or key == "g"){
       Send, {Shift Up}{End}{Home}{Shift Down}{Up}
-      VimState.SetMode("Vim_VisualLine")
+      this.Vim.State.SetMode("Vim_VisualLine")
     }
-    if(VimState.StrIsInCurrentVimMode( "Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
-      VimState.LineCopy := 1
+    if(this.Vim.State.StrIsInCurrentVimMode( "Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
+      this.Vim.State.LineCopy := 1
       Send,{Shift Up}{Home}{Down}{Shift Down}{Up}
     }
-    if(VimState.StrIsInCurrentVimMode("Vim_ydc")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
-      VimState.LineCopy := 1
+    if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
+      this.Vim.State.LineCopy := 1
       Send,{Shift Up}{Home}{Shift Down}{Down}
     }
 
@@ -105,30 +109,30 @@
     }
     Send,{Shift Up}
 
-    if(VimState.Mode == "Vim_ydc_y"){
+    if(this.Vim.State.Mode == "Vim_ydc_y"){
       Clipboard :=
       Send, ^c
       ClipWait, 1
-      VimState.SetMode("Vim_Normal")
-    }else if(VimState.Mode == "Vim_ydc_d"){
+      this.Vim.State.SetMode("Vim_Normal")
+    }else if(this.Vim.State.Mode == "Vim_ydc_d"){
       Clipboard :=
       Send, ^x
       ClipWait, 1
-      VimState.SetMode("Vim_Normal")
-    }else if(VimState.Mode == "Vim_ydc_c"){
+      this.Vim.State.SetMode("Vim_Normal")
+    }else if(this.Vim.State.Mode == "Vim_ydc_c"){
       Clipboard :=
       Send, ^x
       ClipWait, 1
-      VimState.SetMode("Insert")
+      this.Vim.State.SetMode("Insert")
     }
-    VimState.SetMode("", 0, 0)
+    this.Vim.State.SetMode("", 0, 0)
   }
   Repeat(key=""){
-    if(VimState.n == 0){
-      VimState.n := 1
+    if(this.Vim.State.n == 0){
+      this.Vim.State.n := 1
     }
-    Loop, % VimState.n {
-      VimMove.Move(key)
+    Loop, % this.Vim.State.n {
+      this.Vim.Move.Move(key)
     }
   }
 }

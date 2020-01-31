@@ -1,8 +1,8 @@
-﻿#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
-r::VimState.SetMode("r_once")
-+r::VimState.SetMode("r_repeat")
+﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
+r::Vim.State.SetMode("r_once")
++r::Vim.State.SetMode("r_repeat")
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "r_once")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "r_once")
 ~a::
 ~+a::
 ~b::
@@ -96,15 +96,15 @@ r::VimState.SetMode("r_once")
 ~>::
 ~Space::
   Send, {Del}
-  VimState.SetMode("Vim_Normal")
+  Vim.State.SetMode("Vim_Normal")
 Return
 
 ::: ; ":" can't be used with "~"?
   Send, {:}{Del}
-  VimState.SetMode("Vim_Normal")
+  Vim.State.SetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "r_repeat")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "r_repeat")
 ~a::
 ~+a::
 ~b::

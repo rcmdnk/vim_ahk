@@ -1,91 +1,91 @@
-﻿#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
-y::VimState.SetMode("Vim_ydc_y", 0, -1, 0)
-d::VimState.SetMode("Vim_ydc_d", 0, -1, 0)
-c::VimState.SetMode("Vim_ydc_c", 0, -1, 0)
+﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
+y::Vim.State.SetMode("Vim_ydc_y", 0, -1, 0)
+d::Vim.State.SetMode("Vim_ydc_d", 0, -1, 0)
+c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
 +y::
-  VimState.SetMode("Vim_ydc_y", 0, 0, 1)
+  Vim.State.SetMode("Vim_ydc_y", 0, 0, 1)
   Sleep, 150 ; Need to wait (For variable change?)
   if WinActive("ahk_group VimDoubleHomeGroup"){
     Send, {Home}
   }
   Send, {Home}+{End}
   if not WinActive("ahk_group VimLBSelectGroup"){
-    VimMove.Move("l")
+    Vim.Move.Move("l")
   }else{
-    VimMove.Move("")
+    Vim.Move.Move("")
   }
   Send, {Left}{Home}
 Return
 
 +d::
-  VimState.SetMode("Vim_ydc_d", 0, 0, 0)
+  Vim.State.SetMode("Vim_ydc_d", 0, 0, 0)
   if not WinActive("ahk_group VimLBSelectGroup"){
-    VimMove.Move("$")
+    Vim.Move.Move("$")
   }else{
     Send, {Shift Down}{End}{Left}
-    VimMove.Move("")
+    Vim.Move.Move("")
   }
 Return
 
 +c::
-  VimState.SetMode("Vim_ydc_c",0,0,0)
+  Vim.State.SetMode("Vim_ydc_c",0,0,0)
   if not WinActive("ahk_group VimLBSelectGroup"){
-    VimMove.Move("$")
+    Vim.Move.Move("$")
   }else{
     Send, {Shift Down}{End}{Left}
-    VimMove.Move("")
+    Vim.Move.Move("")
   }
 Return
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_ydc_y")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_ydc_y")
 y::
-  VimState.LineCopy := 1
+  Vim.State.LineCopy := 1
   if WinActive("ahk_group VimDoubleHomeGroup"){
     Send, {Home}
   }
   Send, {Home}+{End}
   if not WinActive("ahk_group VimLBSelectGroup"){
-    VimMove.Move("l")
+    Vim.Move.Move("l")
   }else{
-    VimMove.Move("")
+    Vim.Move.Move("")
   }
   Send, {Left}{Home}
 Return
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_ydc_d")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_ydc_d")
 d::
-  VimState.LineCopy := 1
+  Vim.State.LineCopy := 1
   if WinActive("ahk_group DoubleHome"){
     Send, {Home}
   }
   Send, {Home}+{End}
   if not WinActive("ahk_group VimLBSelectGroup"){
-    VimMove.Move("l")
+    Vim.Move.Move("l")
   }else{
-    VimMove.Move("")
+    Vim.Move.Move("")
   }
 Return
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_ydc_c")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_ydc_c")
 c::
-  VimState.LineCopy := 1
+  Vim.State.LineCopy := 1
   if WinActive("ahk_group DoubleHome"){
     Send, {Home}
   }
   Send, {Home}+{End}
   if not WinActive("ahk_group VimLBSelectGroup"){
-    VimMove.Move("l")
+    Vim.Move.Move("l")
   }else{
-    VimMove.Move("")
+    Vim.Move.Move("")
   }
 Return
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
 x::Send, {Delete}
 +x::Send, {BS}
 
 ; Paste
-#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
 p::
   ;i:=0
   ;;Send, {p Up}
@@ -93,7 +93,7 @@ p::
   ;  if !GetKeyState("p", "P"){
   ;    break
   ;  }
-  ;  if(VimState.LineCopy == 1){
+  ;  if(Vim.State.LineCopy == 1){
   ;    Send, {End}{Enter}^v{BS}{Home}
   ;  }else{
   ;    Send, {Right}
@@ -113,7 +113,7 @@ p::
   ;  i+=1
   ;  break
   ;}
-  if(VimState.LineCopy == 1){
+  if(Vim.State.LineCopy == 1){
     Send, {End}{Enter}^v{BS}{Home}
   }else{
     Send, {Right}
@@ -126,7 +126,7 @@ p::
 Return
 
 +p::
-  if(VimState.LineCopy == 1){
+  if(Vim.State.LineCopy == 1){
     Send, {Up}{End}{Enter}^v{BS}{Home}
   }else{
     Send, ^v

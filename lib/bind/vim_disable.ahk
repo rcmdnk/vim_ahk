@@ -1,4 +1,4 @@
-﻿#If WinActive("ahk_group " . VimConfObj.GroupName) and (VimState.StrIsInCurrentVimMode( "ydc") or VimState.StrIsInCurrentVimMode( "Command") or (VimState.Mode == "Z"))
+﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.StrIsInCurrentVimMode( "ydc") or Vim.State.StrIsInCurrentVimMode( "Command") or (Vim.State.Mode == "Z"))
 *a::
 *b::
 *c::
@@ -66,10 +66,10 @@ _::
 .::
 >::
 Space::
-  VimState.SetMode("Vim_Normal")
+  Vim.State.SetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and VimState.StrIsInCurrentVimMode("Vim_") and (VimConfObj.Conf["VimDisableUnused"]["val"] == 2)
+#If WinActive("ahk_group " . Vim.GroupName) and Vim.State.StrIsInCurrentVimMode("Vim_") and (Vim.Conf["VimDisableUnused"]["val"] == 2)
 a::
 b::
 c::
@@ -165,7 +165,7 @@ _::
 Space::
 Return
 
-#If WinActive("ahk_group " . VimConfObj.GroupName) and VimState.StrIsInCurrentVimMode("Vim_") and (VimConfObj.Conf["VimDisableUnused"]["val"] == 3)
+#If WinActive("ahk_group " . Vim.GroupName) and Vim.State.StrIsInCurrentVimMode("Vim_") and (Vim.Conf["VimDisableUnused"]["val"] == 3)
 *a::
 *b::
 *c::

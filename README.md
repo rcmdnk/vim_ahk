@@ -101,8 +101,8 @@ This interval defines the interval when the Window is changed (e.g. vim_ahk enab
 Verbose level:
 
 * 1: Nothing.
-* 2: Minimum tool tips (Mode name only).
-* 3: Tool tips.
+* 2: Minimum tooltip (Mode name only).
+* 3: Tooltip.
 * 4: Msgbox.
 
 Disable level:
