@@ -28,7 +28,6 @@ class VimAhk{
 
 
   __New(setup=true){
-    this.RemoveToolTipObj := ObjBindMethod(this, "RemoveToolTip")
     ; Classes
     this.About := new VimAbout(this)
     this.Check := new VimCheck(this)
@@ -81,34 +80,34 @@ class VimAhk{
 
     ; Configuration values for Read/Write ini
     this.Conf := {VimRestoreIME: {default: 1, val: 1
-        , description: "Restore IME status at entering Insert mode"
+        , description: "Restore IME status at entering Insert mode:"
         , info: "Restore IME status at entering Insert mode."}
       , VimJJ: {default: 0, val: 0
-        , description: "JJ enters Normal mode"
+        , description: "JJ enters Normal mode:"
         , info: "Assign JJ enters Normal mode."}
       , VimJK: {default: 0, val: 0
-        , description: "JK enters Normal mode"
+        , description: "JK enters Normal mode:"
         , info: "Assign JK enters Normal mode."}
       , VimSD: {default: 0, val: 0
-        , description: "SD enters Normal mode"
+        , description: "SD enters Normal mode:"
         , info: "Assign SD enters Normal mode."}
       , VimDisableUnused: {default: 1, val: 1
-        , description: "Disable unused keys in Normal mode"
-        , info: "Set how to disable unused keys in Normal mode."}
+        , description: "Disable unused keys in Normal mode:"
+        , info: "1: Do not disable unused keys`n2: Disable alphabets (+shift) and symbols`n3: Disable all including keys with modifiers (e.g. Ctrl+Z)"}
       , VimSetTitleMatchMode: {default: "2", val: "2"
-        , description: "SetTitleMatchMode"
+        , description: "SetTitleMatchMode:"
         , info: "[Mode] 1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow] Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow."}
       , VimSetTitleMatchModeFS: {default: "Fast", val: "Fast"
         , description: "SetTitleMatchMode"
         , info: "[Mode]1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow]: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow."}
       , VimIconCheckInterval: {default: 1000, val: 1000
-        , description: "Icon check interval (ms)"
+        , description: "Icon check interval (ms):"
         , info: "Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set."}
       , VimVerbose: {default: 1, val: 1
-        , description: "Verbose level"
-        , info: "Verbose level`n`n1: Nothing `n2: Minimum tooltip of status`n: More info in tooltip`n4: Debug mode with a message box, which doesn't disappear automatically"}
+        , description: "Verbose level:"
+        , info: "1: Nothing `n2: Minimum tooltip of status`n3: More info in tooltip`n4: Debug mode with a message box, which doesn't disappear automatically"}
       , VimGroup: {default: this.Group, val: this.Group
-        , description: "Application"
+        , description: "Application:"
         , info: "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon)."}}
     this.CheckBoxes := ["VimRestoreIME", "VimJJ", "VimJK", "VimSD"]
 
@@ -131,15 +130,12 @@ class VimAhk{
     this.Info["VimVerboseText"] := this.Conf["VimVerbose"]["info"]
     this.Info["VimVerboseValue"] := this.Conf["VimVerbose"]["info"]
 
-    this.Info["VimGuiSettingOK"] := "Reflect changes and exit"
-    this.Info["VimGuiSettingReset"] := "Reset to the default values"
-    this.Info["VimGuiSettingCancel"] := "Don't change and exit"
+    this.Info["VimGuiOK"] := "Reflect changes and exit"
+    this.Info["VimGuiReset"] := "Reset to the default values"
+    this.Info["VimGuiCancel"] := "Don't change and exit"
 
-    this.DisableUnused := ["1: Do not disable unused keys"
-      , "2: Disable alphabets (+shift) and symbols"
-      , "3: Disable all including keys with modifiers (e.g. Ctrl+Z)"]
-    this.Verbose := ["1: Nothing", "2: Minimum tooltip"
-      , "3: Tooltip" ,"4: MsgBox"]
+    this.RemoveToolTipObj := ObjBindMethod(this, "RemoveToolTip")
+    this.StatusCheckObj := ObjBindMethod(this.State, "StatusCheck")
 
     this.Initialize()
   }
@@ -166,7 +162,7 @@ class VimAhk{
   Setup(){
     SetTitleMatchMode, % this.Conf["VimSetTitleMatchMode"]["val"]
     SetTitleMatchMode, % this.Conf["VimSetTitleMatchModeFS"]["val"]
-    check := ObjBindMethod(this.State, "StatusCheck")
+    check := this.StatusCheckObj
     if(this.Conf["VimIconCheckInterval"]["val"] > 0){
       SetTimer, % check, % this.Conf["VimIconCheckInterval"]["val"]
     }else{
