@@ -22,7 +22,7 @@
     }
     if FileExist(icon){
       Menu, Tray, Icon, % icon
-      if (TryIcon == 1){
+      if(icon != VimIcon.Icons["Default"]){
         Menu, VimSubMenu, Icon, Status, % icon
       }
     }
