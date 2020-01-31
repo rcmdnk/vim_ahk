@@ -1,5 +1,4 @@
 ﻿class VimState{
-
   __New(vim){
     this.Vim := vim
 
@@ -16,6 +15,8 @@
     this.LastIME := 0
     this.CurrControl := ""
     this.PrevControl := ""
+
+    this.StatusCheckObj := ObjBindMethod(this, "StatusCheck")
   }
 
   CheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
@@ -27,9 +28,8 @@
       this.Status(this.Mode "`r`ng=" this.g "`r`nn=" this.n "`r`nLineCopy=" this.LineCopy, 4)
     }
     if(verbose >= 4){
-      Msgbox, , Vim Ahk, % "Mode: " . this.Mode . "`nVim_g: " . this.g . "`nVim_n: " . this.n . "`nVimLineCopy: " . this.LineCopy
+      Msgbox, , Vim Ahk, % "Mode: " this.Mode "`nVim_g: " this.g "`nVim_n: " this.n "`nVimLineCopy: " this.LineCopy
     }
-    Return
   }
 
   Status(Title, lines=1){
@@ -61,20 +61,19 @@
       this.LineCopy := LineCopy
     }
     this.CheckMode(this.Vim.Conf["VimVerbose"]["val"], Mode, g, n, LineCopy)
-    Return
   }
 
   SetNormal(){
     this.LastIME := VIM_IME_Get()
     if(this.LastIME){
       if(VIM_IME_GetConverting(A)){
-        Send,{Esc}
+        Send, {Esc}
         Return
       }else{
         VIM_IME_SET()
       }
     }
-    if(this.StrIsInCurrentVimMode( "Visual") or this.StrIsInCurrentVimMode( "ydc")){
+    if(this.StrIsInCurrentVimMode("Visual") or this.StrIsInCurrentVimMode("ydc")){
       Send, {Right}
       if WinActive("ahk_group VimCursorSameAfterSelect"){
         Send, {Left}
@@ -85,12 +84,12 @@
 
   IsCurrentVimMode(mode){
     this.CheckValidMode(mode)
-    return (mode == this.Mode)
+    Return (mode == this.Mode)
   }
 
   StrIsInCurrentVimMode(mode){
     this.CheckValidMode(mode, false)
-    return (inStr(this.Mode, mode))
+    Return (inStr(this.Mode, mode))
   }
 
   CheckValidMode(Mode, FullMatch=true){
@@ -101,7 +100,7 @@
       InOrBlank:= (not full_match) ? "in " : ""
       if not this.HasValue(this.PossibleVimModes, Mode, FullMatch){
         throw Exception("Invalid mode specified",-2,
-        ( Join
+        (Join
   "'" Mode "' is not " InOrBlank " a valid mode as defined by the VimPossibleVimModes
    array at the top of vim.ahk. This may be a typo.
    Fix this error by using an existing mode,
@@ -119,7 +118,7 @@
     }else if(haystack.Length()==0){
       return false
     }
-    for index,value in haystack{
+    for index, value in haystack{
       if full_match{
         if (value==needle){
           return true
@@ -134,10 +133,20 @@
   }
 
   StatusCheck(){
-    if WinActive("ahk_group " . this.Vim.GroupName){
+    if WinActive("ahk_group " this.Vim.GroupName){
       this.Vim.Icon.SetIcon(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
     }else{
       this.Vim.Icon.SetIcon("Disabled", this.Vim.Conf["VimIconCheckInterval"]["val"])
+    }
+  }
+
+  SetStatusCheck(){
+    check := this.StatusCheckObj
+    if(this.Vim.Conf["VimIconCheckInterval"]["val"] > 0){
+      SetTimer, % check, % this.Vim.Conf["VimIconCheckInterval"]["val"]
+    }else{
+      this.Vim.Icon.SetIcon("", 0)
+      SetTimer, % check, Off
     }
   }
 }

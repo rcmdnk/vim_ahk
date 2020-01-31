@@ -1,5 +1,5 @@
 ﻿class VimIni{
-  static IniDir_Default := A_AppData . "\AutoHotkey"
+  static IniDir_Default := A_AppData "\AutoHotkey"
   static Ini_Default := "vim_ahk.ini"
   static Section_Default := "Vim Ahk Settings"
 
@@ -15,14 +15,14 @@
       section := VimIni.Section_Default
     }
     this.IniDir := dir
-    this.Ini := dir . "\" . ini
+    this.Ini := dir "\" . ini
     this.section := section
   }
 
   ReadIni(){
     for k, v in this.Vim.Conf {
       current := v["val"]
-      IniRead, val, % this.Ini, % this.Section, %k%, %current%
+      IniRead, val, % this.Ini, % this.Section, % k, % current
       %k% := val
       v["val"] := val
     }
@@ -33,7 +33,7 @@
       FileCreateDir, this.IniDir
 
     for k, v in this.Vim.Conf {
-      IniWrite, % v["val"], % this.Ini, % this.Section, %k%
+      IniWrite, % v["val"], % this.Ini, % this.Section, % k
     }
   }
 }

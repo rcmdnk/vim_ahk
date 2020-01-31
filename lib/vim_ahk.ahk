@@ -26,8 +26,11 @@ class VimAhk{
     this.Info["VimHomepage"] := this.About.Homepage
   }
 
-
   __New(setup=true){
+    ; Objects for ToolTip
+    this.DisplayToolTipObjs := []
+    this.RemoveToolTipObj := ObjBindMethod(this, "RemoveToolTip")
+
     ; Classes
     this.About := new VimAbout(this)
     this.Check := new VimCheck(this)
@@ -44,20 +47,20 @@ class VimAhk{
     this.GroupName := "VimGroup" . GroupN
 
     ; Enable vim mode for following applications
-    this.Group :=                              "ahk_exe notepad.exe"   ; NotePad
-    this.Group := this.Group . this.GroupDel . "ahk_exe explorer.exe"  ; Explorer
-    this.Group := this.Group . this.GroupDel . "ahk_exe wordpad.exe"   ; WordPad
-    this.Group := this.Group . this.GroupDel . "ahk_exe TeraPad.exe"   ; TeraPad
-    this.Group := this.Group . this.GroupDel . "作成"                  ; Thunderbird, 日本語
-    this.Group := this.Group . this.GroupDel . "Write:"                ; Thuderbird, English
-    this.Group := this.Group . this.GroupDel . "ahk_exe POWERPNT.exe"  ; PowerPoint
-    this.Group := this.Group . this.GroupDel . "ahk_exe WINWORD.exe"   ; Word
-    this.Group := this.Group . this.GroupDel . "ahk_exe Evernote.exe"  ; Evernote
-    this.Group := this.Group . this.GroupDel . "ahk_exe Code.exe"      ; Visual Studio Code
-    this.Group := this.Group . this.GroupDel . "ahk_exe onenote.exe"   ; OneNote Desktop
-    this.Group := this.Group . this.GroupDel . "OneNote"               ; OneNote in Windows 10
-    this.Group := this.Group . this.GroupDel . "ahk_exe texworks.exe"  ; TexWork
-    this.Group := this.Group . this.GroupDel . "ahk_exe texstudio.exe" ; TexStudio
+    this.Group :=                          "ahk_exe notepad.exe"   ; NotePad
+    this.Group := this.Group this.GroupDel "ahk_exe explorer.exe"  ; Explorer
+    this.Group := this.Group this.GroupDel "ahk_exe wordpad.exe"   ; WordPad
+    this.Group := this.Group this.GroupDel "ahk_exe TeraPad.exe"   ; TeraPad
+    this.Group := this.Group this.GroupDel "作成"                  ; Thunderbird, 日本語
+    this.Group := this.Group this.GroupDel "Write:"                ; Thuderbird, English
+    this.Group := this.Group this.GroupDel "ahk_exe POWERPNT.exe"  ; PowerPoint
+    this.Group := this.Group this.GroupDel "ahk_exe WINWORD.exe"   ; Word
+    this.Group := this.Group this.GroupDel "ahk_exe Evernote.exe"  ; Evernote
+    this.Group := this.Group this.GroupDel "ahk_exe Code.exe"      ; Visual Studio Code
+    this.Group := this.Group this.GroupDel "ahk_exe onenote.exe"   ; OneNote Desktop
+    this.Group := this.Group this.GroupDel "OneNote"               ; OneNote in Windows 10
+    this.Group := this.Group this.GroupDel "ahk_exe texworks.exe"  ; TexWork
+    this.Group := this.Group this.GroupDel "ahk_exe texstudio.exe" ; TexStudio
 
     ; Following application select the line break at Shift + End.
     GroupAdd, VimLBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
@@ -111,6 +114,7 @@ class VimAhk{
         , info: "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon)."}}
     this.CheckBoxes := ["VimRestoreIME", "VimJJ", "VimJK", "VimSD"]
 
+    ; Other ToolTip Information
     this.Info := {}
     for k, v in this.Conf {
       this.Info[k] := v["info"]
@@ -134,9 +138,7 @@ class VimAhk{
     this.Info["VimGuiReset"] := "Reset to the default values"
     this.Info["VimGuiCancel"] := "Don't change and exit"
 
-    this.RemoveToolTipObj := ObjBindMethod(this, "RemoveToolTip")
-    this.StatusCheckObj := ObjBindMethod(this.State, "StatusCheck")
-
+    ; Initialize
     this.Initialize()
   }
 
@@ -162,13 +164,7 @@ class VimAhk{
   Setup(){
     SetTitleMatchMode, % this.Conf["VimSetTitleMatchMode"]["val"]
     SetTitleMatchMode, % this.Conf["VimSetTitleMatchModeFS"]["val"]
-    check := this.StatusCheckObj
-    if(this.Conf["VimIconCheckInterval"]["val"] > 0){
-      SetTimer, % check, % this.Conf["VimIconCheckInterval"]["val"]
-    }else{
-      this.Icon.SetIcon("", 0)
-      SetTimer, % check, Off
-    }
+    this.State.SetStatusCheck()
     this.SetGroup()
   }
 
@@ -184,6 +180,9 @@ class VimAhk{
   }
 
   RemoveToolTip(){
+    for d in this.DisplayToolTipObjs {
+      SetTimer, % d, off
+    }
     remove := this.RemoveToolTipObj
     SetTimer, % remove, off
     ToolTip
@@ -191,6 +190,6 @@ class VimAhk{
 
   SetRemoveToolTip(time){
     remove := this.RemoveToolTipObj
-    SetTimer, % remove, % "-" . time
+    SetTimer, % remove, % "-" time
   }
 }

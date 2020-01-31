@@ -5,14 +5,14 @@
 
   Move(key=""){
     shift = 0
-    if(this.Vim.State.StrIsInCurrentVimMode( "Visual") or this.Vim.State.StrIsInCurrentVimMode( "ydc")){
+    if(this.Vim.State.StrIsInCurrentVimMode("Visual") or this.Vim.State.StrIsInCurrentVimMode("ydc")){
       shift := 1
     }
     if(shift == 1){
       Send, {Shift Down}
     }
     ; Left/Right
-    if(not this.Vim.State.StrIsInCurrentVimMode( "Line")){
+    if(not this.Vim.State.StrIsInCurrentVimMode("Line")){
       ; For some cases, need '+' directly to continue to select
       ; especially for cases using shift as original keys
       ; For now, caret does not work even add + directly
@@ -69,7 +69,7 @@
       Send, {Shift Up}{End}{Home}{Shift Down}{Up}
       this.Vim.State.SetMode("Vim_VisualLine")
     }
-    if(this.Vim.State.StrIsInCurrentVimMode( "Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
+    if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
       this.Vim.State.LineCopy := 1
       Send,{Shift Up}{Home}{Down}{Shift Down}{Up}
     }
@@ -127,6 +127,7 @@
     }
     this.Vim.State.SetMode("", 0, 0)
   }
+
   Repeat(key=""){
     if(this.Vim.State.n == 0){
       this.Vim.State.n := 1
