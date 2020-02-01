@@ -47,21 +47,7 @@ class VimAhk{
     this.GroupN := 0
     this.GroupName := "VimGroup" . GroupN
 
-    ; Enable vim mode for following applications
-    this.Group :=                          "ahk_exe notepad.exe"   ; NotePad
-    this.Group := this.Group this.GroupDel "ahk_exe explorer.exe"  ; Explorer
-    this.Group := this.Group this.GroupDel "ahk_exe wordpad.exe"   ; WordPad
-    this.Group := this.Group this.GroupDel "ahk_exe TeraPad.exe"   ; TeraPad
-    this.Group := this.Group this.GroupDel "作成"                  ; Thunderbird, 日本語
-    this.Group := this.Group this.GroupDel "Write:"                ; Thuderbird, English
-    this.Group := this.Group this.GroupDel "ahk_exe POWERPNT.exe"  ; PowerPoint
-    this.Group := this.Group this.GroupDel "ahk_exe WINWORD.exe"   ; Word
-    this.Group := this.Group this.GroupDel "ahk_exe Evernote.exe"  ; Evernote
-    this.Group := this.Group this.GroupDel "ahk_exe Code.exe"      ; Visual Studio Code
-    this.Group := this.Group this.GroupDel "ahk_exe onenote.exe"   ; OneNote Desktop
-    this.Group := this.Group this.GroupDel "OneNote"               ; OneNote in Windows 10
-    this.Group := this.Group this.GroupDel "ahk_exe texworks.exe"  ; TexWork
-    this.Group := this.Group this.GroupDel "ahk_exe texstudio.exe" ; TexStudio
+    this.SetDefaultActiveWindows()
 
     ; Following application select the line break at Shift + End.
     GroupAdd, VimLBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
@@ -80,7 +66,7 @@ class VimAhk{
     ; Followings start cursor from the same place after selection.
     ; Others start right/left (by cursor) point of the selection
     GroupAdd, VimCursorSameAfterSelect, ahk_exe notepad.exe ; NotePad
-    GroupAdd, VimCursorSameAfterSelect, ahk_exe exproloer.exe ; Explorer
+    GroupAdd, VimCursorSameAfterSelect, ahk_exe explorer.exe ; Explorer
 
     ; Configuration values for Read/Write ini
     this.Conf := {}
@@ -152,6 +138,10 @@ class VimAhk{
     }
   }
 
+  AddToActiveWindows(window){
+    this.Group := this.Group this.GroupDel window
+  }
+
   SetGroup(){
     this.GroupN++
     this.GroupName := "VimGroup" . this.GroupN
@@ -206,6 +196,28 @@ class VimAhk{
     this.Ini.ReadIni()
     this.VimMenu.SetMenu()
     this.Setup()
+  }
+
+  SetDefaultActiveWindows(){
+    ; Enable vim mode for following applications
+    defaults := ["ahk_exe texworks.exe"
+    , "ahk_exe texstudio.exe"
+    , "ahk_exe notepad.exe"
+    , "ahk_exe explorer.exe"
+    , "ahk_exe wordpad.exe"
+    , "ahk_exe TeraPad.exe"
+    , "ahk_exe POWERPNT.exe"
+    , "ahk_exe WINWORD.exe"
+    , "ahk_exe Evernote.exe"]
+
+    Loop % defaults.Length()
+        this.AddToActiveWindows(defaults[A_Index])
+
+    this.AddToActiveWindows("作成")                  ; Thunderbird, 日本語
+    this.AddToActiveWindows("Write:")                ; Thuderbird, English
+    this.AddToActiveWindows("ahk_exe Code.exe")      ; Visual Studio Code
+    this.AddToActiveWindows("ahk_exe onenote.exe")   ; OneNote Desktop
+    this.AddToActiveWindows("OneNote")               ; OneNote in Windows 10
   }
 }
 ; vim: sw=2:et:ts=2
