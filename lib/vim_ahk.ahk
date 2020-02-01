@@ -83,33 +83,34 @@ class VimAhk{
     GroupAdd, VimCursorSameAfterSelect, ahk_exe exproloer.exe ; Explorer
 
     ; Configuration values for Read/Write ini
-    this.Conf := {VimRestoreIME: {default: 1, val: 1
-        , description: "Restore IME status at entering Insert mode:"
-        , info: "Restore IME status at entering Insert mode."}
-      , VimJJ: {default: 0, val: 0
-        , description: "JJ enters Normal mode:"
-        , info: "Assign JJ enters Normal mode."}
-      , VimTwoLetterEsc: {default: "", val: ""
-        , description: "Two-letter insert-mode <esc> hotkey (sets normal mode)"
-        , info: "When these two letters are pressed together in insert mode, enters normal mode.`n`nSet one per line, exactly two letters per line.`nThe two letters must be different."}
-      , VimDisableUnused: {default: 1, val: 1
-        , description: "Disable unused keys in Normal mode:"
-        , info: "1: Do not disable unused keys`n2: Disable alphabets (+shift) and symbols`n3: Disable all including keys with modifiers (e.g. Ctrl+Z)"}
-      , VimSetTitleMatchMode: {default: "2", val: "2"
-        , description: "SetTitleMatchMode:"
-        , info: "[Mode] 1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow] Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow."}
-      , VimSetTitleMatchModeFS: {default: "Fast", val: "Fast"
-        , description: "SetTitleMatchMode"
-        , info: "[Mode]1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow]: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow."}
-      , VimIconCheckInterval: {default: 1000, val: 1000
-        , description: "Icon check interval (ms):"
-        , info: "Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set."}
-      , VimVerbose: {default: 1, val: 1
-        , description: "Verbose level:"
-        , info: "1: Nothing `n2: Minimum tooltip of status`n3: More info in tooltip`n4: Debug mode with a message box, which doesn't disappear automatically"}
-      , VimGroup: {default: this.Group, val: this.Group
-        , description: "Application:"
-        , info: "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon)."}}
+    this.Conf := {}
+    this.AddToConf("VimRestoreIME", 1, 1
+        , "Restore IME status at entering Insert mode:"
+        , "Restore IME status at entering Insert mode.")
+      this.AddToConf("VimJJ", 0, 0
+          , "JJ enters Normal mode:"
+        , "Assign JJ enters Normal mode.")
+      this.AddToConf("VimTwoLetterEsc", "", ""
+          , "Two-letter insert-mode <esc> hotkey (sets normal mode)"
+        , "When these two letters are pressed together in insert mode, enters normal mode.`n`nSet one per line, exactly two letters per line.`nThe two letters must be different.")
+      this.AddToConf("VimDisableUnused", 1, 1
+          , "Disable unused keys in Normal mode:"
+        , "1: Do not disable unused keys`n2: Disable alphabets (+shift) and symbols`n3: Disable all including keys with modifiers (e.g. Ctrl+Z)")
+      this.AddToConf("VimSetTitleMatchMode", "2", "2"
+          , "SetTitleMatchMode:"
+        , "[Mode] 1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow] Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow.")
+      this.AddToConf("VimSetTitleMatchModeFS", "Fast", "Fast"
+          , "SetTitleMatchMode"
+        , "[Mode]1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow]: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow.")
+      this.AddToConf("VimIconCheckInterval", 1000, 1000
+          , "Icon check interval (ms):"
+        , "Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set.")
+      this.AddToConf("VimVerbose", 1, 1
+          , "Verbose level:"
+        , "1: Nothing `n2: Minimum tooltip of status`n3: More info in tooltip`n4: Debug mode with a message box, which doesn't disappear automatically")
+      this.AddToConf("VimGroup", this.Group, this.Group
+          , "Application:"
+        , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
     this.CheckBoxes := ["VimRestoreIME", "VimJJ"]
 
     ; Other ToolTip Information
@@ -137,6 +138,10 @@ class VimAhk{
   SetInfo(variable, variablevaluename){
     key=%variable%%variablevaluename%
     this.Info[key] := this.Conf[variable]["info"]
+  }
+
+  AddToConf(setting, default_, val_, description_, info_){
+    this.Conf[setting] :=  {"default": default_, val: val_, description: description_, info: info_}
   }
 
   SetExistValue(){
