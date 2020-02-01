@@ -119,17 +119,12 @@ class VimAhk{
       textKey:=k . "Text"
       this.Info[textKey] := v["info"]
     }
-    this.Info["VimGroupList"] := this.Conf["VimGroup"]["info"]
-
-    this.Info["VimTwoLetterEscList"] := this.Conf["VimTwoLetterEsc"]["info"]
-
-    this.Info["VimDisableUnusedValue"] := this.Conf["VimDisableUnused"]["info"]
-
-    this.Info["VimSetTitleMatchModeValue"] := this.Conf["VimSetTitleMatchMode"]["info"]
-
-    this.Info["VimIconCheckIntervalEdit"] := this.Conf["VimIconCheckInterval"]["info"]
-
-    this.Info["VimVerboseValue"] := this.Conf["VimVerbose"]["info"]
+    this.SetInfo("VimGroup", "List")
+    this.SetInfo("VimTwoLetterEsc", "List")
+    this.SetInfo("VimDisableUnused", "Value")
+    this.SetInfo("VimSetTitleMatchMode", "Value")
+    this.SetInfo("VimIconCheckInterval", "Edit")
+    this.SetInfo("VimVerbose", "Value")
 
     this.Info["VimSettingOK"] := "Reflect changes and exit"
     this.Info["VimSettingReset"] := "Reset to the default values"
@@ -137,6 +132,11 @@ class VimAhk{
 
     ; Initialize
     this.Initialize()
+  }
+
+  SetInfo(variable, variablevaluename){
+    key=%variable%%variablevaluename%
+    this.Info[key] := this.Conf[variable]["info"]
   }
 
   SetExistValue(){
