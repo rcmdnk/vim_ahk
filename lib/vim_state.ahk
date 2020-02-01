@@ -97,7 +97,7 @@
       Return
     }
     try{
-      InOrBlank:= (not full_match) ? "in " : ""
+      InOrBlank:= (not FullMatch) ? "in " : ""
       if not this.HasValue(this.PossibleVimModes, Mode, FullMatch){
         throw Exception("Invalid mode specified",-2,
         (Join

@@ -17,6 +17,9 @@
 ; Key Bindings
 #Include %A_LineFile%\..\vim_bind.ahk
 
+twoLetterNormalMapsEnabled(){
+  return 0
+}
 class VimAhk{
   __About(){
     this.About.Version := "v0.6.0"
@@ -86,12 +89,9 @@ class VimAhk{
       , VimJJ: {default: 0, val: 0
         , description: "JJ enters Normal mode:"
         , info: "Assign JJ enters Normal mode."}
-      , VimJK: {default: 0, val: 0
-        , description: "JK enters Normal mode:"
-        , info: "Assign JK enters Normal mode."}
-      , VimSD: {default: 0, val: 0
-        , description: "SD enters Normal mode:"
-        , info: "Assign SD enters Normal mode."}
+      , VimTwoLetterEsc: {default: "", val: ""
+        , description: "Two-letter insert-mode <esc> hotkey (sets normal mode)"
+        , info: "When these two letters are pressed together in insert mode, enters normal mode.`n`nSet one per line, exactly two letters per line.`nThe two letters must be different."}
       , VimDisableUnused: {default: 1, val: 1
         , description: "Disable unused keys in Normal mode:"
         , info: "1: Do not disable unused keys`n2: Disable alphabets (+shift) and symbols`n3: Disable all including keys with modifiers (e.g. Ctrl+Z)"}
@@ -110,26 +110,25 @@ class VimAhk{
       , VimGroup: {default: this.Group, val: this.Group
         , description: "Application:"
         , info: "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon)."}}
-    this.CheckBoxes := ["VimRestoreIME", "VimJJ", "VimJK", "VimSD"]
+    this.CheckBoxes := ["VimRestoreIME", "VimJJ"]
 
     ; Other ToolTip Information
     this.Info := {}
     for k, v in this.Conf {
       this.Info[k] := v["info"]
+      textKey:=k . "Text"
+      this.Info[textKey] := v["info"]
     }
-    this.Info["VimGroupText"] := this.Conf["VimGroup"]["info"]
     this.Info["VimGroupList"] := this.Conf["VimGroup"]["info"]
 
-    this.Info["VimDisableUnusedText"] := this.Conf["VimDisableUnused"]["info"]
+    this.Info["VimTwoLetterEscList"] := this.Conf["VimTwoLetterEsc"]["info"]
+
     this.Info["VimDisableUnusedValue"] := this.Conf["VimDisableUnused"]["info"]
 
-    this.Info["VimSetTitleMatchModeText"] := this.Conf["VimSetTitleMatchMode"]["info"]
     this.Info["VimSetTitleMatchModeValue"] := this.Conf["VimSetTitleMatchMode"]["info"]
 
-    this.Info["VimIconCheckIntervalText"] := this.Conf["VimIconCheckInterval"]["info"]
     this.Info["VimIconCheckIntervalEdit"] := this.Conf["VimIconCheckInterval"]["info"]
 
-    this.Info["VimVerboseText"] := this.Conf["VimVerbose"]["info"]
     this.Info["VimVerboseValue"] := this.Conf["VimVerbose"]["info"]
 
     this.Info["VimSettingOK"] := "Reflect changes and exit"
@@ -159,11 +158,41 @@ class VimAhk{
     }
   }
 
+  loadTwoLetterEscMaps() {
+    this.twoLetterNormalIsSet:=False
+    delimiter_ := this.GroupDel
+    Loop, Parse, % this.Conf["VimTwoLetterEsc"]["val"], % delimiter_
+    {
+      if(A_LoopField != ""){
+        this.twoLetterNormalIsSet:=True
+        ; substring from 1st char of length 1.
+        key1 := SubStr(A_LoopField, 1, 1)
+        key2 := SubStr(A_LoopField, 2, 1)
+        this.SetTwoLetterEscMap(key1, key2)
+      }
+    }
+  }
+
+  SetTwoLetterEscMap(key1, key2){
+    ; The two IFs here: The first #If is needed to declare the condition, the second hotkey If needs to use the same condition.
+    ; Must used &&, not and.
+    ; See https://www.autohotkey.com/docs/Hotkey.htm for gotchas.
+    #If, vim.twoLetterNormalMapsEnabled()
+    hotkey If, vim.twoLetterNormalMapsEnabled()
+    hotkey, %key1% & %key2%, vimTwoletterEnterNormal
+    hotkey, %key2% & %key1%, vimTwoletterEnterNormal
+    hotkey If
+  }
+  twoLetterNormalMapsEnabled(){
+    return WinActive("ahk_group " . this.GroupName) && (this.State.StrIsInCurrentVimMode( "Insert")) && this.twoLetterNormalIsSet
+  }
+
   Setup(){
     SetTitleMatchMode, % this.Conf["VimSetTitleMatchMode"]["val"]
     SetTitleMatchMode, % this.Conf["VimSetTitleMatchModeFS"]["val"]
     this.State.SetStatusCheck()
     this.SetGroup()
+    this.loadTwoLetterEscMaps()
   }
 
   Initialize(){
@@ -174,3 +203,4 @@ class VimAhk{
     this.Setup()
   }
 }
+; vim: sw=2:et:ts=2
