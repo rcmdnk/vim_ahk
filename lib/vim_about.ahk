@@ -8,7 +8,7 @@
     this.Description := ""
     this.Homepage := ""
 
-    base.__New("Vim Ahk")
+    base.__New(vim, "Vim Ahk")
   }
 
   MakeGui(){
@@ -16,7 +16,7 @@
     Gui, % this.Hwnd ":-Resize"
     Gui, % this.Hwnd ":Add", Text, , % "Vim Ahk (vim_ahk):`n" this.Description
     Gui, % this.Hwnd ":Font", Underline
-    Gui, % this.Hwnd ":Add", Text, +HwndVimGuiAboutHomepageId Y+0 cBlue, Homepage
+    Gui, % this.Hwnd ":Add", Text, +HwndVimGuiAboutHomepageId Y+0 cBlue vVimHomepage, Homepage
     VimGuiAboutOpenHomepage := ObjBindMethod(this, "OpenHomepage")
     GuiControl, +G, % VimGuiAboutHomepageId, % VimGuiAboutOpenHomepage
     Gui, % this.Hwnd ":Font", Norm
@@ -32,7 +32,7 @@
   }
 
   OpenHomepage(){
-    ToolTip
+    this.Vim.VimToolTip.RemoveToolTip()
     Run % this.Homepage
   }
 }

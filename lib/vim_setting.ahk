@@ -1,11 +1,7 @@
 ﻿class VimSetting Extends VimGui{
   __New(vim){
     this.Vim := vim
-    base.__New("Vim Ahk Settings")
-    this.DisplayToolTipObj := ObjBindMethod(this, "DisplayToolTip")
-    this.RemoveToolTipObj := ObjBindMethod(this, "RemoveToolTip")
-
-    this.Vim.DisplayToolTipObjs.Push(this.DisplayToolTipObj)
+    base.__New(vim, "Vim Ahk Settings")
   }
 
   MakeGui(){
@@ -119,26 +115,6 @@
   GroupText(){
   }
 
-  OnMouseMove(wp, lp, msg, hwnd){
-    this.Vim.State.CurrControl := A_GuiControl
-    if(this.Vim.State.CurrControl != this.Vim.State.PrevControl){
-      this.Vim.State.PrevControl := this.Vim.State.CurrControl
-      this.Vim.RemoveToolTip()
-      if(this.Vim.Info.HasKey(this.Vim.State.CurrControl)){
-        display := this.DisplayToolTipObj
-        SetTimer, % display, -1000
-      }
-    }
-    Return
-  }
-
-  DisplayToolTip(){
-    display := this.DisplayToolTipObj
-    SetTimer, % display, Off
-    ToolTip % this.Vim.Info[this.Vim.State.CurrControl]
-    this.Vim.SetRemoveToolTip(60000)
-  }
-
   VimV2Conf(){
     global VimRestoreIME, VimJJ, VimJK, VimSD
     global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimGroup, VimGroupList
@@ -192,10 +168,5 @@
   Reset(){
     this.VimDefault2V()
     this.UpdateGuiValue()
-  }
-
-  OpenHomepage(){
-    ToolTip
-    Run % this.Homepage
   }
 }

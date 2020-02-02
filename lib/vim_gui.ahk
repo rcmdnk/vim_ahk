@@ -1,5 +1,6 @@
 class VimGui{
-  __New(title){
+  __New(vim, title){
+    this.Vim := vim
     this.Hwnd := 0
     this.Title := title
   }
@@ -12,7 +13,6 @@ class VimGui{
       Gui, % this.Hwnd ":Show", , % this.Title
       OnMessage(0x112, ObjBindMethod(this, "OnClose"))
       OnMessage(0x100, ObjBindMethod(this, "OnEscape"))
-      OnMessage(0x200, ObjBindMethod(this, "OnMouseMove"))
     }
     this.UpdateGui()
     Gui, % this.Hwnd . ":Show", , % this.Title
@@ -30,7 +30,7 @@ class VimGui{
   }
 
   Hide(){
-    ToolTip
+    this.Vim.VimToolTip.RemoveToolTip()
     Gui, % this.Hwnd ":Hide"
   }
 
@@ -48,8 +48,5 @@ class VimGui{
     if((hwnd == this.Hwnd || hwnd == this.OKHwnd) && wp == 27){
       this.Hide()
     }
-  }
-
-  OnMouseMove(wp, lp, msg, hwnd){
   }
 }

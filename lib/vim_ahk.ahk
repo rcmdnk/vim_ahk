@@ -12,6 +12,7 @@
 #Include %A_LineFile%\..\vim_move.ahk
 #Include %A_LineFile%\..\vim_setting.ahk
 #Include %A_LineFile%\..\vim_state.ahk
+#Include %A_LineFile%\..\vim_tooltip.ahk
 
 ; Key Bindings
 #Include %A_LineFile%\..\vim_bind.ahk
@@ -27,10 +28,6 @@ class VimAhk{
   }
 
   __New(setup=true){
-    ; Objects for ToolTip
-    this.DisplayToolTipObjs := []
-    this.RemoveToolTipObj := ObjBindMethod(this, "RemoveToolTip")
-
     ; Classes
     this.About := new VimAbout(this)
     this.Check := new VimCheck(this)
@@ -40,6 +37,7 @@ class VimAhk{
     this.Move := new VimMove(this)
     this.Setting := new VimSetting(this)
     this.State := new VimState(this)
+    this.VimToolTip := new VimToolTip(this)
 
     ; Group Settings
     this.GroupDel := ","
@@ -174,22 +172,5 @@ class VimAhk{
     this.Ini.ReadIni()
     this.VimMenu.SetMenu()
     this.Setup()
-  }
-
-  DisplayToolTip(){
-  }
-
-  RemoveToolTip(){
-    for d in this.DisplayToolTipObjs {
-      SetTimer, % d, off
-    }
-    remove := this.RemoveToolTipObj
-    SetTimer, % remove, off
-    ToolTip
-  }
-
-  SetRemoveToolTip(time){
-    remove := this.RemoveToolTipObj
-    SetTimer, % remove, % "-" time
   }
 }
