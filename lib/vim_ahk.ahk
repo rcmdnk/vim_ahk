@@ -132,9 +132,9 @@ class VimAhk{
     this.Info["VimVerboseText"] := this.Conf["VimVerbose"]["info"]
     this.Info["VimVerboseValue"] := this.Conf["VimVerbose"]["info"]
 
-    this.Info["VimGuiOK"] := "Reflect changes and exit"
-    this.Info["VimGuiReset"] := "Reset to the default values"
-    this.Info["VimGuiCancel"] := "Don't change and exit"
+    this.Info["VimSettingOK"] := "Reflect changes and exit"
+    this.Info["VimSettingReset"] := "Reset to the default values"
+    this.Info["VimSettingCancel"] := "Don't change and exit"
 
     ; Initialize
     this.Initialize()

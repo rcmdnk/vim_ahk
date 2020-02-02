@@ -7,7 +7,7 @@
   MakeGui(){
     global VimRestoreIME, VimJJ, VimJK, VimSD
     global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimGroup, VimGroupList
-    global VimDisableUnusedText, VimSetTitleMatchModeText, VimIconCheckIntervalText, VimIconCheckIntervalEdit, VimVerboseText, VimGroupText, VimHomepage, VimGuiOK, VimGuiReset, VimGuiCancel
+    global VimDisableUnusedText, VimSetTitleMatchModeText, VimIconCheckIntervalText, VimIconCheckIntervalEdit, VimVerboseText, VimGroupText, VimHomepage, VimSettingOK, VimSettingReset, VimSettingCancel
     this.VimVal2V()
     Gui, % this.Hwnd ":-MinimizeBox"
     Gui, % this.Hwnd ":-Resize"
@@ -47,26 +47,23 @@
     Gui, % this.Hwnd ":Add", Edit, XM+10 Y+5 R10 W300 Multi vVimGroupList, % VimGroupList
     Gui, % this.Hwnd ":Add", Text, XM+10 Y+10, Check
     Gui, % this.Hwnd ":Font", Underline
-    Gui, % this.Hwnd ":Add", Text, +HwndHomepageHwnd X+5 cBlue vVimHomepage, HELP
+    Gui, % this.Hwnd ":Add", Text, X+5 cBlue vVimHomepage, HELP
     homepage := ObjBindMethod(this.Vim.About, "OpenHomepage")
-    GuiControl, +G, % HomepageHwnd, % homepage
+    GuiControl, +G, VimHomepage, % homepage
     Gui, % this.Hwnd ":Font", Norm
     Gui, % this.Hwnd ":Add", Text, X+5, for further information.
 
-    Gui, % this.Hwnd ":Add", Button, +HwndOKHwnd vVimGuiOK X10 W100 Y+10 Default, &OK
-    this.OKHwnd := OKHwnd
+    Gui, % this.Hwnd ":Add", Button, vVimSettingOK X10 W100 Y+10 Default, &OK
     ok := ObjBindMethod(this, "OK")
-    GuiControl, +G, % OKHwnd, % ok
+    GuiControl, +G, VimSettingOK, % ok
 
-    Gui, % this.Hwnd ":Add", Button, +HwndResetHwnd vVimGuiReset W100 X+10, &Reset
-    this.ResetHwnd := ResetHwnd
+    Gui, % this.Hwnd ":Add", Button, vVimSettingReset W100 X+10, &Reset
     reset := ObjBindMethod(this, "Reset")
-    GuiControl, +G, % ResetHwnd, % reset
+    GuiControl, +G, VimSettingReset, % reset
 
-    Gui, % this.Hwnd ":Add", Button, +HwndCancelHwnd vVimGuiCancel W100 X+10, &Cancel
-    this.CancelHwnd := CancelHwnd
+    Gui, % this.Hwnd ":Add", Button, vVimSettingCancel W100 X+10, &Cancel
     cancel := ObjBindMethod(this, "Cancel")
-    GuiControl, +G, % CancelHwnd, % cancel
+    GuiControl, +G, VimSettingCancel, % cancel
   }
 
   UpdateGui(){
