@@ -2,6 +2,7 @@ class VimGui{
   __New(vim, title){
     this.Vim := vim
     this.Hwnd := 0
+    this.HwndAll := []
     this.Title := title
   }
 
@@ -9,6 +10,7 @@ class VimGui{
     if(this.hwnd == 0){
       Gui, New, +HwndGuiHwnd
       this.Hwnd := GuiHwnd
+      this.HwndAll.Push(GuiHwnd)
       this.MakeGui()
       Gui, % this.Hwnd ":Show", , % this.Title
       OnMessage(0x112, ObjBindMethod(this, "OnClose"))
@@ -20,10 +22,10 @@ class VimGui{
   }
 
   MakeGui(){
-    Gui, % this.Hwnd ":Add", Button, +HwndOKHwnd X200 W100 Default, &OK
-    this.OKHwnd := OKHwnd
+    Gui, % this.Hwnd ":Add", Button, +HwndOK X200 W100 Default, &OK
+    this.HwndAll.Push(OK)
     ok := ObjBindMethod(this, "OK")
-    GuiControl, +G, % OKHwnd, % ok
+    GuiControl, +G, % OK, % ok
   }
 
   UpdateGui(){
@@ -38,14 +40,23 @@ class VimGui{
     this.Hide()
   }
 
+  IsThisWindow(hwnd){
+    for i, h in this.HwndAll {
+      if(hwnd == h){
+        Return True
+      }
+    }
+    Return False
+  }
+
   OnClose(wp, lp, msg, hwnd){
-    if(hwnd == this.Hwnd && wp == 0xF060){
+    if(wp == 0xF060 && hwnd == this.Hwnd){
       this.Hide()
     }
   }
 
   OnEscape(wp, lp, msg, hwnd){
-    if((hwnd == this.Hwnd || hwnd == this.OKHwnd) && wp == 27){
+    if(wp == 27 && this.IsThisWindow(hwnd)){
       this.Hide()
     }
   }

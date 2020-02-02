@@ -18,33 +18,41 @@
       }else{
         y := "Y+10"
       }
-      Gui, % this.Hwnd ":Add", Checkbox, XM+10 %y% v%k%, % this.Vim.Conf[k]["description"]
+      Gui, % this.Hwnd ":Add", Checkbox, % "+HwndHwnd" k " XM+10 " y " v" k, % this.Vim.Conf[k]["description"]
+      hwnd := "Hwnd" k
+      this.HwndAll.Push(%hwnd%)
       created  := 1
-      kk := %k%
-      GuiControl, % this.Hwnd ":", % k, % kk
+      GuiControl, % this.Hwnd ":", % k, % %k%
     }
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+15 g" this.__Class ".DisableUnusedText vVimDisableUnusedText", % this.Vim.Conf["VimDisableUnused"]["description"]
-    Gui, % this.Hwnd ":Add", DropDownList, % "X+5 Y+-16 W30 vVimDisableUnused Choose" VimDisableUnused, 1|2|3
+    Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndDisableUnused X+5 Y+-16 W30 vVimDisableUnused Choose" VimDisableUnused, 1|2|3
+    this.HwndAll.Push(HwndDisableUnused)
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+15 g" this.__Class ".SetTitleMatchModeText vVimSetTitleMatchModeText", % this.Vim.Conf["VimSetTitleMatchMode"]["description"]
     if(VimSetTitleMatchMode == "RegEx"){
       matchmode := 4
     }else{
       matchmode := %VimSetTitleMatchMode%
     }
-    Gui, % this.Hwnd ":Add", DropDownList, % "X+5 Y+-16 W60 vVimSetTitleMatchMode Choose" matchmode, 1|2|3|RegEx
+    Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndSetTitleMachMode X+5 Y+-16 W60 vVimSetTitleMatchMode Choose" matchmode, 1|2|3|RegEx
+    this.HwndAll.Push(HwndSetTitleMachMode)
     if(VimSetTitleMatchModeFS == "Fast"){
       matchmodefs := 1
     }else{
       matchmodefs := 2
     }
-    Gui, % this.Hwnd ":Add", DropDownList, % "X+5 Y+-20 W50 vVimSetTitleMatchModeFS Choose" matchmodefs, Fast|Slow
+    Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndSetTitleMachModeFS X+5 Y+-20 W50 vVimSetTitleMatchModeFS Choose" matchmodefs, Fast|Slow
+    this.HwndAll.Push(HwndSetTitleMachModeFS)
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+10 g" this.__Class ".IconCheckIntervalText vVimIconCheckIntervalText", % this.Vim.Conf["VimIconCheckInterval"]["description"]
-    Gui, % this.Hwnd ":Add", Edit, X+5 Y+-16 W70 vVimIconCheckIntervalEdit
-    Gui, % this.Hwnd ":Add", UpDown, vVimIconCheckInterval Range0-1000000, % VimIconCheckInterval
+    Gui, % this.Hwnd ":Add", Edit, +HwndHwndIconCheckIntervalEdit X+5 Y+-16 W70 vVimIconCheckIntervalEdit
+    this.HwndAll.Push(HwndIconCheckIntervalEdit)
+    Gui, % this.Hwnd ":Add", UpDown, +HwndHwndIconCheckInterval vVimIconCheckInterval Range0-1000000, % VimIconCheckInterval
+    this.HwndAll.Push(HwndIconCheckInterval)
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+10 g" this.__Class ".VerboseText vVimVerboseText", % this.Vim.Conf["VimVerbose"]["description"]
-    Gui, % this.Hwnd ":Add", DropDownList, % "X+5 Y+-16 W30 vVimVerbose Choose"VimVerbose, 1|2|3|4
+    Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndVerbose X+5 Y+-16 W30 vVimVerbose Choose"VimVerbose, 1|2|3|4
+    this.HwndAll.Push(HwndVerbose)
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+5 g" this.__Class ".GroupText vVimGroupText", % this.Vim.Conf["VimGroup"]["description"]
-    Gui, % this.Hwnd ":Add", Edit, XM+10 Y+5 R10 W300 Multi vVimGroupList, % VimGroupList
+    Gui, % this.Hwnd ":Add", Edit, +HwndHwndGroupList XM+10 Y+5 R10 W300 Multi vVimGroupList, % VimGroupList
+    this.HwndAll.Push(HwndGroupList)
     Gui, % this.Hwnd ":Add", Text, XM+10 Y+10, Check
     Gui, % this.Hwnd ":Font", Underline
     Gui, % this.Hwnd ":Add", Text, X+5 cBlue vVimHomepage, HELP
@@ -53,15 +61,19 @@
     Gui, % this.Hwnd ":Font", Norm
     Gui, % this.Hwnd ":Add", Text, X+5, for further information.
 
-    Gui, % this.Hwnd ":Add", Button, vVimSettingOK X10 W100 Y+10 Default, &OK
+    Gui, % this.Hwnd ":Add", Button, +HwndHwndOK vVimSettingOK X10 W100 Y+10 Default, &OK
+    this.HwndAll.Push(HwndOK)
     ok := ObjBindMethod(this, "OK")
     GuiControl, +G, VimSettingOK, % ok
 
-    Gui, % this.Hwnd ":Add", Button, vVimSettingReset W100 X+10, &Reset
+    Gui, % this.Hwnd ":Add", Button, +HwndHwndReset vVimSettingReset W100 X+10, &Reset
+    this.HwndAll.Push(HwndReset)
     reset := ObjBindMethod(this, "Reset")
     GuiControl, +G, VimSettingReset, % reset
 
-    Gui, % this.Hwnd ":Add", Button, vVimSettingCancel W100 X+10, &Cancel
+    Gui, % this.Hwnd ":Add", Button, +HwndHwndCancel vVimSettingCancel W100 X+10, &Cancel
+    this.HwndAll.Push(HwndCancel)
+    this.LastHwnd := Last
     cancel := ObjBindMethod(this, "Cancel")
     GuiControl, +G, VimSettingCancel, % cancel
   }
@@ -75,8 +87,7 @@
     global VimRestoreIME, VimJJ, VimJK, VimSD
     global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimGroup, VimGroupList
     for i, k in this.Vim.Checkboxes {
-      kk := %k%
-      GuiControl, % this.Hwnd ":", % k, % kk
+      GuiControl, % this.Hwnd ":", % k, % %k%
     }
     GuiControl, % this.Hwnd ":Choose", VimDisableUnused, % VimDisableUnused
     GuiControl, % this.Hwnd ":", VimIconCheckInterval, % VimIconCheckInterval
