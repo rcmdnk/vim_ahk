@@ -17,7 +17,7 @@ class VimGui{
       OnMessage(0x100, ObjBindMethod(this, "OnEscape"))
     }
     this.UpdateGui()
-    Gui, % this.Hwnd . ":Show", , % this.Title
+    Gui, % this.Hwnd ":Show", , % this.Title
     Return
   }
 

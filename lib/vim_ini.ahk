@@ -15,14 +15,18 @@
       section := VimIni.Section_Default
     }
     this.IniDir := dir
-    this.Ini := dir "\" . ini
+    this.Ini := dir "\" ini
     this.section := section
   }
 
   ReadIni(){
     for k, v in this.Vim.Conf {
       current := v["val"]
-      IniRead, val, % this.Ini, % this.Section, % k, % current
+      if(current != ""){
+        IniRead, val, % this.Ini, % this.Section, % k, % current
+      }else{
+        IniRead, val, % this.Ini, % this.Section, % k, %A_Space%
+      }
       %k% := val
       v["val"] := val
     }

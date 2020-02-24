@@ -4,4 +4,3 @@
                   ; Use ~500kB memory?
 #HotkeyInterval 2000 ; Hotkey interval (default 2000 milliseconds).
 #MaxHotkeysPerInterval 70 ; Max hotkeys per interval (default 50).
-; #warn

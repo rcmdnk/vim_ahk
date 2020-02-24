@@ -17,9 +17,6 @@
 ; Key Bindings
 #Include %A_LineFile%\..\vim_bind.ahk
 
-twoLetterNormalMapsEnabled(){
-  return 0
-}
 class VimAhk{
   __About(){
     this.About.Version := "v0.6.0"
@@ -45,9 +42,9 @@ class VimAhk{
     ; Group Settings
     this.GroupDel := ","
     this.GroupN := 0
-    this.GroupName := "VimGroup" . GroupN
+    this.GroupName := "VimGroup" GroupN
 
-    this.SetDefaultActiveWindows()
+    DefaultGroup := this.SetDefaultActiveWindows()
 
     ; Following application select the line break at Shift + End.
     GroupAdd, VimLBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
@@ -71,43 +68,49 @@ class VimAhk{
     ; Configuration values for Read/Write ini
     this.Conf := {}
     this.AddToConf("VimRestoreIME", 1, 1
-        , "Restore IME status at entering Insert mode:"
-        , "Restore IME status at entering Insert mode.")
-      this.AddToConf("VimJJ", 0, 0
-          , "JJ enters Normal mode:"
-        , "Assign JJ enters Normal mode.")
-      this.AddToConf("VimTwoLetterEsc", "", ""
-          , "Two-letter insert-mode <esc> hotkey (sets normal mode)"
-        , "When these two letters are pressed together in insert mode, enters normal mode.`n`nSet one per line, exactly two letters per line.`nThe two letters must be different.")
-      this.AddToConf("VimDisableUnused", 1, 1
-          , "Disable unused keys in Normal mode:"
-        , "1: Do not disable unused keys`n2: Disable alphabets (+shift) and symbols`n3: Disable all including keys with modifiers (e.g. Ctrl+Z)")
-      this.AddToConf("VimSetTitleMatchMode", "2", "2"
-          , "SetTitleMatchMode:"
-        , "[Mode] 1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow] Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow.")
-      this.AddToConf("VimSetTitleMatchModeFS", "Fast", "Fast"
-          , "SetTitleMatchMode"
-        , "[Mode]1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow]: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow.")
-      this.AddToConf("VimIconCheckInterval", 1000, 1000
-          , "Icon check interval (ms):"
-        , "Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set.")
-      this.AddToConf("VimVerbose", 1, 1
-          , "Verbose level:"
-        , "1: Nothing `n2: Minimum tooltip of status`n3: More info in tooltip`n4: Debug mode with a message box, which doesn't disappear automatically")
-      this.AddToConf("VimGroup", this.Group, this.Group
-          , "Application:"
-        , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
-    this.CheckBoxes := ["VimRestoreIME", "VimJJ"]
+      , "Restore IME status at entering insert mode:"
+      , "Restore IME status at entering insert mode.")
+    this.AddToConf("VimJJ", 0, 0
+      , "JJ enters Normal mode:"
+      , "Assign JJ enters Normal mode.")
+    this.AddToConf("VimJK", 0, 0
+      , "JK enters Normal mode:"
+      , "Assign JK enters Normal mode.")
+    this.AddToConf("VimSD", 0, 0
+      , "SD enters Normal mode:"
+      , "Assign SD enters Normal mode.")
+    this.AddToConf("VimTwoLetter", "", ""
+      , "Two-letter insert mode <esc> hotkey (sets normal mode)"
+      , "When these two letters are pressed together in insert mode, enters normal mode.`n`nSet one per line, exactly two letters per line.`nThe two letters must be different.")
+    this.AddToConf("VimDisableUnused", 1, 1
+      , "Disable unused keys in Normal mode:"
+      , "1: Do not disable unused keys`n2: Disable alphabets (+shift) and symbols`n3: Disable all including keys with modifiers (e.g. Ctrl+Z)")
+    this.AddToConf("VimSetTitleMatchMode", "2", "2"
+      , "SetTitleMatchMode:"
+      , "[Mode] 1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow] Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow.")
+    this.AddToConf("VimSetTitleMatchModeFS", "Fast", "Fast"
+      , "SetTitleMatchMode"
+      , "[Mode]1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow]: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow.")
+    this.AddToConf("VimIconCheckInterval", 1000, 1000
+      , "Icon check interval (ms):"
+      , "Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set.")
+    this.AddToConf("VimVerbose", 1, 1
+      , "Verbose level:"
+      , "1: Nothing `n2: Minimum tooltip of status`n3: More info in tooltip`n4: Debug mode with a message box, which doesn't disappear automatically")
+    this.AddToConf("VimGroup", DefaultGroup, DefaultGroup
+      , "Application:"
+      , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
+    this.CheckBoxes := ["VimRestoreIME", "VimJJ", "VimJK", "VimSD"]
 
     ; Other ToolTip Information
     this.Info := {}
     for k, v in this.Conf {
       this.Info[k] := v["info"]
-      textKey:=k . "Text"
+      textKey := k "Text"
       this.Info[textKey] := v["info"]
     }
     this.SetInfo("VimGroup", "List")
-    this.SetInfo("VimTwoLetterEsc", "List")
+    this.SetInfo("VimTwoLetter", "List")
     this.SetInfo("VimDisableUnused", "Value")
     this.SetInfo("VimSetTitleMatchMode", "Value")
     this.SetInfo("VimIconCheckInterval", "Edit")
@@ -122,12 +125,12 @@ class VimAhk{
   }
 
   SetInfo(variable, variablevaluename){
-    key=%variable%%variablevaluename%
+    key := % variable variablevaluename
     this.Info[key] := this.Conf[variable]["info"]
   }
 
-  AddToConf(setting, default_, val_, description_, info_){
-    this.Conf[setting] :=  {"default": default_, val: val_, description: description_, info: info_}
+  AddToConf(setting, default, val, description, info){
+    this.Conf[setting] :=  {"default": default, "val": val, "description": description, "info": info}
   }
 
   SetExistValue(){
@@ -138,13 +141,9 @@ class VimAhk{
     }
   }
 
-  AddToActiveWindows(window){
-    this.Group := this.Group this.GroupDel window
-  }
-
   SetGroup(){
     this.GroupN++
-    this.GroupName := "VimGroup" . this.GroupN
+    this.GroupName := "VimGroup" this.GroupN
     Loop, Parse, % this.Conf["VimGroup"]["val"], % this.GroupDel
     {
       if(A_LoopField != ""){
@@ -153,33 +152,34 @@ class VimAhk{
     }
   }
 
-  loadTwoLetterEscMaps() {
-    this.twoLetterNormalIsSet:=False
-    delimiter_ := this.GroupDel
-    Loop, Parse, % this.Conf["VimTwoLetterEsc"]["val"], % delimiter_
+  LoadTwoLetterMaps() {
+    this.TwoLetterNormalIsSet := False
+    Loop, Parse, % this.Conf["VimTwoLetter"]["val"], % this.GroupDel
     {
       if(A_LoopField != ""){
-        this.twoLetterNormalIsSet:=True
-        ; substring from 1st char of length 1.
+        this.TwoLetterNormalIsSet := True
         key1 := SubStr(A_LoopField, 1, 1)
         key2 := SubStr(A_LoopField, 2, 1)
-        this.SetTwoLetterEscMap(key1, key2)
+        this.SetTwoLetterMap(key1, key2)
       }
     }
   }
 
-  SetTwoLetterEscMap(key1, key2){
-    ; The two IFs here: The first #If is needed to declare the condition, the second hotkey If needs to use the same condition.
-    ; Must used &&, not and.
-    ; See https://www.autohotkey.com/docs/Hotkey.htm for gotchas.
-    #If, vim.twoLetterNormalMapsEnabled()
-    hotkey If, vim.twoLetterNormalMapsEnabled()
-    hotkey, %key1% & %key2%, vimTwoletterEnterNormal
-    hotkey, %key2% & %key1%, vimTwoletterEnterNormal
-    hotkey If
+  SetTwoLetterMap(key1, key2){
+    EnterNormal := ObjBindMethod(this, "TwoLetterEnterNormal")
+    Enabled := ObjBindMethod(this, "TwoLetterNormalMapsEnabled")
+    HotKey If, % Enabled
+    HotKey, %key1% & %key2%, % EnterNormal
+    HotKey, %key2% & %key1%, % EnterNormal
   }
-  twoLetterNormalMapsEnabled(){
-    return WinActive("ahk_group " . this.GroupName) && (this.State.StrIsInCurrentVimMode( "Insert")) && this.twoLetterNormalIsSet
+
+  TwoLetterNormalMapsEnabled(){
+    Return WinActive("ahk_group " this.GroupName) && (this.State.StrIsInCurrentVimMode("Insert")) && this.TwoLetterNormalIsSet
+  }
+
+  TwoLetterEnterNormal(){
+    SendInput, {BackSpace 1}
+    this.State.SetNormal()
   }
 
   Setup(){
@@ -187,7 +187,7 @@ class VimAhk{
     SetTitleMatchMode, % this.Conf["VimSetTitleMatchModeFS"]["val"]
     this.State.SetStatusCheck()
     this.SetGroup()
-    this.loadTwoLetterEscMaps()
+    this.LoadTwoLetterMaps()
   }
 
   Initialize(){
@@ -199,25 +199,30 @@ class VimAhk{
   }
 
   SetDefaultActiveWindows(){
-    ; Enable vim mode for following applications
-    defaults := ["ahk_exe texworks.exe"
-    , "ahk_exe texstudio.exe"
-    , "ahk_exe notepad.exe"
-    , "ahk_exe explorer.exe"
-    , "ahk_exe wordpad.exe"
-    , "ahk_exe TeraPad.exe"
-    , "ahk_exe POWERPNT.exe"
-    , "ahk_exe WINWORD.exe"
-    , "ahk_exe Evernote.exe"]
+    DefaultList := ["ahk_exe Evernote.exe"  ; Evernote
+                  , "ahk_exe explorer.exe"  ; Explorer
+                  , "ahk_exe notepad.exe"   ; NotePad
+                  , "OneNote"               ; OneNote at Windows 10
+                  , "ahk_exe onenote.exe"   ; OneNote Desktop
+                  , "ahk_exe POWERPNT.exe"  ; PowerPoint
+                  , "ahk_exe TeraPad.exe"   ; TeraPad
+                  , "ahk_exe texstudio.exe" ; TexStudio
+                  , "ahk_exe texworks.exe"  ; TexWork
+                  , "Write:"                ; Thunderbird, English
+                  , "作成"                  ; Thunderbird, 日本語
+                  , "ahk_exe Code.exe"      ; Visual Studio Code
+                  , "ahk_exe WINWORD.exe"   ; Word
+                  , "ahk_exe wordpad.exe"]  ; WordPad
 
-    Loop % defaults.Length()
-        this.AddToActiveWindows(defaults[A_Index])
-
-    this.AddToActiveWindows("作成")                  ; Thunderbird, 日本語
-    this.AddToActiveWindows("Write:")                ; Thuderbird, English
-    this.AddToActiveWindows("ahk_exe Code.exe")      ; Visual Studio Code
-    this.AddToActiveWindows("ahk_exe onenote.exe")   ; OneNote Desktop
-    this.AddToActiveWindows("OneNote")               ; OneNote in Windows 10
+    DefaultGroup := ""
+    For i, v in DefaultList
+    {
+      if(DefaultGroup == ""){
+        DefaultGroup := v
+      }else{
+        DefaultGroup := DefaultGroup this.GroupDel v
+      }
+    }
+    Return DefaultGroup
   }
 }
-; vim: sw=2:et:ts=2

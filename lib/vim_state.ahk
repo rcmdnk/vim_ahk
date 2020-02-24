@@ -115,12 +115,12 @@
   HasValue(haystack, needle, full_match = true){
     if(!isObject(haystack)){
       return false
-    }else if(haystack.Length()==0){
+    }else if(haystack.Length() == 0){
       return false
     }
     for index, value in haystack{
       if full_match{
-        if (value==needle){
+        if (value == needle){
           return true
         }
       }else{
