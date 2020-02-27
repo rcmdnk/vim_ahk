@@ -26,13 +26,18 @@
     for k, v in store {
       current := v["val"]
       if(current != ""){
-        IniRead, val, % this.Ini, % this.Section, % k, % current
+        val := this.ReadIniValue(this.Ini, this.Section, k, current)
       }else{
-        IniRead, val, % this.Ini, % this.Section, % k, %A_Space%
+        val := this.ReadIniValue(this.Ini, this.Section, k, A_Space)
       }
       %k% := val
       v["val"] := val
     }
+  }
+
+  ReadIniValue(file, iniSection, key, default_=""){
+    IniRead, out, % file, % iniSection, % key, % default_
+    return out
   }
 
   WriteIni(){
