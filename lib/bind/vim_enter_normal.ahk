@@ -17,17 +17,3 @@ Return
     Vim.State.SetNormal()
   }
 Return
-
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.StrIsInCurrentVimMode( "Insert")) and (Vim.Conf["VimJK"]["val"] == 1)
-j & k::
-k & j::
-  SendInput, {BackSpace 1}
-  Vim.State.SetNormal()
-Return
-
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.StrIsInCurrentVimMode( "Insert")) and (Vim.Conf["VimSD"]["val"] == 1)
-s & d::
-d & s::
-  SendInput, {BackSpace 1}
-  Vim.State.SetNormal()
-Return

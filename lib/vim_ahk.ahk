@@ -73,12 +73,6 @@ class VimAhk{
     this.AddToConf("VimJJ", 0, 0
       , "JJ enters Normal mode:"
       , "Assign JJ enters Normal mode.")
-    this.AddToConf("VimJK", 0, 0
-      , "JK enters Normal mode:"
-      , "Assign JK enters Normal mode.")
-    this.AddToConf("VimSD", 0, 0
-      , "SD enters Normal mode:"
-      , "Assign SD enters Normal mode.")
     this.AddToConf("VimTwoLetter", "", ""
       , "Two-letter insert mode <esc> hotkey (sets normal mode)"
       , "When these two letters are pressed together in insert mode, enters normal mode.`n`nSet one per line, exactly two letters per line.`nThe two letters must be different.")
@@ -100,7 +94,7 @@ class VimAhk{
     this.AddToConf("VimGroup", DefaultGroup, DefaultGroup
       , "Application:"
       , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
-    this.CheckBoxes := ["VimRestoreIME", "VimJJ", "VimJK", "VimSD"]
+    this.CheckBoxes := ["VimRestoreIME", "VimJJ"]
 
     ; Other ToolTip Information
     this.Info := {}
