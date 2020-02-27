@@ -17,9 +17,6 @@
 ; Key Bindings
 #Include %A_LineFile%\..\vim_bind.ahk
 
-twoLetterNormalMapsEnabled(){
-  return 0
-}
 class VimAhk{
   __About(){
     this.About.Version := "v0.6.0"
