@@ -85,9 +85,7 @@ vim_ahk also works on other applications which use these Class/Process name (mos
 |:-----|:----------|:------|
 |VimRestoreIME|If 1, IME status is restored at entering insert mode.|1|
 |VimJJ|If 1, `jj` changes mode to Normal from Insert.|0|
-|VimJK|If 1, `jk` changes mode to Normal from Insert.|0|
-|VimSD|If 1, `sd` changes mode to Normal from Insert.|0|
-|VimTwoLetterEsc|A list of character pairs to press together during insert mode to get to normal mode. For example, a value of `jf` means pressing `j` and `f` at the same time will enter normal mode. (`jk` and `sd` can be enabled with above options, too.)||
+|VimTwoLetterEsc|A list of character pairs to press together during insert mode to get to normal mode. For example, a value of `jf` means pressing `j` and `f` at the same time will enter normal mode.||
 |VimDisableUnused|Disable level of unused keys in Normal mode (see below for details).|3|
 |VimSetTitleMatchMode|SetTitleMatchMode: 1: Start with, 2: Contain, 3: Exact match|2|
 |VimSetTitleMatchModeFS|SetTitleMatchMode: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow|Fast|
@@ -153,15 +151,11 @@ After pressing `:`, a few commands to save/quit are available.
 |:----------:|:-------|
 |ESC/Ctrl-[| Enter Normal Mode. Holding (0.5s) these keys emulate normal ESC.|
 |jj|Enter Normal Mode, if enabled.|
-|jk|Enter Normal Mode, if enabled.|
-|sd|Enter Normal Mode, if enabled.|
 |Custom two letters|If two-letter mapping is set.|
 
 ESC/Ctrl-[ switch off IME if IME is on.
 ESC acts as ESC when IME is on and converting instructions.
 Ctrl-[ switches off IME and enters Normal Mode even if IME is on.
-
-jj, jk or sd is optional one, which is enabled when VimJJ/VimJK/VimSK = 1, respectively.
 
 If using a custom two-letter hotkey to enter normal mode, the two letters must be different.
 
