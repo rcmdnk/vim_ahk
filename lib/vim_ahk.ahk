@@ -241,7 +241,7 @@ class VimAhk{
     return this.vim.store.HasValue(haystack, needle)
   }
   AddToTwoLetterMap(l1, l2){
-    return
+    this.Conf["VimTwoLetter"]["val"] := this.Conf["VimTwoLetter"]["val"] . this.GroupDel . l1 . l2
   }
 
 }
