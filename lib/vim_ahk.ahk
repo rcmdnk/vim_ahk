@@ -26,6 +26,7 @@ class VimAhk{
     this.About.Homepage := "https://github.com/rcmdnk/vim_ahk"
     this.Info["VimHomepage"] := this.About.Homepage
   }
+  DeprecatedSettings := ["VimSD", "VimJK"]
 
   __New(setup=true){
     ; Classes
@@ -188,6 +189,7 @@ class VimAhk{
     this.__About()
     this.SetExistValue()
     this.Ini.ReadIni()
+    this.ReadDeprecatedSettings()
     this.VimMenu.SetMenu()
     this.Setup()
   }
@@ -219,4 +221,27 @@ class VimAhk{
     }
     Return DefaultGroup
   }
+
+  ReadDeprecatedSettings(){
+    DeprecatedSettingsMap := {}
+    ; loop % this.DeprecatedSettings.length()
+    for index, setting in this.DeprecatedSettings
+    {
+      DeprecatedSettingsMap[setting] := {"default": "", "val": "", "description": "", "info": ""}
+    }
+    this.Ini.ReadIni(DeprecatedSettingsMap)
+    if (DeprecatedSettingsMap["VimSD"]["val"] = 1){
+      this.AddToTwoLetterMap("s","d")
+    }
+    if (DeprecatedSettingsMap["VimJK"]["val"] = 1){
+      this.AddToTwoLetterMap("j","k")
+    }
+  }
+  HasValue(haystack, needle){
+    return this.vim.store.HasValue(haystack, needle)
+  }
+  AddToTwoLetterMap(l1, l2){
+    return
+  }
+
 }
