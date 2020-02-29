@@ -19,11 +19,11 @@
     this.section := section
   }
 
-  ReadIni(store=""){
-    if (store = ""){
-        store := this.Vim.Conf
+  ReadIni(SettingsStore=""){
+    if (SettingsStore = ""){
+        SettingsStore := this.Vim.Conf
     }
-    for k, v in store {
+    for k, v in SettingsStore {
       current := v["val"]
       if(current != ""){
         val := this.ReadIniValue(this.Ini, this.Section, k, current)
