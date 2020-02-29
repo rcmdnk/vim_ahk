@@ -232,9 +232,11 @@ class VimAhk{
     this.Ini.ReadIni(DeprecatedSettingsMap)
     if (DeprecatedSettingsMap["VimSD"]["val"] = 1){
       this.AddToTwoLetterMap("s","d")
+      this.Ini.DeleteIniValue("VimSD")
     }
     if (DeprecatedSettingsMap["VimJK"]["val"] = 1){
       this.AddToTwoLetterMap("j","k")
+      this.Ini.DeleteIniValue("VimJK")
     }
   }
   HasValue(haystack, needle){

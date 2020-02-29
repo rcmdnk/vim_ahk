@@ -40,8 +40,15 @@
     return out
   }
 
-  DeleteIniValue(key, file=this.Ini, section_=this.Section){
-    IniDelete, file, section_, key
+  DeleteIniValue(key, file="", section_=""){
+    if (file = "")
+      file := this.Ini
+    if (section_ = "")
+      section_ := this.Section
+    this.RemoveIniValue(file, section_, key)
+  }
+  RemoveIniValue(file, iniSection, key){
+    IniDelete, % file, % iniSection, % key
   }
 
   WriteIni(){
