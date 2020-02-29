@@ -1,6 +1,6 @@
 ﻿#If WinActive("ahk_group " . Vim.GroupName)
 Esc::VimHandleEsc()  ; Just send Esc at converting, long press for normal Esc.
-^[::VimHandleEsc()  ; Go to Normal mode (for vim) with IME off even at converting.
+^[::Vim.State.SetNormal()
 VimHandleEsc(){
   KeyWait, Esc, T0.5
   LongPress := ErrorLevel
