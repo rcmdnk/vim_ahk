@@ -85,6 +85,7 @@ vim_ahk also works on other applications which use these Class/Process name (mos
 |:-----|:----------|:------|
 |VimRestoreIME|If 1, IME status is restored at entering insert mode.|1|
 |VimJJ|If 1, `jj` changes mode to Normal from Insert.|0|
+|VimLongEscNormal|If 1, pushing escape sends escape to the underlying application, while holding escape sets normal mode.|0|
 |VimTwoLetterEsc|A list of character pairs to press together during insert mode to get to normal mode. For example, a value of `jf` means pressing `j` and `f` at the same time will enter normal mode.||
 |VimDisableUnused|Disable level of unused keys in Normal mode (see below for details).|3|
 |VimSetTitleMatchMode|SetTitleMatchMode: 1: Start with, 2: Contain, 3: Exact match|2|
