@@ -40,6 +40,10 @@
     return out
   }
 
+  DeleteIniValue(key, file=this.Ini, section_=this.Section){
+    IniDelete, file, section_, key
+  }
+
   WriteIni(){
     IfNotExist, % this.IniDir
       FileCreateDir, this.IniDir
