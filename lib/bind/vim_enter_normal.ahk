@@ -1,13 +1,31 @@
 ﻿#If WinActive("ahk_group " . Vim.GroupName)
-Esc:: ; Just send Esc at converting, long press for normal Esc.
-^[:: ; Go to Normal mode (for vim) with IME off even at converting.
+Esc::VimHandleEsc()  ; Just send Esc at converting, long press for normal Esc.
+^[::VimHandleEsc()  ; Go to Normal mode (for vim) with IME off even at converting.
+VimHandleEsc(){
   KeyWait, Esc, T0.5
-  if(ErrorLevel){ ; long press to Esc
-    Send,{Esc}
-    Return
+  LongPress := ErrorLevel
+  if(LongPress){
+    VimEscLongPress()
+  }else{
+    VimEsc()
   }
-  Vim.State.SetNormal()
-Return
+}
+VimEscLongPress(){
+  global Vim, VimLongEscNormal
+  if (VimLongEscNormal){
+    Vim.State.SetNormal()
+  }else{
+    Send,{Esc}
+  }
+}
+VimEsc(){
+  global Vim, VimLongEscNormal
+  if (!VimLongEscNormal){
+    Vim.State.SetNormal()
+  }else{
+    Send,{Esc}
+  }
+}
 
 #If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.StrIsInCurrentVimMode( "Insert")) and (Vim.Conf["VimJJ"]["val"] == 1)
 ~j up:: ; jj: go to Normal mode.
