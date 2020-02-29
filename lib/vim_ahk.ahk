@@ -71,6 +71,9 @@ class VimAhk{
     this.AddToConf("VimRestoreIME", 1, 1
       , "Restore IME status at entering insert mode:"
       , "Restore IME status at entering insert mode.")
+    this.AddToConf("VimLongEscNormal", 0, 0
+      , "Long press esc to enter normal mode:"
+      , "Hold esc to enter normal, allowing single press to send esc to window")
     this.AddToConf("VimJJ", 0, 0
       , "JJ enters Normal mode:"
       , "Assign JJ enters Normal mode.")
@@ -95,7 +98,8 @@ class VimAhk{
     this.AddToConf("VimGroup", DefaultGroup, DefaultGroup
       , "Application:"
       , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
-    this.CheckBoxes := ["VimRestoreIME", "VimJJ"]
+
+    this.CheckBoxes := ["VimRestoreIME", "VimJJ", "VimLongEscNormal"]
 
     ; Other ToolTip Information
     this.Info := {}
