@@ -4,23 +4,12 @@ Esc::VimHandleEsc()  ; Just send Esc at converting, long press for normal Esc.
 VimHandleEsc(){
   KeyWait, Esc, T0.5
   LongPress := ErrorLevel
-  if(LongPress){
-    VimEscLongPress()
-  }else{
-    VimEsc()
-  }
-}
-VimEscLongPress(){
   global Vim, VimLongEscNormal
-  if (VimLongEscNormal){
-    Vim.State.SetNormal()
-  }else{
-    Send,{Esc}
+  SetNormal := VimLongEscNormal
+  if (!LongPress){
+    SetNormal := !SetNormal
   }
-}
-VimEsc(){
-  global Vim, VimLongEscNormal
-  if (!VimLongEscNormal){
+  if (SetNormal){
     Vim.State.SetNormal()
   }else{
     Send,{Esc}
