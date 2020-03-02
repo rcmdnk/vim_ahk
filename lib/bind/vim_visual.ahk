@@ -11,8 +11,10 @@ Return
   Send, {Home}+{Down}
 Return
 
-; ydc
 #If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.StrIsInCurrentVimMode( "Visual"))
+v::Vim.State.SetMode("Vim_Normal")
+
+; ydc
 y::
   Clipboard :=
   Send, ^c

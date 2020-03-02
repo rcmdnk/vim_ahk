@@ -132,7 +132,7 @@
   SendUp(){
     ; Only for OneNote of less than windows 10?
     if WinActive("ahk_group VimOneNoteGroup"){
-      Send ^{Up}
+      run, %A_scriptdir%\lib\util\sendUp.exe
     } else {
       Send,{Up}
     }
@@ -141,7 +141,7 @@
   SendDown(){
     ; Only for OneNote of less than windows 10?
     if WinActive("ahk_group VimOneNoteGroup"){
-      Send ^{Down}
+      run, %A_scriptdir%\lib\util\sendDown.exe
     } else {
       Send,{Down}
     }
