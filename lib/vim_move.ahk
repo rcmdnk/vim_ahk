@@ -126,6 +126,7 @@
       this.Vim.State.SetMode("Insert")
     }
     this.Vim.State.SetMode("", 0, 0)
+    send {ctrl up}
   }
 
   Repeat(key=""){
