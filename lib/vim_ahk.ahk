@@ -26,7 +26,6 @@ class VimAhk{
     this.About.Homepage := "https://github.com/rcmdnk/vim_ahk"
     this.Info["VimHomepage"] := this.About.Homepage
   }
-  DeprecatedSettings := ["VimSD", "VimJK"]
 
   __New(setup=true){
     ; Classes
@@ -78,7 +77,7 @@ class VimAhk{
       , "JJ enters Normal mode:"
       , "Assign JJ enters Normal mode.")
     this.AddToConf("VimTwoLetter", "", ""
-      , "Two-letter insert mode <esc> hotkey (sets normal mode)"
+      , "Two-letter to enter Normal mode:"
       , "When these two letters are pressed together in insert mode, enters normal mode.`n`nSet one per line, exactly two letters per line.`nThe two letters must be different.")
     this.AddToConf("VimDisableUnused", 1, 1
       , "Disable unused keys in Normal mode:"
@@ -193,7 +192,6 @@ class VimAhk{
     this.__About()
     this.SetExistValue()
     this.Ini.ReadIni()
-    this.ReadDeprecatedSettings()
     this.VimMenu.SetMenu()
     this.Setup()
   }
@@ -226,28 +224,7 @@ class VimAhk{
     Return DefaultGroup
   }
 
-  ReadDeprecatedSettings(){
-    DeprecatedSettingsMap := {}
-    ; loop % this.DeprecatedSettings.length()
-    for index, setting in this.DeprecatedSettings
-    {
-      DeprecatedSettingsMap[setting] := {"default": "", "val": "", "description": "", "info": ""}
-    }
-    this.Ini.ReadIni(DeprecatedSettingsMap)
-    if (DeprecatedSettingsMap["VimSD"]["val"] = 1){
-      this.AddToTwoLetterMap("s","d")
-      this.Ini.DeleteIniValue("VimSD")
-    }
-    if (DeprecatedSettingsMap["VimJK"]["val"] = 1){
-      this.AddToTwoLetterMap("j","k")
-      this.Ini.DeleteIniValue("VimJK")
-    }
-  }
-  HasValue(haystack, needle){
-    return this.vim.store.HasValue(haystack, needle)
-  }
   AddToTwoLetterMap(l1, l2){
     this.Conf["VimTwoLetter"]["val"] := this.Conf["VimTwoLetter"]["val"] . this.GroupDel . l1 . l2
   }
-
 }

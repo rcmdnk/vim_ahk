@@ -19,36 +19,42 @@
     this.section := section
   }
 
-  ReadIni(SettingsStore=""){
-    if (SettingsStore = ""){
-        SettingsStore := this.Vim.Conf
+  ReadIni(conf=""){
+    if (conf == ""){
+        conf := this.Vim.Conf
     }
-    for k, v in SettingsStore {
+    for k, v in conf {
       current := v["val"]
       if(current != ""){
-        val := this.ReadIniValue(this.Ini, this.Section, k, current)
+        IniRead, val, % this.Ini, % this.Section, % k, % current
       }else{
-        val := this.ReadIniValue(this.Ini, this.Section, k, A_Space)
+        IniRead, val, % this.Ini, % this.Section, % k, % A_Space
       }
       %k% := val
       v["val"] := val
     }
+    this.ReadDeprecatedSettings()
   }
 
-  ReadIniValue(file, iniSection, key, default_=""){
-    IniRead, out, % file, % iniSection, % key, % default_
-    return out
+  ReadDeprecatedSettings(){
+    ; Deprecate VimSD, VimJK, use VimTwoLetter
+    this.DeprecatedTwoLetter("s", "d")
+    this.DeprecatedTwoLetter("j", "k")
   }
 
-  DeleteIniValue(key, file="", section_=""){
-    if (file = "")
-      file := this.Ini
-    if (section_ = "")
-      section_ := this.Section
-    this.RemoveIniValue(file, section_, key)
-  }
-  RemoveIniValue(file, iniSection, key){
-    IniDelete, % file, % iniSection, % key
+  DeprecatedTwoLetter(l1, l2){
+    StringUpper, ul1, l1
+    StringUpper, ul2, l2
+    twoLetter := "Vim" ul1 ul2
+    IniRead, val, % this.Ini, % this.Section, % twoLetter, 0
+    if (val == 1){
+      if (this.Vim.Conf["VimTwoLetter"]["val"] == ""){
+        this.Vim.Conf["VimTwoLetter"]["val"] := l1 l2
+      }else{
+        this.Vim.Conf["VimTwoLetter"]["val"] := this.Vim.Conf["VimTwoLetter"]["val"] this.Vim.GroupDel l1 l2
+      }
+    }
+    IniDelete, % this.Ini, % this.Section, % twoLetter
   }
 
   WriteIni(){
