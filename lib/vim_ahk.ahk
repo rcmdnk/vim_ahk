@@ -134,7 +134,7 @@ class VimAhk{
   SetExistValue(){
     for k, v in this.Conf {
       if(%k% != ""){
-        conf[k]["val"] := %k%
+        this.Conf[k]["val"] := %k%
       }
     }
   }
