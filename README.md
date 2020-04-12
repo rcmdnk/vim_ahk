@@ -49,6 +49,7 @@ The default setting enables vim-mode for the following applications:
 * TexWork
 * TexStudio
 
+(For LibreOffice, especially its spreadsheet calculator `Calc`, there is the [vibreoffice](https://github.com/yamsu/vibreoffice) extension.)
 You can change them from the right click menu of task tray icon (find `VimMenu`-`Settings` in the list),
 or launch the setting window by `Ctrl-Alt-Shift-v`.
 
