@@ -79,6 +79,16 @@ If you add any of above lines to VimGroup, vim_ahk works on OneNote.
 But if you set `ahk_class ApplicationFrameWindow` or `ahk_exe ApplicationFrameHost.exe`,
 vim_ahk also works on other applications which use these Class/Process name (most of applications installed from Microsoft Store).
 
+Another examples:
+
+* Excel:
+
+        ahk_exe EXCEL.EXE
+
+* LibreOffice:
+
+        ahk_exe soffice.bin
+
 ## Options
 
 |Option|Description|Default|
