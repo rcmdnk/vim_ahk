@@ -52,10 +52,18 @@ The default setting enables vim-mode for the following applications:
 You can change them from the right click menu of task tray icon (find `VimMenu`-`Settings` in the list),
 or launch the setting window by `Ctrl-Alt-Shift-v`.
 
-If you want to change applications directly in the script, add `GroupAdd VimGroup` lines at the top of vim.ahk
-(Window title/class can be checked by Window spy of AutoHotkey), like:
+If you want to change applications directly in the script, add `VimGroup` variable before `Vim := new VimAhk()` in vim.ahk (Window title/class can be checked by Window spy of AutoHotkey),
+or write before including vim.ahk
 
-    GroupAdd VimGroup, ahk_exe chrome.exe ; Google Chrome
+Example line:
+
+    VimGroup := "ahk_exe chrome.exe,ahk_exe firefox.exe"
+
+Multiple applications can be written by comma separated.
+
+Note: This will overwrite the default applications. If you want to **add** these applications to the default applications, add following applications after your applications:
+
+    "ahk_exe notepad.exe,ahk_exe explorer.exe,ahk_exe wordpad.exe,ahk_exe TeraPad.exe,作成,Write:,ahk_exe POWERPNT.exe,ahk_exe WINWORD.exe,ahk_exe Evernote.exe,ahk_exe Code.exe,ahk_exe onenote.exe,OneNote,ahk_exe texworks.exe,ahk_exe texstudio.exe"
 
 Or you can use GUI option setting described below.
 
@@ -63,7 +71,6 @@ The default setting of `VimSetTitleMatchMode` is 2, which makes matching methods
 
 If you set `OneNote`, all windows with a title containing `OneNote` (e.g. `XXX's OneNote`) will be included.
 If you set `VimSetTitleMatchMode` as 3, only exact title of `OneNote` will be included.
-
 
 Note: It may not work on OneNote. OneNote may has window name like **User's Notebook - OneNote**, instead of **OneNote**.
 
@@ -79,17 +86,13 @@ If you add any of above lines to VimGroup, vim_ahk works on OneNote.
 But if you set `ahk_class ApplicationFrameWindow` or `ahk_exe ApplicationFrameHost.exe`,
 vim_ahk also works on other applications which use these Class/Process name (most of applications installed from Microsoft Store).
 
-Another examples:
+Examples of applications:
+* Chrome: `ahk_exe chrome.exe`
+* Firefox: `ahk_exe firefox.exe`
+* Excel: `ahk_exe EXCEL.EXE`
+* LibreOffice: `ahk_exe soffice.bin` (for all LibreOffice applications)
 
-* Excel:
-
-        ahk_exe EXCEL.EXE
-
-* LibreOffice:
-
-        ahk_exe soffice.bin
-
-## Options
+## Other Options
 
 |Option|Description|Default|
 |:-----|:----------|:------|
@@ -103,8 +106,12 @@ Another examples:
 |VimIconCheckInterval|Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set.|1000|
 |VimVerbose|Verbose level (see below for details).|0|
 
+If you want to change them directly in the script, add these variable before `Vim := new VimAhk()` in vim.ahk or write before including vim.ahk
+
+Or you can use GUI option setting described below.
 
 VimIconCheckInterval:
+
 If it is set non-zero, the tray icon is immediately changed when the mode is changed.
 This interval defines the interval when the Window is changed (e.g. vim_ahk enabled window to disabled window).
 
