@@ -7,19 +7,11 @@ VimHandleEsc(){
   KeyWait, Esc, T0.5
   LongPress := ErrorLevel
   global Vim, VimLongEscNormal
-  SetNormal := VimLongEscNormal
-  if (VimLongEscNormal) {
-    if (LongPress){
+  SetNormal := (VimLongEscNormal && LongPress) || (!VimLongEscNormal && !LongPress)
+  if (SetNormal) {
       Vim.State.SetNormal()
-    } else {
-      Send,{Esc}
-    }
   } else {
-    if (LongPress){
       Send,{Esc}
-    }else{
-      Vim.State.SetNormal()
-    }
   }
   if (LongPress){
     ; Have to ensure the key has been released, otherwise this will get
