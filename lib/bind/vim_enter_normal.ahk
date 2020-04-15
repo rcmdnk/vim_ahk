@@ -6,10 +6,6 @@ VimHandleEsc(){
   ; within the time limit, sets errorlevel to 1.
   KeyWait, Esc, T0.5
   LongPress := ErrorLevel
-  if (LongPress){
-    ; Have to ensure the key has been released.
-    KeyWait, Esc
-  }
   global Vim, VimLongEscNormal
   SetNormal := VimLongEscNormal
   if (VimLongEscNormal) {
@@ -24,6 +20,11 @@ VimHandleEsc(){
     }else{
       Vim.State.SetNormal()
     }
+  }
+  if (LongPress){
+    ; Have to ensure the key has been released, otherwise this will get
+    ; triggered again.
+    KeyWait, Esc
   }
 }
 
