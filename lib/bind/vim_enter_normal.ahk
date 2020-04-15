@@ -1,18 +1,29 @@
 ﻿#If WinActive("ahk_group " . Vim.GroupName)
-Esc::VimHandleEsc()  ; Just send Esc at converting, long press for normal Esc.
+Esc::VimHandleEsc()
 ^[::Vim.State.SetNormal()
 VimHandleEsc(){
+  ; The keywait waits for esc to be released. If it doesn't detect a release
+  ; within the time limit, sets errorlevel to 1.
   KeyWait, Esc, T0.5
   LongPress := ErrorLevel
+  if (LongPress){
+    ; Have to ensure the key has been released.
+    KeyWait, Esc
+  }
   global Vim, VimLongEscNormal
   SetNormal := VimLongEscNormal
-  if (!LongPress){
-    SetNormal := !SetNormal
-  }
-  if (SetNormal){
-    Vim.State.SetNormal()
-  }else{
-    Send,{Esc}
+  if (VimLongEscNormal) {
+    if (LongPress){
+      Vim.State.SetNormal()
+    } else {
+      Send,{Esc}
+    }
+  } else {
+    if (LongPress){
+      Send,{Esc}
+    }else{
+      Vim.State.SetNormal()
+    }
   }
 }
 
