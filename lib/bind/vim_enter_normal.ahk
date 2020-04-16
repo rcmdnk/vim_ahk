@@ -7,8 +7,9 @@ VimHandleEsc(){
   KeyWait, Esc, T0.5
   LongPress := ErrorLevel
   global Vim, VimLongEscNormal
-  ; Both or neither option
-  SetNormal := (VimLongEscNormal && LongPress) || !(VimLongEscNormal || LongPress)
+  both := VimLongEscNormal && LongPress
+  neither := !(VimLongEscNormal || LongPress)
+  SetNormal :=  both or neither
   if (SetNormal) {
       Vim.State.SetNormal()
   } else {
