@@ -82,6 +82,27 @@
     this.SetMode("Vim_Normal")
   }
 
+  HandleEsc(){
+    ; The keywait waits for esc to be released. If it doesn't detect a release
+    ; within the time limit, sets errorlevel to 1.
+    KeyWait, Esc, T0.5
+    LongPress := ErrorLevel
+    global Vim, VimLongEscNormal
+    both := VimLongEscNormal && LongPress
+    neither := !(VimLongEscNormal || LongPress)
+    SetNormal :=  both or neither
+    if (SetNormal) {
+        Vim.State.SetNormal()
+    } else {
+        Send,{Esc}
+    }
+    if (LongPress){
+      ; Have to ensure the key has been released, otherwise this will get
+      ; triggered again.
+      KeyWait, Esc
+    }
+  }
+
   IsCurrentVimMode(mode){
     this.CheckValidMode(mode)
     Return (mode == this.Mode)
