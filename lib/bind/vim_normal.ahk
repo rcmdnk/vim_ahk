@@ -4,12 +4,7 @@ u::Send,^z
 ^r::Send,^y
 
 ; Combine lines
-+j::
-  if WinActive("ahk_group VimOneNoteGroup"){
-    Send, ^{Down}{Home}{BS}{Space}{Left}
-  }else{
-    Send, {Down}{Home}{BS}{Space}{Left}
-  }
++j:: Send, {End}{Space}{Delete}
 
 ; Change case
 ~::
