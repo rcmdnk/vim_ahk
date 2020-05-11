@@ -80,9 +80,17 @@
 
     ; 1 character
     if(key == "j"){
-      this.SendDown()
+      if WinActive("ahk_group VimOneNoteGroup"){
+        Send ^{Down}
+      } else {
+        Send,{Down}
+      }
     }else if(key="k"){
-      this.SendUp()
+      if WinActive("ahk_group VimOneNoteGroup"){
+        Send ^{Up}
+      } else {
+        Send,Up}
+      }
     ; Page Up/Down
     }else if(key == "^u"){
       Send, {Up 10}
@@ -128,23 +136,4 @@
       this.Vim.Move.Move(key)
     }
   }
-
-  SendUp(){
-    ; Only for OneNote of less than windows 10?
-    if WinActive("ahk_group VimOneNoteGroup"){
-      run, %A_scriptdir%\lib\util\sendUp.exe
-    } else {
-      Send,{Up}
-    }
-  }
-
-  SendDown(){
-    ; Only for OneNote of less than windows 10?
-    if WinActive("ahk_group VimOneNoteGroup"){
-      run, %A_scriptdir%\lib\util\sendDown.exe
-    } else {
-      Send,{Down}
-    }
-  }
-
 }
