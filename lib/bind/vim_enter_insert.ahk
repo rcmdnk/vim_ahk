@@ -22,6 +22,6 @@ o::
 Return
 
 +o::
-  Send, {Up}{End}{Enter}
+  Send, {Home}{Enter}{Left}
   Vim.State.SetMode("Insert")
 Return
