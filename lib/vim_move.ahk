@@ -89,7 +89,7 @@
       if WinActive("ahk_group VimOneNoteGroup"){
         Send ^{Up}
       } else {
-        Send,Up}
+        Send,{Up}
       }
     ; Page Up/Down
     }else if(key == "^u"){
