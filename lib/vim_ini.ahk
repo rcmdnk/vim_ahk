@@ -59,7 +59,7 @@
 
   WriteIni(){
     IfNotExist, % this.IniDir
-      FileCreateDir, this.IniDir
+      FileCreateDir, % this.IniDir
 
     for k, v in this.Vim.Conf {
       IniWrite, % v["val"], % this.Ini, % this.Section, % k
