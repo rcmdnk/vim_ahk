@@ -1,14 +1,53 @@
 ﻿class VimMove{
   __New(vim){
     this.Vim := vim
+    this.shift := 0
+  }
+
+  MoveInitialize(key=""){
+    this.shift := 0
+    if(this.Vim.State.StrIsInCurrentVimMode("Visual") or this.Vim.State.StrIsInCurrentVimMode("ydc")){
+      this.shift := 1
+      Send, {Shift Down}
+    }
+
+    if(this.Vim.State.Mode == "Vim_VisualLineFirst") and (key == "k" or key == "^u" or key == "^b" or key == "g"){
+      Send, {Shift Up}{End}
+      this.Home()
+      Send, {Shift Down}
+      this.Up()
+      this.vim.state.setmode("Vim_VisualLine")
+    }
+
+    if(this.Vim.State.Mode == "Vim_VisualLineFirst") and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
+      this.vim.state.setmode("Vim_VisualLine")
+    }
+
+    if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
+      this.Vim.State.LineCopy := 1
+      Send,{Shift Up}
+      this.Home()
+      this.Down()
+      Send, {Shift Down}
+      this.Up()
+    }
+    if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
+      this.Vim.State.LineCopy := 1
+      Send,{Shift Up}
+      this.Home()
+      Send, {Shift Down}
+      this.Down()
+    }
   }
 
   MoveFinalize(){
+    ydc_y := false
     if(this.Vim.State.Mode == "Vim_ydc_y"){
       Clipboard :=
       Send, ^c
       ClipWait, 1
       this.Vim.State.SetMode("Vim_Normal")
+      ydc_y := true
     }else if(this.Vim.State.Mode == "Vim_ydc_d"){
       Clipboard :=
       Send, ^x
@@ -22,6 +61,9 @@
     }
     this.Vim.State.SetMode("", 0, 0)
     Send,{Shift Up}
+    if(ydc_y){
+      Send, {Left}{Right}
+    }
     ; Sometimes, when using `c`, the control key would be stuck down afterwards.
     ; This forces it to be up again afterwards.
     send {Ctrl Up}
@@ -55,12 +97,10 @@
   }
 
   Move(key="", repeat=false){
-    shift = 0
-    if(this.Vim.State.StrIsInCurrentVimMode("Visual") or this.Vim.State.StrIsInCurrentVimMode("ydc")){
-      shift := 1
-
-      Send, {Shift Down}
+    if(!repeat){
+      this.MoveInitialize(key)
     }
+
     ; Left/Right
     if(not this.Vim.State.StrIsInCurrentVimMode("Line")){
       ; For some cases, need '+' directly to continue to select
@@ -76,13 +116,13 @@
       }else if(key == "0"){
         this.Home()
       }else if(key == "$"){
-        if(shift == 1){
+        if(this.shift == 1){
           Send, +{End}
         }else{
           Send, {End}
         }
       }else if(key == "^"){
-        if(shift == 1){
+        if(this.shift == 1){
           if WinActive("ahk_group VimCaretMove"){
             this.Home()
             Send, ^{Right}
@@ -101,44 +141,20 @@
         }
       ; Words
       }else if(key == "w"){
-        if(shift == 1){
+        if(this.shift == 1){
           Send, +^{Right}
         }else{
           Send, ^{Right}
         }
       }else if(key == "b"){
-        if(shift == 1){
+        if(this.shift == 1){
           Send, +^{Left}
         }else{
           Send, ^{Left}
         }
       }
     }
-    ; Up/Down
-    if(this.Vim.State.Mode == "Vim_VisualLineFirst") and (key == "k" or key == "^u" or key == "^b" or key == "g"){
-      Send, {Shift Up}{End}
-      this.Home()
-      Send, {Shift Down}
-      this.Up()
-      this.vim.state.setmode("vim_visualline")
-    }
-    if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
-      this.Vim.State.LineCopy := 1
-      Send,{Shift Up}
-      this.Home()
-      this.Down()
-      Send, {Shift Down}
-      this.Up()
-    }
-    if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
-      this.Vim.State.LineCopy := 1
-      Send,{Shift Up}
-      this.Home()
-      Send, {Shift Down}
-      this.Down()
-    }
-
-    ; 1 character
+    ; Up/Down 1 character
     if(key == "j"){
       this.Down()
     }else if(key="k"){
@@ -165,6 +181,7 @@
   }
 
   Repeat(key=""){
+    this.MoveInitialize(key)
     if(this.Vim.State.n == 0){
       this.Vim.State.n := 1
     }
