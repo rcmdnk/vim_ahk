@@ -1,4 +1,5 @@
 ﻿; Auto-execute section
+VimScriptPath := A_LineFile
 Vim := new VimAhk()
 Return
 
