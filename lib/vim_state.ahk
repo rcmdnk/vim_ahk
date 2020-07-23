@@ -113,13 +113,13 @@
     Return (inStr(this.Mode, mode))
   }
 
-  CheckValidMode(Mode, FullMatch=true){
+  CheckValidMode(mode, fullMatch=true){
     if(this.CheckModeValue == false){
       Return
     }
     try{
-      InOrBlank:= (not FullMatch) ? "in " : ""
-      if not this.HasValue(this.PossibleVimModes, Mode, FullMatch){
+      InOrBlank:= (not fullMatch) ? "in " : ""
+      if not this.HasValue(this.PossibleVimModes, mode, fullMatch){
         throw Exception("Invalid mode specified",-2,
         (Join
   "'" Mode "' is not " InOrBlank " a valid mode as defined by the VimPossibleVimModes
@@ -133,14 +133,14 @@
     }
   }
 
-  HasValue(haystack, needle, full_match=true){
+  HasValue(haystack, needle, fullMatch=true){
     if(!isObject(haystack)){
       return false
     }else if(haystack.Length() == 0){
       return false
     }
     for index, value in haystack{
-      if full_match{
+      if fullMatch{
         if (value == needle){
           return true
         }
