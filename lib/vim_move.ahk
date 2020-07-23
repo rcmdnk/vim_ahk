@@ -118,20 +118,24 @@
     if(this.Vim.State.Mode == "Vim_VisualLineFirst") and (key == "k" or key == "^u" or key == "^b" or key == "g"){
       Send, {Shift Up}{End}
       this.Home()
-      Send, {Shift Down}{Up}
+      Send, {Shift Down}
+      this.Up()
       this.vim.state.setmode("vim_visualline")
     }
     if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
       this.Vim.State.LineCopy := 1
       Send,{Shift Up}
       this.Home()
-      Send, {Down}{Shift Down}{Up}
+      this.Down()
+      Send, {Shift Down}
+      this.Up()
     }
     if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
       this.Vim.State.LineCopy := 1
       Send,{Shift Up}
       this.Home()
-      Send, {Shift Down}{Down}
+      Send, {Shift Down}
+      this.Down()
     }
 
     ; 1 character
