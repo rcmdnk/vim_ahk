@@ -55,7 +55,7 @@ Return
 #If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_ydc_d")
 d::
   Vim.State.LineCopy := 1
-  if WinActive("ahk_group DoubleHome"){
+  if WinActive("ahk_group VimDoubleHomeGroup"){
     Send, {Home}
   }
   Send, {Home}+{End}
@@ -69,7 +69,7 @@ Return
 #If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_ydc_c")
 c::
   Vim.State.LineCopy := 1
-  if WinActive("ahk_group DoubleHome"){
+  if WinActive("ahk_group VimDoubleHomeGroup"){
     Send, {Home}
   }
   Send, {Home}+{End}
