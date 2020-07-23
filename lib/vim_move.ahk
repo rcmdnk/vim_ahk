@@ -27,6 +27,13 @@
     send {Ctrl Up}
   }
 
+  Home(){
+    if WinActive("ahk_group VimDoubleHomeGroup"){
+      Send, {Home}
+    }
+    Send, {Home}
+  }
+
   Up(n=1){
     Loop, %n% {
       if WinActive("ahk_group VimCtrlUpDownGroup"){
@@ -67,7 +74,7 @@
         Send, {Right}
       ; Home/End
       }else if(key == "0"){
-        Send, {Home}
+        this.Home()
       }else if(key == "$"){
         if(shift == 1){
           Send, +{End}
@@ -77,11 +84,11 @@
       }else if(key == "^"){
         if(shift == 1){
           if WinActive("ahk_group VimCaretMove"){
-            Send, {Home}
+            this.Home()
             Send, ^{Right}
             Send, ^{Left}
           }else{
-            Send, {Home}
+            this.Home()
           }
         }else{
           if WinActive("ahk_group VimCaretMove"){
@@ -109,16 +116,22 @@
     }
     ; Up/Down
     if(this.Vim.State.Mode == "Vim_VisualLineFirst") and (key == "k" or key == "^u" or key == "^b" or key == "g"){
-      Send, {Shift Up}{End}{Home}{Shift Down}{Up}
+      Send, {Shift Up}{End}
+      this.Home()
+      Send, {Shift Down}{Up}
       this.vim.state.setmode("vim_visualline")
     }
     if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
       this.Vim.State.LineCopy := 1
-      Send,{Shift Up}{Home}{Down}{Shift Down}{Up}
+      Send,{Shift Up}
+      this.Home()
+      Send, {Down}{Shift Down}{Up}
     }
     if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
       this.Vim.State.LineCopy := 1
-      Send,{Shift Up}{Home}{Shift Down}{Down}
+      Send,{Shift Up}
+      this.Home()
+      Send, {Shift Down}{Down}
     }
 
     ; 1 character
@@ -159,10 +172,13 @@
 
   YDCMove(){
     this.Vim.State.LineCopy := 1
-    if WinActive("ahk_group VimDoubleHomeGroup"){
-      Send, {Home}
+    this.Home()
+    Send, {Shift Down}
+    if(this.Vim.State.n == 0){
+      this.Vim.State.n := 1
     }
-    Send, {Home}+{End}
+    this.Down(this.Vim.State.n - 1)
+    Send, {End}
     if not WinActive("ahk_group VimLBSelectGroup"){
       this.Move("l")
     }else{
