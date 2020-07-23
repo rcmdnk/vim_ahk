@@ -39,46 +39,15 @@ Return
 
 #If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_ydc_y")
 y::
-  Vim.State.LineCopy := 1
-  if WinActive("ahk_group VimDoubleHomeGroup"){
-    Send, {Home}
-  }
-  Send, {Home}+{End}
-  if not WinActive("ahk_group VimLBSelectGroup"){
-    Vim.Move.Move("l")
-  }else{
-    Vim.Move.Move("")
-  }
+  Vim.Move.YDCMove()
   Send, {Left}{Home}
 Return
 
 #If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_ydc_d")
-d::
-  Vim.State.LineCopy := 1
-  if WinActive("ahk_group VimDoubleHomeGroup"){
-    Send, {Home}
-  }
-  Send, {Home}+{End}
-  if not WinActive("ahk_group VimLBSelectGroup"){
-    Vim.Move.Move("l")
-  }else{
-    Vim.Move.Move("")
-  }
-Return
+d::Vim.Move.YDCMove()
 
 #If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_ydc_c")
-c::
-  Vim.State.LineCopy := 1
-  if WinActive("ahk_group VimDoubleHomeGroup"){
-    Send, {Home}
-  }
-  Send, {Home}+{End}
-  if not WinActive("ahk_group VimLBSelectGroup"){
-    Vim.Move.Move("l")
-  }else{
-    Vim.Move.Move("")
-  }
-Return
+c::Vim.Move.YDCMove()
 
 #If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
 x::Send, {Delete}

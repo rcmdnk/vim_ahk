@@ -156,4 +156,17 @@
     }
     this.MoveFinalize()
   }
+
+  YDCMove(){
+    this.Vim.State.LineCopy := 1
+    if WinActive("ahk_group VimDoubleHomeGroup"){
+      Send, {Home}
+    }
+    Send, {Home}+{End}
+    if not WinActive("ahk_group VimLBSelectGroup"){
+      this.Move("l")
+    }else{
+      this.Move("")
+    }
+  }
 }
