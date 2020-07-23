@@ -133,7 +133,7 @@
     }
   }
 
-  HasValue(haystack, needle, full_match = true){
+  HasValue(haystack, needle, full_match=true){
     if(!isObject(haystack)){
       return false
     }else if(haystack.Length() == 0){

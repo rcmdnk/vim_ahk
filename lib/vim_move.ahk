@@ -3,12 +3,55 @@
     this.Vim := vim
   }
 
-  Move(key=""){
+  MoveFinalize(){
+    if(this.Vim.State.Mode == "Vim_ydc_y"){
+      Clipboard :=
+      Send, ^c
+      ClipWait, 1
+      this.Vim.State.SetMode("Vim_Normal")
+    }else if(this.Vim.State.Mode == "Vim_ydc_d"){
+      Clipboard :=
+      Send, ^x
+      ClipWait, 1
+      this.Vim.State.SetMode("Vim_Normal")
+    }else if(this.Vim.State.Mode == "Vim_ydc_c"){
+      Clipboard :=
+      Send, ^x
+      ClipWait, 1
+      this.Vim.State.SetMode("Insert")
+    }
+    this.Vim.State.SetMode("", 0, 0)
+    Send,{Shift Up}
+    ; Sometimes, when using `c`, the control key would be stuck down afterwards.
+    ; This forces it to be up again afterwards.
+    send {Ctrl Up}
+  }
+
+  Up(n=1){
+    Loop, %n% {
+      if WinActive("ahk_group VimCtrlUpDownGroup"){
+        Send ^{Up}
+      } else {
+        Send,{Up}
+      }
+    }
+  }
+
+  Down(n=1){
+    Loop, %n% {
+      if WinActive("ahk_group VimCtrlUpDownGroup"){
+        Send ^{Down}
+      } else {
+        Send,{Down}
+      }
+    }
+  }
+
+  Move(key="", repeat=false){
     shift = 0
     if(this.Vim.State.StrIsInCurrentVimMode("Visual") or this.Vim.State.StrIsInCurrentVimMode("ydc")){
       shift := 1
-    }
-    if(shift == 1){
+
       Send, {Shift Down}
     }
     ; Left/Right
@@ -67,7 +110,7 @@
     ; Up/Down
     if(this.Vim.State.Mode == "Vim_VisualLineFirst") and (key == "k" or key == "^u" or key == "^b" or key == "g"){
       Send, {Shift Up}{End}{Home}{Shift Down}{Up}
-      this.Vim.State.SetMode("Vim_VisualLine")
+      this.vim.state.setmode("vim_visualline")
     }
     if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
       this.Vim.State.LineCopy := 1
@@ -80,22 +123,15 @@
 
     ; 1 character
     if(key == "j"){
-      if WinActive("ahk_group VimOneNoteGroup"){
-        Send ^{Down}
-      } else {
-        Send,{Down}
-      }
+      this.Down()
     }else if(key="k"){
-      if WinActive("ahk_group VimOneNoteGroup"){
-        Send ^{Up}
-      } else {
-        Send,{Up}
-      }
+      this.Up()
     ; Page Up/Down
+    n := 10
     }else if(key == "^u"){
-      Send, {Up 10}
+      this.Up(10)
     }else if(key == "^d"){
-      Send, {Down 10}
+      this.Down(10)
     }else if(key == "^b"){
       Send, {PgUp}
     }else if(key == "^f"){
@@ -103,29 +139,12 @@
     }else if(key == "g"){
       Send, ^{Home}
     }else if(key == "+g"){
-      ;Send, ^{End}{Home}
       Send, ^{End}
     }
-    Send,{Shift Up}
 
-    if(this.Vim.State.Mode == "Vim_ydc_y"){
-      Clipboard :=
-      Send, ^c
-      ClipWait, 1
-      this.Vim.State.SetMode("Vim_Normal")
-    }else if(this.Vim.State.Mode == "Vim_ydc_d"){
-      Clipboard :=
-      Send, ^x
-      ClipWait, 1
-      this.Vim.State.SetMode("Vim_Normal")
-    }else if(this.Vim.State.Mode == "Vim_ydc_c"){
-      Clipboard :=
-      Send, ^x
-      ClipWait, 1
-      this.Vim.State.SetMode("Insert")
+    if(!repeat){
+      this.MoveFinalize()
     }
-    this.Vim.State.SetMode("", 0, 0)
-    send {ctrl up}
   }
 
   Repeat(key=""){
@@ -133,7 +152,8 @@
       this.Vim.State.n := 1
     }
     Loop, % this.Vim.State.n {
-      this.Vim.Move.Move(key)
+      this.Move(key, true)
     }
+    this.MoveFinalize()
   }
 }

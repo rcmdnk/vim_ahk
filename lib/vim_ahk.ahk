@@ -51,8 +51,8 @@ class VimAhk{
     GroupAdd, VimLBSelectGroup, ahk_exe WINWORD.exe  ; Word
     GroupAdd, VimLBSelectGroup, ahk_exe wordpad.exe  ; WordPad
 
-    ; OneNote before Windows 10
-    GroupAdd, VimOneNoteGroup, ahk_exe onenote.exe ; OneNote Desktop
+    ; Need Ctrl for Up/Down
+    GroupAdd, VimCtrlUpDownGroup, ahk_exe onenote.exe ; OneNote Desktop, before Windows 10
 
     ; Need Home twice
     GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
