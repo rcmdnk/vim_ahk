@@ -41,6 +41,7 @@
   }
 
   MoveFinalize(){
+    Send,{Shift Up}
     ydc_y := false
     if(this.Vim.State.Mode == "Vim_ydc_y"){
       Clipboard :=
@@ -60,7 +61,6 @@
       this.Vim.State.SetMode("Insert")
     }
     this.Vim.State.SetMode("", 0, 0)
-    Send,{Shift Up}
     if(ydc_y){
       Send, {Left}{Right}
     }
