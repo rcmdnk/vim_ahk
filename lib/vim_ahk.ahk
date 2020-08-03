@@ -19,8 +19,8 @@
 
 class VimAhk{
   __About(){
-    this.About.Version := "v0.7.5"
-    this.About.Date := "23/Jul/2020"
+    this.About.Version := "v0.7.6"
+    this.About.Date := "03/Aug/2020"
     this.About.Author := "rcmdnk"
     this.About.Description := "Vim emulation with AutoHotkey, everywhere in Windows."
     this.About.Homepage := "https://github.com/rcmdnk/vim_ahk"
@@ -46,10 +46,13 @@ class VimAhk{
 
     DefaultGroup := this.SetDefaultActiveWindows()
 
-    ; Following application select the line break at Shift + End.
+    ; Following applications select the line break at Shift + End.
     GroupAdd, VimLBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
     GroupAdd, VimLBSelectGroup, ahk_exe WINWORD.exe  ; Word
     GroupAdd, VimLBSelectGroup, ahk_exe wordpad.exe  ; WordPad
+
+    ; Following applications do not copy the line break
+    GroupAdd, VimNoLBCopyGroup, ahk_exe Evernote.exe ; Evernote
 
     ; Need Ctrl for Up/Down
     GroupAdd, VimCtrlUpDownGroup, ahk_exe onenote.exe ; OneNote Desktop, before Windows 10

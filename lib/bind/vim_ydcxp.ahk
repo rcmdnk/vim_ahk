@@ -83,7 +83,11 @@ p::
   ;  break
   ;}
   if(Vim.State.LineCopy == 1){
-    Send, {End}{Enter}^v{BS}{Home}
+    if WinActive("ahk_group VimNoLBCopyGroup"){
+      Send, {End}{Enter}^v{Home}
+    }else{
+      Send, {End}{Enter}^v{BS}{Home}
+    }
   }else{
     Send, {Right}
     Send, ^v
