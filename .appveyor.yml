@@ -4,16 +4,18 @@ artifacts:
   - path: ./build/vim_ahk.exe
     name: Main Executable
 
-init:
-  # Initialise remote desktop stuff
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#init:
+#  # Initialise remote desktop stuff
+#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 install:
-  # Chocolaty install autohotkey and vim for testing
+  # Chocolaty install autohotkey
   - cinst autohotkey.install
   - cmd: refreshenv
 
 build_script:
+  #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  - cmd: mkdir "C:\Users\appveyor\AppData\Local\Temp\~Ahk2Exe~build"
   - cmd: ./build/build.bat
 
 deploy:
