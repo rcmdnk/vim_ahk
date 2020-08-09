@@ -1,0 +1,58 @@
+on: [push, pull_request]
+
+name: Build test
+
+jobs:
+  build:
+    name: Build test
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install AutoHotkey with Chocolatey
+        uses: crazy-max/ghaction-chocolatey@v1
+        with:
+          args: install autohotkey
+          # fix for [Unable to copy error by command line · Issue #68 · AutoHotkey/Ahk2Exe](https://github.com/AutoHotkey/Ahk2Exe/issues/68)
+      - name: make tmp folder
+        shell: cmd
+        run: mkdir "C:\Users\appveyor\AppData\Local\Temp\~Ahk2Exe~build"
+      - name: build
+        shell: cmd
+        run: ./build/build.bat
+      - name: get tag
+        if: startsWith( github.ref, 'refs/tags/v' )
+        id: get_tag
+        shell: bash
+        run: echo ::set-output name=tag::${GITHUB_REF##*/}
+      - name: zip
+        if: startsWith( github.ref, 'refs/tags/v' )
+        working-directory: ./build
+        #shell: bash
+        #run: zip -r vim_ahk-${{steps.get_tag.outputs.tag}}.zip vim_ahk.app
+        #run: powershell -c Compress-Archive -Path  vim_ahk.app  -DestinationPath vim_ahk-${{steps.get_tag.outputs.tag}}.zip
+        shell: pwsh
+        run:
+          Compress-Archive -Path "./vim_ahk.exe"  -DestinationPath vim_ahk-${{steps.get_tag.outputs.tag}}.zip
+      - name: Create Release
+        if: startsWith( github.ref, 'refs/tags/v' )
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tag_name: ${{github.ref}}
+          release_name: Release ${{github.ref}}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        if: startsWith( github.ref, 'refs/tags/v' )
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{steps.create_release.outputs.upload_url}}
+          asset_path: ./build/vim_ahk-${{steps.get_tag.outputs.tag}}.zip
+          asset_name: vim_ahk-${{steps.get_tag.outputs.tag}}.zip
+          asset_content_type: application/zip
