@@ -14,9 +14,6 @@ jobs:
         with:
           args: install autohotkey
           # fix for [Unable to copy error by command line · Issue #68 · AutoHotkey/Ahk2Exe](https://github.com/AutoHotkey/Ahk2Exe/issues/68)
-      - name: make tmp folder
-        shell: cmd
-        run: mkdir "C:\Users\appveyor\AppData\Local\Temp\~Ahk2Exe~build"
       - name: build
         shell: cmd
         run: ./build/build.bat

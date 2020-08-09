@@ -18,4 +18,5 @@ if errorlevel 1 (
     echo   .
     exit /b %errorlevel%
 )
+mkdir "%TEMP%\~Ahk2Exe~build"
 "%AHKPath%\compiler\ahk2exe.exe" /in vim.ahk /out build/vim_ahk.exe
