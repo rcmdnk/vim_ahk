@@ -18,6 +18,4 @@ if errorlevel 1 (
     echo   .
     exit /b %errorlevel%
 )
-SET AHK_TEMP="%TEMP%\~Ahk2Exe~build"
-if not exist "%AHK_TEMP%" mkdir "%AHK_TEMP%"
-"%AHKPath%\compiler\ahk2exe.exe" /in vim.ahk /out build/vim_ahk.exe
+"%AHKPath%\compiler\ahk2exe.exe" /in vim.ahk /out build\vim_ahk.exe /compress 0
