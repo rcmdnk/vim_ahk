@@ -215,7 +215,7 @@ class VimAhk{
                   , "ahk_exe WINWORD.exe"   ; Word
                   , "ahk_exe wordpad.exe"]  ; WordPad
 
-    DefaultGroup := ""
+    DefaultGroup := VimGroup
     For i, v in DefaultList
     {
       if(DefaultGroup == ""){
