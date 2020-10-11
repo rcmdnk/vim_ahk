@@ -27,7 +27,7 @@ class VimAhk{
     this.Info["VimHomepage"] := this.About.Homepage
   }
 
-  __New(vimGroup=""){
+  __New(setup=true){
     ; Classes
     this.About := new VimAbout(this)
     this.Check := new VimCheck(this)
@@ -44,7 +44,7 @@ class VimAhk{
     this.GroupN := 0
     this.GroupName := "VimGroup" GroupN
 
-    DefaultGroup := this.SetDefaultActiveWindows(vimGroup)
+    DefaultGroup := this.SetDefaultActiveWindows()
 
     ; Following applications select the line break at Shift + End.
     GroupAdd, VimLBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
@@ -199,7 +199,7 @@ class VimAhk{
     this.Setup()
   }
 
-  SetDefaultActiveWindows(vimGroup){
+  SetDefaultActiveWindows(){
     DefaultList := ["ahk_exe Evernote.exe"  ; Evernote
                   , "ahk_exe explorer.exe"  ; Explorer
                   , "ahk_exe notepad.exe"   ; NotePad
@@ -215,7 +215,7 @@ class VimAhk{
                   , "ahk_exe WINWORD.exe"   ; Word
                   , "ahk_exe wordpad.exe"]  ; WordPad
 
-    DefaultGroup := vimGroup
+    DefaultGroup := VimGroup
     For i, v in DefaultList
     {
       if(DefaultGroup == ""){
