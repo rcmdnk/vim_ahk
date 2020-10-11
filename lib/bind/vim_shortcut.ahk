@@ -1,7 +1,7 @@
 ﻿; Launch Settings
 #If
 ^!+v::
-  VimSetting.Menu()
+  Vim.Setting.ShowGui()
 Return
 
 ; Check Mode
