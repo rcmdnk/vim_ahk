@@ -7,5 +7,5 @@ Return
 ; Check Mode
 #If WinActive("ahk_group " . Vim.GroupName)
 ^!+c::
-  Vim.State.CheckMode(Vim.Verbose.Length(), Vim.State.Mode)
+  Vim.State.CheckMode(4, Vim.State.Mode)
 Return
