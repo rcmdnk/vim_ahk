@@ -200,7 +200,6 @@ class VimAhk{
   }
 
   SetDefaultActiveWindows(){
-    global VimGroup
     DefaultList := ["ahk_exe Evernote.exe"  ; Evernote
                   , "ahk_exe explorer.exe"  ; Explorer
                   , "ahk_exe notepad.exe"   ; NotePad
