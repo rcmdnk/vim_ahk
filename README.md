@@ -49,10 +49,13 @@ The default setting enables vim-mode for the following applications:
 * TexWork
 * TexStudio
 
-You can change them from the right click menu of task tray icon (find `VimMenu`-`Settings` in the list),
+You can change them from the right click menu of task tray icon
+(find `VimMenu`-`Settings` in the list),
 or launch the setting window by `Ctrl-Alt-Shift-v`.
 
-If you want to change applications directly in the script, add `VimGroup` variable before `Vim := new VimAhk()` in vim.ahk (Window title/class can be checked by Window spy of AutoHotkey),
+If you want to change applications directly in the script, add `VimGroup`
+variable before `Vim := new VimAhk()` in vim.ahk
+(Window title/class can be checked by Window spy of AutoHotkey),
 or write before including vim.ahk
 
 Example line:
@@ -61,18 +64,23 @@ Example line:
 
 Multiple applications can be written by comma separated.
 
-Note: This will overwrite the default applications. If you want to **add** these applications to the default applications, add following applications after your applications:
+Note: This will overwrite the default applications. If you want to **add**
+these applications to the default applications, add following applications
+after your applications:
 
-    "ahk_exe notepad.exe,ahk_exe explorer.exe,ahk_exe wordpad.exe,ahk_exe TeraPad.exe,作成,Write:,ahk_exe POWERPNT.exe,ahk_exe WINWORD.exe,ahk_exe Evernote.exe,ahk_exe Code.exe,ahk_exe onenote.exe,OneNote,ahk_exe texworks.exe,ahk_exe texstudio.exe"
+    ahk_exe notepad.exe,ahk_exe explorer.exe,ahk_exe wordpad.exe,ahk_exe TeraPad.exe,作成,Write:,ahk_exe POWERPNT.exe,ahk_exe WINWORD.exe,ahk_exe Evernote.exe,ahk_exe Code.exe,ahk_exe onenote.exe,OneNote,ahk_exe texworks.exe,ahk_exe texstudio.exe
 
-Or you can use GUI option setting described below.
+Or you can use GUI option setting menu described below.
 
-The default setting of `VimSetTitleMatchMode` is 2, which makes matching methods as `Contain`.
+The default setting of `VimSetTitleMatchMode` is 2,
+which makes matching methods as `Contain`.
 
-If you set `OneNote`, all windows with a title containing `OneNote` (e.g. `XXX's OneNote`) will be included.
+If you set `OneNote`, all windows with a title containing `OneNote`
+(e.g. `XXX's OneNote`) will be included.
 If you set `VimSetTitleMatchMode` as 3, only exact title of `OneNote` will be included.
 
-Note: It may not work on OneNote. OneNote may has window name like **User's Notebook - OneNote**, instead of **OneNote**.
+Note: It may not work on OneNote. OneNote may has window name like
+**User's Notebook - OneNote**, instead of **OneNote**.
 
 In that case, you need to check OneNote's window title with Window spy.
 
@@ -84,67 +92,96 @@ Window spy will give you about Window Title, Class and Process like:
 
 If you add any of above lines to VimGroup, vim_ahk works on OneNote.
 But if you set `ahk_class ApplicationFrameWindow` or `ahk_exe ApplicationFrameHost.exe`,
-vim_ahk also works on other applications which use these Class/Process name (most of applications installed from Microsoft Store).
+vim_ahk also works on other applications which use these Class/Process name
+(most of applications installed from Microsoft Store).
 
 Examples of applications:
+
 * Chrome: `ahk_exe chrome.exe`
 * Firefox: `ahk_exe firefox.exe`
 * Excel: `ahk_exe EXCEL.EXE`
 * LibreOffice: `ahk_exe soffice.bin` (for all LibreOffice applications)
 
-## Other Options
+## Options
+
+There are following options which you can set in your script.
+All of these can be changed from setting menu, too.
 
 |Option|Description|Default|
 |:-----|:----------|:------|
 |VimRestoreIME|If 1, IME status is restored at entering insert mode.|1|
 |VimJJ|If 1, `jj` changes mode to Normal from Insert.|0|
 |VimLongEscNormal|If 1, pushing escape sends escape to the underlying application, while holding escape sets normal mode.|0|
-|VimTwoLetterEsc|A list of character pairs to press together during insert mode to get to normal mode. For example, a value of `jf` means pressing `j` and `f` at the same time will enter normal mode.||
-|VimDisableUnused|Disable level of unused keys in Normal mode (see below for details).|3|
+|VimTwoLetterEsc|A list of character pairs to press together during insert mode to get to normal mode. For example, a value of `jf` means pressing `j` and `f` at the same time will enter normal mode.|""|
+|VimDisableUnused|Disable level of unused keys in normal mode (see below for details).|3|
 |VimSetTitleMatchMode|SetTitleMatchMode: 1: Start with, 2: Contain, 3: Exact match|2|
 |VimSetTitleMatchModeFS|SetTitleMatchMode: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow|Fast|
-|VimIconCheckInterval|Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set.|1000|
+|VimIconCheckInterval|Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set (see below for details).|1000|
 |VimVerbose|Verbose level (see below for details).|0|
+|VimGroup|Applications on witch vim_ahk is enabled.|See **Applications** section|
 
-If you want to change them directly in the script, add these variable before `Vim := new VimAhk()` in vim.ahk or write before including vim.ahk
+You can add your options before including **vim.ahk** in your script
+in the auto execute section like:
 
-Or you can use GUI option setting described below.
+    VimVerbose := 2
+    #Include \path\to\\vim.ahk
 
-VimIconCheckInterval:
+If you want to change them directly in the vim.ahk script,
+add these variable before `Vim := new VimAhk()`.
 
-If it is set non-zero, the tray icon is immediately changed when the mode is changed.
-This interval defines the interval when the Window is changed (e.g. vim_ahk enabled window to disabled window).
+### DisableUnused
 
-Verbose level:
+Set how vim_ahk treats keys which are not used by vim_ahk in such normal mode.
+
+* 1: Do not disable unused keys
+* 2: Disable alphabets (+shift) and symbols
+* 3: Disable all including keys with modifiers (e.g. Ctrl+Z)
+
+### VimIconCheckInterval
+
+If **VimIconCheckInterval** is set to non-zero,
+the tray icon is changed when the mode is changed.
+
+This interval defines the interval to check the mode to update the icon.
+
+If this value is non-zero, the task tray icon is changed by following the mode.
+
+![trayicon](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/trayicon.gif "trayicon")
+
+### VimVerbose
+
+Set verbose level with **VimVerbose**.
+
+The level is defined by a number and the allowed numbers are followings:
 
 * 1: Nothing.
 * 2: Minimum tooltip (Mode name only).
 * 3: Tooltip.
 * 4: Msgbox.
 
-Disable level:
-* 1: Do not disable unused keys
-* 2: Disable alphabets (+shift) and symbols
-* 3: Disable all including keys with modifiers (e.g. Ctrl+Z)
-
 ## GUI Option Setting Window
 
-You can change these options from the right click menu of task tray icon (find `VimMenu`-`Settings` in the list),
+You can change these options from the right click menu of task tray icon
+(find `VimMenu`-`Settings` in the list),
 or launch the setting window by `Ctrl-Alt-Shift-v`.
 
 ![traymenu](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/traymenu.jpg "traymenu")
 
 ![settings](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/settings.jpg "settings")
 
-Here, you can add **
+Here, you can add applications, change the mode change key,
+or change the verbose level.
 
+If you push `Reset`, default settings will be shown in the window.
+These settings will be enabled only if you push `OK` button.
 
-If `Icon` is enabled, the task tray icon is changed following the mode.
-
-![trayicon](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/trayicon.gif "trayicon")
-
+These **default settings** are overwritten by
+your `VimXXX` options in your script described above.
+(i.e. `Reset` will restore your options in the script in addition to
+the default settings of vim_ahk.)
 
 ## Main Modes
+
 Here are the main modes.
 
 |Mode|Description|
@@ -163,8 +200,8 @@ Visual Mode, respectively.
 
 After pressing `:`, a few commands to save/quit are available.
 
-
 ## Available commands in Insert Mode
+
 |Key/Commands|Function|
 |:----------:|:-------|
 |ESC/Ctrl-[| Enter Normal Mode. Holding (0.5s) these keys emulate normal ESC.|
@@ -178,7 +215,9 @@ Ctrl-[ switches off IME and enters Normal Mode even if IME is on.
 If using a custom two-letter hotkey to enter normal mode, the two letters must be different.
 
 ## Available commands in Normal Mode
+
 ### Mode Change
+
 |Key/Commands|Function|
 |:----------:|:-------|
 |i/I/a/A/o/O| Enter Insert Mode at under the cursor/start of the line/next to the cursor/end of the line/next line/previous line.|
@@ -186,6 +225,7 @@ If using a custom two-letter hotkey to enter normal mode, the two letters must b
 |:|Enter Command Line Mode|
 
 ### Move
+
 |Key/Commands|Function|
 |:----------:|:-------|
 |h/j/k/l|Left/Down/Up/Right.|
@@ -207,6 +247,7 @@ In addition, `Repeat` is also available for some commands.
 |100j| Down 100 lines|
 
 ### Yank/Cut(Delete)/Change/Paste
+
 |Key/Commands|Function|
 |:----------:|:-------|
 |yy, Y| Copy the line.|
@@ -222,6 +263,7 @@ y/d/c+Move Command can be used, too.
 * e.g.) `d3w` -> delete next 3 words.
 
 ### Others
+
 |Key/Commands|Function|
 |:----------:|:-------|
 |u/Ctrl-r| Undo/Redo.|
@@ -235,6 +277,7 @@ y/d/c+Move Command can be used, too.
 |ZZ/ZQ|Save and Quit/Quit.|
 
 ## Available commands in Visual Mode
+
 |Key/Commands|Function|
 |:----------:|:-------|
 |ESC/Ctrl-[| Enter Normal Mode.|
@@ -244,6 +287,7 @@ y/d/c+Move Command can be used, too.
 |*| Search the selected word.|
 
 ## Available commands at Command mode
+
 |Key/Commands|Function|
 |:----------:|:-------|
 |ESC/Ctrl-[| Enter Normal Mode.|
