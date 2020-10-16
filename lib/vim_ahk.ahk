@@ -19,8 +19,8 @@
 
 class VimAhk{
   __About(){
-    this.About.Version := "v0.8.0"
-    this.About.Date := "15/Oct/2020"
+    this.About.Version := "v0.8.1"
+    this.About.Date := "17/Oct/2020"
     this.About.Author := "rcmdnk"
     this.About.Description := "Vim emulation with AutoHotkey, everywhere in Windows."
     this.About.Homepage := "https://github.com/rcmdnk/vim_ahk"
@@ -226,9 +226,5 @@ class VimAhk{
       }
     }
     Return DefaultGroup
-  }
-
-  AddToTwoLetterMap(l1, l2){
-    this.Conf["VimTwoLetter"]["val"] := this.Conf["VimTwoLetter"]["val"] . this.GroupDel . l1 . l2
   }
 }

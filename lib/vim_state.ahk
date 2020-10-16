@@ -103,6 +103,23 @@
     }
   }
 
+  HandleCtrlBracket(){
+    KeyWait, [, T0.5
+    LongPress := ErrorLevel
+    global Vim, VimLongEscNormal
+    both := VimLongEscNormal && LongPress
+    neither := !(VimLongEscNormal || LongPress)
+    SetNormal :=  both or neither
+    if (SetNormal) {
+        Vim.State.SetNormal()
+    } else {
+        Send, ^[
+    }
+    if (LongPress){
+      KeyWait, [
+    }
+  }
+
   IsCurrentVimMode(mode){
     this.CheckValidMode(mode)
     Return (mode == this.Mode)
