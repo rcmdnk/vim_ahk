@@ -5,7 +5,7 @@
   }
 
   MakeGui(){
-    global VimRestoreIME, VimJJ, VimLongEscNormal
+    global VimRestoreIME, VimJJ, VimEscNormal, VimLongEscNormal, VimCtrlBracketNormal, VimLongCtrlBracketNormal
     global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimGroup, VimGroupList, VimTwoLetterList
     global VimDisableUnusedText, VimSetTitleMatchModeText, VimIconCheckIntervalText, VimIconCheckIntervalEdit, VimVerboseText, VimGroupText, VimHomepage, VimSettingOK, VimSettingReset, VimSettingCancel, VimTwoLetterText
     this.VimVal2V()
@@ -18,7 +18,12 @@
       }else{
         y := "Y+10"
       }
-      Gui, % this.Hwnd ":Add", Checkbox, % "+HwndHwnd" k " XM+10 " y " v" k, % this.Vim.Conf[k]["description"]
+      if(inStr(k, "Long")) {
+        x := "30"
+      }else{
+        x := "10"
+      }
+      Gui, % this.Hwnd ":Add", Checkbox, % "+HwndHwnd" k " XM+" x " " y " v" k, % this.Vim.Conf[k]["description"]
       hwnd := "Hwnd" k
       this.HwndAll.Push(%hwnd%)
       created  := 1
@@ -86,7 +91,7 @@
   }
 
   UpdateGuiValue(){
-    global VimRestoreIME, VimJJ, VimLongEscNormal
+    global VimRestoreIME, VimJJ, VimEscNormal, VimLongEscNormal, VimCtrlBracketNormal, VimLongCtrlBracketNormal
     global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimGroup, VimGroupList, VimTwoLetter, VimTwoLetterList
     for i, k in this.Vim.Checkboxes {
       GuiControl, % this.Hwnd ":", % k, % %k%
@@ -130,7 +135,7 @@
   }
 
   VimV2Conf(){
-    global VimRestoreIME, VimJJ, VimLongEscNormal
+    global VimRestoreIME, VimJJ, VimEscNormal, VimLongEscNormal, VimCtrlBracketNormal, VimLongCtrlBracketNormal
     global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimGroup, VimGroupList, VimTwoLetter, VimTwoLetterList
     VimGroup := this.VimParseList(VimGroupList)
     VimTwoLetter := this.VimParseList(VimTwoLetterList)
@@ -157,7 +162,7 @@
   }
 
   VimConf2V(vd){
-    global VimRestoreIME, VimJJ, VimLongEscNormal
+    global VimRestoreIME, VimJJ, VimEscNormal, VimLongEscNormal, VimCtrlBracketNormal, VimLongCtrlBracketNormal
     global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimGroup, VimGroupList, VimTwoLetterList
     StringReplace, VimGroupList, % this.Vim.Conf["VimGroup"][vd], % this.Vim.GroupDel, `n, All
     StringReplace, VimTwoLetterList, % this.Vim.Conf["VimTwoLetter"][vd], % this.Vim.GroupDel, `n, All

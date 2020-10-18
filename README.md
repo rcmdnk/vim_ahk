@@ -109,9 +109,12 @@ All of these can be changed from setting menu, too.
 
 |Option|Description|Default|
 |:-----|:----------|:------|
+|VimEscNormal|If 1, pushing ESC sets normal mode, while long press ESC sends ESC.|1|
+|VimLongEscNormal|If 1, single press and long press of ESC behaviors are swapped.|0|
+|VimCtrlBracketNormal|If 1, pushing Ctrl-[ sets normal mode, while long press Ctrl-[ sends Ctrl-[.|1|
+|VimLongCtrlBracketNormal|If 1, single press and long press of Ctrl-[ behaviors are swapped.|0|
 |VimRestoreIME|If 1, IME status is restored at entering insert mode.|1|
 |VimJJ|If 1, `jj` changes mode to Normal from Insert.|0|
-|VimLongEscNormal|If 1, pushing escape/Ctrl-[ sends escape to the underlying application, while holding escape sets normal mode.|0|
 |VimTwoLetterEsc|A list of character pairs to press together during insert mode to get to normal mode. For example, a value of `jf` means pressing `j` and `f` at the same time will enter normal mode.|""|
 |VimDisableUnused|Disable level of unused keys in normal mode (see below for details).|3|
 |VimSetTitleMatchMode|SetTitleMatchMode: 1: Start with, 2: Contain, 3: Exact match|2|
@@ -212,10 +215,11 @@ ESC/Ctrl-[ switch off IME if IME is on.
 ESC acts as ESC when IME is on and converting instructions.
 Ctrl-[ switches off IME and enters Normal Mode even if IME is on.
 
-Long press ESC/Ctrl-[ will send these original keys, if `VimLongEscNormal` is not enabled (0).
-If `VimLongEscNormal` is enabled,
-short press these keys will send these original
-and long press these keys will change the mode to the normal mode.
+Long press ESC (Ctrl-[) will send these original keys, if `VimLongEscNormal` (`VimLongCtrlBracketNormal` is not enabled (0).
+
+If `VimLongEscNormal` (`VimLongCtrlBracketNormal`) is enabled,
+single press will send original keys
+and long press will change the mode to the normal mode.
 
 If using a custom two-letter hotkey to enter normal mode, the two letters must be different.
 

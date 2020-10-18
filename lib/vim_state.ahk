@@ -83,18 +83,22 @@
   }
 
   HandleEsc(){
+    global Vim, VimEscNormal, VimLongEscNormal
+    if (!VimNormal) {
+      Send, {Esc}
+      Return
+    }
     ; The keywait waits for esc to be released. If it doesn't detect a release
-    ; within the time limit, sets errorlevel to 1.
+    ; within the time limit, sets ErrorLevel to 1.
     KeyWait, Esc, T0.5
     LongPress := ErrorLevel
-    global Vim, VimLongEscNormal
     both := VimLongEscNormal && LongPress
     neither := !(VimLongEscNormal || LongPress)
     SetNormal :=  both or neither
     if (SetNormal) {
         Vim.State.SetNormal()
     } else {
-        Send,{Esc}
+        Send, {Esc}
     }
     if (LongPress){
       ; Have to ensure the key has been released, otherwise this will get
@@ -104,11 +108,15 @@
   }
 
   HandleCtrlBracket(){
+    global Vim, VimCtrlBracketNormal, VimLongCtrlBracketNormal
+    if (!VimCtrlBracketNormal) {
+      Send, ^[
+      Return
+    }
     KeyWait, [, T0.5
     LongPress := ErrorLevel
-    global Vim, VimLongEscNormal
-    both := VimLongEscNormal && LongPress
-    neither := !(VimLongEscNormal || LongPress)
+    both := VimLongCtrlBracketNormal && LongPress
+    neither := !(VimLongCtrlBracketNormal || LongPress)
     SetNormal :=  both or neither
     if (SetNormal) {
         Vim.State.SetNormal()
