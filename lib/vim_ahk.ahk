@@ -112,19 +112,16 @@ class VimAhk{
 
     this.CheckBoxes := ["VimEscNormal", "VimLongEscNormal", "VimCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ"]
 
-    ; Other ToolTip Information
+    ; ToolTip Information
     this.Info := {}
     for k, v in this.Conf {
-      this.Info[k] := v["info"]
-      textKey := k "Text"
-      this.Info[textKey] := v["info"]
+      info := k ":`n'" v["info"]
+      this.Info[k] := info
+      for i, type in ["Text", "List", "Value", "Edit"] {
+        textKey := k type
+        this.Info[textKey] := info
+      }
     }
-    this.SetInfo("VimGroup", "List")
-    this.SetInfo("VimTwoLetter", "List")
-    this.SetInfo("VimDisableUnused", "Value")
-    this.SetInfo("VimSetTitleMatchMode", "Value")
-    this.SetInfo("VimIconCheckInterval", "Edit")
-    this.SetInfo("VimVerbose", "Value")
 
     this.Info["VimSettingOK"] := "Reflect changes and exit"
     this.Info["VimSettingReset"] := "Reset to the default values"
@@ -132,11 +129,6 @@ class VimAhk{
 
     ; Initialize
     this.Initialize()
-  }
-
-  SetInfo(variable, variablevaluename){
-    key := % variable variablevaluename
-    this.Info[key] := this.Conf[variable]["info"]
   }
 
   AddToConf(setting, default, val, description, info){
