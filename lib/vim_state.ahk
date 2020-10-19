@@ -96,9 +96,12 @@
     neither := !(VimLongEscNormal || LongPress)
     SetNormal :=  both or neither
     if (SetNormal) {
-        Vim.State.SetNormal()
+      if (VimSendEscNormal && Vim.State.Mode == "Vim_Normal") {
+        Send, ^[
+      }
+      Vim.State.SetNormal()
     } else {
-        Send, {Esc}
+      Send, {Esc}
     }
     if (LongPress){
       ; Have to ensure the key has been released, otherwise this will get
@@ -108,7 +111,7 @@
   }
 
   HandleCtrlBracket(){
-    global Vim, VimCtrlBracketNormal, VimLongCtrlBracketNormal
+    global Vim, VimCtrlBracketNormal, VimSendCtrlBracketNormal, VimLongCtrlBracketNormal
     if (!VimCtrlBracketNormal) {
       Send, ^[
       Return
@@ -119,9 +122,12 @@
     neither := !(VimLongCtrlBracketNormal || LongPress)
     SetNormal :=  both or neither
     if (SetNormal) {
-        Vim.State.SetNormal()
-    } else {
+      if (VimSendCtrlBracketNormal && Vim.State.Mode == "Vim_Normal") {
         Send, ^[
+      }
+      Vim.State.SetNormal()
+    } else {
+      Send, ^[
     }
     if (LongPress){
       KeyWait, [

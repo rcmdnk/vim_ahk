@@ -73,12 +73,18 @@ class VimAhk{
     this.AddToConf("VimEscNormal", 1, 1
       , "ESC to enter the normal mode"
       , "Use ESC to enter the normal mode, long press ESC to send ESC.")
+    this.AddToConf("VimSendEscNormal", 0, 0
+      , "Send ESC by ESC at the normal mode"
+      , "If not checked, single press ESC does not send anything at the normal mode.`nEnable ESC to enter the normal mode first.")
     this.AddToConf("VimLongEscNormal", 0, 0
       , "Long press ESC to enter the normal mode"
       , "Swap single press and long press behaviors for ESC.`nEnable ESC to enter Normal mode first.")
     this.AddToConf("VimCtrlBracketNormal", 1, 1
       , "Ctrl-[ to enter the normal mode"
       , "Use Ctrl-[ to enter the normal mode, long press Ctrl-[ to send Ctrl-[.")
+    this.AddToConf("VimSendCtrlBracketNormal", 0, 0
+      , "Send Ctrl-[ by Ctrl-[ at the normal mode"
+      , "If not checked, single press Ctrl-[ does not send anything at the normal mode.`nEnable Ctrl-[ to enter the normal mode first.")
     this.AddToConf("VimLongCtrlBracketNormal", 0, 0
       , "Long press Ctrl-[ to enter the normal mode:"
       , "Swap single press and long press behaviors for Ctrl-[.`nEnable Ctrl-[ to enter the normal mode first.")
@@ -110,7 +116,7 @@ class VimAhk{
       , "Application"
       , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
 
-    this.CheckBoxes := ["VimEscNormal", "VimLongEscNormal", "VimCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ"]
+    this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ"]
 
     ; ToolTip Information
     this.Info := {}
