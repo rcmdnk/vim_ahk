@@ -125,18 +125,18 @@ All of these can be changed from setting menu, too.
 
 |Option|Description|Default|
 |:-----|:----------|:------|
-|VimEscNormal|If 1, pushing ESC sets normal mode, while long press ESC sends ESC.|1|
+|VimEscNormal|If 1, pushing ESC sets the normal mode, while long press ESC sends ESC.|1|
 |VimLongEscNormal|If 1, single press and long press of ESC behaviors are swapped.|0|
-|VimCtrlBracketNormal|If 1, pushing Ctrl-[ sets normal mode, while long press Ctrl-[ sends Ctrl-[.|1|
+|VimCtrlBracketNormal|If 1, pushing Ctrl-[ sets the normal mode, while long press Ctrl-[ sends Ctrl-[.|1|
 |VimLongCtrlBracketNormal|If 1, single press and long press of Ctrl-[ behaviors are swapped.|0|
-|VimRestoreIME|If 1, IME status is restored at entering insert mode.|1|
-|VimJJ|If 1, `jj` changes mode to Normal from Insert.|0|
-|VimTwoLetterEsc|A list of character pairs to press together during insert mode to get to normal mode.<br>For example, a value of `jf` means pressing `j` and `f` at the same time will enter normal mode.<br>Multiple combination can be set by separated by `,`. (e.g. `jf,jk,sd`)||
-|VimDisableUnused|Disable level of unused keys in other than insert mode:<br><ol><li>Do not disable unused keys</li><li>Disable alphabets (+shift) and symbols</li><li>Disable all including keys with modifiers (e.g. Ctrl+Z)</li></ol>|3|
+|VimRestoreIME|If 1, IME status is restored at entering the insert mode.|1|
+|VimJJ|If 1, `jj` changes the mode to the normal mode from the insert mode.|0|
+|VimTwoLetterEsc|A list of character pairs to press together during the insert mode to get to the Normal mode.<br>For example, a value of `jf` means pressing `j` and `f` at the same time will enter the Normal mode.<br>Multiple combination can be set by separated by `,`. (e.g. `jf,jk,sd`)||
+|VimDisableUnused|Disable level of unused keys in other than the insert mode:<br><ol><li>Do not disable unused keys</li><li>Disable alphabets (+shift) and symbols</li><li>Disable all including keys with modifiers (e.g. Ctrl+Z)</li></ol>|3|
 |VimSetTitleMatchMode|SetTitleMatchMode:<br><ol><li>Start with</li><li><li>Contain</li><li>Exact match</li>|2|
 |VimSetTitleMatchModeFS|SetTitleMatchMode:<br><ol><li>Fast: Text is not detected for such edit control.</li><li>Slow: Works for all windows, but slow.</li>|Fast|
 |VimIconCheckInterval|Interval to check vim_ahk status (ms) and change tray icon (see below picture).<br>If it is set to 0, the original AHK icon is set and not changed.|1000|
-|VimVerbose|Verbose level:<br><ol><li>Nothing.</li><li>Minimum tooltip (Mode name only).</li><li>ToolTip (All information).</li><li>MsgBox.</li></ol>|1|
+|VimVerbose|Verbose level:<br><ol><li>Nothing.</li><li>Minimum tooltip (mode information only).</li><li>ToolTip (all information).</li><li>Debug mode with a message box, which doesn't disappear automatically.</li></ol>|1|
 |VimGroup|Applications on witch vim_ahk is enabled.|See **Applications** section|
 
 You can add your options before including **vim.ahk** in your script
@@ -177,31 +177,32 @@ Here are the main modes.
 
 |Mode|Description|
 |:---|:----------|
-|Insert Mode|Normal Windows state|
-|Normal Mode|As in vim, a cursor is moved by hjkl, w, etc... and some vim like commands are available.|
-|Visual Mode|There are three visual mode: Character-wise, Line-wise, and Block-wise. Block-wise visual mode is valid only for applications which support block-wise selection (such TeraPad).|
-|Command Mode|Can be used for saving file/quitting.|
+|Insert mode|Original Windows state|
+|Normal mode|As in vim, a cursor is moved by hjkl, w, etc... and some vim like commands are available.|
+|Visual mode|There are three visual modes: Character-wise, Line-wise, and Block-wise. Block-wise visual mode is valid only for applications which support block-wise selection (such TeraPad).|
+|Command mode|Can be used for saving file/quitting.|
 
-The initial state is `Insert Mode`, then `ESC` or `Ctrl-[` brings you to Normal Mode.
+The initial state is the insert mode, then `ESC` or `Ctrl-[` brings you to the normal mode.
 
-In Normal Mode, `i` is the key to be back to Insert Mode.
+In the normal mode, `i` is the key to be back to the insert mode.
 
-`v`, `V` and `Ctrl-v` are the key to the Character-wise, Line-wise, and Block-wise
-Visual Mode, respectively.
+`v`, `V` and `Ctrl-v` are the key to
+the Character-wise, the Line-wise, and the Block-wise
+visual mode, respectively.
 
 After pressing `:`, a few commands to save/quit are available.
 
-## Available commands in Insert Mode
+## Available commands in the insert mode
 
 |Key/Commands|Function|
 |:----------:|:-------|
-|ESC/Ctrl-[| Enter Normal Mode. Holding (0.5s) these keys emulate normal ESC.|
-|jj|Enter Normal Mode, if enabled.|
+|ESC/Ctrl-[| Enter the normal mode. Holding (0.5s) these keys emulate normal ESC/Ctrl-[.|
+|jj|Enter the normal mode, if enabled.|
 |Custom two letters|If two-letter mapping is set.|
 
 ESC/Ctrl-[ switch off IME if IME is on.
 ESC acts as ESC when IME is on and converting instructions.
-Ctrl-[ switches off IME and enters Normal Mode even if IME is on.
+Ctrl-[ switches off IME and enters the normal mode even if IME is on.
 
 Long press ESC (Ctrl-[) will send these original keys, if `VimLongEscNormal` (`VimLongCtrlBracketNormal` is not enabled (0).
 
@@ -209,17 +210,17 @@ If `VimLongEscNormal` (`VimLongCtrlBracketNormal`) is enabled,
 single press will send original keys
 and long press will change the mode to the normal mode.
 
-If using a custom two-letter hotkey to enter normal mode, the two letters must be different.
+If using a custom two-letter hotkey to enter the normal mode, the two letters must be different.
 
-## Available commands in Normal Mode
+## Available commands in the normal mode
 
 ### Mode Change
 
 |Key/Commands|Function|
 |:----------:|:-------|
-|i/I/a/A/o/O| Enter Insert Mode at under the cursor/start of the line/next to the cursor/end of the line/next line/previous line.|
-|v/V/Ctrl-v|Enter Visual Mode of Character-wise/Line-wise/Block-wise.|
-|:|Enter Command Line Mode|
+|i/I/a/A/o/O| Enter the insert mode at under the cursor/start of the line/next to the cursor/end of the line/next line/previous line.|
+|v/V/Ctrl-v|Enter the visual mode of Character-wise/Line-wise/Block-wise.|
+|:|Enter the command line mode|
 
 ### Move
 
@@ -250,10 +251,10 @@ In addition, `Repeat` is also available for some commands.
 |yy, Y| Copy the line.|
 |dd| Cut the line.|
 |D| Cut from here to the end of the line.|
-|cc| Change the line (enter Insert Mode).|
-|C| Cut from here to the end of the line and enter Insert Mode.|
+|cc| Change the line (enter the insert mode).|
+|C| Cut from here to the end of the line and enter the insert mode.|
 |x/X| Delete a character under/before the cursor (not registered in the clipboard).|
-|p/P| Paste to the next/current place. If copy/cut was done with line-wise Visual Mode, it pastes to the next/current line. Some commands (such yy/dd) also force to paste as line-wise.|
+|p/P| Paste to the next/current place. If copy/cut was done with the line-wise visual mode, it pastes to the next/current line. Some commands (such yy/dd) also force to paste as line-wise.|
 
 y/d/c+Move Command can be used, too.
 * e.g.) `yw` -> copy next one word.
@@ -273,21 +274,21 @@ y/d/c+Move Command can be used, too.
 |*| Search the word under the cursor.|
 |ZZ/ZQ|Save and Quit/Quit.|
 
-## Available commands in Visual Mode
+## Available commands in visual mode
 
 |Key/Commands|Function|
 |:----------:|:-------|
-|ESC/Ctrl-[| Enter Normal Mode.|
-|Move command| Most of move commands in the Normal Mode are available.|
+|ESC/Ctrl-[| Enter the normal mode.|
+|Move command| Most of move commands in the normal mode are available.|
 |y/d/x/c| Copy/Cut/Cut/Cut and insert (`d`=`x`)|
-|Y/D/X/C| Move to the end of line, then Copy/Cut/Cut/Cut and Insert Mode (`D`=`X`)|
+|Y/D/X/C| Move to the end of line, then Copy/Cut/Cut/Cut and the insert mode (`D`=`X`)|
 |*| Search the selected word.|
 
-## Available commands at Command mode
+## Available commands in the command mode
 
 |Key/Commands|Function|
 |:----------:|:-------|
-|ESC/Ctrl-[| Enter Normal Mode.|
+|ESC/Ctrl-[| Enter the the normal mode.|
 |w + RETURN| Save |
 |w + SPACE | Save as |
 |w + q| Save and Quit |

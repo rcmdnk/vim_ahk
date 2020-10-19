@@ -71,28 +71,28 @@ class VimAhk{
     ; Configuration values for Read/Write ini
     this.Conf := {}
     this.AddToConf("VimEscNormal", 1, 1
-      , "ESC to enter Normal mode"
-      , "Use ESC to enter Normal mode, long press ESC to send ESC.")
+      , "ESC to enter the normal mode"
+      , "Use ESC to enter the normal mode, long press ESC to send ESC.")
     this.AddToConf("VimLongEscNormal", 0, 0
-      , "Long press ESC to enter Normal mode"
+      , "Long press ESC to enter the normal mode"
       , "Swap single press and long press behaviors for ESC.`nEnable ESC to enter Normal mode first.")
     this.AddToConf("VimCtrlBracketNormal", 1, 1
-      , "Ctrl-[ to enter Normal mode"
-      , "Use Ctrl-[ to enter Normal mode, long press Ctrl-[ to send Ctrl-[.")
+      , "Ctrl-[ to enter the normal mode"
+      , "Use Ctrl-[ to enter the normal mode, long press Ctrl-[ to send Ctrl-[.")
     this.AddToConf("VimLongCtrlBracketNormal", 0, 0
-      , "Long press Ctrl-[ to enter Normal mode:"
-      , "Swap single press and long press behaviors for Ctrl-[.`nEnable Ctrl-[ to enter Normal mode first.")
+      , "Long press Ctrl-[ to enter the normal mode:"
+      , "Swap single press and long press behaviors for Ctrl-[.`nEnable Ctrl-[ to enter the normal mode first.")
     this.AddToConf("VimRestoreIME", 1, 1
-      , "Restore IME status at entering insert mode"
-      , "Restore IME status at entering insert mode.")
+      , "Restore IME status at entering the insert mode"
+      , "Save the IME status in the insert mode, and restore it at entering the insert mode.")
     this.AddToConf("VimJJ", 0, 0
-      , "JJ to enter Normal mode"
-      , "Use JJ to enter Normal mode.")
+      , "JJ to enter the normal mode"
+      , "Use JJ to enter the normal mode.")
     this.AddToConf("VimTwoLetter", "", ""
-      , "Two-letter to enter Normal mode"
-      , "When these two letters are pressed together in insert mode, enters normal mode.`n`nSet one per line, exactly two letters per line.`nThe two letters must be different.")
+      , "Two-letter to enter the normal mode"
+      , "When these two letters are pressed together in insert mode, enters the normal mode.`n`nSet one per line, exactly two letters per line.`nThe two letters must be different.")
     this.AddToConf("VimDisableUnused", 1, 1
-      , "Disable unused keys in Normal mode"
+      , "Disable unused keys in the normal mode"
       , "1: Do not disable unused keys`n2: Disable alphabets (+shift) and symbols`n3: Disable all including keys with modifiers (e.g. Ctrl+Z)")
     this.AddToConf("VimSetTitleMatchMode", "2", "2"
       , "SetTitleMatchMode"
@@ -105,7 +105,7 @@ class VimAhk{
       , "Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set.")
     this.AddToConf("VimVerbose", 1, 1
       , "Verbose level"
-      , "1: Nothing `n2: Minimum tooltip of status`n3: More info in tooltip`n4: Debug mode with a message box, which doesn't disappear automatically")
+      , "1: Nothing `n2: Minimum tooltip (mode information only)`n3: Tooltip (all information)`n4: Debug mode with a message box, which doesn't disappear automatically")
     this.AddToConf("VimGroup", DefaultGroup, DefaultGroup
       , "Application"
       , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
