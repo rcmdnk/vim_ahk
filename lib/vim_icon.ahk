@@ -1,11 +1,11 @@
 ﻿class VimIcon{
   __New(){
     global VimScriptPath
-    this.icons := {Normal: VimScriptPath "\..\icons\normal.ico"
-                 , Insert: VimScriptPath  "\..\icons\insert.ico"
-                 , Visual: VimScriptPath "\..\icons\visual.ico"
-                 , Command: VimScriptPath "\..\icons\command.ico"
-                 , Disabled: VimScriptPath "\..\icons\disabled.ico"
+    this.icons := {Normal: VimScriptPath "\..\vim_ahk_icons\normal.ico"
+                 , Insert: VimScriptPath  "\..\vim_ahk_icons\insert.ico"
+                 , Visual: VimScriptPath "\..\vim_ahk_icons\visual.ico"
+                 , Command: VimScriptPath "\..\vim_ahk_icons\command.ico"
+                 , Disabled: VimScriptPath "\..\vim_ahk_icons\disabled.ico"
                  , Default: A_AhkPath}
   }
 

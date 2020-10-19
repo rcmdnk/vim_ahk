@@ -1,6 +1,6 @@
 @echo off
 SET AHKPath=C:\Program Files\AutoHotkey
-REM Takes a sinple optional command parameter, /t, which starts testing before build.
+REM Takes a simple optional command parameter, /t, which starts testing before build.
 SET Param1=%1
 
 if "%Param1%"=="/t" (
@@ -18,4 +18,7 @@ if errorlevel 1 (
     echo   .
     exit /b %errorlevel%
 )
-"%AHKPath%\compiler\ahk2exe.exe" /in vim.ahk /out build\vim_ahk.exe /compress 0
+if exist vim_ahk rmdir /s /q vim_ahk
+mkdir vim_ahk
+"%AHKPath%\compiler\ahk2exe.exe" /in vim.ahk /out vim_ahk\vim_ahk.exe /compress 0
+xcopy /i /y vim_ahk_icons vim_ahk\vim_ahk_icons

@@ -28,12 +28,27 @@ at the end of the <a href="http://www.autohotkey.com/docs/Scripts.htm#auto">Auto
 
 ### Executable
 
-You can also use vim.exe, which can work standalone w/o AutoHotKey.
+You can also use **vim_ahk.exe**, which can work standalone w/o AutoHotKey.
 
 To get executable, go to [the releases page](https://github.com/rcmdnk/vim_ahk/releases)
-and download the latest one.
+and download the latest zip file.
 
-## Applications
+Unzip the zip file, and place the extracted vim_ahk folder where you like,
+then launch **vim_ahk.exe**.
+
+:memo: place **vim_ahk_icons** folder in the same folder with **vim_ahk.exe**,
+otherwise the tray menu icon feature does not work.
+
+### Build executable from the source
+
+Clone vim_ahk and go vim_ahk folder, and run **build.bat**.
+
+* Double click the file
+* Or run `.\build.bat` on PowerShell or Command Prompt.
+
+You will find **vim_ahk** folder which contains **vim_ahk.exe** and **vim_ahk_icons**.
+
+## Applications (VimGroup)
 The default setting enables vim-mode for the following applications:
 
 * Notepad (メモ帳)
@@ -104,7 +119,8 @@ Examples of applications:
 
 ## Options
 
-There are following options which you can set in your script.
+In addition to `VimGroup`,
+there are following options which you can set in your script.
 All of these can be changed from setting menu, too.
 
 |Option|Description|Default|
@@ -116,11 +132,11 @@ All of these can be changed from setting menu, too.
 |VimRestoreIME|If 1, IME status is restored at entering insert mode.|1|
 |VimJJ|If 1, `jj` changes mode to Normal from Insert.|0|
 |VimTwoLetterEsc|A list of character pairs to press together during insert mode to get to normal mode. For example, a value of `jf` means pressing `j` and `f` at the same time will enter normal mode.|""|
-|VimDisableUnused|Disable level of unused keys in normal mode (see below for details).|3|
+|VimDisableUnused|Disable level of unused keys in other than insert mode.<br><ol><li>Do not disable unused keys</li><li>Disable alphabets (+shift) and symbols</li><li>Disable all including keys with modifiers (e.g. Ctrl+Z)</li></ol>|3|
 |VimSetTitleMatchMode|SetTitleMatchMode: 1: Start with, 2: Contain, 3: Exact match|2|
 |VimSetTitleMatchModeFS|SetTitleMatchMode: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow|Fast|
-|VimIconCheckInterval|Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set (see below for details).|1000|
-|VimVerbose|Verbose level (see below for details).|0|
+|VimIconCheckInterval|Interval to check vim_ahk status (ms) and change tray icon (see below picture). If it is set to 0, the original AHK icon is set and not changed.|1000|
+|VimVerbose|Verbose level.<br><ol><li>Nothing.</li><li>Minimum tooltip (Mode name only).</li><li>ToolTip (All information).</li><li>MsgBox.</li></ol>|0|
 |VimGroup|Applications on witch vim_ahk is enabled.|See **Applications** section|
 
 You can add your options before including **vim.ahk** in your script
@@ -132,35 +148,7 @@ in the auto execute section like:
 If you want to change them directly in the vim.ahk script,
 add these variable before `Vim := new VimAhk()`.
 
-### DisableUnused
-
-Set how vim_ahk treats keys which are not used by vim_ahk in such normal mode.
-
-* 1: Do not disable unused keys
-* 2: Disable alphabets (+shift) and symbols
-* 3: Disable all including keys with modifiers (e.g. Ctrl+Z)
-
-### VimIconCheckInterval
-
-If **VimIconCheckInterval** is set to non-zero,
-the tray icon is changed when the mode is changed.
-
-This interval defines the interval to check the mode to update the icon.
-
-If this value is non-zero, the task tray icon is changed by following the mode.
-
 ![trayicon](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/trayicon.gif "trayicon")
-
-### VimVerbose
-
-Set verbose level with **VimVerbose**.
-
-The level is defined by a number and the allowed numbers are followings:
-
-* 1: Nothing.
-* 2: Minimum tooltip (Mode name only).
-* 3: Tooltip.
-* 4: Msgbox.
 
 ## GUI Option Setting Window
 
