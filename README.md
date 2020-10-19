@@ -131,12 +131,12 @@ All of these can be changed from setting menu, too.
 |VimLongCtrlBracketNormal|If 1, single press and long press of Ctrl-[ behaviors are swapped.|0|
 |VimRestoreIME|If 1, IME status is restored at entering insert mode.|1|
 |VimJJ|If 1, `jj` changes mode to Normal from Insert.|0|
-|VimTwoLetterEsc|A list of character pairs to press together during insert mode to get to normal mode. For example, a value of `jf` means pressing `j` and `f` at the same time will enter normal mode.|""|
-|VimDisableUnused|Disable level of unused keys in other than insert mode.<br><ol><li>Do not disable unused keys</li><li>Disable alphabets (+shift) and symbols</li><li>Disable all including keys with modifiers (e.g. Ctrl+Z)</li></ol>|3|
-|VimSetTitleMatchMode|SetTitleMatchMode: 1: Start with, 2: Contain, 3: Exact match|2|
-|VimSetTitleMatchModeFS|SetTitleMatchMode: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow|Fast|
-|VimIconCheckInterval|Interval to check vim_ahk status (ms) and change tray icon (see below picture). If it is set to 0, the original AHK icon is set and not changed.|1000|
-|VimVerbose|Verbose level.<br><ol><li>Nothing.</li><li>Minimum tooltip (Mode name only).</li><li>ToolTip (All information).</li><li>MsgBox.</li></ol>|0|
+|VimTwoLetterEsc|A list of character pairs to press together during insert mode to get to normal mode.<br>For example, a value of `jf` means pressing `j` and `f` at the same time will enter normal mode.<br>Multiple combination can be set by separated by `,`. (e.g. `jf,jk,sd`)||
+|VimDisableUnused|Disable level of unused keys in other than insert mode:<br><ol><li>Do not disable unused keys</li><li>Disable alphabets (+shift) and symbols</li><li>Disable all including keys with modifiers (e.g. Ctrl+Z)</li></ol>|3|
+|VimSetTitleMatchMode|SetTitleMatchMode:<br><ol><li>Start with</li><li><li>Contain</li><li>Exact match</li>|2|
+|VimSetTitleMatchModeFS|SetTitleMatchMode:<br><ol><li>Fast: Text is not detected for such edit control.</li><li>Slow: Works for all windows, but slow.</li>|Fast|
+|VimIconCheckInterval|Interval to check vim_ahk status (ms) and change tray icon (see below picture).<br>If it is set to 0, the original AHK icon is set and not changed.|1000|
+|VimVerbose|Verbose level:<br><ol><li>Nothing.</li><li>Minimum tooltip (Mode name only).</li><li>ToolTip (All information).</li><li>MsgBox.</li></ol>|1|
 |VimGroup|Applications on witch vim_ahk is enabled.|See **Applications** section|
 
 You can add your options before including **vim.ahk** in your script
