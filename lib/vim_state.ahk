@@ -84,7 +84,7 @@
 
   HandleEsc(){
     global Vim, VimEscNormal, VimLongEscNormal
-    if (!VimNormal) {
+    if (!VimEscNormal) {
       Send, {Esc}
       Return
     }
