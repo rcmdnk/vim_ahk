@@ -75,10 +75,10 @@ class VimAhk{
       , "Use ESC to enter the normal mode, long press ESC to send ESC.")
     this.AddToConf("VimSendEscNormal", 0, 0
       , "Send ESC by ESC at the normal mode"
-      , "If not checked, single press ESC does not send anything at the normal mode.`nEnable ESC to enter the normal mode first.")
+      , "If not checked, short press ESC does not send anything at the normal mode.`nEnable ESC to enter the normal mode first.")
     this.AddToConf("VimLongEscNormal", 0, 0
       , "Long press ESC to enter the normal mode"
-      , "Swap single press and long press behaviors for ESC.`nEnable ESC to enter Normal mode first.")
+      , "Swap short press and long press behaviors for ESC.`nEnable ESC to enter Normal mode first.")
     this.AddToConf("VimCtrlBracketToEsc", 1, 1
       , "Ctrl-[ to ESC"
       , "Send ESC by Ctrl-[.`nThis changes Ctrl-[ behavir even if Ctrl-[ to enter the normal mode is enabled.`nIf both Ctlr-[ to ESC and Ctlr-[ to enter the normal mode are enabled, long press Ctrl-[ sends ESC instead of Ctrl-[.")
@@ -87,10 +87,10 @@ class VimAhk{
       , "Use Ctrl-[ to enter the normal mode, long press Ctrl-[ to send Ctrl-[.")
     this.AddToConf("VimSendCtrlBracketNormal", 0, 0
       , "Send Ctrl-[ by Ctrl-[ at the normal mode"
-      , "If not checked, single press Ctrl-[ does not send anything at the normal mode.`nEnable Ctrl-[ to enter the normal mode first.")
+      , "If not checked, short press Ctrl-[ does not send anything at the normal mode.`nEnable Ctrl-[ to enter the normal mode first.")
     this.AddToConf("VimLongCtrlBracketNormal", 0, 0
       , "Long press Ctrl-[ to enter the normal mode:"
-      , "Swap single press and long press behaviors for Ctrl-[.`nEnable Ctrl-[ to enter the normal mode first.")
+      , "Swap short press and long press behaviors for Ctrl-[.`nEnable Ctrl-[ to enter the normal mode first.")
     this.AddToConf("VimRestoreIME", 1, 1
       , "Restore IME status at entering the insert mode"
       , "Save the IME status in the insert mode, and restore it at entering the insert mode.")

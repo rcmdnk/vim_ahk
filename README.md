@@ -125,10 +125,13 @@ All of these can be changed from setting menu, too.
 
 |Option|Description|Default|
 |:-----|:----------|:------|
-|VimEscNormal|If 1, pushing ESC sets the normal mode, while long press ESC sends ESC.|1|
-|VimLongEscNormal|If 1, single press and long press of ESC behaviors are swapped.|0|
+|VimEscNormal|If 1, short press ESC sets the normal mode, while long press ESC sends ESC.|1|
+|VimSendEscNormal|If 1, short press ESC send ESC in the normal mode.|0|
+|VimLongEscNormal|If 1, short press and long press of ESC behaviors are swapped.|0|
+|VimCtrlBracketToEsc|If 1, Ctrl-[ behaves as ESC.<br>If VimCtrlBracketNormal is 0, Ctrl-[ sends ESC.<br>If VimCtrlBracketNormal is 1, long press Ctrl-[ sends ESC.|0|
 |VimCtrlBracketNormal|If 1, pushing Ctrl-[ sets the normal mode, while long press Ctrl-[ sends Ctrl-[.|1|
-|VimLongCtrlBracketNormal|If 1, single press and long press of Ctrl-[ behaviors are swapped.|0|
+|VimSendCtrlBracketNormal|If 1, short press Ctrl-[ send Ctrl-[ in the normal mode.|0|
+|VimLongCtrlBracketNormal|If 1, short press and long press of Ctrl-[ behaviors are swapped.|0|
 |VimRestoreIME|If 1, IME status is restored at entering the insert mode.|1|
 |VimJJ|If 1, `jj` changes the mode to the normal mode from the insert mode.|0|
 |VimTwoLetterEsc|A list of character pairs to press together during the insert mode to get to the Normal mode.<br>For example, a value of `jf` means pressing `j` and `f` at the same time will enter the Normal mode.<br>Multiple combination can be set by separated by `,`. (e.g. `jf,jk,sd`)||
