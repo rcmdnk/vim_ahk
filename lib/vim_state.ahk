@@ -96,11 +96,9 @@
     neither := !(VimLongEscNormal || LongPress)
     SetNormal :=  both or neither
     if (SetNormal) {
-      if (VimSendEscNormal && Vim.State.Mode == "Vim_Normal") {
-        Send, ^[
-      }
       Vim.State.SetNormal()
-    } else {
+    }
+    if (!SetNormal or (VimSendEscNormal && Vim.State.Mode == "Vim_Normal")) {
       Send, {Esc}
     }
     if (LongPress){
@@ -122,11 +120,9 @@
     neither := !(VimLongCtrlBracketNormal || LongPress)
     SetNormal :=  both or neither
     if (SetNormal) {
-      if (VimSendCtrlBracketNormal && Vim.State.Mode == "Vim_Normal") {
-        Send, ^[
-      }
       Vim.State.SetNormal()
-    } else {
+    }
+    if (!SetNormal or (VimSendCtrlBracketNormal && Vim.State.Mode == "Vim_Normal")) {
       Send, ^[
     }
     if (LongPress){
