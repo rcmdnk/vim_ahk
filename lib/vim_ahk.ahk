@@ -19,7 +19,7 @@
 
 class VimAhk{
   __About(){
-    this.About.Version := "v0.8.4"
+    this.About.Version := "v0.8.5"
     this.About.Date := "20/Oct/2020"
     this.About.Author := "rcmdnk"
     this.About.Description := "Vim emulation with AutoHotkey, everywhere in Windows."
@@ -79,6 +79,9 @@ class VimAhk{
     this.AddToConf("VimLongEscNormal", 0, 0
       , "Long press ESC to enter the normal mode"
       , "Swap single press and long press behaviors for ESC.`nEnable ESC to enter Normal mode first.")
+    this.AddToConf("VimCtrlBracketToEsc", 1, 1
+      , "Ctrl-[ to ESC"
+      , "Send ESC by Ctrl-[.`nThis changes Ctrl-[ behavir even if Ctrl-[ to enter the normal mode is enabled.`nIf both Ctlr-[ to ESC and Ctlr-[ to enter the normal mode are enabled, long press Ctrl-[ sends ESC instead of Ctrl-[.")
     this.AddToConf("VimCtrlBracketNormal", 1, 1
       , "Ctrl-[ to enter the normal mode"
       , "Use Ctrl-[ to enter the normal mode, long press Ctrl-[ to send Ctrl-[.")
@@ -116,7 +119,7 @@ class VimAhk{
       , "Application"
       , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
 
-    this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ"]
+    this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ"]
 
     ; ToolTip Information
     this.Info := {}

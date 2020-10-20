@@ -83,7 +83,7 @@
   }
 
   HandleEsc(){
-    global Vim, VimEscNormal, VimLongEscNormal
+    global Vim, VimEscNormal, vimSendEscNormal, VimLongEscNormal
     if (!VimEscNormal) {
       Send, {Esc}
       Return
@@ -95,11 +95,11 @@
     both := VimLongEscNormal && LongPress
     neither := !(VimLongEscNormal || LongPress)
     SetNormal :=  both or neither
-    if (SetNormal) {
-      Vim.State.SetNormal()
-    }
     if (!SetNormal or (VimSendEscNormal && Vim.State.Mode == "Vim_Normal")) {
       Send, {Esc}
+    }
+    if (SetNormal) {
+      Vim.State.SetNormal()
     }
     if (LongPress){
       ; Have to ensure the key has been released, otherwise this will get
@@ -119,11 +119,11 @@
     both := VimLongCtrlBracketNormal && LongPress
     neither := !(VimLongCtrlBracketNormal || LongPress)
     SetNormal :=  both or neither
-    if (SetNormal) {
-      Vim.State.SetNormal()
-    }
     if (!SetNormal or (VimSendCtrlBracketNormal && Vim.State.Mode == "Vim_Normal")) {
       Send, ^[
+    }
+    if (SetNormal) {
+      Vim.State.SetNormal()
     }
     if (LongPress){
       KeyWait, [
