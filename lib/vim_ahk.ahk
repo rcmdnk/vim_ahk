@@ -124,7 +124,7 @@ class VimAhk{
     ; ToolTip Information
     this.Info := {}
     for k, v in this.Conf {
-      info := k ":`n'" v["info"]
+      info := k ":`n" v["info"]
       this.Info[k] := info
       for i, type in ["Text", "List", "Value", "Edit"] {
         textKey := k type
