@@ -51,6 +51,7 @@ You will find **vim_ahk** folder which contains **vim_ahk.exe** and **vim_ahk_ic
 ## Applications (VimGroup)
 The default setting enables vim-mode for the following applications:
 
+* Q-dir
 * Notepad (メモ帳)
 * Wordpad
 * TeraPad
@@ -229,7 +230,8 @@ If using a custom two-letter hotkey to enter the normal mode, the two letters mu
 
 |Key/Commands|Function|
 |:----------:|:-------|
-|h/j/k/l|Left/Down/Up/Right.|
+|h/j/k/l|Left/Down/Up/Right in other applications.|
+|h/j/k/l|Backspace(returns to the parent directory)/Down/Up/Enter(enters the selected directory or opens a file) in q-dir.|
 |0/$| To the start/end of the line.|
 |Ctrl-a/Ctrl-e| To the start/end of the line (emacs like).|
 |^| To the starting non-whitespace character of the line.|
