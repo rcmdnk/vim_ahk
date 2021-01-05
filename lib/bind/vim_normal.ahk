@@ -39,3 +39,46 @@ Space::Send, {Right}
 
 ; period
 .::Send, +^{Right}{BS}^v
+
+; Q-dir
+#If WinActive("ahk_group VimQdir") and (Vim.State.Mode == "Vim_Normal")
+; switch to left up panel
+; 使用ctrl无法正常工作, 改用alt更加顺手
+!u::
+    Send, {LControl Down}
+    Send, {1 Down}
+    Send, {1 Up}
+    Send, {LControl Up}
+Return
+
+; switch to right up panel
+!i::
+    Send, {LControl Down}
+    Send, {2 Down}
+    Send, {2 Up}
+    Send, {LControl Up}
+Return
+
+; switch to left down panel
+!j::
+    Send, {LControl Down}
+    Send, {3 Down}
+    Send, {3 Up}
+    Send, {LControl Up}
+Return
+
+; switch to right down panel
+!k::
+    Send, {LControl Down}
+    Send, {4 Down}
+    Send, {4 Up}
+    Send, {LControl Up}
+Return
+
+; Ctrl+q, menu Quick-links
+'::
+    Send, {LControl Down}
+    Send, {q Down}
+    Send, {q Up}
+    Send, {LControl Up}
+Return
