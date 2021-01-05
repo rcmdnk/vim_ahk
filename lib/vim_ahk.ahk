@@ -68,6 +68,8 @@ class VimAhk{
     GroupAdd, VimCursorSameAfterSelect, ahk_exe notepad.exe ; NotePad
     GroupAdd, VimCursorSameAfterSelect, ahk_exe explorer.exe ; Explorer
 
+    ; Q-Dir should be a new group
+    GroupAdd, VimQdir, ahk_exe Q-Dir_x64.exe ; q-dir
     ; Configuration values for Read/Write ini
     this.Conf := {}
     this.AddToConf("VimEscNormal", 1, 1

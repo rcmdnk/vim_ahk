@@ -109,9 +109,19 @@
 
       ; 1 character
       if(key == "h"){
-        Send, {Left}
+        if WinActive("ahk_group VimQdir"){
+          Send, {BackSpace down}{BackSpace up}
+        }
+        else {
+          Send, {Left}
+        }
       }else if(key == "l"){
-        Send, {Right}
+        if WinActive("ahk_group VimQdir"){
+          Send, {Enter}
+        }
+        else {
+          Send, {Right}
+        }
       ; Home/End
       }else if(key == "0"){
         this.Home()
