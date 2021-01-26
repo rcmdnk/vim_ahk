@@ -8,7 +8,10 @@ class VimCaret{
                  , "Default": 1}
   }
 
-  SetCaret(Mode="", Interval=0){
+  SetCaret(Mode=""){
+    if (this.Vim.Conf["VimChangeCaretWidth"]["val"] == 0){
+      return
+    }
     width :=
     if this.Vim.State.IsCurrentVimMode("Vim_Normal"){
       width := this.caretwidths["Normal"]

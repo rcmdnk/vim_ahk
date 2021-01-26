@@ -44,7 +44,7 @@ class VimAhk{
     ; Group Settings
     this.GroupDel := ","
     this.GroupN := 0
-    this.GroupName := "VimGroup" GroupN
+    this.GroupName := "VimGroup" this.GroupN
 
     DefaultGroup := this.SetDefaultActiveWindows()
 
@@ -71,6 +71,7 @@ class VimAhk{
     GroupAdd, VimCursorSameAfterSelect, ahk_exe explorer.exe ; Explorer
 
     ; Configuration values for Read/Write ini
+    ; setting, default, val, description, info
     this.Conf := {}
     this.AddToConf("VimEscNormal", 1, 1
       , "ESC to enter the normal mode"
@@ -93,6 +94,9 @@ class VimAhk{
     this.AddToConf("VimLongCtrlBracketNormal", 0, 0
       , "Long press Ctrl-[ to enter the normal mode:"
       , "Swap short press and long press behaviors for Ctrl-[.`nEnable Ctrl-[ to enter the normal mode first.")
+    this.AddToConf("VimChangeCaretWidth", 0, 0
+      , "Change to thick text caret when in normal mode"
+      , "When entering normal mode, sets the text cursor/caret to a thick bar, then sets back to thin when exiting normal mode.`nDoesn't work with all windows, and causes the current window to briefly lose focus when changing mode.")
     this.AddToConf("VimRestoreIME", 1, 1
       , "Restore IME status at entering the insert mode"
       , "Save the IME status in the insert mode, and restore it at entering the insert mode.")
@@ -121,7 +125,7 @@ class VimAhk{
       , "Application"
       , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
 
-    this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ"]
+    this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth"]
 
     ; ToolTip Information
     this.Info := {}
@@ -148,6 +152,7 @@ class VimAhk{
 
   SetExistValue(){
     for k, v in this.Conf {
+      ; This ensures the variable exists, as a workaround since in AHK we cannot directly check whether it exists.
       if(%k% != ""){
         this.Conf[k]["default"] := %k%
         this.Conf[k]["val"] := %k%
