@@ -7,6 +7,7 @@
 #Include %A_LineFile%\..\vim_check.ahk
 #Include %A_LineFile%\..\vim_gui.ahk
 #Include %A_LineFile%\..\vim_icon.ahk
+#Include %A_LineFile%\..\vim_caret.ahk
 #Include %A_LineFile%\..\vim_ini.ahk
 #Include %A_LineFile%\..\vim_menu.ahk
 #Include %A_LineFile%\..\vim_move.ahk
@@ -32,6 +33,7 @@ class VimAhk{
     this.About := new VimAbout(this)
     this.Check := new VimCheck(this)
     this.Icon := new VimIcon(this)
+    this.Caret := new VimCaret(this)
     this.Ini := new VimIni(this)
     this.VimMenu := new VimMenu(this)
     this.Move := new VimMove(this)
