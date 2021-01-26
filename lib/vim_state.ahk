@@ -23,16 +23,16 @@
     if(force == 0) and ((verbose <= 1) or ((Mode == "") and (g == 0) and (n == 0) and (LineCopy == -1))){
       Return
     }else if(verbose == 2){
-      this.Status(this.Mode, 1)
+      this.SetTooltip(this.Mode, 1)
     }else if(verbose == 3){
-      this.Status(this.Mode "`r`ng=" this.g "`r`nn=" this.n "`r`nLineCopy=" this.LineCopy, 4)
+      this.SetTooltip(this.Mode "`r`ng=" this.g "`r`nn=" this.n "`r`nLineCopy=" this.LineCopy, 4)
     }
     if(verbose >= 4){
       Msgbox, , Vim Ahk, % "Mode: " this.Mode "`nVim_g: " this.g "`nVim_n: " this.n "`nVimLineCopy: " this.LineCopy
     }
   }
 
-  Status(Title, lines=1){
+  SetTooltip(Title, lines=1){
     WinGetPos, , , W, H, A
     ToolTip, %Title%, W - 110, H - 30 - (lines) * 20
     this.Vim.VimToolTip.SetRemoveToolTip(1000)
@@ -50,6 +50,7 @@
         VIM_IME_SET(this.LastIME)
       }
       this.Vim.Icon.SetIcon(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
+      this.Vim.Caret.SetCaret(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
     }
     if(g != -1){
       this.g := g
@@ -180,10 +181,10 @@
     return false
   }
 
+  ; Update icon/mode indicator
   StatusCheck(){
     if WinActive("ahk_group " this.Vim.GroupName){
       this.Vim.Icon.SetIcon(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
-      this.Vim.Caret.SetCaret(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
     }else{
       this.Vim.Icon.SetIcon("Disabled", this.Vim.Conf["VimIconCheckInterval"]["val"])
     }

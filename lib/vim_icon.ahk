@@ -1,6 +1,7 @@
 ﻿class VimIcon{
-  __New(){
+  __New(vim){
     global VimScriptPath
+    this.Vim := vim
     this.icons := {Normal: VimScriptPath "\..\vim_ahk_icons\normal.ico"
                  , Insert: VimScriptPath  "\..\vim_ahk_icons\insert.ico"
                  , Visual: VimScriptPath "\..\vim_ahk_icons\visual.ico"
