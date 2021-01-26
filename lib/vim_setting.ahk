@@ -38,7 +38,7 @@
     if(VimSetTitleMatchMode == "RegEx"){
       matchmode := 4
     }else{
-      matchmode := %VimSetTitleMatchMode%
+      matchmode := VimSetTitleMatchMode
     }
     Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndSetTitleMachMode X+5 Y+-16 W60 vVimSetTitleMatchMode Choose" matchmode, 1|2|3|RegEx
     this.HwndAll.Push(HwndSetTitleMachMode)
