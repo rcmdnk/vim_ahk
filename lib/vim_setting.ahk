@@ -80,7 +80,6 @@
 
     Gui, % this.Hwnd ":Add", Button, +HwndHwndCancel vVimSettingCancel W100 X+10, &Cancel
     this.HwndAll.Push(HwndCancel)
-    this.LastHwnd := Last
     cancel := ObjBindMethod(this, "Cancel")
     GuiControl, +G, VimSettingCancel, % cancel
   }

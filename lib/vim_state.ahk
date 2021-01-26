@@ -150,7 +150,7 @@
         throw Exception("Invalid mode specified",-2,
         (Join
   "'" Mode "' is not " InOrBlank " a valid mode as defined by the VimPossibleVimModes
-   array at the top of vim.ahk. This may be a typo.
+   array at the top of vim_state.ahk. This may be a typo.
    Fix this error by using an existing mode,
    or adding your mode to the array.")
         )
