@@ -172,7 +172,7 @@
     }else if(key == "g"){
       Send, ^{Home}
     }else if(key == "+g"){
-      Send, ^{End}
+      Send, ^{End}{Home}
     }
 
     if(!repeat){
