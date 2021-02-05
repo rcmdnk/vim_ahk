@@ -4,12 +4,10 @@
 ; Results are outputed as the current time and date in %A_ScriptDir%\testlogs
 
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-; #Warn  ; Enable warnings to assist with detecting common errors.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance Force
-#warn
-sendlevel, 1 ; So vim commands get triggered by this script
+sendlevel, 5 ; So vim commands get triggered by this script
 SetTitleMatchMode 2 ; window title functions will match by containing the match text.
 ; Only affects sendevent, used for sending the test one key at a time.
 ; Gives the vim script time to interpret it, also useful to increase when
@@ -17,6 +15,7 @@ SetTitleMatchMode 2 ; window title functions will match by containing the match 
 SetKeyDelay, 80
 ; (gives vim script time to react).
 DetectHiddenWindows, on
+; #Warn  ; Enable warnings to assist with detecting common errors.
 
 ; Contains clipboard related functions, among others.
 #include %A_ScriptDir%\utility_functions.ahk
@@ -38,25 +37,15 @@ TestsFailed := False
 IfNotExist, testLogs
     FileCreateDir, testLogs
 LogFileName = testLogs\%A_Now%.txt ;%A_Scriptdir%\testlogs\%A_Now%.txt
+IniOriginal = "%A_AppData%\AutoHotkey\vim_ahk.ini"
+IniBackup = "%A_Temp%\AutoHotkey\vim_ahk_backup_%A_Now%.ini"
 
 ; Initialise the programs
-SetWorkingDir %A_ScriptDir%\testLogs  ; Temp vim files are put out of the way.
-run, cmd.exe /r gvim -u NONE,,,VimPID
-sleep, 200
-WaitForWindowToActivate("ahk_class Vim") ; Wait for vim to start
-WinMaximize,ahk_class Vim
-SetWorkingDir %A_ScriptDir%
-
-send :imap jj <esc>{return} ; Prepare vim
-; So newlines are handled correctly between both notepad and vim
-send :imap ^q`r^q`n ^q{return 2}
-
-Run, Notepad,,,NotepadPID
-sleep, 200
-WaitForWindowToActivate("ahk_class Notepad") ; Wait for notepad to start
-WinMaximize, ahk_class Notepad
-
-run, %A_ScriptDir%/vim.ahk --testing,,, AHKVimPID ; Run our vim emulator script.
+StartVim()
+StartNotepad()
+BackupIni()
+; Run our vim emulator script.
+run, %A_ScriptDir%/../vim.ahk --testing,,, AHKVimPID
 
 ; Set all our scripts and two testing programs to Above normal priority, for test reliability.
 Process, Priority, ,A ; This script
@@ -94,10 +83,7 @@ ReadFileWithComments(OutputArray){
         {
             testString := output[1]
             ; escape special chars
-            StringReplace, testString, testString, ^, {^}, A
-            StringReplace, testString, testString, +, {+}, A
-            StringReplace, testString, testString, #, {#}, A
-            StringReplace, testString, testString, !, {!}, A
+            testString := SanitiseTextForAhk(testString)
             OutputArray.push(testString)
         }
     }
@@ -116,13 +102,44 @@ RunTests(){
     EndTesting()
 }
 
+StartVim(){
+    global VimPID, VimWinID
+    SetWorkingDir %A_ScriptDir%\testLogs  ; Temp vim files are put out of the way.
+    ; Using this sets VimPID to the cmd.exe PID, which isn't correct.
+    run, cmd.exe /r gvim -u NONE,,,VimPID
+    ; Usually not found by AHK.
+    ; run, gvim -u NONE,,,VimPID
+    sleep, 200
+    WinActivate, ahk_class Vim ahk_pid %VimPID%
+    WaitForWindowToActivate("ahk_class Vim")
+    WinMaximize,ahk_class Vim
+    SetWorkingDir %A_ScriptDir%
+    WinGet, VimWinID, ID, A
+
+    send :imap jj <esc>{return} ; Prepare vim
+    ; So newlines are handled correctly between both notepad and vim
+    send :imap ^q`r^q`n ^q{return 2}
+}
+
+StartNotepad(){
+    global NotepadPID, NotepadWinID
+    Run, Notepad,,,NotepadPID
+    sleep, 200
+    WinActivate, ahk_class Notepad ahk_pid %NotepadPID%
+    WaitForWindowToActivate("ahk_class Notepad")
+    WinMaximize, ahk_class Notepad
+    WinGet, NotepadWinID, ID, A
+}
+
 SwitchToVim(){
-    WinActivate, ahk_class Vim
+    global VimPID, VimWinID
+    WinActivate, ahk_class Vim ahk_id %VimWinID%
     WaitForWindowToActivate("ahk_class Vim")
 }
 
 SwitchToNotepad(){
-    WinActivate, ahk_class Notepad
+    global NotepadPID, NotepadWinID
+    WinActivate, ahk_class Notepad ahk_id %NotepadWinID%
     WaitForWindowToActivate("ahk_class Notepad")
 }
 
@@ -180,7 +197,7 @@ SendTestToVimAndReturnResult(test){
     sleep, 50
     SaveClipboard()
     clipboard= ; Empty the clipboard for clipwait to work
-    send {esc}:`%d{numpadAdd} ; select all text, cut to system clipboard
+    send {esc}:`%d{+} ; select all text, cut to system clipboard
     send {return}
     ClipWait
     output := Clipboard
@@ -189,10 +206,19 @@ SendTestToVimAndReturnResult(test){
 }
 
 TestAndCompareOutput(test){
-    global Log
     NotepadOutput := SendTestToNotepadAndReturnResult(test)
     VimOutput := SendTestToVimAndReturnResult(test)
     CompareStrings(NotepadOutput, VimOutput, test)
+}
+
+; Replaces AHK special characters with their sanitised versions, so they can be
+; sent literally.
+SanitiseTextForAhk(input){
+    input := StrReplace(input, "^", "{^}")
+    input := StrReplace(input, "!", "{!}")
+    input := StrReplace(input, "+", "{+}")
+    input := StrReplace(input, "#", "{#}")
+    return input
 }
 
 ; Use a diff, then log the result in temp files
@@ -236,7 +262,7 @@ EndTesting(){
     SwitchToVim()
     send :q{!}
     send {return} ; Exit vim.
-   
+
     if (TestsFailed == True)
     {
         if not isQuiet() {
@@ -255,16 +281,22 @@ EndTesting(){
     }
 }
 
+BackupIni(){
+    global IniOriginal, IniBackup
+    FileMove, %IniOriginal%, %IniBackup%
+}
 
-
+RestoreIni(){
+    global IniOriginal, IniBackup
+    FileMove, %IniBackup%, %IniOriginal%, True
+}
 
 EndScript(exitCode){
-    Global NotepadPID
-    Global AHKVimPID
-    Global VimPID
+    Global NotepadPID, AHKVimPID, VimPID
+    RestoreIni()
     process, Close, %NotepadPID%
-    process, Close, %AHKVimPID%
     process, Close, %VimPID%
+    process, Close, %AHKVimPID%
     if exitCode = 1
         ExitApp, 1 ; Failed exit
     else
@@ -273,4 +305,4 @@ EndScript(exitCode){
 
 EndScript(1)
 
-+ & esc::EndScript(1) ; Abort
+LShift & esc::EndScript(1) ; Abort
