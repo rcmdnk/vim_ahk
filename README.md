@@ -298,6 +298,14 @@ y/d/c+Move Command can be used, too.
 |q | Quit |
 |h | Open help of the application|
 
+## Testing
+
+Tests are run by executing `tests/run_vimahk_tests.ahk`. A notepad and vim window is opened, and vim_ahk is started.
+
+The testing system used is a series of test cases in `tests/testcases.txt` representing key strokes to send to vim_ahk. These are sent to the open vim and notepad windows, and the resulting text is compared.
+
+The tests can be very flakey, so should be used as a guide and to execute code paths to check for errors. Tests should be run with a default ini.
+
 ## References (Japanese)
 
 * [vim_ahkでウィンドウを定期的にチェックしてトレイアイコンを変えられる様にした](https://rcmdnk.com/blog/2017/11/22/computer-autohotkey-vim/)
