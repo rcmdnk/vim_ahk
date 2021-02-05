@@ -1,4 +1,4 @@
-﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
+﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 y::Vim.State.SetMode("Vim_ydc_y", 0, -1, 0)
 d::Vim.State.SetMode("Vim_ydc_d", 0, -1, 0)
 c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
@@ -37,24 +37,24 @@ Return
   }
 Return
 
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_ydc_y")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Vim_ydc_y"))
 y::
   Vim.Move.YDCMove()
   Send, {Left}{Home}
 Return
 
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_ydc_d")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Vim_ydc_d"))
 d::Vim.Move.YDCMove()
 
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_ydc_c")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Vim_ydc_c"))
 c::Vim.Move.YDCMove()
 
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 x::Send, {Delete}
 +x::Send, {BS}
 
 ; Paste
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 p::
   ;i:=0
   ;;Send, {p Up}

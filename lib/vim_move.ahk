@@ -11,7 +11,7 @@
       Send, {Shift Down}
     }
 
-    if(this.Vim.State.Mode == "Vim_VisualLineFirst") and (key == "k" or key == "^u" or key == "^b" or key == "g"){
+    if(this.Vim.State.IsCurrentVimMode("Vim_VisualLineFirst")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
       Send, {Shift Up}{End}
       this.Home()
       Send, {Shift Down}
@@ -19,7 +19,7 @@
       this.vim.state.setmode("Vim_VisualLine")
     }
 
-    if(this.Vim.State.Mode == "Vim_VisualLineFirst") and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
+    if(this.Vim.State.IsCurrentVimMode("Vim_VisualLineFirst")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
       this.vim.state.setmode("Vim_VisualLine")
     }
 
@@ -43,18 +43,18 @@
   MoveFinalize(){
     Send,{Shift Up}
     ydc_y := false
-    if(this.Vim.State.Mode == "Vim_ydc_y"){
+    if(this.Vim.State.IsCurrentVimMode("Vim_ydc_y")){
       Clipboard :=
       Send, ^c
       ClipWait, 1
       this.Vim.State.SetMode("Vim_Normal")
       ydc_y := true
-    }else if(this.Vim.State.Mode == "Vim_ydc_d"){
+    }else if(this.Vim.State.IsCurrentVimMode("Vim_ydc_d")){
       Clipboard :=
       Send, ^x
       ClipWait, 1
       this.Vim.State.SetMode("Vim_Normal")
-    }else if(this.Vim.State.Mode == "Vim_ydc_c"){
+    }else if(this.Vim.State.IsCurrentVimMode("Vim_ydc_c")){
       Clipboard :=
       Send, ^x
       ClipWait, 1

@@ -2,7 +2,10 @@
   __New(vim){
     this.Vim := vim
 
+    ; CheckModeValue does not get set for compiled scripts.
+    ;@Ahk2Exe-IgnoreBegin
     this.CheckModeValue := true
+    ;@Ahk2Exe-IgnoreEnd
     this.PossibleVimModes := ["Vim_Normal", "Insert", "Replace", "Vim_ydc_y"
     , "Vim_ydc_c", "Vim_ydc_d", "Vim_VisualLine", "Vim_VisualFirst"
     , "Vim_VisualChar", "Command", "Command_w", "Command_q", "Z", ""
@@ -46,7 +49,7 @@
     this.CheckValidMode(Mode)
     if(Mode != ""){
       this.Mode := Mode
-      If(Mode == "Insert") and (this.Vim.Conf["VimRestoreIME"]["val"] == 1){
+      If(this.IsCurrentVimMode("Insert")) and (this.Vim.Conf["VimRestoreIME"]["val"] == 1){
         VIM_IME_SET(this.LastIME)
       }
       this.Vim.Icon.SetIcon(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
@@ -95,7 +98,7 @@
     both := VimLongEscNormal && LongPress
     neither := !(VimLongEscNormal || LongPress)
     SetNormal :=  both or neither
-    if (!SetNormal or (VimSendEscNormal && Vim.State.Mode == "Vim_Normal")) {
+    if (!SetNormal or (VimSendEscNormal && this.IsCurrentVimMode("Vim_Normal"))) {
       Send, {Esc}
     }
     if (SetNormal) {
@@ -119,7 +122,7 @@
     both := VimLongCtrlBracketNormal && LongPress
     neither := !(VimLongCtrlBracketNormal || LongPress)
     SetNormal :=  both or neither
-    if (!SetNormal or (VimSendCtrlBracketNormal && Vim.State.Mode == "Vim_Normal")) {
+    if (!SetNormal or (VimSendCtrlBracketNormal && this.IsCurrentVimMode("Vim_Normal"))) {
       Send, ^[
     }
     if (SetNormal) {
