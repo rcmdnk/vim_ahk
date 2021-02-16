@@ -82,3 +82,7 @@ Return
     Send, {q Up}
     Send, {LControl Up}
 Return
+
+; 保留Normal模式下e键，用于右键再按下刷新(e)功能，啥事不干，直接返回e键
+~e::
+Return
