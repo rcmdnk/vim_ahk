@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}\\vim.ahk",
             "args": [],
-            "runtime": "D:\\Program Files\\AutoHotkey\\AutoHotkeyU64.exe"
+            "runtime": "C:\\Program Files\\AutoHotkey\\AutoHotkeyU64.exe"
         }
 
     ],
