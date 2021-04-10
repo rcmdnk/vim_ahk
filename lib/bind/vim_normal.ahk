@@ -42,47 +42,15 @@ Space::Send, {Right}
 
 ; Q-dir
 #If WinActive("ahk_group VimQdir") and (Vim.State.Mode == "Vim_Normal")
-; switch to left up panel
-; 使用ctrl无法正常工作, 改用alt更加顺手
-!u::
-    Send, {LControl Down}
-    Send, {1 Down}
-    Send, {1 Up}
-    Send, {LControl Up}
-Return
-
-; switch to right up panel
-!i::
-    Send, {LControl Down}
-    Send, {2 Down}
-    Send, {2 Up}
-    Send, {LControl Up}
-Return
-
-; switch to left down panel
-!j::
-    Send, {LControl Down}
-    Send, {3 Down}
-    Send, {3 Up}
-    Send, {LControl Up}
-Return
-
-; switch to right down panel
-!k::
-    Send, {LControl Down}
-    Send, {4 Down}
-    Send, {4 Up}
-    Send, {LControl Up}
-Return
-
+; For Q-dir, ^X mapping does not work, use !X instead.
+; ^X does not work to be sent, too, use Down/Up
+; switch to left top (1), right top (2), left bottom (3), right bottom (4)
+!u::Send, {LControl Down}{1 Down}{1 Up}{LControl Up}
+!i::Send, {LControl Down}{2 Down}{2 Up}{LControl Up}
+!j::Send, {LControl Down}{3 Down}{3 Up}{LControl Up}
+!k::Send, {LControl Down}{4 Down}{4 Up}{LControl Up}
 ; Ctrl+q, menu Quick-links
-'::
-    Send, {LControl Down}
-    Send, {q Down}
-    Send, {q Up}
-    Send, {LControl Up}
-Return
-
-; 保留Normal模式下e键，用于右键再按下刷新(e)功能，啥事不干，直接返回e键
+'::Send, {LControl Down}{q Down}{q Up}{LControl Up}
+; Keep the e key in Normal mode, use the right button and then press the refresh (e) function, do nothing, return to the e key directly
 ~e::
 Return
