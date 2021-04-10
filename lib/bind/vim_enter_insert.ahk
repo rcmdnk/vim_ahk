@@ -28,7 +28,7 @@ Return
 
 ; Q-dir
 #If WinActive("ahk_group VimQdir") and (Vim.State.Mode == "Vim_Normal")
-; 进入无autohotkey模式，可以通过首字母来快速定位文件/文件夹
+; Enter insert mode to quickly locate the file/folder by using the first letter
 /::Vim.State.SetMode("Insert")
-; 重命名，自动进入insert模式
+; Enter insert mode at rename
 ~F2::Vim.State.SetMode("Insert")

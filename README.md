@@ -51,7 +51,6 @@ You will find **vim_ahk** folder which contains **vim_ahk.exe** and **vim_ahk_ic
 ## Applications (VimGroup)
 The default setting enables vim-mode for the following applications:
 
-* Q-dir
 * Notepad (メモ帳)
 * Wordpad
 * TeraPad
@@ -64,6 +63,7 @@ The default setting enables vim-mode for the following applications:
 * OneNote
 * TexWork
 * TexStudio
+* Q-dir
 
 You can change them from the right click menu of task tray icon
 (find `VimMenu`-`Settings` in the list),
@@ -230,7 +230,7 @@ If using a custom two-letter hotkey to enter the normal mode, the two letters mu
 
 |Key/Commands|Function|
 |:----------:|:-------|
-|h/j/k/l|Left/Down/Up/Right in other applications.|
+|h/j/k/l|Left/Down/Up/Right.|
 |0/$| To the start/end of the line.|
 |Ctrl-a/Ctrl-e| To the start/end of the line (emacs like).|
 |^| To the starting non-whitespace character of the line.|
@@ -247,15 +247,6 @@ In addition, `Repeat` is also available for some commands.
 |4j| Down 4 lines|
 |3w| Move 3 words forward|
 |100j| Down 100 lines|
-
-### Q-dir
-The keybinds refer to [ranger](https://github.com/ranger/ranger) which is a console file manager with VI key bindings
-
-|Key/Commands|Function|
-|:----------:|:-------|
-|h/j/k/l|Backspace(returns to the parent directory)/Down/Up/Enter(enters the selected directory or opens a file)|
-|Alt+u/i/j/k| switch between Quad-Directories|
-|'| menu Quick-links|
 
 ### Yank/Cut(Delete)/Change/Paste
 
@@ -307,6 +298,21 @@ y/d/c+Move Command can be used, too.
 |w + q| Save and Quit |
 |q | Quit |
 |h | Open help of the application|
+
+## Application specific settings
+
+### Q-dir
+
+The keybinds refer to [ranger](https://github.com/ranger/ranger) which is a console file manager with VI key bindings
+
+#### Available commands in the normal mode
+
+|Key/Commands|Function|
+|:----------:|:-------|
+|h/j/k/l|Backspace(returns to the parent directory)/Down/Up/Enter(enters the selected directory or opens a file)|
+|Alt+u/i/j/k| switch between Quad-Directories|
+|'| menu Quick-links|
+
 
 ## References (Japanese)
 
