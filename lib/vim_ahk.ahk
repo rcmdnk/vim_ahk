@@ -7,6 +7,7 @@
 #Include %A_LineFile%\..\vim_check.ahk
 #Include %A_LineFile%\..\vim_gui.ahk
 #Include %A_LineFile%\..\vim_icon.ahk
+#Include %A_LineFile%\..\vim_caret.ahk
 #Include %A_LineFile%\..\vim_ini.ahk
 #Include %A_LineFile%\..\vim_menu.ahk
 #Include %A_LineFile%\..\vim_move.ahk
@@ -32,6 +33,7 @@ class VimAhk{
     this.About := new VimAbout(this)
     this.Check := new VimCheck(this)
     this.Icon := new VimIcon(this)
+    this.Caret := new VimCaret(this)
     this.Ini := new VimIni(this)
     this.VimMenu := new VimMenu(this)
     this.Move := new VimMove(this)
@@ -42,7 +44,7 @@ class VimAhk{
     ; Group Settings
     this.GroupDel := ","
     this.GroupN := 0
-    this.GroupName := "VimGroup" GroupN
+    this.GroupName := "VimGroup" this.GroupN
 
     DefaultGroup := this.SetDefaultActiveWindows()
 
@@ -73,6 +75,7 @@ class VimAhk{
     GroupAdd, VimQdir, ahk_exe Q-Dir.exe ; q-dir
 
     ; Configuration values for Read/Write ini
+    ; setting, default, val, description, info
     this.Conf := {}
     this.AddToConf("VimEscNormal", 1, 1
       , "ESC to enter the normal mode"
@@ -95,6 +98,9 @@ class VimAhk{
     this.AddToConf("VimLongCtrlBracketNormal", 0, 0
       , "Long press Ctrl-[ to enter the normal mode:"
       , "Swap short press and long press behaviors for Ctrl-[.`nEnable Ctrl-[ to enter the normal mode first.")
+    this.AddToConf("VimChangeCaretWidth", 0, 0
+      , "Change to thick text caret when in normal mode"
+      , "When entering normal mode, sets the text cursor/caret to a thick bar, then sets back to thin when exiting normal mode.`nDoesn't work with all windows, and causes the current window to briefly lose focus when changing mode.")
     this.AddToConf("VimRestoreIME", 1, 1
       , "Restore IME status at entering the insert mode"
       , "Save the IME status in the insert mode, and restore it at entering the insert mode.")
@@ -123,7 +129,7 @@ class VimAhk{
       , "Application"
       , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
 
-    this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ"]
+    this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth"]
 
     ; ToolTip Information
     this.Info := {}
@@ -150,6 +156,7 @@ class VimAhk{
 
   SetExistValue(){
     for k, v in this.Conf {
+      ; This ensures the variable exists, as a workaround since in AHK we cannot directly check whether it exists.
       if(%k% != ""){
         this.Conf[k]["default"] := %k%
         this.Conf[k]["val"] := %k%
@@ -220,6 +227,7 @@ class VimAhk{
                   , "ahk_exe notepad.exe"   ; NotePad
                   , "OneNote"               ; OneNote at Windows 10
                   , "ahk_exe onenote.exe"   ; OneNote Desktop
+                  , "ahk_exe ApplicationFrameHost.exe" ; Some Windows applications use this, including OneNote at Windows 10
                   , "ahk_exe POWERPNT.exe"  ; PowerPoint
                   , "ahk_exe TeraPad.exe"   ; TeraPad
                   , "ahk_exe texstudio.exe" ; TexStudio

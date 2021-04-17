@@ -60,10 +60,11 @@ The default setting enables vim-mode for the following applications:
 * Microsoft Word
 * Evernote
 * Visual Studio Code
-* OneNote
 * TexWork
 * TexStudio
 * Q-dir
+* OneNote
+* Applications using ahk_exe ApplicationFrameHost.exe
 
 You can change them from the right click menu of task tray icon
 (find `VimMenu`-`Settings` in the list),
@@ -133,6 +134,7 @@ All of these can be changed from setting menu, too.
 |VimCtrlBracketNormal|If 1, pushing Ctrl-[ sets the normal mode, while long press Ctrl-[ sends Ctrl-[.|1|
 |VimSendCtrlBracketNormal|If 1, short press Ctrl-[ send Ctrl-[ in the normal mode.|0|
 |VimLongCtrlBracketNormal|If 1, short press and long press of Ctrl-[ behaviors are swapped.|0|
+|VimChangeCaretWidth|If 1, when entering normal mode, sets the text cursor/caret to a thick bar, then sets back to thin when exiting normal mode.|0|
 |VimRestoreIME|If 1, IME status is restored at entering the insert mode.|1|
 |VimJJ|If 1, `jj` changes the mode to the normal mode from the insert mode.|0|
 |VimTwoLetterEsc|A list of character pairs to press together during the insert mode to get to the Normal mode.<br>For example, a value of `jf` means pressing `j` and `f` at the same time will enter the Normal mode.<br>Multiple combination can be set by separated by `,`. (e.g. `jf,jk,sd`)||
@@ -147,12 +149,26 @@ You can add your options before including **vim.ahk** in your script
 in the auto execute section like:
 
     VimVerbose := 2
-    #Include \path\to\\vim.ahk
+    #Include \path\to\vim.ahk
 
 If you want to change them directly in the vim.ahk script,
 add these variable before `Vim := new VimAhk()`.
 
+* VimIconCheckInterval example
+
+If you set VimIconCheckInterval as non-zero, the tray icon is changed
+when you change the mode, or change the applications to vim_ahk enabled or not enabled ones.
+
 ![trayicon](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/trayicon.gif "trayicon")
+
+* Note for VimChangeCaretWidth
+
+Caret width can be changed only on the specific applications: Wordpad, Word, OneNote, or Explorer.
+On Notepad, the caret width is kept but does not change.
+
+For the most of other applications, the caret width is kept as original width.
+
+When this option is enabled, the current window briefly loses focus when the mode is changed.
 
 ## GUI Option Setting Window
 
