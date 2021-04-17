@@ -223,6 +223,7 @@ class VimAhk{
                   , "ahk_exe notepad.exe"   ; NotePad
                   , "OneNote"               ; OneNote at Windows 10
                   , "ahk_exe onenote.exe"   ; OneNote Desktop
+                  , "ahk_exe ApplicationFrameHost.exe" ; Some Windows applications use this, including OneNote at Windows 10
                   , "ahk_exe POWERPNT.exe"  ; PowerPoint
                   , "ahk_exe TeraPad.exe"   ; TeraPad
                   , "ahk_exe texstudio.exe" ; TexStudio
