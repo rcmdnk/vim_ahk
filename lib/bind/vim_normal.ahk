@@ -1,4 +1,4 @@
-﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
+﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 ; Undo/Redo
 u::Send,^z
 ^r::Send,^y
@@ -22,7 +22,7 @@ u::Send,^z
 Return
 
 +z::Vim.State.SetMode("Z")
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Z")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Z"))
 +z::
   Send, ^s
   Send, !{F4}
@@ -34,7 +34,7 @@ Return
   Vim.State.SetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 Space::Send, {Right}
 
 ; period

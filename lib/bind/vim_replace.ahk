@@ -1,8 +1,8 @@
-﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "Vim_Normal")
+﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 r::Vim.State.SetMode("r_once")
 +r::Vim.State.SetMode("r_repeat")
 
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "r_once")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("r_once"))
 ~a::
 ~+a::
 ~b::
@@ -104,7 +104,7 @@ Return
   Vim.State.SetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.Mode == "r_repeat")
+#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("r_repeat"))
 ~a::
 ~+a::
 ~b::

@@ -38,7 +38,7 @@ class VimSetting Extends VimGui{
     if(VimSetTitleMatchMode == "RegEx"){
       matchmode := 4
     }else{
-      matchmode := %VimSetTitleMatchMode%
+      matchmode := VimSetTitleMatchMode
     }
     Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndSetTitleMachMode X+5 Y+-16 W60 vVimSetTitleMatchMode Choose" matchmode, 1|2|3|RegEx
     this.HwndAll.Push(HwndSetTitleMachMode)
@@ -80,7 +80,6 @@ class VimSetting Extends VimGui{
 
     Gui, % this.Hwnd ":Add", Button, +HwndHwndCancel vVimSettingCancel W100 X+10, &Cancel
     this.HwndAll.Push(HwndCancel)
-    this.LastHwnd := Last
     cancel := ObjBindMethod(this, "Cancel")
     GuiControl, +G, VimSettingCancel, % cancel
   }

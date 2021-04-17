@@ -1,4 +1,4 @@
-﻿#If WinActive("ahk_group " . Vim.GroupName) && (Vim.State.Mode == "Vim_Normal")
+﻿#If WinActive("ahk_group " . Vim.GroupName) && (Vim.State.IsCurrentVimMode("Vim_Normal"))
 i::Vim.State.SetMode("Insert")
 
 +i::

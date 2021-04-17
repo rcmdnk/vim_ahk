@@ -1,4 +1,4 @@
-﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.StrIsInCurrentVimMode( "ydc") or Vim.State.StrIsInCurrentVimMode( "Command") or (Vim.State.Mode == "Z"))
+﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.StrIsInCurrentVimMode( "ydc") or Vim.State.StrIsInCurrentVimMode( "Command") or (Vim.State.IsCurrentVimMode("Z")))
 *a::
 *b::
 *c::

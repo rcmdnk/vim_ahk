@@ -3,6 +3,7 @@
 ; Use {esc} to send an escape key, and {return} to send a newline.
 ; Otherwise it is best to avoid {} characters.
 ; Please put a comment at the end of your test case stating what it tests.
+; Do not finish a test with a capital letter, for some reason that breaks vim
 ;
 ; Sample text (reference only, see testscript for actual text):
 ;
@@ -20,12 +21,12 @@
 
 iAt start of first lin.{esc}ie{esc}IWord ; i,I
 ahe {esc}{esc}A Also this.; a, A, double esc
-w$^iBOL; ^, no whitespace
-I    {esc}$^ialmostBOL; ^, whitespace
-w$0iBOL; 0, no whitespace
+w$^iBOLne; ^, no whitespace
+I    {esc}$^ialmostBOLne; ^, whitespace
+w$0iBOLne; 0, no whitespace
 $bbbi[3rd word from end]; b with punctuation?
-GiEOF; G, go to end of file.
-GiEOF{esc}ggiBOF; gg (go to beginning of file)
+GiEOFle; G, go to end of file.
+GiEOF{esc}ggiBOFle; gg (go to beginning of file)
 ddGp; delete line, paste linewise at final line.
 dw; d with single motion
 d4w; d with repeat motion

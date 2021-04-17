@@ -329,6 +329,13 @@ The keybinds refer to [ranger](https://github.com/ranger/ranger) which is a cons
 |Alt+u/i/j/k| switch between Quad-Directories|
 |'| menu Quick-links|
 
+## Testing
+
+Tests are run by executing `tests/run_vimahk_tests.ahk`. A notepad and vim window is opened, and vim_ahk is started.
+
+The testing system used is a series of test cases in `tests/testcases.txt` representing key strokes to send to vim_ahk. These are sent to the open vim and notepad windows, and the resulting text is compared.
+
+The tests can be very flakey, so should be used as a guide and to execute code paths to check for errors. Tests should be run with a default ini.
 
 ## References (Japanese)
 

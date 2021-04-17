@@ -3,7 +3,7 @@
   static Ini_Default := "vim_ahk.ini"
   static Section_Default := "Vim Ahk Settings"
 
-  __New(vim, dir="", ini="", sec=""){
+  __New(vim, dir="", ini="", section=""){
     this.Vim := vim
     if(dir == ""){
       dir := VimIni.IniDir_Default
