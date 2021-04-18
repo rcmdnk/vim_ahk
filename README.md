@@ -163,8 +163,8 @@ when you change the mode, or change the applications to vim_ahk enabled or not e
 
 * Note for VimChangeCaretWidth
 
-Caret width can be changed only on the specific applications: Wordpad, Word, OneNote, or Explorer.
-On Notepad, the caret width is kept but does not change.
+Caret width can be changed only on the specific applications: Wordpad, Word, or OneNote.
+On Notepad or Explorer, the caret width is kept but does not change.
 
 For the most of other applications, the caret width is kept as original width.
 
