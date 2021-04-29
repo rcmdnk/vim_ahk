@@ -1,7 +1,7 @@
-﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Vim_Normal"))
+﻿#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 :::Vim.State.SetMode("Command") ;(:)
 `;::Vim.State.SetMode("Command") ;(;)
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Command"))
+#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Command"))
 w::Vim.State.SetMode("Command_w")
 q::Vim.State.SetMode("Command_q")
 h::
@@ -9,7 +9,7 @@ h::
   Vim.State.SetMode("Vim_Normal")
 Return
 
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Command_w"))
+#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Command_w"))
 Return::
   Send, ^s
   Vim.State.SetMode("Vim_Normal")
@@ -26,7 +26,7 @@ Space::
   Vim.State.SetMode("Insert")
 Return
 
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Command_q"))
+#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Command_q"))
 Return::
   Send, !{F4}
   Vim.State.SetMode("Insert")

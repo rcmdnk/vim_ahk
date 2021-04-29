@@ -186,7 +186,7 @@
 
   ; Update icon/mode indicator
   StatusCheck(){
-    if WinActive("ahk_group " this.Vim.GroupName){
+    if(this.Vim.IsVimGroup()){
       this.Vim.Icon.SetIcon(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
     }else{
       this.Vim.Icon.SetIcon("Disabled", this.Vim.Conf["VimIconCheckInterval"]["val"])

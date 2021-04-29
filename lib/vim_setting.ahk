@@ -6,8 +6,8 @@ class VimSetting Extends VimGui{
 
   MakeGui(){
     global VimRestoreIME, VimJJ, VimEscNormal, VimSendEscNormal, VimLongEscNormal, VimCtrlBracketToEsc, VimCtrlBracketNormal, VimSendCtrlBracketNormal, VimLongCtrlBracketNormal, VimChangeCaretWidth
-    global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimGroup, VimGroupList, VimTwoLetterList
-    global VimDisableUnusedText, VimSetTitleMatchModeText, VimIconCheckIntervalText, VimIconCheckIntervalEdit, VimVerboseText, VimGroupText, VimHomepage, VimSettingOK, VimSettingReset, VimSettingCancel, VimTwoLetterText
+    global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimAppList, VimGroup, VimGroupList, VimTwoLetterList
+    global VimDisableUnusedText, VimSetTitleMatchModeText, VimIconCheckIntervalText, VimIconCheckIntervalEdit, VimVerboseText, VimAppListText, VimGroupText, VimHomepage, VimSettingOK, VimSettingReset, VimSettingCancel, VimTwoLetterText
     this.VimVal2V()
     Gui, % this.Hwnd ":-MinimizeBox"
     Gui, % this.Hwnd ":-Resize"
@@ -56,6 +56,8 @@ class VimSetting Extends VimGui{
     this.HwndAll.Push(HwndIconCheckInterval)
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+10 g" this.__Class ".VerboseText vVimVerboseText", % this.Vim.Conf["VimVerbose"]["description"]
     Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndVerbose X+5 Y+-16 W30 vVimVerbose Choose"VimVerbose, 1|2|3|4
+    Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+10 g" this.__Class ".AppListText vVimAppListText", % this.Vim.Conf["VimAppList"]["description"]
+    Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndAppList X+5 Y+-16 W100 vVimAppList Choose"AppList, All|Allow List|Deny List
     this.HwndAll.Push(HwndVerbose)
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+5 g" this.__Class ".GroupText vVimGroupText", % this.Vim.Conf["VimGroup"]["description"]
     Gui, % this.Hwnd ":Add", Edit, +HwndHwndGroupList XM+10 Y+5 R10 W300 Multi vVimGroupList, % VimGroupList
@@ -91,7 +93,7 @@ class VimSetting Extends VimGui{
 
   UpdateGuiValue(){
     global VimRestoreIME, VimJJ, VimEscNormal, VimSendEscNormal, VimLongEscNormal, VimCtrlBracketToEsc, VimCtrlBracketNormal, VimSendCtrlBracketNormal, VimLongCtrlBracketNormal, VimChangeCaretWidth
-    global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimGroup, VimGroupList, VimTwoLetter, VimTwoLetterList
+    global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimAppList, VimGroup, VimGroupList, VimTwoLetter, VimTwoLetterList
     for i, k in this.Vim.Checkboxes {
       GuiControl, % this.Hwnd ":", % k, % %k%
     }
@@ -111,6 +113,7 @@ class VimSetting Extends VimGui{
     }
     GuiControl, % this.Hwnd ":Choose", VimSetTitleMatchModeFS, % matchmodefs
     GuiControl, % this.Hwnd ":Choose", VimVerbose, % VimVerbose
+    GuiControl, % this.Hwnd ":Choose", VimAppList, % VimAppList
     GuiControl, % this.Hwnd ":", VimGroupList, % VimGroupList
   }
 
@@ -130,12 +133,15 @@ class VimSetting Extends VimGui{
   VerboseText(){
   }
 
+  AppListText(){
+  }
+
   GroupText(){
   }
 
   VimV2Conf(){
     global VimRestoreIME, VimJJ, VimEscNormal, VimSendEscNormal, VimLongEscNormal, VimCtrlBracketToEsc, VimCtrlBracketNormal, VimSendCtrlBracketNormal, VimLongCtrlBracketNormal, VimChangeCaretWidth
-    global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimGroup, VimGroupList, VimTwoLetter, VimTwoLetterList
+    global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimAppList, VimGroup, VimGroupList, VimTwoLetter, VimTwoLetterList
     VimGroup := this.VimParseList(VimGroupList)
     VimTwoLetter := this.VimParseList(VimTwoLetterList)
     for k, v in this.Vim.Conf {
@@ -162,7 +168,7 @@ class VimSetting Extends VimGui{
 
   VimConf2V(vd){
     global VimRestoreIME, VimJJ, VimEscNormal, VimSendEscNormal, VimLongEscNormal, VimCtrlBracketToEsc, VimCtrlBracketNormal, VimSendCtrlBracketNormal, VimLongCtrlBracketNormal, VimChangeCaretWidth
-    global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimGroup, VimGroupList, VimTwoLetterList
+    global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimAppList, VimGroup, VimGroupList, VimTwoLetterList
     StringReplace, VimGroupList, % this.Vim.Conf["VimGroup"][vd], % this.Vim.GroupDel, `n, All
     StringReplace, VimTwoLetterList, % this.Vim.Conf["VimTwoLetter"][vd], % this.Vim.GroupDel, `n, All
     for k, v in this.Vim.Conf {

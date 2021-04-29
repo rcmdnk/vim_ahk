@@ -11,7 +11,7 @@
     WinGet, name, ProcessName, ahk_pid %process%
     WinGetClass, class, ahk_pid %process%
     WinGetTitle, title, ahk_pid %process%
-    if WinActive("ahk_group " this.Vim.GroupName){
+    if(this.Vim.IsVimGroup()){
       Msgbox, 0x40, Vim Ahk,
       (
         Supported

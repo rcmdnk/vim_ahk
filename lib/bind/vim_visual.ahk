@@ -1,5 +1,5 @@
 ﻿; Visual Char/Block/Line
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.IsCurrentVimMode("Vim_Normal"))
+#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 v::Vim.State.SetMode("Vim_VisualChar")
 ^v::
   Send, ^b
@@ -11,7 +11,7 @@ Return
   Send, {Home}+{Down}
 Return
 
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.StrIsInCurrentVimMode( "Visual"))
+#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode( "Visual"))
 v::Vim.State.SetMode("Vim_Normal")
 
 ; ydc

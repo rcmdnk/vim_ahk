@@ -143,6 +143,7 @@ All of these can be changed from setting menu, too.
 |VimSetTitleMatchModeFS|SetTitleMatchMode:<br><ol><li>Fast: Text is not detected for such edit control.</li><li>Slow: Works for all windows, but slow.</li>|Fast|
 |VimIconCheckInterval|Interval to check vim_ahk status (ms) and change tray icon (see below picture).<br>If it is set to 0, the original AHK icon is set and not changed.|1000|
 |VimVerbose|Verbose level:<br><ol><li>Nothing.</li><li>Minimum tooltip (mode information only).</li><li>ToolTip (all information).</li><li>Debug mode with a message box, which doesn't disappear automatically.</li></ol>|1|
+|VimAppList|Application list usage:<br><ul><li>All: Enable vim_ahk on all applications (the applicatoin list is ignored).</li><li>Allow List: Use the application list as an allow list.</li><li>Deny List: Use the application list as a deny list.</li></ul>|Allow List|
 |VimGroup|Applications on witch vim_ahk is enabled.|See **Applications** section|
 
 You can add your options before including **vim.ahk** in your script

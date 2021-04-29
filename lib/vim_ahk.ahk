@@ -20,8 +20,8 @@
 
 class VimAhk{
   __About(){
-    this.About.Version := "v0.9.0"
-    this.About.Date := "17/Apr/2021"
+    this.About.Version := "v0.9.1"
+    this.About.Date := "02/May/2021"
     this.About.Author := "rcmdnk"
     this.About.Description := "Vim emulation with AutoHotkey, everywhere in Windows."
     this.About.Homepage := "https://github.com/rcmdnk/vim_ahk"
@@ -125,6 +125,9 @@ class VimAhk{
     this.AddToConf("VimVerbose", 1, 1
       , "Verbose level"
       , "1: Nothing `n2: Minimum tooltip (mode information only)`n3: Tooltip (all information)`n4: Debug mode with a message box, which doesn't disappear automatically")
+    this.AddToConf("VimAppList", "Allow List", "Allow List"
+      , "Application list usage"
+      , "All: Enable on all application (the application list is ignored) `nAllow List: Use the application list as an allow list`nDeny List: Use the application list as a deny list")
     this.AddToConf("VimGroup", DefaultGroup, DefaultGroup
       , "Application"
       , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
@@ -197,7 +200,7 @@ class VimAhk{
   }
 
   TwoLetterNormalMapsEnabled(){
-    Return WinActive("ahk_group " this.GroupName) && (this.State.StrIsInCurrentVimMode("Insert")) && this.TwoLetterNormalIsSet
+    Return this.IsVimGroup() && (this.State.StrIsInCurrentVimMode("Insert")) && this.TwoLetterNormalIsSet
   }
 
   TwoLetterEnterNormal(){
@@ -250,5 +253,14 @@ class VimAhk{
       }
     }
     Return DefaultGroup
+  }
+
+  IsVimGroup(){
+    if(this.Conf["VimAppList"]["val"] == "Allow List"){
+      Return (WinActive("ahk_group " . this.GroupName) != 0)
+    }else if(this.Conf["VimAppList"]["val"] == "Deny List"){
+      Return (WinActive("ahk_group " . this.GroupName) == 0)
+    }
+    Return True
   }
 }

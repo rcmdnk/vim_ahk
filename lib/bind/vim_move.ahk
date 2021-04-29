@@ -1,7 +1,7 @@
-﻿#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.StrIsInCurrentVimMode("Vim_")) and (not Vim.State.g)
+﻿#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and (not Vim.State.g)
 g::Vim.State.SetMode("", 1)
 
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.StrIsInCurrentVimMode("Vim_"))
+#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_"))
 ; 1 character
 h::Vim.Move.Repeat("h")
 j::Vim.Move.Repeat("j")
@@ -32,6 +32,6 @@ b::Vim.Move.Repeat("b")
 ; G
 +g::Vim.Move.Move("+g")
 ; gg
-#If WinActive("ahk_group " . Vim.GroupName) and (Vim.State.StrIsInCurrentVimMode( "Vim_")) and (Vim.State.g)
+#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode( "Vim_")) and (Vim.State.g)
 g::Vim.Move.Move("g")
 ; }}} Move
