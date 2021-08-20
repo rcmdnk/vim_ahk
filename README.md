@@ -248,11 +248,12 @@ If using a custom two-letter hotkey to enter the normal mode, the two letters mu
 |Key/Commands|Function|
 |:----------:|:-------|
 |h/j/k/l|Left/Down/Up/Right.|
-|0/$| To the start/end of the line.|
-|Ctrl-a/Ctrl-e| To the start/end of the line (emacs like).|
-|^| To the starting non-whitespace character of the line.|
-|w/W/e/E| Move a word forward (all work the same way: goes to the beginning of the word).|
-|b/B| Move a word backward (b/B:  the beginning of the word).|
+|0/$| Move to the start/end of the line.|
+|Ctrl-a/Ctrl-e| Move to the start/end of the line (emacs like).|
+|^| Move to the starting non-whitespace character of the line.|
+|w/W| Move to the beginning of the next word.|
+|e/E| Move to the end of the next word. (Actually, move to the beggining of the next next word and move a one character left.)|
+|b/B| Move to the beginning of the previous word.|
 |Ctrl-u/Ctrl-d| Go Up/Down 10 line.|
 |Ctrl-b/Ctrl-f| PageUp/PageDown.|
 |gg/G| Go to the top/bottom of the file|

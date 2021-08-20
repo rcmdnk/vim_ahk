@@ -156,6 +156,12 @@
         }else{
           Send, ^{Right}
         }
+      }else if(key == "e"){
+        if(this.shift == 1){
+          Send, +^{Right}+^{Right}+{Left}
+        }else{
+          Send, ^{Right}^{Right}{Left}
+        }
       }else if(key == "b"){
         if(this.shift == 1){
           Send, +^{Left}
