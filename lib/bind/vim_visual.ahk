@@ -11,7 +11,7 @@ Return
   Send, {Home}+{Down}
 Return
 
-#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode( "Visual"))
+#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Visual"))
 v::Vim.State.SetMode("Vim_Normal")
 
 ; ydc
@@ -23,7 +23,7 @@ y::
     Send, {Left}
   }
   ClipWait, 1
-  if(Vim.State.StrIsInCurrentVimMode( "Line")){
+  if(Vim.State.StrIsInCurrentVimMode("Line")){
     Vim.State.SetMode("Vim_Normal", 0, 0, 1)
   }else{
     Vim.State.SetMode("Vim_Normal", 0, 0, 0)
@@ -45,7 +45,7 @@ x::
   Clipboard :=
   Send, ^x
   ClipWait, 1
-  if(Vim.State.StrIsInCurrentVimMode( "Line")){
+  if(Vim.State.StrIsInCurrentVimMode("Line")){
     Vim.State.SetMode("Vim_Normal", 0, 0, 1)
   }else{
     Vim.State.SetMode("Vim_Normal", 0, 0, 0)
@@ -56,7 +56,7 @@ c::
   Clipboard :=
   Send, ^x
   ClipWait, 1
-  if(Vim.State.StrIsInCurrentVimMode( "Line")){
+  if(Vim.State.StrIsInCurrentVimMode("Line")){
     Vim.State.SetMode("Insert", 0, 0, 1)
   }else{
     Vim.State.SetMode("Insert", 0, 0, 0)
@@ -73,4 +73,5 @@ Return
   clipboard := bak
   Vim.State.SetMode("Vim_Normal")
 Return
-; }}} Vim visual mode
+
+#If

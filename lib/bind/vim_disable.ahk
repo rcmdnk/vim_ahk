@@ -1,4 +1,4 @@
-﻿#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode( "ydc") or Vim.State.StrIsInCurrentVimMode( "Command") or (Vim.State.IsCurrentVimMode("Z")))
+﻿#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("ydc") or Vim.State.StrIsInCurrentVimMode("Command") or (Vim.State.IsCurrentVimMode("Z")))
 *a::
 *b::
 *c::
@@ -234,3 +234,5 @@ _::
 >::
 Space::
 Return
+
+#If

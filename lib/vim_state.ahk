@@ -202,4 +202,12 @@
       SetTimer, % check, Off
     }
   }
+
+  ToggleEnabled(){
+    if(this.Vim.Enabled){
+      this.Vim.Enabled := False
+    }else{
+      this.Vim.Enabled := True
+    }
+  }
 }

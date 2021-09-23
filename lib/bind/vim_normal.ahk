@@ -54,3 +54,5 @@ Space::Send, {Right}
 ; Keep the e key in Normal mode, use the right button and then press the refresh (e) function, do nothing, return to the e key directly
 ~e::
 Return
+
+#If

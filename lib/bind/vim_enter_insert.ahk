@@ -32,3 +32,5 @@ Return
 /::Vim.State.SetMode("Insert")
 ; Enter insert mode at rename
 ~F2::Vim.State.SetMode("Insert")
+
+#If

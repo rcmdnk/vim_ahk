@@ -17,3 +17,5 @@ Return
   n_repeat := Vim.State.n*10 + A_ThisHotkey
   Vim.State.SetMode("", 0, n_repeat)
 Return
+
+#If

@@ -32,6 +32,8 @@ b::Vim.Move.Repeat("b")
 ; G
 +g::Vim.Move.Move("+g")
 ; gg
-#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode( "Vim_")) and (Vim.State.g)
+#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and (Vim.State.g)
 g::Vim.Move.Move("g")
 ; }}} Move
+
+#If

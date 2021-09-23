@@ -29,6 +29,9 @@ class VimAhk{
   }
 
   __New(setup=true){
+    this.Enabled := True
+
+
     ; Classes
     this.About := new VimAbout(this)
     this.Check := new VimCheck(this)
@@ -256,7 +259,9 @@ class VimAhk{
   }
 
   IsVimGroup(){
-    if(this.Conf["VimAppList"]["val"] == "Allow List"){
+    if(not this.Enabled){
+      Return False
+    }else if(this.Conf["VimAppList"]["val"] == "Allow List"){
       Return WinActive("ahk_group " . this.GroupName)
     }else if(this.Conf["VimAppList"]["val"] == "Deny List"){
       Return !WinActive("ahk_group " . this.GroupName)

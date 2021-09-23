@@ -192,6 +192,14 @@ your `VimXXX` options in your script described above.
 (i.e. `Reset` will restore your options in the script in addition to
 the default settings of vim_ahk.)
 
+## Global shortcut keys
+
+|Key|Function|
+|:----------:|:-------|
+|Ctrl-Alt-Shift-v|Launch GUI Option Setting Window.|
+|Ctrl-Alt-Shift-s|Suspend/restart vim_ahk.|
+|Ctrl-Alt-Shift-c|Show status check window. (Only on the VimGroup applications.)|
+
 ## Main Modes
 
 Here are the main modes.
