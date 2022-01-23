@@ -103,7 +103,7 @@
       Send, {Esc}
     }
     if (SetNormal) {
-      Vim.State.SetNormal()
+      this.SetNormal()
     }
     if (LongPress){
       ; Have to ensure the key has been released, otherwise this will get
@@ -127,7 +127,7 @@
       Send, ^[
     }
     if (SetNormal) {
-      Vim.State.SetNormal()
+      this.SetNormal()
     }
     if (LongPress){
       KeyWait, [
