@@ -43,18 +43,18 @@
   MoveFinalize(){
     Send,{Shift Up}
     ydc_y := false
-    if(this.Vim.State.IsCurrentVimMode("Vim_ydc_y")){
+    if(this.Vim.State.StrIsInCurrentVimMode("ydc_y")){
       Clipboard :=
       Send, ^c
       ClipWait, 1
       this.Vim.State.SetMode("Vim_Normal")
       ydc_y := true
-    }else if(this.Vim.State.IsCurrentVimMode("Vim_ydc_d")){
+    }else if(this.Vim.State.StrIsInCurrentVimMode("ydc_d")){
       Clipboard :=
       Send, ^x
       ClipWait, 1
       this.Vim.State.SetMode("Vim_Normal")
-    }else if(this.Vim.State.IsCurrentVimMode("Vim_ydc_c")){
+    }else if(this.Vim.State.StrIsInCurrentVimMode("ydc_c")){
       Clipboard :=
       Send, ^x
       ClipWait, 1
@@ -220,6 +220,13 @@
       this.Move("l")
     }else{
       this.Move("")
+    }
+  }
+
+  Inner(key=""){
+    if(key == "w"){
+      this.Move("b", true)
+      this.Move("w", false)
     }
   }
 }
