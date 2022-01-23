@@ -20,8 +20,8 @@
 
 class VimAhk{
   __About(){
-    this.About.Version := "v0.10.0"
-    this.About.Date := "24/Sep/2021"
+    this.About.Version := "v0.11.0"
+    this.About.Date := "24/Jan/2022"
     this.About.Author := "rcmdnk"
     this.About.Description := "Vim emulation with AutoHotkey, everywhere in Windows."
     this.About.Homepage := "https://github.com/rcmdnk/vim_ahk"
@@ -67,11 +67,14 @@ class VimAhk{
 
     ; Followings can emulate ^. For others, ^ works as same as 0
     GroupAdd, VimCaretMove, ahk_exe notepad.exe ; NotePad
+    GroupAdd, VimCaretMove, ahk_exe Notepad.exe ; NotePad
 
     ; Followings start cursor from the same place after selection.
     ; Others start right/left (by cursor) point of the selection
     GroupAdd, VimCursorSameAfterSelect, ahk_exe notepad.exe ; NotePad
+    GroupAdd, VimCursorSameAfterSelect, ahk_exe Notepad.exe ; NotePad
     GroupAdd, VimCursorSameAfterSelect, ahk_exe explorer.exe ; Explorer
+    GroupAdd, VimCursorSameAfterSelect, ahk_exe Explorer.exe ; Explorer
 
     ; Q-Dir
     GroupAdd, VimQdir, ahk_exe Q-Dir_x64.exe ; q-dir
@@ -230,7 +233,9 @@ class VimAhk{
   SetDefaultActiveWindows(){
     DefaultList := ["ahk_exe Evernote.exe"  ; Evernote
                   , "ahk_exe explorer.exe"  ; Explorer
+                  , "ahk_exe Explorer.exe"  ; Explorer, Explorer became also upper case, but lower case works for this
                   , "ahk_exe notepad.exe"   ; NotePad
+                  , "ahk_exe Notepad.exe"   ; NotePad, Changed as upper case since ~2022/1 ??
                   , "OneNote"               ; OneNote at Windows 10
                   , "ahk_exe onenote.exe"   ; OneNote Desktop
                   , "ahk_exe ApplicationFrameHost.exe" ; Some Windows applications use this, including OneNote at Windows 10

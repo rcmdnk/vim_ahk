@@ -7,7 +7,7 @@ vim.ahk is the setting file for [AutoHotkey](http://www.autohotkey.com/)(Autohot
 vim.exe is a standalone application made from vim.ahk (available in [the releases page](https://github.com/rcmdnk/vim_ahk/releases)).
 
 This is vim emulation for Windows.
-If you are interesting in same settings for Mac,
+If you are interested in the same settings for Mac,
 try Vim emulation for [Karabiner - Software for macOS](https://pqrs.org/osx/karabiner/): [Karabiner-Elements complex_modifications rules by rcmdnk](https://rcmdnk.com/KE-complex_modifications/).
 
 ## Installation
@@ -37,7 +37,7 @@ Unzip the zip file, and place the extracted vim_ahk folder where you like,
 then launch **vim_ahk.exe**.
 
 :memo: place **vim_ahk_icons** folder in the same folder with **vim_ahk.exe**,
-otherwise the tray menu icon feature does not work.
+otherwise, the tray menu icon feature does not work.
 
 ### Build executable from the source
 
@@ -66,7 +66,7 @@ The default setting enables vim-mode for the following applications:
 * OneNote
 * Applications using ahk_exe ApplicationFrameHost.exe
 
-You can change them from the right click menu of task tray icon
+You can change them from the right-click menu of the task tray icon
 (find `VimMenu`-`Settings` in the list),
 or launch the setting window by `Ctrl-Alt-Shift-v`.
 
@@ -79,7 +79,7 @@ Example line:
 
     VimGroup := "ahk_exe chrome.exe,ahk_exe firefox.exe"
 
-Multiple applications can be written by comma separated.
+Multiple applications can be written by a comma-separated.
 
 Note: This will overwrite the default applications. If you want to **add**
 these applications to the default applications, add following applications
@@ -94,9 +94,9 @@ which makes matching methods as `Contain`.
 
 If you set `OneNote`, all windows with a title containing `OneNote`
 (e.g. `XXX's OneNote`) will be included.
-If you set `VimSetTitleMatchMode` as 3, only exact title of `OneNote` will be included.
+If you set `VimSetTitleMatchMode` as 3, only the exact title of `OneNote` will be included.
 
-Note: It may not work on OneNote. OneNote may has window name like
+Note: It may not work on OneNote. OneNote may have a window name like
 **User's Notebook - OneNote**, instead of **OneNote**.
 
 In that case, you need to check OneNote's window title with Window spy.
@@ -107,10 +107,10 @@ Window spy will give you about Window Title, Class and Process like:
     ahk_class ApplicationFrameWindow
     ahk_exe ApplicationFrameHost.exe
 
-If you add any of above lines to VimGroup, vim_ahk works on OneNote.
+If you add any of the above lines to VimGroup, vim_ahk works on OneNote.
 But if you set `ahk_class ApplicationFrameWindow` or `ahk_exe ApplicationFrameHost.exe`,
-vim_ahk also works on other applications which use these Class/Process name
-(most of applications installed from Microsoft Store).
+vim_ahk also works on other applications which use these Class/Process names
+(most of the applications installed from Microsoft Store).
 
 Examples of applications:
 
@@ -122,8 +122,8 @@ Examples of applications:
 ## Options
 
 In addition to `VimGroup`,
-there are following options which you can set in your script.
-All of these can be changed from setting menu, too.
+there are the following options that you can set in your script.
+All of these can be changed from the setting menu, too.
 
 |Option|Description|Default|
 |:-----|:----------|:------|
@@ -158,22 +158,22 @@ add these variable before `Vim := new VimAhk()`.
 * VimIconCheckInterval example
 
 If you set VimIconCheckInterval as non-zero, the tray icon is changed
-when you change the mode, or change the applications to vim_ahk enabled or not enabled ones.
+when you change the mode or change the applications to vim_ahk enabled or not enabled ones.
 
 ![trayicon](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/trayicon.gif "trayicon")
 
 * Note for VimChangeCaretWidth
 
-Caret width can be changed only on the specific applications: Wordpad, Word, or OneNote.
+Caret width can be changed only on specific applications: Wordpad, Word, or OneNote.
 On Notepad or Explorer, the caret width is kept but does not change.
 
-For the most of other applications, the caret width is kept as original width.
+For most other applications, the caret width is kept as the original width.
 
 When this option is enabled, the current window briefly loses focus when the mode is changed.
 
 ## GUI Option Setting Window
 
-You can change these options from the right click menu of task tray icon
+You can change these options from the right-click menu of the task tray icon
 (find `VimMenu`-`Settings` in the list),
 or launch the setting window by `Ctrl-Alt-Shift-v`.
 
@@ -185,7 +185,7 @@ Here, you can add applications, change the mode change key,
 or change the verbose level.
 
 If you push `Reset`, default settings will be shown in the window.
-These settings will be enabled only if you push `OK` button.
+These settings will be enabled only if you push the `OK` button.
 
 These **default settings** are overwritten by
 your `VimXXX` options in your script described above.
@@ -207,13 +207,13 @@ Here are the main modes.
 |Mode|Description|
 |:---|:----------|
 |Insert mode|Original Windows state|
-|Normal mode|As in vim, a cursor is moved by hjkl, w, etc... and some vim like commands are available.|
-|Visual mode|There are three visual modes: Character-wise, Line-wise, and Block-wise. Block-wise visual mode is valid only for applications which support block-wise selection (such TeraPad).|
-|Command mode|Can be used for saving file/quitting.|
+|Normal mode|As in vim, a cursor is moved by `hjkl`, `w`, etc... and some vim-like commands are available.|
+|Visual mode|There are three visual modes: Character-wise, Line-wise, and Block-wise. Block-wise visual mode is valid only for applications that support block-wise selection (such TeraPad).|
+|Command mode|Can be used for saving the file/quitting.|
 
 The initial state is the insert mode, then `ESC` or `Ctrl-[` brings you to the normal mode.
 
-In the normal mode, `i` is the key to be back to the insert mode.
+In the normal mode, `i` is the key to being back to the insert mode.
 
 `v`, `V` and `Ctrl-v` are the key to
 the Character-wise, the Line-wise, and the Block-wise
@@ -236,8 +236,8 @@ Ctrl-[ switches off IME and enters the normal mode even if IME is on.
 Long press ESC (Ctrl-[) will send these original keys, if `VimLongEscNormal` (`VimLongCtrlBracketNormal` is not enabled (0).
 
 If `VimLongEscNormal` (`VimLongCtrlBracketNormal`) is enabled,
-single press will send original keys
-and long press will change the mode to the normal mode.
+a single press will send original keys
+and a long press will change the mode to the normal mode.
 
 If using a custom two-letter hotkey to enter the normal mode, the two letters must be different.
 
@@ -247,7 +247,7 @@ If using a custom two-letter hotkey to enter the normal mode, the two letters mu
 
 |Key/Commands|Function|
 |:----------:|:-------|
-|i/I/a/A/o/O| Enter the insert mode at under the cursor/start of the line/next to the cursor/end of the line/next line/previous line.|
+|i/I/a/A/o/O| Enter the insert mode under the cursor/start of the line/next to the cursor/end of the line/next line/previous line.|
 |v/V/Ctrl-v|Enter the visual mode of Character-wise/Line-wise/Block-wise.|
 |:|Enter the command line mode|
 
@@ -260,7 +260,7 @@ If using a custom two-letter hotkey to enter the normal mode, the two letters mu
 |Ctrl-a/Ctrl-e| Move to the start/end of the line (emacs like).|
 |^| Move to the starting non-whitespace character of the line.|
 |w/W| Move to the beginning of the next word.|
-|e/E| Move to the end of the next word. (Actually, move to the beggining of the next next word and move a one character left.)|
+|e/E| Move to the end of the word. (Actually, move to the beginning of the next word and move one character left.)|
 |b/B| Move to the beginning of the previous word.|
 |Ctrl-u/Ctrl-d| Go Up/Down 10 line.|
 |Ctrl-b/Ctrl-f| PageUp/PageDown.|
@@ -285,6 +285,7 @@ In addition, `Repeat` is also available for some commands.
 |C| Cut from here to the end of the line and enter the insert mode.|
 |x/X| Delete a character under/before the cursor (not registered in the clipboard).|
 |p/P| Paste to the next/current place. If copy/cut was done with the line-wise visual mode, it pastes to the next/current line. Some commands (such yy/dd) also force to paste as line-wise.|
+|yiw/diw/ciw| Copy/cut/change current word.|
 
 y/d/c+Move Command can be used, too.
 * e.g.) `yw` -> copy next one word.
@@ -297,7 +298,7 @@ y/d/c+Move Command can be used, too.
 |u/Ctrl-r| Undo/Redo.|
 |r/R| Replace one character/multiple characters.|
 |J| Combine two lines.|
-|.| It is fixed to do: `Replace a following word with a clipboard` (useful to use with a search).|
+|.| It is fixed to do: `Replace the following word with a clipboard` (useful to use with a search).|
 |~| Change case.|
 |/| Start search (search box will be opened)|
 |n/N| Search next/previous (Some applications support only next search)|
@@ -309,27 +310,28 @@ y/d/c+Move Command can be used, too.
 |Key/Commands|Function|
 |:----------:|:-------|
 |ESC/Ctrl-[| Enter the normal mode.|
-|Move command| Most of move commands in the normal mode are available.|
+|Move command| Most move commands in the normal mode are available.|
 |y/d/x/c| Copy/Cut/Cut/Cut and insert (`d`=`x`)|
-|Y/D/X/C| Move to the end of line, then Copy/Cut/Cut/Cut and the insert mode (`D`=`X`)|
+|Y/D/X/C| Move to the end of the line, then Copy/Cut/Cut/Cut and the insert mode (`D`=`X`)|
+|iw| Select the current word.|
 |*| Search the selected word.|
 
 ## Available commands in the command mode
 
 |Key/Commands|Function|
 |:----------:|:-------|
-|ESC/Ctrl-[| Enter the the normal mode.|
+|ESC/Ctrl-[| Enter the normal mode.|
 |w + RETURN| Save |
 |w + SPACE | Save as |
 |w + q| Save and Quit |
 |q | Quit |
 |h | Open help of the application|
 
-## Application specific settings
+## Application-specific settings
 
 ### Q-dir
 
-The keybinds refer to [ranger](https://github.com/ranger/ranger) which is a console file manager with VI key bindings
+Refer [ranger](https://github.com/ranger/ranger) which is a console file manager with VI key bindings.
 
 #### Available commands in the normal mode
 
@@ -343,7 +345,7 @@ The keybinds refer to [ranger](https://github.com/ranger/ranger) which is a cons
 
 Tests are run by executing `tests/run_vimahk_tests.ahk`. A notepad and vim window is opened, and vim_ahk is started.
 
-The testing system used is a series of test cases in `tests/testcases.txt` representing key strokes to send to vim_ahk. These are sent to the open vim and notepad windows, and the resulting text is compared.
+The testing system used is a series of test cases in `tests/testcases.txt` representing keystrokes to send to vim_ahk. These are sent to the open vim and notepad windows, and the resulting text is compared.
 
 The tests can be very flakey, so should be used as a guide and to execute code paths to check for errors. Tests should be run with a default ini.
 

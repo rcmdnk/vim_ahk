@@ -6,10 +6,11 @@
     ;@Ahk2Exe-IgnoreBegin
     this.CheckModeValue := true
     ;@Ahk2Exe-IgnoreEnd
-    this.PossibleVimModes := ["Vim_Normal", "Insert", "Replace", "Vim_ydc_y"
-    , "Vim_ydc_c", "Vim_ydc_d", "Vim_VisualLine", "Vim_VisualFirst"
-    , "Vim_VisualChar", "Command", "Command_w", "Command_q", "Z", ""
-    , "r_once", "r_repeat", "Vim_VisualLineFirst"]
+    this.PossibleVimModes := ["", "Vim_Normal", "Insert", "Replace"
+    , "Vim_ydc_y" , "Vim_ydc_yInner", "Vim_ydc_c", "Vim_ydc_cInner"
+    , "Vim_ydc_d" , "Vim_ydc_dInner" , "Vim_VisualLine", "Vim_VisualFirst"
+    , "Vim_VisualChar", "Vim_VisualLineFirst", "Vim_VisualCharInner"
+    , "Command" , "Command_w", "Command_q", "Z", "r_once", "r_repeat"]
 
     this.Mode := "Insert"
     this.g := 0
@@ -86,6 +87,10 @@
     this.SetMode("Vim_Normal")
   }
 
+  SetInner(){
+    this.SetMode(this.Mode "Inner")
+  }
+
   HandleEsc(){
     global Vim, VimEscNormal, vimSendEscNormal, VimLongEscNormal
     if (!VimEscNormal) {
@@ -103,7 +108,7 @@
       Send, {Esc}
     }
     if (SetNormal) {
-      Vim.State.SetNormal()
+      this.SetNormal()
     }
     if (LongPress){
       ; Have to ensure the key has been released, otherwise this will get
@@ -127,7 +132,7 @@
       Send, ^[
     }
     if (SetNormal) {
-      Vim.State.SetNormal()
+      this.SetNormal()
     }
     if (LongPress){
       KeyWait, [
