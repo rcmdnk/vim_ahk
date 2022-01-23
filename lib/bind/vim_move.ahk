@@ -1,5 +1,16 @@
-﻿#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and (not Vim.State.g)
+﻿; Inner mode
+#If Vim.IsVimGroup() and ((Vim.State.StrIsInCurrentVimMode("Vim_ydc")) or (Vim.State.IsCurrentVimMode("Vim_VisualChar")))
+i::Vim.State.SetInner()
+
+#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Inner"))
+w::Vim.Move.Inner("w")
++w::Vim.Move.Inner("w")
+
+; gg
+#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and (not Vim.State.g)
 g::Vim.State.SetMode("", 1)
+#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and (Vim.State.g)
+g::Vim.Move.Move("g")
 
 #If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_"))
 ; 1 character
@@ -31,9 +42,5 @@ b::Vim.Move.Repeat("b")
 ^f::Vim.Move.Repeat("^f")
 ; G
 +g::Vim.Move.Move("+g")
-; gg
-#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and (Vim.State.g)
-g::Vim.Move.Move("g")
-; }}} Move
 
 #If
