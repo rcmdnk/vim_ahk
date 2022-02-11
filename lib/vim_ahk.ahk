@@ -20,8 +20,8 @@
 
 class VimAhk{
   __About(){
-    this.About.Version := "v0.11.0"
-    this.About.Date := "24/Jan/2022"
+    this.About.Version := "v0.11.1"
+    this.About.Date := "11/Feb/2022"
     this.About.Author := "rcmdnk"
     this.About.Description := "Vim emulation with AutoHotkey, everywhere in Windows."
     this.About.Homepage := "https://github.com/rcmdnk/vim_ahk"
@@ -252,7 +252,7 @@ class VimAhk{
                   , "ahk_exe Q-Dir.exe"]    ; Q-dir
 
     DefaultGroup := ""
-    For i, v in DefaultList
+    for i, v in DefaultList
     {
       if(DefaultGroup == ""){
         DefaultGroup := v
@@ -272,5 +272,22 @@ class VimAhk{
       Return !WinActive("ahk_group " . this.GroupName)
     }
     Return True
+  }
+
+  ; Ref: https://www.reddit.com/r/AutoHotkey/comments/4ma5b8/identifying_end_of_line_when_typing_with_ahk_and/
+  CheckChr(key){
+    BlockInput, Send
+    tempClip := clipboard
+    clipboard := ""
+    SendInput {Shift Down}{Right}{Shift up}{Ctrl down}c{Ctrl Up}{Left}
+    Sleep 10
+    ret := False
+    If (clipboard ~= key){
+      ret := True
+    }
+    sleep 10
+    clipboard := tempClip
+    BlockInput, off
+    Return ret
   }
 }

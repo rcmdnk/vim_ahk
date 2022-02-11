@@ -7,7 +7,11 @@ i::Vim.State.SetMode("Insert")
 Return
 
 a::
-  Send, {Right}
+  if(Vim.CheckChr("`n")){
+    Send, {Left}
+  }else{
+    Send, {Right}
+  }
   Vim.State.SetMode("Insert")
 Return
 
