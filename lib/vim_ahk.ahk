@@ -20,8 +20,8 @@
 
 class VimAhk{
   __About(){
-    this.About.Version := "v0.11.2"
-    this.About.Date := "11/Feb/2022"
+    this.About.Version := "v0.11.3"
+    this.About.Date := "14/Feb/2022"
     this.About.Author := "rcmdnk"
     this.About.Description := "Vim emulation with AutoHotkey, everywhere in Windows."
     this.About.Homepage := "https://github.com/rcmdnk/vim_ahk"
@@ -107,6 +107,9 @@ class VimAhk{
     this.AddToConf("VimChangeCaretWidth", 0, 0
       , "Change to thick text caret when in normal mode"
       , "When entering normal mode, sets the text cursor/caret to a thick bar, then sets back to thin when exiting normal mode.`nDoesn't work with all windows, and causes the current window to briefly lose focus when changing mode.")
+    this.AddToConf("VimCheckChr", 0, 0
+      , "Check the character before an action"
+      , "Check the character under the cursor before an action.`nCurrently, this is used for: 'a' in the normal mode (check if the cursor is located the end of the line).")
     this.AddToConf("VimRestoreIME", 1, 1
       , "Restore IME status at entering the insert mode"
       , "Save the IME status in the insert mode, and restore it at entering the insert mode.")
@@ -138,7 +141,7 @@ class VimAhk{
       , "Application"
       , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
 
-    this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth"]
+    this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth", "VimCheckChr"]
 
     ; ToolTip Information
     this.Info := {}
@@ -276,6 +279,9 @@ class VimAhk{
 
   ; Ref: https://www.reddit.com/r/AutoHotkey/comments/4ma5b8/identifying_end_of_line_when_typing_with_ahk_and/
   CheckChr(key){
+    if(this.Conf["VimCheckChr"]["val"] == 0){
+      Return False
+    }
     BlockInput, Send
     tempClip := clipboard
     clipboard := ""
