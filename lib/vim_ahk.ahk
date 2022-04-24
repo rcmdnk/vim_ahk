@@ -124,10 +124,10 @@ class VimAhk{
       , "1: Do not disable unused keys`n2: Disable alphabets (+shift) and symbols`n3: Disable all including keys with modifiers (e.g. Ctrl+Z)")
     this.AddToConf("VimSetTitleMatchMode", "2", "2"
       , "SetTitleMatchMode"
-      , "[Mode] 1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow] Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow.")
+      , "[Mode] 1: Start with, 2: Contain, 3: Exact match, RegExp: Regular expression.`n[Fast/Slow] Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow.")
     this.AddToConf("VimSetTitleMatchModeFS", "Fast", "Fast"
       , "SetTitleMatchMode"
-      , "[Mode]1: Start with, 2: Contain, 3: Exact match.`n[Fast/Slow]: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow.")
+      , "[Mode]1: Start with, 2: Contain, 3: Exact match, RegExp: Regular expression.`n[Fast/Slow]: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow.")
     this.AddToConf("VimIconCheckInterval", 1000, 1000
       , "Icon check interval (ms)"
       , "Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set.")
