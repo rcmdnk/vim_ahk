@@ -140,7 +140,7 @@ All of these can be changed from the setting menu, too.
 |VimJJ|If 1, `jj` changes the mode to the normal mode from the insert mode.|0|
 |VimTwoLetterEsc|A list of character pairs to press together during the insert mode to get to the Normal mode.<br>For example, a value of `jf` means pressing `j` and `f` at the same time will enter the Normal mode.<br>Multiple combination can be set by separated by `,`. (e.g. `jf,jk,sd`)||
 |VimDisableUnused|Disable level of unused keys in other than the insert mode:<br><ol><li>Do not disable unused keys</li><li>Disable alphabets (+shift) and symbols</li><li>Disable all including keys with modifiers (e.g. Ctrl+Z)</li></ol>|3|
-|VimSetTitleMatchMode|SetTitleMatchMode:<br><ol><li>Start with</li><li><li>Contain</li><li>Exact match</li>|2|
+|VimSetTitleMatchMode|SetTitleMatchMode:<br><ol><li>Start with</li><li>Contain</li><li>Exact match</li><li>Regular expression</li>|2|
 |VimSetTitleMatchModeFS|SetTitleMatchMode:<br><ol><li>Fast: Text is not detected for such edit control.</li><li>Slow: Works for all windows, but slow.</li>|Fast|
 |VimIconCheckInterval|Interval to check vim_ahk status (ms) and change tray icon (see below picture).<br>If it is set to 0, the original AHK icon is set and not changed.|1000|
 |VimVerbose|Verbose level:<br><ol><li>Nothing.</li><li>Minimum tooltip (mode information only).</li><li>ToolTip (all information).</li><li>Debug mode with a message box, which doesn't disappear automatically.</li></ol>|1|
