@@ -13,7 +13,7 @@
 
     if(this.Vim.State.IsCurrentVimMode("Vim_VisualLineFirst")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
       Send, {Shift Up}{End}
-      this.Home()
+      this.Zero()
       Send, {Shift Down}
       this.Up()
       this.vim.state.setmode("Vim_VisualLine")
@@ -26,7 +26,7 @@
     if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
       this.Vim.State.LineCopy := 1
       Send,{Shift Up}
-      this.Home()
+      this.Zero()
       this.Down()
       Send, {Shift Down}
       this.Up()
@@ -34,7 +34,7 @@
     if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
       this.Vim.State.LineCopy := 1
       Send,{Shift Up}
-      this.Home()
+      this.Zero()
       Send, {Shift Down}
       this.Down()
     }
@@ -69,7 +69,7 @@
     send {Ctrl Up}
   }
 
-  Home(){
+  Zero(){
     if WinActive("ahk_group VimDoubleHomeGroup"){
       Send, {Home}
     }
@@ -124,7 +124,7 @@
         }
       ; Home/End
       }else if(key == "0"){
-        this.Home()
+        this.Zero()
       }else if(key == "$"){
         if(this.shift == 1){
           Send, +{End}
@@ -134,19 +134,19 @@
       }else if(key == "^"){
         if(this.shift == 1){
           if WinActive("ahk_group VimCaretMove"){
-            this.Home()
-            Send, ^{Right}
-            Send, ^{Left}
-          }else{
-            this.Home()
-          }
-        }else{
-          if WinActive("ahk_group VimCaretMove"){
             Send, +{Home}
             Send, +^{Right}
             Send, +^{Left}
           }else{
             Send, +{Home}
+          }
+        }else{
+          if WinActive("ahk_group VimCaretMove"){
+            Send, {Home}
+            Send, ^{Right}
+            Send, ^{Left}
+          }else{
+            Send, {Home}
           }
         }
       ; Words
@@ -209,7 +209,7 @@
 
   YDCMove(){
     this.Vim.State.LineCopy := 1
-    this.Home()
+    this.Zero()
     Send, {Shift Down}
     if(this.Vim.State.n == 0){
       this.Vim.State.n := 1
