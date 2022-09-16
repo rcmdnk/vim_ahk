@@ -20,8 +20,8 @@
 
 class VimAhk{
   __About(){
-    this.About.Version := "v0.11.3"
-    this.About.Date := "14/Feb/2022"
+    this.About.Version := "v0.11.5"
+    this.About.Date := "16/Sep/2022"
     this.About.Author := "rcmdnk"
     this.About.Description := "Vim emulation with AutoHotkey, everywhere in Windows."
     this.About.Homepage := "https://github.com/rcmdnk/vim_ahk"
@@ -66,8 +66,9 @@ class VimAhk{
     GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
 
     ; Followings can emulate ^. For others, ^ works as same as 0
-    GroupAdd, VimCaretMove, ahk_exe notepad.exe ; NotePad
-    GroupAdd, VimCaretMove, ahk_exe Notepad.exe ; NotePad
+    ; It does not work for NotePad at Windows 11
+    ; GroupAdd, VimCaretMove, ahk_exe notepad.exe ; NotePad
+    ; GroupAdd, VimCaretMove, ahk_exe Notepad.exe ; NotePad
 
     ; Followings start cursor from the same place after selection.
     ; Others start right/left (by cursor) point of the selection
