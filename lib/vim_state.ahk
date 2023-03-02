@@ -139,6 +139,10 @@
     }
   }
 
+  HandleRightControl(){
+    this.SetNormal()
+  }
+
   IsCurrentVimMode(mode){
     this.CheckValidMode(mode)
     Return (mode == this.Mode)
