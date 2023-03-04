@@ -22,6 +22,7 @@ SetCapsLockState, AlwaysOff
 return
 
 ~Capslock & j::Vim.State.HandleRightControl()
+^j::Vim.State.HandleRightControl()
 
 
 
