@@ -3,14 +3,6 @@ Esc::Vim.State.HandleEsc()
 ^[::Vim.State.HandleCtrlBracket()
 LShift & RShift::Capslock
 
-SetCapsLockState Off
-
-WaitingForCtrlInput := false
-SentCtrlDownWithKey := false
-
-#Persistent
-SetCapsLockState, AlwaysOff
-
 ; Send Capslock to Right control. 
 ; see https://www.autohotkey.com/boards/viewtopic.php?t=87992
 *Capslock::
@@ -22,10 +14,8 @@ SetCapsLockState, AlwaysOff
     }
 return
 
-~Capslock & j::Vim.State.HandleRightControl()
-^j::Vim.State.HandleRightControl()
-
-
+~Capslock & j::Vim.State.SetNormal()
+^j::Vim.State.SetNormal()
 
 #If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Insert")) and (Vim.Conf["VimJJ"]["val"] == 1)
 ~j up:: ; jj: go to Normal mode.
