@@ -12,6 +12,7 @@ SentCtrlDownWithKey := false
 SetCapsLockState, AlwaysOff
 
 ; Send Capslock to Right control. 
+; see https://www.autohotkey.com/boards/viewtopic.php?t=87992
 *Capslock::
     Send {RCtrl DownR}
     KeyWait, Capslock
