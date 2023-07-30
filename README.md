@@ -135,7 +135,6 @@ All of these can be changed from the setting menu, too.
 |VimSendCtrlBracketNormal|If 1, short press Ctrl-[ send Ctrl-[ in the normal mode.|0|
 |VimLongCtrlBracketNormal|If 1, short press and long press of Ctrl-[ behaviors are swapped.|0|
 |VimChangeCaretWidth|If 1, check the character under the cursor before an action. Currently this is used for: `a` in the normal mode (check if the cursor is located at the end of the line).|0|
-|VimCheckChr|If 1, |0|
 |VimRestoreIME|If 1, IME status is restored at entering the insert mode.|1|
 |VimJJ|If 1, `jj` changes the mode to the normal mode from the insert mode.|0|
 |VimTwoLetterEsc|A list of character pairs to press together during the insert mode to get to the Normal mode.<br>For example, a value of `jf` means pressing `j` and `f` at the same time will enter the Normal mode.<br>Multiple combination can be set by separated by `,`. (e.g. `jf,jk,sd`)||
