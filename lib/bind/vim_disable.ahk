@@ -69,7 +69,7 @@ Space::
   Vim.State.SetMode("Vim_Normal")
 Return
 
-#If Vim.IsVimGroup() and Vim.State.StrIsInCurrentVimMode("Vim_") and (Vim.Conf["VimDisableUnused"]["val"] == 2)
+#If Vim.IsVimGroup() and Vim.State.StrIsInCurrentVimMode("Vim_") and (Vim.Conf["VimDisableUnused"]["val"] > 1)
 a::
 b::
 c::
@@ -165,7 +165,7 @@ _::
 Space::
 Return
 
-#If Vim.IsVimGroup() and Vim.State.StrIsInCurrentVimMode("Vim_") and (Vim.Conf["VimDisableUnused"]["val"] == 3)
+#If Vim.IsVimGroup() and Vim.State.StrIsInCurrentVimMode("Vim_") and (Vim.Conf["VimDisableUnused"]["val"] > 2)
 *a::
 *b::
 *c::
@@ -192,47 +192,6 @@ Return
 *x::
 *y::
 *z::
-0::
-1::
-2::
-3::
-4::
-5::
-6::
-7::
-8::
-9::
-`::
-~::
-!::
-@::
-#::
-$::
-%::
-^::
-&::
-*::
-(::
-)::
--::
-_::
-=::
-+::
-[::
-{::
-]::
-}::
-\::
-|::
-:::
-`;::
-'::
-"::
-,::
-<::
-.::
->::
-Space::
 Return
 
 #If
