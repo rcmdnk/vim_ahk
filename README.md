@@ -265,6 +265,10 @@ If using a custom two-letter hotkey to enter the normal mode, the two letters mu
 |Ctrl-u/Ctrl-d| Go Up/Down 10 line.|
 |Ctrl-b/Ctrl-f| PageUp/PageDown.|
 |gg/G| Go to the top/bottom of the file|
+|Space| Right.|
+|Enter| Move to the beginning of the next line.|
+
+Note: Enter works only for editor applications (for other than Explorer, Q-dir, it works as Enter even in the normal mode).
 
 In addition, `Repeat` is also available for some commands.
 

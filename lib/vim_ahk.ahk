@@ -51,6 +51,12 @@ class VimAhk{
 
     DefaultGroup := this.SetDefaultActiveWindows()
 
+    ; On following applications, Enter works as Enter at the normal mode.
+    GroupAdd, VimNonEditor, ahk_exe explorer.exe  ; Explorer
+    GroupAdd, VimNonEditor, ahk_exe Explorer.exe  ; Explorer, Explorer became also upper case, but lower case works for this
+    GroupAdd, VimNonEditor, ahk_exe Q-Dir_x64.exe ; Q-dir
+    GroupAdd, VimNonEditor, ahk_exe Q-Dir.exe     ; Q-dir
+
     ; Following applications select the line break at Shift + End.
     GroupAdd, VimLBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
     GroupAdd, VimLBSelectGroup, ahk_exe WINWORD.exe  ; Word

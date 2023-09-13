@@ -42,5 +42,12 @@ b::Vim.Move.Repeat("b")
 ^f::Vim.Move.Repeat("^f")
 ; G
 +g::Vim.Move.Move("+g")
-
+; Space
+Space::Vim.Move.Repeat("l")
+#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and not WinActive("ahk_group VimNonEditor")
+; Enter
+Enter::
+  Vim.Move.Repeat("j")
+  Vim.Move.Move("^")
+  Return
 #If
