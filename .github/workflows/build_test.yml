@@ -10,7 +10,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install AutoHotkey with Chocolatey
-        uses: crazy-max/ghaction-chocolatey@v2
+        uses: crazy-max/ghaction-chocolatey@v3
         with:
           args: install autohotkey
           # fix for [Unable to copy error by command line · Issue #68 · AutoHotkey/Ahk2Exe](https://github.com/AutoHotkey/Ahk2Exe/issues/68)
