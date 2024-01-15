@@ -36,8 +36,9 @@ and download the latest zip file.
 Unzip the zip file, and place the extracted vim_ahk folder where you like,
 then launch **vim_ahk.exe**.
 
-:memo: place **vim_ahk_icons** folder in the same folder with **vim_ahk.exe**,
-otherwise, the tray menu icon feature does not work.
+> [!NOTE]
+> place **vim_ahk_icons** folder in the same folder with **vim_ahk.exe**,
+> otherwise, the tray menu icon feature does not work.
 
 ### Build executable from the source
 
@@ -155,21 +156,27 @@ in the auto execute section like:
 If you want to change them directly in the vim.ahk script,
 add these variable before `Vim := new VimAhk()`.
 
-* VimIconCheckInterval example
+> [!NOTE]
+> VimIconCheckInterval example
+>
+> If you set VimIconCheckInterval as non-zero, the tray icon is changed
+> when you change the mode or change the applications to vim_ahk enabled or not enabled ones.
+>
+> ![trayicon](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/trayicon.gif "trayicon")
 
-If you set VimIconCheckInterval as non-zero, the tray icon is changed
-when you change the mode or change the applications to vim_ahk enabled or not enabled ones.
-
-![trayicon](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/trayicon.gif "trayicon")
-
-* Note for VimChangeCaretWidth
-
-Caret width can be changed only on specific applications: Wordpad, Word, or OneNote.
-On Notepad or Explorer, the caret width is kept but does not change.
-
-For most other applications, the caret width is kept as the original width.
-
-When this option is enabled, the current window briefly loses focus when the mode is changed.
+> [!WARNING]
+> VimChangeCaretWidth
+>
+> Caret width can be changed only on specific applications: Wordpad, Word, or OneNote.
+> On Notepad or Explorer, the caret width is kept but does not change.
+>
+> For most other applications, the caret width is kept as the original width.
+>
+> When this option is enabled, the current window briefly loses focus when the mode is changed.
+>
+> If you enabled this option and change the caret width thick in the Normal mode, and disable the option,
+> the cursor width is kept as thick.
+> To reverse the caret width, re-enable the option and enter the Normal mode at the Wordpad or something to revert the caret width, then disable the option.
 
 ## GUI Option Setting Window
 
