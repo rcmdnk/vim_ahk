@@ -1,4 +1,6 @@
-﻿; Auto-execute section
+#Requires AutoHotkey v1.0
+
+; Auto-execute section
 VimScriptPath := A_LineFile
 Vim := new VimAhk()
 Return
