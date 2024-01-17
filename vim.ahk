@@ -1,4 +1,4 @@
-#Requires AutoHotkey v1.0
+#Requires AutoHotkey v1.1
 
 ; Auto-execute section
 VimScriptPath := A_LineFile
