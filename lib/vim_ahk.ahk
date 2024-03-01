@@ -256,7 +256,8 @@ class VimAhk{
                   , "ahk_exe WINWORD.exe"   ; Word
                   , "ahk_exe wordpad.exe"   ; WordPad
                   , "ahk_exe Q-Dir_x64.exe" ; Q-dir
-                  , "ahk_exe Q-Dir.exe"]    ; Q-dir
+                  , "ahk_exe Q-Dir.exe"     ; Q-dir
+                  , "ahk_exe Obsidian.exe"] ; Obsidian
 
     DefaultGroup := ""
     for i, v in DefaultList
