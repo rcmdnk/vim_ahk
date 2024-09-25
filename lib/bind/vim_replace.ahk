@@ -96,13 +96,13 @@ r::Vim.State.SetMode("r_once")
 ~>::
 ~Space::
 {
-  Send, {Del}
+  Send("{Del}")
   Vim.State.SetMode("Vim_Normal")
 }
 
 ::: ; ":" can't be used with "~"?
 {
-  Send, {:}{Del}
+  Send("{:}{Del}")
   Vim.State.SetMode("Vim_Normal")
 }
 
@@ -200,12 +200,12 @@ r::Vim.State.SetMode("r_once")
 ~>::
 ~Space::
 {
-  Send, {Del}
+  Send("{Del}")
 }
 
 :::
 {
-  Send, {:}{Del}
+  Send("{:}{Del}")
 }
 
 #HotIf

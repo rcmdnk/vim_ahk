@@ -3,14 +3,14 @@
 v::Vim.State.SetMode("Vim_VisualChar")
 ^v::
 {
-  Send, ^b
+  Send("^b")
   Vim.State.SetMode("Vim_VisualChar")
 }
 
 +v::
 {
   Vim.State.SetMode("Vim_VisualLineFirst")
-  Send, {Home}+{Down}
+  Send("{Home}+{Down}")
 }
 
 #HotIf Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Visual"))
@@ -20,10 +20,10 @@ v::Vim.State.SetMode("Vim_Normal")
 y::
 {
   Clipboard :=
-  Send, ^c
-  Send, {Right}
+  Send("^c")
+  Send("{Right}")
   if WinActive("ahk_group VimCursorSameAfterSelect"){
-    Send, {Left}
+    Send("{Left}")
   }
   ClipWait, 1
   if(Vim.State.StrIsInCurrentVimMode("Line")){
@@ -36,7 +36,7 @@ y::
 d::
 {
   Clipboard :=
-  Send, ^x
+  Send("^x")
   ClipWait, 1
   if(Vim.State.StrIsInCurrentVimMode("Line")){
     Vim.State.SetMode("Vim_Normal", 0, 0, 1)
@@ -48,7 +48,7 @@ d::
 x::
 {
   Clipboard :=
-  Send, ^x
+  Send("^x")
   ClipWait, 1
   if(Vim.State.StrIsInCurrentVimMode("Line")){
     Vim.State.SetMode("Vim_Normal", 0, 0, 1)
@@ -60,7 +60,7 @@ x::
 c::
 {
   Clipboard :=
-  Send, ^x
+  Send("^x")
   ClipWait, 1
   if(Vim.State.StrIsInCurrentVimMode("Line")){
     Vim.State.SetMode("Insert", 0, 0, 1)
@@ -73,10 +73,10 @@ c::
 {
   bak := ClipboardAll
   Clipboard :=
-  Send, ^c
+  Send("^c")
   ClipWait, 1
-  Send, ^f
-  Send, ^v!f
+  Send("^f")
+  Send("^v!f")
   clipboard := bak
   Vim.State.SetMode("Vim_Normal")
 }

@@ -217,7 +217,7 @@ class VimAhk{
   }
 
   TwoLetterEnterNormal(){
-    SendInput, {BackSpace 1}
+    SendInput("{BackSpace 1}")
     this.State.SetNormal()
   }
 
@@ -287,8 +287,8 @@ class VimAhk{
     BlockInput, Send
     tempClip := clipboard
     clipboard := ""
-    SendInput {Shift Down}{Right}{Shift up}{Ctrl down}c{Ctrl Up}{Left}
-    Sleep 10
+    SendInput("{Shift Down}{Right}{Shift up}{Ctrl down}c{Ctrl Up}{Left}")
+    Sleep(10)
     ret := False
     If (clipboard ~= key){
       ret := True

@@ -72,16 +72,16 @@
     this.LastIME := VIM_IME_Get()
     if(this.LastIME){
       if(VIM_IME_GetConverting(A)){
-        Send, {Esc}
+        Send("{Esc}")
         Return
       }else{
         VIM_IME_SET()
       }
     }
     if(this.StrIsInCurrentVimMode("Visual") or this.StrIsInCurrentVimMode("ydc")){
-      Send, {Right}
+      Send("{Right}")
       if WinActive("ahk_group VimCursorSameAfterSelect"){
-        Send, {Left}
+        Send("{Left}")
       }
     }
     this.SetMode("Vim_Normal")
@@ -94,7 +94,7 @@
   HandleEsc(){
     global Vim, VimEscNormal, vimSendEscNormal, VimLongEscNormal
     if (!VimEscNormal) {
-      Send, {Esc}
+      Send("{Esc}")
       Return
     }
     ; The keywait waits for esc to be released. If it doesn't detect a release
@@ -105,7 +105,7 @@
     neither := !(VimLongEscNormal || LongPress)
     SetNormal :=  both or neither
     if (!SetNormal or (VimSendEscNormal && this.IsCurrentVimMode("Vim_Normal"))) {
-      Send, {Esc}
+      Send("{Esc}")
     }
     if (SetNormal) {
       this.SetNormal()
@@ -120,7 +120,7 @@
   HandleCtrlBracket(){
     global Vim, VimCtrlBracketNormal, VimSendCtrlBracketNormal, VimLongCtrlBracketNormal
     if (!VimCtrlBracketNormal) {
-      Send, ^[
+      Send("^[")
       Return
     }
     KeyWait, [, T0.5
@@ -129,7 +129,7 @@
     neither := !(VimLongCtrlBracketNormal || LongPress)
     SetNormal :=  both or neither
     if (!SetNormal or (VimSendCtrlBracketNormal && this.IsCurrentVimMode("Vim_Normal"))) {
-      Send, ^[
+      Send("^[")
     }
     if (SetNormal) {
       this.SetNormal()

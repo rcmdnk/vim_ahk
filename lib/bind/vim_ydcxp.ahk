@@ -7,15 +7,15 @@ c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
   Vim.State.SetMode("Vim_ydc_y", 0, 0, 1)
   Sleep, 150 ; Need to wait (For variable change?)
   if WinActive("ahk_group VimDoubleHomeGroup"){
-    Send, {Home}
+    Send("{Home}")
   }
-  Send, {Home}+{End}
+  Send("{Home}+{End}")
   if not WinActive("ahk_group VimLBSelectGroup"){
     Vim.Move.Move("l")
   }else{
     Vim.Move.Move("")
   }
-  Send, {Left}{Home}
+  Send("{Left}{Home}")
 }
 
 +d::
@@ -24,7 +24,7 @@ c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
   if not WinActive("ahk_group VimLBSelectGroup"){
     Vim.Move.Move("$")
   }else{
-    Send, {Shift Down}{End}{Left}
+    Send("{Shift Down}{End}{Left}")
     Vim.Move.Move("")
   }
 }
@@ -35,7 +35,7 @@ c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
   if not WinActive("ahk_group VimLBSelectGroup"){
     Vim.Move.Move("$")
   }else{
-    Send, {Shift Down}{End}{Left}
+    Send("{Shift Down}{End}{Left}")
     Vim.Move.Move("")
   }
 }
@@ -44,7 +44,7 @@ c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
 y::
 {
   Vim.Move.YDCMove()
-  Send, {Left}{Home}
+  Send("{Left}{Home}")
 }
 
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_ydc_d"))
@@ -54,26 +54,26 @@ d::Vim.Move.YDCMove()
 c::Vim.Move.YDCMove()
 
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
-x::Send, {Delete}
-+x::Send, {BS}
+x::Send("{Delete}")
++x::Send("{BS}")
 
 ; Paste
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 p::
 {
   ;i:=0
-  ;;Send, {p Up}
+  ;;Send("{p Up}")
   ;Loop {
   ;  if !GetKeyState("p", "P"){
   ;    break
   ;  }
   ;  if(Vim.State.LineCopy == 1){
-  ;    Send, {End}{Enter}^v{BS}{Home}
+  ;    Send("{End}{Enter}^v{BS}{Home}")
   ;  }else{
-  ;    Send, {Right}
-  ;    Send, ^v
+  ;    Send("{Right}")
+  ;    Send("^v")
   ;    ;Sleep, 1000
-  ;    Send, ^{Left}
+  ;    Send("^{Left}")
   ;  }
   ;  ;TrayTip,i,%i%,
   ;  if(i == 0){
@@ -89,16 +89,16 @@ p::
   ;}
   if(Vim.State.LineCopy == 1){
     if WinActive("ahk_group VimNoLBCopyGroup"){
-      Send, {End}{Enter}^v{Home}
+      Send("{End}{Enter}^v{Home}")
     }else{
-      Send, {End}{Enter}^v{BS}{Home}
+      Send("{End}{Enter}^v{BS}{Home}")
     }
   }else{
-    Send, {Right}
-    Send, ^v
+    Send("{Right}")
+    Send("^v")
     ;Sleep, 1000
-    Send, {Left}
-    ;;Send, ^{Left}
+    Send("{Left}")
+    ;;Send("^{Left}")
   }
   KeyWait, p ; To avoid repeat, somehow it calls <C-p>, print...
 }
@@ -106,10 +106,10 @@ p::
 +p::
 {
   if(Vim.State.LineCopy == 1){
-    Send, {Up}{End}{Enter}^v{BS}{Home}
+    Send("{Up}{End}{Enter}^v{BS}{Home}")
   }else{
-    Send, ^v
-    ;Send,^{Left}
+    Send("^v")
+    ;Send("^{Left}")
   }
   KeyWait, p
 }
