@@ -2,7 +2,7 @@
 
 ; Get IME Status. 0: Off, 1: On
 VIM_IME_GET(WinTitle:="A"){
-  ControlGet,hwnd,HWND,,,%WinTitle%
+  hwnd := WinExist(WinTitle)
   if(WinActive(WinTitle)){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
     VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
@@ -34,7 +34,7 @@ VIM_IME_GetConverting(WinTitle:="A", ConvCls:="", CandCls:=""){
     .  "|SKKIME\d+\.*\d+UCand"                    ; SKKIME Unicode
   CandGCls := "GoogleJapaneseInputCandidateWindow" ; Google IME
 
-  ControlGet, hwnd, HWND, , , %WinTitle%
+  hwnd := WinExist(WinTitle)
   if(WinActive(WinTitle)){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
     VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
@@ -56,7 +56,7 @@ VIM_IME_GetConverting(WinTitle:="A", ConvCls:="", CandCls:=""){
 
 ; Set IME, SetSts=0: Off, 1: On, return 0 for success, others for non-success
 VIM_IME_SET(SetSts:=0, WinTitle:="A"){
-  ControlGet, hwnd, HWND, , , %WinTitle%
+  hwnd := WinExist(WinTitle)
   if(WinActive(WinTitle)){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
     VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
