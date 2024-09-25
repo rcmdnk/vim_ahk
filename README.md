@@ -10,6 +10,17 @@ This is vim emulation for Windows.
 If you are interested in the same settings for Mac,
 try Vim emulation for [Karabiner - Software for macOS](https://pqrs.org/osx/karabiner/): [Karabiner-Elements complex_modifications rules by rcmdnk](https://rcmdnk.com/KE-complex_modifications/).
 
+
+## AutoHotkey v1 or v2
+
+This script is for AutoHotkey v1.
+
+Currently, vim_ahk for AutoHotkey v2 is under development in the branch [ahk_v2](https://github.com/rcmdnk/vim_ahk/tree/ahk_v2).
+
+If you are using AutoHotkey v2, please try the script in [ahk_v2](https://github.com/rcmdnk/vim_ahk/tree/ahk_v2).
+
+Any feedback is welcome.
+
 ## Installation
 
 ### Scripts
