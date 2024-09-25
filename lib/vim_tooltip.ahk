@@ -12,7 +12,7 @@ class VimToolTip{
     if(this.Vim.State.CurrControl != this.Vim.State.PrevControl){
       this.Vim.State.PrevControl := this.Vim.State.CurrControl
       this.RemoveToolTip()
-      if(this.Vim.Info.HasKey(this.Vim.State.CurrControl)){
+      if(this.Vim.Info.Has(this.Vim.State.CurrControl)){
         display := this.DisplayToolTipObj
         SetTimer(display, -1000)
       }
