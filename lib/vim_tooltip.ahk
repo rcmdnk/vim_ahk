@@ -14,28 +14,28 @@ class VimToolTip{
       this.RemoveToolTip()
       if(this.Vim.Info.HasKey(this.Vim.State.CurrControl)){
         display := this.DisplayToolTipObj
-        SetTimer, % display, -1000
+        SetTimer(display, -1000)
       }
     }
   }
 
   DisplayToolTip(){
     display := this.DisplayToolTipObj
-    SetTimer, % display, Off
+    SetTimer(display, 0)
     ToolTip % this.Vim.Info[this.Vim.State.CurrControl]
     this.SetRemoveToolTip(60000)
   }
 
   RemoveToolTip(){
     display := this.DisplayToolTipObj
-    SetTimer, % display, Off
+    SetTimer(display, 0)
     remove := this.RemoveToolTipObj
-    SetTimer, % remove, off
+    SetTimer(remove, 0)
     ToolTip
   }
 
   SetRemoveToolTip(time){
     remove := this.RemoveToolTipObj
-    SetTimer, % remove, % "-" time
+    SetTimer(remove, "-" time)
   }
 }

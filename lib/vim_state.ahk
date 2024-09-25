@@ -195,10 +195,10 @@
   SetStatusCheck(){
     check := this.StatusCheckObj
     if(this.Vim.Conf["VimIconCheckInterval"]["val"] > 0){
-      SetTimer, % check, % this.Vim.Conf["VimIconCheckInterval"]["val"]
+      SetTimer(check, this.Vim.Conf["VimIconCheckInterval"]["val"])
     }else{
       this.Vim.Icon.SetIcon("", 0)
-      SetTimer, % check, Off
+      SetTimer(check, 0)
     }
   }
 
