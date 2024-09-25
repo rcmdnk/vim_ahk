@@ -12,14 +12,16 @@
     win_class := WinGetClass("ahk_pid " process)
     title := WinGetTitle("ahk_pid " process)
     if(this.Vim.IsVimGroup()){
-      MsgBox("(
+      MsgBox("
+      (
         Supported
         Process name: %name%
         Class       : %win_class%
         Title       : %title%
       )", "Vim Ahk", "Iconi")
     }else{
-      MsgBox("(
+      MsgBox("
+      (
         Not supported
         Process name: %name%
         Class       : %win_class%

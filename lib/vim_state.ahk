@@ -32,7 +32,8 @@
       this.SetTooltip(this.Mode "`r`ng=" this.g "`r`nn=" this.n "`r`nLineCopy=" this.LineCopy, 4)
     }
     if(verbose >= 4){
-      MsgBox("(
+      MsgBox("
+      (
         Mode        : %this.Mode%
         Vim_g       : %this.g%
         Vim_n       : %this.n%
@@ -153,7 +154,8 @@
     try{
       InOrBlank := (not fullMatch) ? "in " : ""
       if not this.HasValue(this.PossibleVimModes, mode, fullMatch){
-        Throw ValueError("Invalid mode specified", -2, "(
+        Throw ValueError("Invalid mode specified", -2, "
+        (
           '%Mode%' is not %InOrBlank%a valid mode as defined by the VimPossibleVimModes
           array at the top of vim_state.ahk. This may be a typo.
           Fix this error by using an existing mode,
@@ -161,7 +163,8 @@
         )")
       }
     }catch ValueError as e{
-      MsgBox("(
+      MsgBox("
+      (
         Warning: %e.Message%
         %e.Extra%
 
