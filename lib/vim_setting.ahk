@@ -5,9 +5,6 @@ class VimSetting Extends VimGui{
   }
 
   MakeGui(){
-    global VimRestoreIME, VimJJ, VimEscNormal, VimSendEscNormal, VimLongEscNormal, VimCtrlBracketToEsc, VimCtrlBracketNormal, VimSendCtrlBracketNormal, VimLongCtrlBracketNormal, VimChangeCaretWidth
-    global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimAppList, VimGroup, VimGroupList, VimTwoLetterList
-    global VimDisableUnusedText, VimSetTitleMatchModeText, VimIconCheckIntervalText, VimIconCheckIntervalEdit, VimVerboseText, VimAppListText, VimGroupText, VimHomepage, VimSettingOK, VimSettingReset, VimSettingCancel, VimTwoLetterText
     this.VimVal2V()
     Gui, % this.Hwnd ":-MinimizeBox"
     Gui, % this.Hwnd ":-Resize"
@@ -30,19 +27,19 @@ class VimSetting Extends VimGui{
       GuiControl, % this.Hwnd ":", % k, % %k%
     }
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+15 g" this.__Class ".TwoLetterText vVimTwoLetterText", % this.Vim.Conf["VimTwoLetter"]["description"]
-    Gui, % this.Hwnd ":Add", Edit, XM+10 Y+5 R4 W100 Multi vVimTwoLetterList, % VimTwoLetterList
+    Gui, % this.Hwnd ":Add", Edit, XM+10 Y+5 R4 W100 Multi vVimTwoLetterList, % StrReplace(this.GetVal("VimTwoLetter"), this.Vim.GroupDel, "`n", 0, , -1)
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+15 g" this.__Class ".DisableUnusedText vVimDisableUnusedText", % this.Vim.Conf["VimDisableUnused"]["description"]
-    Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndDisableUnused X+5 Y+-16 W30 vVimDisableUnused Choose" VimDisableUnused, 1|2|3
+    Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndDisableUnused X+5 Y+-16 W30 vVimDisableUnused Choose" this.GetVal("VimDisableUnused"), 1|2|3
     this.HwndAll.Push(HwndDisableUnused)
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+15 g" this.__Class ".SetTitleMatchModeText vVimSetTitleMatchModeText", % this.Vim.Conf["VimSetTitleMatchMode"]["description"]
-    if(VimSetTitleMatchMode == "RegEx"){
+    if(this.GetVal("VimSetTitleMatchMode") == "RegEx"){
       matchmode := 4
     }else{
-      matchmode := VimSetTitleMatchMode
+      matchmode := this.GetVal("VimSetTitleMatchMode")
     }
     Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndSetTitleMachMode X+5 Y+-16 W60 vVimSetTitleMatchMode Choose" matchmode, 1|2|3|RegEx
     this.HwndAll.Push(HwndSetTitleMachMode)
-    if(VimSetTitleMatchModeFS == "Fast"){
+    if(this.GetVal("VimSetTitleMatchModeFS") == "Fast"){
       matchmodefs := 1
     }else{
       matchmodefs := 2
@@ -52,15 +49,15 @@ class VimSetting Extends VimGui{
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+10 g" this.__Class ".IconCheckIntervalText vVimIconCheckIntervalText", % this.Vim.Conf["VimIconCheckInterval"]["description"]
     Gui, % this.Hwnd ":Add", Edit, +HwndHwndIconCheckIntervalEdit X+5 Y+-16 W70 vVimIconCheckIntervalEdit
     this.HwndAll.Push(HwndIconCheckIntervalEdit)
-    Gui, % this.Hwnd ":Add", UpDown, +HwndHwndIconCheckInterval vVimIconCheckInterval Range0-1000000, % VimIconCheckInterval
+    Gui, % this.Hwnd ":Add", UpDown, +HwndHwndIconCheckInterval vVimIconCheckInterval Range0-1000000, % this.GetVal("VimIconCheckInterval")
     this.HwndAll.Push(HwndIconCheckInterval)
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+10 g" this.__Class ".VerboseText vVimVerboseText", % this.Vim.Conf["VimVerbose"]["description"]
-    Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndVerbose X+5 Y+-16 W30 vVimVerbose Choose"VimVerbose, 1|2|3|4
+    Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndVerbose X+5 Y+-16 W30 vVimVerbose Choose"this.GetVal("VimVerbose"), 1|2|3|4
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+10 g" this.__Class ".AppListText vVimAppListText", % this.Vim.Conf["VimAppList"]["description"]
-    Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndAppList X+5 Y+-16 W100 vVimAppList Choose"AppList, All|Allow List|Deny List
+    Gui, % this.Hwnd ":Add", DropDownList, % "+HwndHwndAppList X+5 Y+-16 W100 vVimAppList Choose"this.GetVal("VimAppList"), All|Allow List|Deny List
     this.HwndAll.Push(HwndVerbose)
     Gui, % this.Hwnd ":Add", Text, % "XM+10 Y+5 g" this.__Class ".GroupText vVimGroupText", % this.Vim.Conf["VimGroup"]["description"]
-    Gui, % this.Hwnd ":Add", Edit, +HwndHwndGroupList XM+10 Y+5 R10 W300 Multi vVimGroupList, % VimGroupList
+    Gui, % this.Hwnd ":Add", Edit, +HwndHwndGroupList XM+10 Y+5 R10 W300 Multi vVimGroupList, % StrReplace(this.GetVal("VimGroup"), this.Vim.GroupDel, "`n", 0, , -1)
     this.HwndAll.Push(HwndGroupList)
     Gui, % this.Hwnd ":Add", Text, XM+10 Y+10, Check
     Gui, % this.Hwnd ":Font", Underline
@@ -87,34 +84,31 @@ class VimSetting Extends VimGui{
   }
 
   UpdateGui(){
-    this.VimVal2V()
     this.UpdateGuiValue()
   }
 
   UpdateGuiValue(){
-    global VimRestoreIME, VimJJ, VimEscNormal, VimSendEscNormal, VimLongEscNormal, VimCtrlBracketToEsc, VimCtrlBracketNormal, VimSendCtrlBracketNormal, VimLongCtrlBracketNormal, VimChangeCaretWidth
-    global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimAppList, VimGroup, VimGroupList, VimTwoLetter, VimTwoLetterList
     for i, k in this.Vim.Checkboxes {
-      GuiControl, % this.Hwnd ":", % k, % %k%
+      GuiControl, % this.Hwnd ":", % k, % this.GetVal(k)
     }
-    GuiControl, % this.Hwnd ":", VimTwoLetterList, % VimTwoLetterList
-    GuiControl, % this.Hwnd ":Choose", VimDisableUnused, % VimDisableUnused
-    GuiControl, % this.Hwnd ":", VimIconCheckInterval, % VimIconCheckInterval
-    if(VimSetTitleMatchMode == "RegEx"){
+    GuiControl, % this.Hwnd ":", VimTwoLetterList, % StrReplace(this.GetVal("VimTwoLetter"), this.Vim.GroupDel, "`n", 0, , -1)
+    GuiControl, % this.Hwnd ":Choose", VimDisableUnused, % this.GetVal("VimDisableUnused")
+    GuiControl, % this.Hwnd ":", VimIconCheckInterval, % this.GetVal("VimIconCheckInterval")
+    if(this.GetVal("VimSetTitleMatchMode") == "RegEx"){
       matchmode := 4
     }else{
-      matchmode := VimSetTitleMatchMode
+      matchmode := this.GetVal("VimSetTitleMatchMode")
     }
     GuiControl, % this.Hwnd ":Choose", VimSetTitleMatchMode, % matchmode
-    if(VimSetTitleMatchModeFS == "Fast"){
+    if(this.GetVal("VimSetTitleMatchModeFS") == "Fast"){
       matchmodefs := 1
     }else{
       matchmodefs := 2
     }
     GuiControl, % this.Hwnd ":Choose", VimSetTitleMatchModeFS, % matchmodefs
-    GuiControl, % this.Hwnd ":Choose", VimVerbose, % VimVerbose
-    GuiControl, % this.Hwnd ":Choose", VimAppList, % VimAppList
-    GuiControl, % this.Hwnd ":", VimGroupList, % VimGroupList
+    GuiControl, % this.Hwnd ":Choose", VimVerbose, this.GetVal("VimVerbose")
+    GuiControl, % this.Hwnd ":Choose", VimAppList, this.GetVal("VimAppList")
+    GuiControl, % this.Hwnd ":", VimGroupList, this.GetVal("VimGroupList")
   }
 
   ; Dummy Labels, to enable tooltip over the text
@@ -140,12 +134,28 @@ class VimSetting Extends VimGui{
   }
 
   VimV2Conf(){
-    global VimRestoreIME, VimJJ, VimEscNormal, VimSendEscNormal, VimLongEscNormal, VimCtrlBracketToEsc, VimCtrlBracketNormal, VimSendCtrlBracketNormal, VimLongCtrlBracketNormal, VimChangeCaretWidth
-    global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimAppList, VimGroup, VimGroupList, VimTwoLetter, VimTwoLetterList
-    VimGroup := this.VimParseList(VimGroupList)
-    VimTwoLetter := this.VimParseList(VimTwoLetterList)
     for k, v in this.Vim.Conf {
-      v["val"] := %k%
+      if(k == "VimGroup" || k == "VimTwoLetter"){
+        v["val"] := this.VimParseList(this.Hwnd[k].Value)
+      }else if(k == "VimSetTitleMatchMode" && this.Hwnd[k].Value == 4){
+        v["val"] := "RegEx"
+      }else if(k == "VimSetTitleMatchModeFS"){
+        if(this.Hwnd[k].Value == 1){
+          v["val"] := "Fast"
+        }else{
+          v["val"] := "Slow"
+        }
+      }else if(k == "VimAppList"){
+        if(this.Hwnd[k].Value == 1){
+          v["val"] = "All"
+        }else if(this.Hwnd[k].Value == 2){
+          v["val"] = "Allow List"
+        }else{
+          v["val"] = "Deny List"
+        }
+      }else{
+        v["val"] := this.Hwnd[k].Value
+      }
     }
   }
 
@@ -165,22 +175,26 @@ class VimSetting Extends VimGui{
     return result
   }
 
-  VimConf2V(vd){
-    global VimRestoreIME, VimJJ, VimEscNormal, VimSendEscNormal, VimLongEscNormal, VimCtrlBracketToEsc, VimCtrlBracketNormal, VimSendCtrlBracketNormal, VimLongCtrlBracketNormal, VimChangeCaretWidth
-    global VimDisableUnused, VimSetTitleMatchMode, VimSetTitleMatchModeFS, VimIconCheckInterval, VimVerbose, VimAppList, VimGroup, VimGroupList, VimTwoLetterList
-    StringReplace, VimGroupList, % this.Vim.Conf["VimGroup"][vd], % this.Vim.GroupDel, `n, All
-    StringReplace, VimTwoLetterList, % this.Vim.Conf["VimTwoLetter"][vd], % this.Vim.GroupDel, `n, All
+  VimDefault2V(){
     for k, v in this.Vim.Conf {
-      %k% := v[vd]
+      v["val"] := v["default"]
     }
   }
 
-  VimVal2V(){
-    this.VimConf2V("val")
+  GetConf(name, key){
+    return this.Vim.Conf[name][key]
   }
 
-  VimDefault2V(){
-    this.VimConf2V("default")
+  GetVal(name){
+    return this.GetConf(name, "val")
+  }
+
+  GetDefault(name){
+    return this.GetConf(name, "default")
+  }
+
+  GetDescription(name){
+    return this.GetConf(name, "description")
   }
 
   OK(){

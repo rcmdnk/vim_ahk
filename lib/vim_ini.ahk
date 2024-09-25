@@ -30,7 +30,6 @@
       }else{
         val := IniRead(this.Ini, this.Section, k, A_Space)
       }
-      %k% := val
       v["val"] := val
     }
     this.ReadDeprecatedSettings()
