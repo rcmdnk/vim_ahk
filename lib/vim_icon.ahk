@@ -25,9 +25,9 @@
       icon := this.icons["Disabled"]
     }
     if FileExist(icon){
-      Menu, Tray, Icon, % icon
+      TraySetIcon(icon)
       if(icon != this.icons["Default"]){
-        Menu, VimSubMenu, Icon, Status, % icon
+        this.Vim.SubMenu.SetIcon("Status", icon)
       }
     }
   }
