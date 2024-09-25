@@ -1,7 +1,7 @@
 class VimSetting Extends VimGui{
   __New(vim){
     this.Vim := vim
-    base.__New(vim, "Vim Ahk Settings")
+    super.__New(vim, "Vim Ahk Settings")
   }
 
   MakeGui(){

@@ -8,7 +8,7 @@
     this.Description := ""
     this.Homepage := ""
 
-    base.__New(vim, "Vim Ahk")
+    super.__New(vim, "Vim Ahk")
   }
 
   MakeGui(){
