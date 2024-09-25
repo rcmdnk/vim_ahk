@@ -1,4 +1,3 @@
-#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 #UseHook On ; Make it a bit slow, but can avoid infinitude loop
             ; Same as "$" for each hotkey
 #InstallKeybdHook ; For checking key history
