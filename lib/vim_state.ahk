@@ -153,17 +153,16 @@
       Return
     }
     try{
-      InOrBlank:= (not fullMatch) ? "in " : ""
+      InOrBlank := (not fullMatch) ? "in " : ""
       if not this.HasValue(this.PossibleVimModes, mode, fullMatch){
-        throw Exception("Invalid mode specified",-2,
-        (Join
-  "'" Mode "' is not " InOrBlank " a valid mode as defined by the VimPossibleVimModes
-   array at the top of vim_state.ahk. This may be a typo.
-   Fix this error by using an existing mode,
-   or adding your mode to the array.")
-        )
+        Throw ValueError("Invalid mode specified", -2, "(
+          '%Mode%' is not %InOrBlank%a valid mode as defined by the VimPossibleVimModes
+          array at the top of vim_state.ahk. This may be a typo.
+          Fix this error by using an existing mode,
+          or adding your mode to the array.
+        )")
       }
-    }catch e{
+    }catch ValueError as e{
       MsgBox("(
         Warning: %e.Message%
         %e.Extra%
