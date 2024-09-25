@@ -43,7 +43,7 @@ VIM_IME_GetConverting(WinTitle:="A", ConvCls:="", CandCls:=""){
       ? NumGet(stGTI, 8+PtrSize, "UInt") : hwnd
   }
 
-  WinGet, pid, PID,% "ahk_id " hwnd
+  pid := WinGetPID("ahk_id " hwnd)
   tmm := A_TitleMatchMode
   SetTitleMatchMode("RegEx")
   ret := WinExist("ahk_class " . CandCls . " ahk_pid " pid) ? 2

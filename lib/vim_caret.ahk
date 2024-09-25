@@ -39,7 +39,7 @@ class VimCaret{
 
   SwitchToSameWindow(){
       ; Get ID of active window
-      WinGet, hwnd, ID, A
+      hwnd := WinGetID("A")
       ; Activate desktop
       winActivate, ahk_class WorkerW
       WinActivate, ahk_id %hwnd%
