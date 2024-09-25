@@ -47,7 +47,7 @@
     this.Vim.VimToolTip.SetRemoveToolTip(1000)
   }
 
-  FullStatus(){
+  FullStatus(ItemName, ItemPos, MyMenu){
     this.CheckMode(4, , , , 1)
   }
 
