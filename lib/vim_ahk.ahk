@@ -89,7 +89,7 @@ class VimAhk{
 
     ; Configuration values for Read/Write ini
     ; setting, default, val, description, info
-    this.Conf := {}
+    this.Conf := Map()
     this.AddToConf("VimEscNormal", 1, 1
       , "ESC to enter the normal mode"
       , "Use ESC to enter the normal mode, long press ESC to send ESC.")
@@ -148,7 +148,7 @@ class VimAhk{
     this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth"]
 
     ; ToolTip Information
-    this.Info := {}
+    this.Info := Map()
     for k, v in this.Conf {
       info := k ":`n" v["info"]
       this.Info[k] := info
@@ -167,7 +167,7 @@ class VimAhk{
   }
 
   AddToConf(setting, default, val, description, info){
-    this.Conf[setting] :=  {"default": default, "val": val, "description": description, "info": info}
+    this.Conf[setting] :=  Map("default", default, "val", val, "description", description, "info", info)
   }
 
   SetExistValue(){

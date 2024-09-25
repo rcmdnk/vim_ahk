@@ -2,10 +2,10 @@ class VimCaret{
   __New(vim){
     global VimScriptPath
     this.Vim := vim
-    this.caretwidths := {"Normal": 10
-                 , "Visual": 10
-                 , "Insert": 1
-                 , "Default": 1}
+    this.caretwidths := Map("Normal", 10
+      , "Visual", 10
+      , "Insert", 1
+      , "Default", 1)
   }
 
   SetCaret(Mode:=""){

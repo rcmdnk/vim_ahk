@@ -2,12 +2,12 @@
   __New(vim){
     global VimScriptPath
     this.Vim := vim
-    this.icons := {Normal: VimScriptPath "\..\vim_ahk_icons\normal.ico"
-                 , Insert: VimScriptPath  "\..\vim_ahk_icons\insert.ico"
-                 , Visual: VimScriptPath "\..\vim_ahk_icons\visual.ico"
-                 , Command: VimScriptPath "\..\vim_ahk_icons\command.ico"
-                 , Disabled: VimScriptPath "\..\vim_ahk_icons\disabled.ico"
-                 , Default: A_AhkPath}
+    this.icons := Map("Normal", this.Vim.ScriptPath "\..\vim_ahk_icons\normal.ico"
+      , "Insert", this.Vim.ScriptPath  "\..\vim_ahk_icons\insert.ico"
+      , "Visual", this.Vim.ScriptPath "\..\vim_ahk_icons\visual.ico"
+      , "Command", this.Vim.ScriptPath "\..\vim_ahk_icons\command.ico"
+      , "Disabled", this.Vim.ScriptPath "\..\vim_ahk_icons\disabled.ico"
+      , "Default", A_AhkPath)
   }
 
   SetIcon(Mode:="", Interval:=0){
