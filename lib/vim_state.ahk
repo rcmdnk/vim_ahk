@@ -176,7 +176,7 @@
   HasValue(haystack, needle, fullMatch:=true){
     if(!isObject(haystack)){
       return false
-    }else if(haystack.Length() == 0){
+    }else if(haystack.Length == 0){
       return false
     }
     for index, value in haystack{
