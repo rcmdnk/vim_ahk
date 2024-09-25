@@ -4,28 +4,25 @@ class VimGui{
     this.Hwnd := 0
     this.HwndAll := []
     this.Title := title
+    this.OKObj := ObjBindMethod(this, "OK")
   }
 
-  ShowGui(){
-    if(this.hwnd == 0){
-      Gui, New, +HwndGuiHwnd
-      this.Hwnd := GuiHwnd
-      this.HwndAll.Push(GuiHwnd)
+  ShowGui(name, pos, mymenu){
+    if(this.Hwnd == 0){
+      this.Hwnd := Gui("", this.Title)
+      this.HwndAll.Push(this.Hwnd)
       this.MakeGui()
-      Gui, % this.Hwnd ":Show", , % this.Title
       OnMessage(0x112, ObjBindMethod(this, "OnClose"))
       OnMessage(0x100, ObjBindMethod(this, "OnEscape"))
+    }else{
+      this.UpdateGui()
     }
-    this.UpdateGui()
-    Gui, % this.Hwnd ":Show", , % this.Title
-    Return
+    this.Hwnd.Show()
   }
 
   MakeGui(){
-    Gui, % this.Hwnd ":Add", Button, +HwndOK X200 W100 Default, &OK
-    this.HwndAll.Push(OK)
-    ok := ObjBindMethod(this, "OK")
-    GuiControl, +G, % OK, % ok
+    this.Hwnd.AddButton("X200 W100 Default vGuiOK", "OK").OnEvent("Click", this.OKObj)
+    this.HwndAll.Push(this.Hwnd["GuiOK"])
   }
 
   UpdateGui(){
@@ -33,10 +30,10 @@ class VimGui{
 
   Hide(){
     this.Vim.VimToolTip.RemoveToolTip()
-    Gui, % this.Hwnd ":Hide"
+    this.Hwnd.Hide()
   }
 
-  OK(){
+  OK(btn, info){
     this.Hide()
   }
 
