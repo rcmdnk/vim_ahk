@@ -282,7 +282,7 @@ class VimAhk{
 
   ; Ref: https://www.reddit.com/r/AutoHotkey/comments/4ma5b8/identifying_end_of_line_when_typing_with_ahk_and/
   CheckChr(key){
-    BlockInput, Send
+    BlockInput("Send")
     ClipSaved := ClipboardAll()
     A_Clipboard := ""
     SendInput("{Shift Down}{Right}{Shift up}{Ctrl down}c{Ctrl Up}{Left}")
@@ -293,7 +293,7 @@ class VimAhk{
     }
     sleep(10)
     A_Clipboard := ClipSaved
-    BlockInput, off
+    BlockInput("Off")
     Return ret
   }
 }
