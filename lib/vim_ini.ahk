@@ -26,9 +26,9 @@
     for k, v in conf {
       current := v["val"]
       if(current != ""){
-        IniRead, val, % this.Ini, % this.Section, % k, % current
+        val := IniRead(this.Ini, this.Section, k, current)
       }else{
-        IniRead, val, % this.Ini, % this.Section, % k, % A_Space
+        val := IniRead(this.Ini, this.Section, k, A_Space)
       }
       %k% := val
       v["val"] := val
@@ -46,7 +46,7 @@
     ul1 := StrUpper(l1)
     ul2 := StrUpper(l2)
     twoLetter := "Vim" ul1 ul2
-    IniRead, val, % this.Ini, % this.Section, % twoLetter, 0
+    val := IniRead(this.Ini, this.Section, twoLetter, 0)
     if (val == 1){
       if (this.Vim.Conf["VimTwoLetter"]["val"] == ""){
         this.Vim.Conf["VimTwoLetter"]["val"] := l1 l2
@@ -54,7 +54,7 @@
         this.Vim.Conf["VimTwoLetter"]["val"] := this.Vim.Conf["VimTwoLetter"]["val"] this.Vim.GroupDel l1 l2
       }
     }
-    IniDelete, % this.Ini, % this.Section, % twoLetter
+    IniDelete(this.Ini, this.Section, twoLetter)
   }
 
   WriteIni(){
@@ -62,7 +62,7 @@
       FileCreateDir, % this.IniDir
 
     for k, v in this.Vim.Conf {
-      IniWrite, % v["val"], % this.Ini, % this.Section, % k
+      IniWrite(v["val"], this.Ini, this.Section, k)
     }
   }
 }
