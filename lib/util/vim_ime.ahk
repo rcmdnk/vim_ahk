@@ -7,15 +7,15 @@ VIM_IME_GET(WinTitle:="A"){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
     VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
     NumPut(cbSize, stGTI, 0, "UInt") ; DWORD cbSize;
-    hwnd := DllCall("GetGUIThreadInfo", Uint,0, Uint, &stGTI)
+    hwnd := DllCall("GetGUIThreadInfo", "Uint" , 0, "Uint", &stGTI)
         ? NumGet(stGTI, 8+PtrSize, "UInt") : hwnd
   }
 
   Return DllCall("SendMessage"
-      , UInt, DllCall("imm32\ImmGetDefaultIMEWnd", Uint, hwnd)
-      , UInt, 0x0283  ;Message : WM_IME_CONTROL
-      ,  Int, 0x0005  ;wParam  : IMC_GETOPENSTATUS
-      ,  Int, 0)      ;lParam  : 0
+      , "UInt", DllCall("imm32\ImmGetDefaultIMEWnd", "Uint", hwnd)
+      , "UInt", 0x0283  ;Message : WM_IME_CONTROL
+      ,  "Int", 0x0005  ;wParam  : IMC_GETOPENSTATUS
+      ,  "Int", 0)      ;lParam  : 0
 }
 ; Get input status. 1: Converting, 2: Have converting window, 0: Others
 VIM_IME_GetConverting(WinTitle:="A", ConvCls:="", CandCls:=""){
@@ -39,7 +39,7 @@ VIM_IME_GetConverting(WinTitle:="A", ConvCls:="", CandCls:=""){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
     VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
     NumPut(cbSize, stGTI, 0, "UInt")   ;   DWORD   cbSize;
-    hwnd := DllCall("GetGUIThreadInfo", Uint, 0, Uint,&stGTI)
+    hwnd := DllCall("GetGUIThreadInfo", "Uint", 0, "Uint", &stGTI)
       ? NumGet(stGTI, 8+PtrSize, "UInt") : hwnd
   }
 
@@ -61,13 +61,13 @@ VIM_IME_SET(SetSts:=0, WinTitle:="A"){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
     VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
     NumPut(cbSize, stGTI, 0, "UInt") ; DWORD cbSize;
-    hwnd := DllCall("GetGUIThreadInfo", Uint, 0, Uint, &stGTI)
+    hwnd := DllCall("GetGUIThreadInfo", "Uint", 0, "Uint", &stGTI)
         ? NumGet(stGTI, 8+PtrSize, "UInt") : hwnd
   }
 
   Return DllCall("SendMessage"
-    , UInt, DllCall("imm32\ImmGetDefaultIMEWnd", Uint, hwnd)
-    , UInt, 0x0283  ;Message : WM_IME_CONTROL
-    ,  Int, 0x006   ;wParam  : IMC_SETOPENSTATUS
-    ,  Int, SetSts) ;lParam  : 0 or 1
+    , "UInt", DllCall("imm32\ImmGetDefaultIMEWnd", "UInt", hwnd)
+    , "UInt", 0x0283  ;Message : WM_IME_CONTROL
+    ,  "Int", 0x006   ;wParam  : IMC_SETOPENSTATUS
+    ,  "Int", SetSts) ;lParam  : 0 or 1
 }

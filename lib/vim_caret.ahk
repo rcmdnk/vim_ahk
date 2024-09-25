@@ -32,7 +32,7 @@ class VimCaret{
       SPIF_UPDATEINIFILE := 0x01
       SPIF_SENDCHANGE := 0x02
       fWinIni := SPIF_UPDATEINIFILE | SPIF_SENDCHANGE
-      DllCall("SystemParametersInfo", UInt,SPI_SETCARETWIDTH, UInt,0, UInt,CARETWIDTH, UInt,fWinIni)
+      DllCall("SystemParametersInfo", "UInt", SPI_SETCARETWIDTH, "UInt", 0, "UInt", CARETWIDTH, "UInt", fWinIni)
       this.SwitchToSameWindow()
   }
 
