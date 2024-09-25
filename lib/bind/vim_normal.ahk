@@ -12,7 +12,7 @@ u::Send("^z")
   bak := ClipboardAll
   Clipboard =
   Send("+{Right}^x")
-  ClipWait, 1
+  ClipWait(1)
   if(Clipboard is lower){
     StringUpper, Clipboard, Clipboard
   }else if(Clipboard is upper){

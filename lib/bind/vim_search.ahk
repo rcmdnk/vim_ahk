@@ -10,7 +10,7 @@
   bak := ClipboardAll
   Clipboard=
   Send("^{Left}+^{Right}^c")
-  ClipWait, 1
+  ClipWait(1)
   Send("^f")
   Send("^v!f")
   clipboard := bak
