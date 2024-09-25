@@ -17,7 +17,6 @@ class VimToolTip{
         SetTimer, % display, -1000
       }
     }
-    Return
   }
 
   DisplayToolTip(){
