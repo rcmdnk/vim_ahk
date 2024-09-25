@@ -79,7 +79,7 @@ p::
   ;  if(i == 0){
   ;    Sleep(500)
   ;  }else if(i > 100){
-  ;    Msgbox, , Vim Ahk, Stop at 100!!!
+  ;    MsgBox("Vim Ahk, Stop at 100!!!", "Vim Ahk")
   ;    break
   ;  }else{
   ;    Sleep(0)

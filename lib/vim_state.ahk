@@ -32,7 +32,12 @@
       this.SetTooltip(this.Mode "`r`ng=" this.g "`r`nn=" this.n "`r`nLineCopy=" this.LineCopy, 4)
     }
     if(verbose >= 4){
-      Msgbox, , Vim Ahk, % "Mode: " this.Mode "`nVim_g: " this.g "`nVim_n: " this.n "`nVimLineCopy: " this.LineCopy
+      MsgBox("(
+        Mode        : %this.Mode%
+        Vim_g       : %this.g%
+        Vim_n       : %this.n%
+        VimLineCopy : %this.LineCopy%
+      )", "Vim Ahk")
     }
   }
 
@@ -159,7 +164,12 @@
         )
       }
     }catch e{
-      MsgBox % "Warning: " e.Message "`n" e.Extra "`n`n Called in " e.What " at line " e.Line
+      MsgBox("(
+        Warning: %e.Message%
+        %e.Extra%
+
+        Called in %e.What% at line %e.Line%
+      )", "Vim Ahk")
     }
   }
 
