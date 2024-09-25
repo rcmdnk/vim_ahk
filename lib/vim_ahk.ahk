@@ -28,7 +28,8 @@ class VimAhk{
     this.Info["VimHomepage"] := this.About.Homepage
   }
 
-  __New(setup=true){
+  __New(ScriptPath){
+    this.ScriptPath := ScriptPath
     this.Enabled := True
 
 

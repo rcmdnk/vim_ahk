@@ -1,6 +1,5 @@
 class VimCaret{
   __New(vim){
-    global VimScriptPath
     this.Vim := vim
     this.caretwidths := Map("Normal", 10
       , "Visual", 10

@@ -1,8 +1,7 @@
 #Requires AutoHotkey v1.1
 
 ; Auto-execute section
-VimScriptPath := A_LineFile
-Vim := VimAhk()
+Vim := VimAhk(A_LineFile)
 Return
 
 #Include %A_LineFile%\..\lib\vim_ahk.ahk
