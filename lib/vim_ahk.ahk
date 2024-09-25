@@ -153,8 +153,8 @@ class VimAhk{
     for k, v in this.Conf {
       info := k ":`n" v["info"]
       this.Info[k] := info
-      for i, type in ["Text", "List", "Value", "Edit"] {
-        textKey := k type
+      for i, t_type in ["Text", "List", "Value", "Edit"] {
+        textKey := k t_type
         this.Info[textKey] := info
       }
     }
