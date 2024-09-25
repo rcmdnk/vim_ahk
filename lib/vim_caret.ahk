@@ -12,7 +12,7 @@ class VimCaret{
     if (this.Vim.Conf["VimChangeCaretWidth"]["val"] == 0){
       return
     }
-    width :=
+    width := ""
     if this.Vim.State.IsCurrentVimMode("Vim_Normal"){
       width := this.caretwidths["Normal"]
     }else if this.Vim.State.StrIsInCurrentVimMode("Visual"){
