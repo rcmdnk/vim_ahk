@@ -205,9 +205,9 @@ class VimAhk{
   SetTwoLetterMap(key1, key2){
     EnterNormal := ObjBindMethod(this, "TwoLetterEnterNormal")
     Enabled := ObjBindMethod(this, "TwoLetterNormalMapsEnabled")
-    HotKey If, % Enabled
-    HotKey, %key1% & %key2%, % EnterNormal
-    HotKey, %key2% & %key1%, % EnterNormal
+    HotIf(Enabled)
+    HotKey("%key1% & %key2%", EnterNormal)
+    HotKey("%key2% & %key1%", EnterNormal)
   }
 
   TwoLetterNormalMapsEnabled(){
