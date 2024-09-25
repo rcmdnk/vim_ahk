@@ -11,7 +11,7 @@ h::
 }
 
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Command_w"))
-Return::
+Enter::
 {
   Send("^s")
   Vim.State.SetMode("Vim_Normal")
@@ -31,7 +31,7 @@ Space::
 }
 
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Command_q"))
-Return::
+Enter::
 {
   Send("!{F4}")
   Vim.State.SetMode("Insert")
