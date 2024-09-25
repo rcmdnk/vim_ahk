@@ -3,6 +3,7 @@ y::Vim.State.SetMode("Vim_ydc_y", 0, -1, 0)
 d::Vim.State.SetMode("Vim_ydc_d", 0, -1, 0)
 c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
 +y::
+{
   Vim.State.SetMode("Vim_ydc_y", 0, 0, 1)
   Sleep, 150 ; Need to wait (For variable change?)
   if WinActive("ahk_group VimDoubleHomeGroup"){
@@ -15,9 +16,10 @@ c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
     Vim.Move.Move("")
   }
   Send, {Left}{Home}
-Return
+}
 
 +d::
+{
   Vim.State.SetMode("Vim_ydc_d", 0, 0, 0)
   if not WinActive("ahk_group VimLBSelectGroup"){
     Vim.Move.Move("$")
@@ -25,9 +27,10 @@ Return
     Send, {Shift Down}{End}{Left}
     Vim.Move.Move("")
   }
-Return
+}
 
 +c::
+{
   Vim.State.SetMode("Vim_ydc_c",0,0,0)
   if not WinActive("ahk_group VimLBSelectGroup"){
     Vim.Move.Move("$")
@@ -35,13 +38,14 @@ Return
     Send, {Shift Down}{End}{Left}
     Vim.Move.Move("")
   }
-Return
+}
 
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_ydc_y"))
 y::
+{
   Vim.Move.YDCMove()
   Send, {Left}{Home}
-Return
+}
 
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_ydc_d"))
 d::Vim.Move.YDCMove()
@@ -56,6 +60,7 @@ x::Send, {Delete}
 ; Paste
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 p::
+{
   ;i:=0
   ;;Send, {p Up}
   ;Loop {
@@ -96,9 +101,10 @@ p::
     ;;Send, ^{Left}
   }
   KeyWait, p ; To avoid repeat, somehow it calls <C-p>, print...
-Return
+}
 
 +p::
+{
   if(Vim.State.LineCopy == 1){
     Send, {Up}{End}{Enter}^v{BS}{Home}
   }else{
@@ -106,6 +112,6 @@ Return
     ;Send,^{Left}
   }
   KeyWait, p
-Return
+}
 
 #HotIf

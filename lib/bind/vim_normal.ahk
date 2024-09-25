@@ -8,6 +8,7 @@ u::Send,^z
 
 ; Change case
 ~::
+{
   bak := ClipboardAll
   Clipboard =
   Send, +{Right}^x
@@ -19,7 +20,7 @@ u::Send,^z
   }
   Send, ^v
   Clipboard := bak
-Return
+}
 
 ; period
 .::Send, +^{Right}{BS}^v
@@ -27,15 +28,17 @@ Return
 +z::Vim.State.SetMode("Z")
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Z"))
 +z::
+{
   Send, ^s
   Send, !{F4}
   Vim.State.SetMode("Vim_Normal")
-Return
+}
 
 +q::
+{
   Send, !{F4}
   Vim.State.SetMode("Vim_Normal")
-Return
+}
 
 ; Q-dir
 #HotIf Vim.IsVimGroup() and WinActive("ahk_group VimQdir") and (Vim.State.Mode == "Vim_Normal")
@@ -50,6 +53,6 @@ Return
 '::Send, {LControl Down}{q Down}{q Up}{LControl Up}
 ; Keep the e key in Normal mode, use the right button and then press the refresh (e) function, do nothing, return to the e key directly
 ~e::
-Return
+{}
 
 #HotIf

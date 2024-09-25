@@ -47,7 +47,8 @@ Space::Vim.Move.Repeat("l")
 #HotIf Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and not WinActive("ahk_group VimNonEditor")
 ; Enter
 Enter::
+{
   Vim.Move.Repeat("j")
   Vim.Move.Move("^")
-  Return
+}
 #HotIf

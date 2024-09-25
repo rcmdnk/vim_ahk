@@ -95,14 +95,16 @@ r::Vim.State.SetMode("r_once")
 ~.::
 ~>::
 ~Space::
+{
   Send, {Del}
   Vim.State.SetMode("Vim_Normal")
-Return
+}
 
 ::: ; ":" can't be used with "~"?
+{
   Send, {:}{Del}
   Vim.State.SetMode("Vim_Normal")
-Return
+}
 
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("r_repeat"))
 ~a::
@@ -197,11 +199,13 @@ Return
 ~.::
 ~>::
 ~Space::
+{
   Send, {Del}
-Return
+}
 
 :::
+{
   Send, {:}{Del}
-Return
+}
 
 #HotIf

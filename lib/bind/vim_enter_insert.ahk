@@ -2,31 +2,36 @@
 i::Vim.State.SetMode("Insert")
 
 +i::
+{
   Send, {Home}
   Vim.State.SetMode("Insert")
-Return
+}
 
 a::
+{
   if(! Vim.CheckChr("`n")){
     Send, {Right}
   }
   Vim.State.SetMode("Insert")
-Return
+}
 
 +a::
+{
   Send, {End}
   Vim.State.SetMode("Insert")
-Return
+}
 
 o::
+{
   Send,{End}{Enter}
   Vim.State.SetMode("Insert")
-Return
+}
 
 +o::
+{
   Send, {Home}{Enter}{Left}
   Vim.State.SetMode("Insert")
-Return
+}
 
 ; Q-dir
 #HotIf Vim.IsVimGroup() and WinActive("ahk_group VimQdir") and (Vim.State.Mode == "Vim_Normal")

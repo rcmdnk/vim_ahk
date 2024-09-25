@@ -1,10 +1,12 @@
 ﻿#HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 /::
+{
   Send, ^f
   Vim.State.SetMode("Insert")
-Return
+}
 
 *::
+{
   bak := ClipboardAll
   Clipboard=
   Send, ^{Left}+^{Right}^c
@@ -13,7 +15,7 @@ Return
   Send, ^v!f
   clipboard := bak
   Vim.State.SetMode("Insert")
-Return
+}
 
 n::Send, {F3}
 +n::Send, +{F3}
