@@ -293,7 +293,7 @@ class VimAhk{
     If (clipboard ~= key){
       ret := True
     }
-    sleep 10
+    sleep(10)
     clipboard := tempClip
     BlockInput, off
     Return ret

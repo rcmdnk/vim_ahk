@@ -5,7 +5,7 @@ c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
 +y::
 {
   Vim.State.SetMode("Vim_ydc_y", 0, 0, 1)
-  Sleep, 150 ; Need to wait (For variable change?)
+  Sleep(150) ; Need to wait (For variable change?)
   if WinActive("ahk_group VimDoubleHomeGroup"){
     Send("{Home}")
   }
@@ -72,17 +72,17 @@ p::
   ;  }else{
   ;    Send("{Right}")
   ;    Send("^v")
-  ;    ;Sleep, 1000
+  ;    ;Sleep(1000)
   ;    Send("^{Left}")
   ;  }
   ;  ;TrayTip,i,%i%,
   ;  if(i == 0){
-  ;    Sleep, 500
+  ;    Sleep(500)
   ;  }else if(i > 100){
   ;    Msgbox, , Vim Ahk, Stop at 100!!!
   ;    break
   ;  }else{
-  ;    Sleep, 0
+  ;    Sleep(0)
   ;  }
   ;  i+=1
   ;  break
@@ -96,7 +96,7 @@ p::
   }else{
     Send("{Right}")
     Send("^v")
-    ;Sleep, 1000
+    ;Sleep(1000)
     Send("{Left}")
     ;;Send("^{Left}")
   }
