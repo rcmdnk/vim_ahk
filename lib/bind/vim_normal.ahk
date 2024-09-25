@@ -13,10 +13,10 @@ u::Send("^z")
   A_Clipboard := ""
   Send("+{Right}^x")
   ClipWait(1)
-  if(A_Clipboard is lower){
-    StringUpper, A_Clipboard, A_Clipboard
-  }else if(Clipboard is upper){
-    StringLower, A_Clipboard, A_Clipboard
+  if(isLower(A_Clipboard)){
+    A_Clipboard := StrUpper(A_Clipboard)
+  }else if(isUpper(A_Clipboard)){
+    A_Clipboard := StrLower(A_Clipboard)
   }
   Send("^v")
   A_Clipboard := ClipSaved
