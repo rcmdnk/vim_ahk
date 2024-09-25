@@ -97,16 +97,15 @@
   }
 
   HandleEsc(){
-    global Vim, VimEscNormal, vimSendEscNormal, VimLongEscNormal
-    if (!VimEscNormal) {
+    if (!this.Vim.Conf["VimEscNormal"]["val"]) {
       Send("{Esc}")
       Return
     }
     ; The keywait waits for esc to be released. If it doesn't detect a release
     ; within the time limit, return 0, otherwise return 1.
     ShortPress := KeyWait("Esc", "T0.5")
-    SetNormal := VimLongEscNormal != ShortPress
-    if (!SetNormal or (VimSendEscNormal && this.IsCurrentVimMode("Vim_Normal"))) {
+    SetNormal := this.Vim.Conf["VimLongEscNormal"]["val"] != ShortPress
+    if (!SetNormal or (this.Vim.Conf["VimSendEscNormal"]["val"] && this.IsCurrentVimMode("Vim_Normal"))) {
       Send("{Esc}")
     }
     if (SetNormal) {
@@ -120,14 +119,13 @@
   }
 
   HandleCtrlBracket(){
-    global Vim, VimCtrlBracketNormal, VimSendCtrlBracketNormal, VimLongCtrlBracketNormal
-    if (!VimCtrlBracketNormal) {
+    if (!this.Vim.Conf["VimCtrlBracketNormal"]["val"]) {
       Send("^[")
       Return
     }
     ShortPress := KeyWait("[", "T0.5")
-    SetNormal := VimLongCtrlBracketNormal != ShortPress
-    if (!SetNormal or (VimSendCtrlBracketNormal && this.IsCurrentVimMode("Vim_Normal"))) {
+    SetNormal := this.Vim.Conf["VimLongCtrlBracketNormal"]["val"] != ShortPress
+    if (!SetNormal or (this.Vim.Conf["VimSendCtrlBracketNormal"]["val"] && this.IsCurrentVimMode("Vim_Normal"))) {
       Send("^[")
     }
     if (SetNormal) {
