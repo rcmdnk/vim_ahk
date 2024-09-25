@@ -43,8 +43,8 @@
   }
 
   DeprecatedTwoLetter(l1, l2){
-    StringUpper, ul1, l1
-    StringUpper, ul2, l2
+    ul1 := StrUpper(l1)
+    ul2 := StrUpper(l2)
     twoLetter := "Vim" ul1 ul2
     IniRead, val, % this.Ini, % this.Section, % twoLetter, 0
     if (val == 1){
