@@ -33,16 +33,16 @@ class VimAhk{
 
 
     ; Classes
-    this.About := new VimAbout(this)
-    this.Check := new VimCheck(this)
-    this.Icon := new VimIcon(this)
-    this.Caret := new VimCaret(this)
-    this.Ini := new VimIni(this)
-    this.VimMenu := new VimMenu(this)
-    this.Move := new VimMove(this)
-    this.Setting := new VimSetting(this)
-    this.State := new VimState(this)
-    this.VimToolTip := new VimToolTip(this)
+    this.About := VimAbout(this)
+    this.Check := VimCheck(this)
+    this.Icon := VimIcon(this)
+    this.Caret := VimCaret(this)
+    this.Ini := VimIni(this)
+    this.VimMenu := VimMenu(this)
+    this.Move := VimMove(this)
+    this.Setting := VimSetting(this)
+    this.State := VimState(this)
+    this.VimToolTip := VimToolTip(this)
 
     ; Group Settings
     this.GroupDel := ","
