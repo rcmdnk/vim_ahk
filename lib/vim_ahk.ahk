@@ -5,7 +5,6 @@
 ; Classes, Functions
 #Include %A_LineFile%\..\vim_about.ahk
 #Include %A_LineFile%\..\vim_check.ahk
-#Include %A_LineFile%\..\vim_gui.ahk
 #Include %A_LineFile%\..\vim_icon.ahk
 #Include %A_LineFile%\..\vim_caret.ahk
 #Include %A_LineFile%\..\vim_ini.ahk

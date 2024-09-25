@@ -1,3 +1,6 @@
+#Include %A_LineFile%\..\vim_gui.ahk
+
+
 class VimSetting Extends VimGui{
   __New(vim){
     super.__New(vim, "Vim Ahk Settings")

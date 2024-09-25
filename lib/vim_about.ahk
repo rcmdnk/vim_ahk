@@ -1,4 +1,7 @@
-﻿class VimAbout Extends VimGui{
+﻿#Include %A_LineFile%\..\vim_gui.ahk
+
+
+class VimAbout Extends VimGui{
   __New(vim){
     super.__New(vim, "Vim Ahk")
 
