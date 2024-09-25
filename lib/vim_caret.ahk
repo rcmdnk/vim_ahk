@@ -40,8 +40,8 @@ class VimCaret{
       ; Get ID of active window
       hwnd := WinGetID("A")
       ; Activate desktop
-      winActivate, ahk_class WorkerW
-      WinActivate, ahk_id %hwnd%
+      WinActivate("ahk_class WorkerW")
+      WinActivate("ahk_id " hwnd)
   }
 }
 
