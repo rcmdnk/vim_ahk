@@ -54,7 +54,7 @@
         VIM_IME_SET(this.LastIME)
       }
       this.Vim.Icon.SetIcon(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
-      this.Vim.Caret.SetCaret(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
+      this.Vim.Caret.SetCaret(this.Mode)
     }
     if(g != -1){
       this.g := g
