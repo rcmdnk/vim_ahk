@@ -8,7 +8,7 @@ class VimToolTip{
   }
 
   OnMouseMove(wp, lp, msg, hwnd){
-    this.Vim.State.CurrControl := A_GuiControl
+    this.Vim.State.CurrControl := hwnd
     if(this.Vim.State.CurrControl != this.Vim.State.PrevControl){
       this.Vim.State.PrevControl := this.Vim.State.CurrControl
       this.RemoveToolTip()
