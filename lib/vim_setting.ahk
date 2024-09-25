@@ -152,9 +152,8 @@ class VimSetting Extends VimGui{
   VimParseList(list){
     result := ""
     tmpArray := []
-    Loop, Parse, list, `n
-    {
-      if(! tmpArray.Haskey(A_LoopField)){
+    Loop Parse, list, "`n" {
+      if(! tmpArray.Has(A_LoopField)){
         tmpArray.push(A_LoopField)
         if(result == ""){
           result := A_LoopField

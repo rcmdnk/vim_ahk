@@ -183,8 +183,7 @@ class VimAhk{
   SetGroup(){
     this.GroupN++
     this.GroupName := "VimGroup" this.GroupN
-    Loop, Parse, % this.Conf["VimGroup"]["val"], % this.GroupDel
-    {
+    Loop Parse, this.Conf["VimGroup"]["val"], this.GroupDel {
       if(A_LoopField != ""){
         GroupAdd, % this.GroupName, %A_LoopField%
       }
@@ -193,8 +192,7 @@ class VimAhk{
 
   LoadTwoLetterMaps() {
     this.TwoLetterNormalIsSet := False
-    Loop, Parse, % this.Conf["VimTwoLetter"]["val"], % this.GroupDel
-    {
+    Loop Parse, this.Conf["VimTwoLetter"]["val"], this.GroupDel {
       if(A_LoopField != ""){
         this.TwoLetterNormalIsSet := True
         key1 := SubStr(A_LoopField, 1, 1)

@@ -77,7 +77,7 @@
   }
 
   Up(n:=1){
-    Loop, %n% {
+    Loop n {
       if WinActive("ahk_group VimCtrlUpDownGroup"){
         Send("^{Up}")
       } else {
@@ -87,7 +87,7 @@
   }
 
   Down(n:=1){
-    Loop, %n% {
+    Loop n {
       if WinActive("ahk_group VimCtrlUpDownGroup"){
         Send("^{Down}")
       } else {
@@ -207,7 +207,7 @@
     if(this.Vim.State.n == 0){
       this.Vim.State.n := 1
     }
-    Loop, % this.Vim.State.n {
+    Loop this.Vim.State.n {
       this.Move(key, true)
     }
     this.MoveFinalize()
