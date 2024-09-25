@@ -100,7 +100,7 @@ p::
     Send("{Left}")
     ;;Send("^{Left}")
   }
-  KeyWait, p ; To avoid repeat, somehow it calls <C-p>, print...
+  KeyWait("p") ; To avoid repeat, somehow it calls <C-p>, print...
 }
 
 +p::
@@ -111,7 +111,7 @@ p::
     Send("^v")
     ;Send("^{Left}")
   }
-  KeyWait, p
+  KeyWait("p")
 }
 
 #HotIf

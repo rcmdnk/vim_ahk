@@ -98,22 +98,19 @@
       Return
     }
     ; The keywait waits for esc to be released. If it doesn't detect a release
-    ; within the time limit, sets ErrorLevel to 1.
-    KeyWait, Esc, T0.5
-    LongPress := ErrorLevel
-    both := VimLongEscNormal && LongPress
-    neither := !(VimLongEscNormal || LongPress)
-    SetNormal :=  both or neither
+    ; within the time limit, return 0, otherwise return 1.
+    ShortPress := KeyWait("Esc", "T0.5")
+    SetNormal := VimLongEscNormal != ShortPress
     if (!SetNormal or (VimSendEscNormal && this.IsCurrentVimMode("Vim_Normal"))) {
       Send("{Esc}")
     }
     if (SetNormal) {
       this.SetNormal()
     }
-    if (LongPress){
+    if (!ShortPress){
       ; Have to ensure the key has been released, otherwise this will get
       ; triggered again.
-      KeyWait, Esc
+      KeyWait("Esc")
     }
   }
 
@@ -123,19 +120,16 @@
       Send("^[")
       Return
     }
-    KeyWait, [, T0.5
-    LongPress := ErrorLevel
-    both := VimLongCtrlBracketNormal && LongPress
-    neither := !(VimLongCtrlBracketNormal || LongPress)
-    SetNormal :=  both or neither
+    ShortPress := KeyWait("[", "T0.5")
+    SetNormal := VimLongCtrlBracketNormal != ShortPress
     if (!SetNormal or (VimSendCtrlBracketNormal && this.IsCurrentVimMode("Vim_Normal"))) {
       Send("^[")
     }
     if (SetNormal) {
       this.SetNormal()
     }
-    if (LongPress){
-      KeyWait, [
+    if (!ShortPress){
+      KeyWait("[")
     }
   }
 
