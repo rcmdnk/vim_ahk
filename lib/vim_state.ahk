@@ -23,7 +23,7 @@
     this.StatusCheckObj := ObjBindMethod(this, "StatusCheck")
   }
 
-  CheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
+  CheckMode(verbose:=1, Mode:="", g:=0, n:=0, LineCopy:=-1, force:=0){
     if(force == 0) and ((verbose <= 1) or ((Mode == "") and (g == 0) and (n == 0) and (LineCopy == -1))){
       Return
     }else if(verbose == 2){
@@ -36,7 +36,7 @@
     }
   }
 
-  SetTooltip(Title, lines=1){
+  SetTooltip(Title, lines:=1){
     WinGetPos, , , W, H, A
     ToolTip, %Title%, W - 110, H - 30 - (lines) * 20
     this.Vim.VimToolTip.SetRemoveToolTip(1000)
@@ -46,7 +46,7 @@
     this.CheckMode(4, , , , 1)
   }
 
-  SetMode(Mode="", g=0, n=0, LineCopy=-1){
+  SetMode(Mode:="", g:=0, n:=0, LineCopy:=-1){
     this.CheckValidMode(Mode)
     if(Mode != ""){
       this.Mode := Mode
@@ -143,7 +143,7 @@
     Return (inStr(this.Mode, mode))
   }
 
-  CheckValidMode(mode, fullMatch=true){
+  CheckValidMode(mode, fullMatch:=true){
     if(this.CheckModeValue == false){
       Return
     }
@@ -163,7 +163,7 @@
     }
   }
 
-  HasValue(haystack, needle, fullMatch=true){
+  HasValue(haystack, needle, fullMatch:=true){
     if(!isObject(haystack)){
       return false
     }else if(haystack.Length() == 0){

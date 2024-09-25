@@ -10,8 +10,8 @@
                  , Default: A_AhkPath}
   }
 
-  SetIcon(Mode="", Interval=0){
-    icon :=
+  SetIcon(Mode:="", Interval:=0){
+    icon := ""
     if (Interval == 0){
       icon := this.icons["Default"]
     }else if InStr(Mode, "Normal"){

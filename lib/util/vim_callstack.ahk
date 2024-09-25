@@ -4,7 +4,7 @@ FileReadLine( file, line ) {
   return data
 }
 
-CallStack( deepness = 5, printLines = 1 ) {
+CallStack( deepness:=5, printLines:=1 ) {
   if A_IsCompiled
     return
   loop,% deepness

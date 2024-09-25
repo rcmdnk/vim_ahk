@@ -4,7 +4,7 @@
     this.shift := 0
   }
 
-  MoveInitialize(key=""){
+  MoveInitialize(key:=""){
     this.shift := 0
     if(this.Vim.State.StrIsInCurrentVimMode("Visual") or this.Vim.State.StrIsInCurrentVimMode("ydc")){
       this.shift := 1
@@ -76,7 +76,7 @@
     Send("{Home}")
   }
 
-  Up(n=1){
+  Up(n:=1){
     Loop, %n% {
       if WinActive("ahk_group VimCtrlUpDownGroup"){
         Send("^{Up}")
@@ -86,7 +86,7 @@
     }
   }
 
-  Down(n=1){
+  Down(n:=1){
     Loop, %n% {
       if WinActive("ahk_group VimCtrlUpDownGroup"){
         Send("^{Down}")
@@ -96,7 +96,7 @@
     }
   }
 
-  Move(key="", repeat=false){
+  Move(key:="", repeat:=false){
     if(!repeat){
       this.MoveInitialize(key)
     }
@@ -202,7 +202,7 @@
     }
   }
 
-  Repeat(key=""){
+  Repeat(key:=""){
     this.MoveInitialize(key)
     if(this.Vim.State.n == 0){
       this.Vim.State.n := 1
@@ -229,7 +229,7 @@
     }
   }
 
-  Inner(key=""){
+  Inner(key:=""){
     if(key == "w"){
       this.Move("b", true)
       this.Move("w", false)

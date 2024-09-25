@@ -1,7 +1,7 @@
 ﻿; Ref for IME: http://www6.atwiki.jp/eamat/pages/17.html
 
 ; Get IME Status. 0: Off, 1: On
-VIM_IME_GET(WinTitle="A"){
+VIM_IME_GET(WinTitle:="A"){
   ControlGet,hwnd,HWND,,,%WinTitle%
   if(WinActive(WinTitle)){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
@@ -18,7 +18,7 @@ VIM_IME_GET(WinTitle="A"){
       ,  Int, 0)      ;lParam  : 0
 }
 ; Get input status. 1: Converting, 2: Have converting window, 0: Others
-VIM_IME_GetConverting(WinTitle="A", ConvCls="", CandCls=""){
+VIM_IME_GetConverting(WinTitle:="A", ConvCls:="", CandCls:=""){
   ; Input windows, candidate windows (Add new IME with "|")
   ConvCls .= (ConvCls ? "|" : "")                 ;--- Input Window ---
     .  "ATOK\d+CompStr"                           ; ATOK
@@ -55,7 +55,7 @@ VIM_IME_GetConverting(WinTitle="A", ConvCls="", CandCls=""){
 }
 
 ; Set IME, SetSts=0: Off, 1: On, return 0 for success, others for non-success
-VIM_IME_SET(SetSts=0, WinTitle="A"){
+VIM_IME_SET(SetSts:=0, WinTitle:="A"){
   ControlGet, hwnd, HWND, , , %WinTitle%
   if(WinActive(WinTitle)){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize

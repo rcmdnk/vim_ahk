@@ -8,7 +8,7 @@ class VimCaret{
                  , "Default": 1}
   }
 
-  SetCaret(Mode=""){
+  SetCaret(Mode:=""){
     if (this.Vim.Conf["VimChangeCaretWidth"]["val"] == 0){
       return
     }
@@ -28,7 +28,7 @@ class VimCaret{
   ; Expects argument "width" in hex
   SetCaretWidth(width){
       CARETWIDTH := width
-      ; SPI = SystemParametersInfo
+      ; SPI := SystemParametersInfo
       SPI_SETCARETWIDTH := 0x2007
       SPIF_UPDATEINIFILE := 0x01
       SPIF_SENDCHANGE := 0x02

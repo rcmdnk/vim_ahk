@@ -8,12 +8,12 @@
 *::
 {
   ClipSaved := ClipboardAll()
-  A_Clipboard = ""
+  A_Clipboard := ""
   Send("^{Left}+^{Right}^c")
   ClipWait(1)
   Send("^f")
   Send("^v!f")
-  A_clipboard := ClipSaved
+  A_Clipboard := ClipSaved
   Vim.State.SetMode("Insert")
 }
 

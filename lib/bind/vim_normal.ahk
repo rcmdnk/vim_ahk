@@ -10,7 +10,7 @@ u::Send("^z")
 ~::
 {
   ClipSaved := ClipboardAll()
-  A_Clipboard = ""
+  A_Clipboard := ""
   Send("+{Right}^x")
   ClipWait(1)
   if(A_Clipboard is lower){
