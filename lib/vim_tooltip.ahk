@@ -22,7 +22,7 @@ class VimToolTip{
   DisplayToolTip(){
     display := this.DisplayToolTipObj
     SetTimer(display, 0)
-    ToolTip % this.Vim.Info[this.Vim.State.CurrControl]
+    ToolTip(this.Vim.Info[this.Vim.State.CurrControl])
     this.SetRemoveToolTip(60000)
   }
 

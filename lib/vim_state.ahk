@@ -38,7 +38,7 @@
 
   SetTooltip(Title, lines:=1){
     WinGetPos, , , W, H, A
-    ToolTip, %Title%, W - 110, H - 30 - (lines) * 20
+    ToolTip(Title, W - 110, H - 30 - (lines) * 20)
     this.Vim.VimToolTip.SetRemoveToolTip(1000)
   }
 
