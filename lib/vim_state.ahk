@@ -76,7 +76,7 @@
   SetNormal(){
     this.LastIME := VIM_IME_Get()
     if(this.LastIME){
-      if(VIM_IME_GetConverting(A)){
+      if(VIM_IME_GetConverting("A")){
         Send("{Esc}")
         Return
       }else{
