@@ -1,4 +1,4 @@
-﻿#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
+﻿#HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 /::
   Send, ^f
   Vim.State.SetMode("Insert")
@@ -18,4 +18,4 @@ Return
 n::Send, {F3}
 +n::Send, +{F3}
 
-#If
+#HotIf

@@ -1,4 +1,4 @@
-﻿#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
+﻿#HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 ; Undo/Redo
 u::Send,^z
 ^r::Send,^y
@@ -25,7 +25,7 @@ Return
 .::Send, +^{Right}{BS}^v
 
 +z::Vim.State.SetMode("Z")
-#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Z"))
+#HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Z"))
 +z::
   Send, ^s
   Send, !{F4}
@@ -38,7 +38,7 @@ Return
 Return
 
 ; Q-dir
-#If Vim.IsVimGroup() and WinActive("ahk_group VimQdir") and (Vim.State.Mode == "Vim_Normal")
+#HotIf Vim.IsVimGroup() and WinActive("ahk_group VimQdir") and (Vim.State.Mode == "Vim_Normal")
 ; For Q-dir, ^X mapping does not work, use !X instead.
 ; ^X does not work to be sent, too, use Down/Up
 ; switch to left top (1), right top (2), left bottom (3), right bottom (4)
@@ -52,4 +52,4 @@ Return
 ~e::
 Return
 
-#If
+#HotIf

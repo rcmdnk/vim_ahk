@@ -1,4 +1,4 @@
-﻿#If Vim.IsVimGroup() && (Vim.State.IsCurrentVimMode("Vim_Normal"))
+﻿#HotIf Vim.IsVimGroup() && (Vim.State.IsCurrentVimMode("Vim_Normal"))
 i::Vim.State.SetMode("Insert")
 
 +i::
@@ -29,10 +29,10 @@ Return
 Return
 
 ; Q-dir
-#If Vim.IsVimGroup() and WinActive("ahk_group VimQdir") and (Vim.State.Mode == "Vim_Normal")
+#HotIf Vim.IsVimGroup() and WinActive("ahk_group VimQdir") and (Vim.State.Mode == "Vim_Normal")
 ; Enter insert mode to quickly locate the file/folder by using the first letter
 /::Vim.State.SetMode("Insert")
 ; Enter insert mode at rename
 ~F2::Vim.State.SetMode("Insert")
 
-#If
+#HotIf

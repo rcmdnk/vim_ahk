@@ -1,4 +1,4 @@
-﻿#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
+﻿#HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 y::Vim.State.SetMode("Vim_ydc_y", 0, -1, 0)
 d::Vim.State.SetMode("Vim_ydc_d", 0, -1, 0)
 c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
@@ -37,24 +37,24 @@ Return
   }
 Return
 
-#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_ydc_y"))
+#HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_ydc_y"))
 y::
   Vim.Move.YDCMove()
   Send, {Left}{Home}
 Return
 
-#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_ydc_d"))
+#HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_ydc_d"))
 d::Vim.Move.YDCMove()
 
-#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_ydc_c"))
+#HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_ydc_c"))
 c::Vim.Move.YDCMove()
 
-#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
+#HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 x::Send, {Delete}
 +x::Send, {BS}
 
 ; Paste
-#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
+#HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 p::
   ;i:=0
   ;;Send, {p Up}
@@ -108,4 +108,4 @@ Return
   KeyWait, p
 Return
 
-#If
+#HotIf

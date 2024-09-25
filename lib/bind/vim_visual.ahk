@@ -1,5 +1,5 @@
 ﻿; Visual Char/Block/Line
-#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
+#HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 v::Vim.State.SetMode("Vim_VisualChar")
 ^v::
   Send, ^b
@@ -11,7 +11,7 @@ Return
   Send, {Home}+{Down}
 Return
 
-#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Visual"))
+#HotIf Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Visual"))
 v::Vim.State.SetMode("Vim_Normal")
 
 ; ydc
@@ -74,4 +74,4 @@ Return
   Vim.State.SetMode("Vim_Normal")
 Return
 
-#If
+#HotIf

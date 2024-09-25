@@ -1,4 +1,4 @@
-﻿#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("ydc") or Vim.State.StrIsInCurrentVimMode("Command") or (Vim.State.IsCurrentVimMode("Z")))
+﻿#HotIf Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("ydc") or Vim.State.StrIsInCurrentVimMode("Command") or (Vim.State.IsCurrentVimMode("Z")))
 *a::
 *b::
 *c::
@@ -69,7 +69,7 @@ Space::
   Vim.State.SetMode("Vim_Normal")
 Return
 
-#If Vim.IsVimGroup() and Vim.State.StrIsInCurrentVimMode("Vim_") and (Vim.Conf["VimDisableUnused"]["val"] > 1)
+#HotIf Vim.IsVimGroup() and Vim.State.StrIsInCurrentVimMode("Vim_") and (Vim.Conf["VimDisableUnused"]["val"] > 1)
 a::
 b::
 c::
@@ -165,7 +165,7 @@ _::
 Space::
 Return
 
-#If Vim.IsVimGroup() and Vim.State.StrIsInCurrentVimMode("Vim_") and (Vim.Conf["VimDisableUnused"]["val"] > 2)
+#HotIf Vim.IsVimGroup() and Vim.State.StrIsInCurrentVimMode("Vim_") and (Vim.Conf["VimDisableUnused"]["val"] > 2)
 *a::
 *b::
 *c::
@@ -194,4 +194,4 @@ Return
 *z::
 Return
 
-#If
+#HotIf
