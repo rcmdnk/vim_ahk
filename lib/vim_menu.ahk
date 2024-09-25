@@ -8,13 +8,13 @@
     MenuVimCheck := ObjBindMethod(this.Vim.Check, "CheckMenu")
     MenuVimStatus := ObjBindMethod(this.Vim.State, "FullStatus")
     MenuVimAbout := ObjBindMethod(this.Vim.About, "ShowGui")
-    Menu, VimSubMenu, Add, Settings, % MenuVimSetting
-    Menu, VimSubMenu, Add
-    Menu, VimSubMenu, Add, Vim Check, % MenuVimCheck
-    Menu, VimSubMenu, Add, Status, % MenuVimStatus
-    Menu, VimSubMenu, Add, About vim_ahk, % MenuVimAbout
-
-    Menu, Tray, Add
-    Menu, Tray, Add, VimMenu, :VimSubMenu
+    this.Vim.SubMenu := Menu()
+    this.Vim.SubMenu.Add("Settings", MenuVimSetting)
+    this.Vim.SubMenu.Add()
+    this.Vim.SubMenu.Add("Vim Check", MenuVimCheck)
+    this.Vim.SubMenu.Add("Status", MenuVimStatus)
+    this.Vim.SubMenu.Add("About vim_ahk", MenuVimAbout)
+    A_TrayMenu.Add()
+    A_TrayMenu.Add("VimMenu", this.Vim.SubMenu)
   }
 }
