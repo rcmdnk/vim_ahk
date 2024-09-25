@@ -52,40 +52,40 @@ class VimAhk{
     DefaultGroup := this.SetDefaultActiveWindows()
 
     ; On following applications, Enter works as Enter at the normal mode.
-    GroupAdd, VimNonEditor, ahk_exe explorer.exe  ; Explorer
-    GroupAdd, VimNonEditor, ahk_exe Explorer.exe  ; Explorer, Explorer became also upper case, but lower case works for this
-    GroupAdd, VimNonEditor, ahk_exe Q-Dir_x64.exe ; Q-dir
-    GroupAdd, VimNonEditor, ahk_exe Q-Dir.exe     ; Q-dir
+    GroupAdd("VimNonEditor", "ahk_exe explorer.exe")  ; Explorer
+    GroupAdd("VimNonEditor", "ahk_exe Explorer.exe")  ; Explorer, Explorer became also upper case, but lower case works for this
+    GroupAdd("VimNonEditor", "ahk_exe Q-Dir_x64.exe") ; Q-dir
+    GroupAdd("VimNonEditor", "ahk_exe Q-Dir.exe")     ; Q-dir
 
     ; Following applications select the line break at Shift + End.
-    GroupAdd, VimLBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
-    GroupAdd, VimLBSelectGroup, ahk_exe WINWORD.exe  ; Word
-    GroupAdd, VimLBSelectGroup, ahk_exe wordpad.exe  ; WordPad
+    GroupAdd("VimLBSelectGroup", "ahk_exe POWERPNT.exe") ; PowerPoint
+    GroupAdd("VimLBSelectGroup", "ahk_exe WINWORD.exe")  ; Word
+    GroupAdd("VimLBSelectGroup", "ahk_exe wordpad.exe")  ; WordPad
 
     ; Following applications do not copy the line break
-    GroupAdd, VimNoLBCopyGroup, ahk_exe Evernote.exe ; Evernote
+    GroupAdd("VimNoLBCopyGroup", "ahk_exe Evernote.exe") ; Evernote
 
     ; Need Ctrl for Up/Down
-    GroupAdd, VimCtrlUpDownGroup, ahk_exe onenote.exe ; OneNote Desktop, before Windows 10
+    GroupAdd("VimCtrlUpDownGroup", "ahk_exe onenote.exe") ; OneNote Desktop, before Windows 10
 
     ; Need Home twice
-    GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
+    GroupAdd("VimDoubleHomeGroup", "ahk_exe Code.exe") ; Visual Studio Code
 
     ; Followings can emulate ^. For others, ^ works as same as 0
     ; It does not work for NotePad at Windows 11
-    ; GroupAdd, VimCaretMove, ahk_exe notepad.exe ; NotePad
-    ; GroupAdd, VimCaretMove, ahk_exe Notepad.exe ; NotePad
+    ; GroupAdd("VimCaretMove", "ahk_exe notepad.exe") ; NotePad
+    ; GroupAdd("VimCaretMove", "ahk_exe Notepad.exe") ; NotePad
 
     ; Followings start cursor from the same place after selection.
     ; Others start right/left (by cursor) point of the selection
-    GroupAdd, VimCursorSameAfterSelect, ahk_exe notepad.exe ; NotePad
-    GroupAdd, VimCursorSameAfterSelect, ahk_exe Notepad.exe ; NotePad
-    GroupAdd, VimCursorSameAfterSelect, ahk_exe explorer.exe ; Explorer
-    GroupAdd, VimCursorSameAfterSelect, ahk_exe Explorer.exe ; Explorer
+    GroupAdd("VimCursorSameAfterSelect", "ahk_exe notepad.exe") ; NotePad
+    GroupAdd("VimCursorSameAfterSelect", "ahk_exe Notepad.exe") ; NotePad
+    GroupAdd("VimCursorSameAfterSelect", "ahk_exe explorer.exe") ; Explorer
+    GroupAdd("VimCursorSameAfterSelect", "ahk_exe Explorer.exe") ; Explorer
 
     ; Q-Dir
-    GroupAdd, VimQdir, ahk_exe Q-Dir_x64.exe ; q-dir
-    GroupAdd, VimQdir, ahk_exe Q-Dir.exe ; q-dir
+    GroupAdd("VimQdir", "ahk_exe Q-Dir_x64.exe") ; q-dir
+    GroupAdd("VimQdir", "ahk_exe Q-Dir.exe") ; q-dir
 
     ; Configuration values for Read/Write ini
     ; setting, default, val, description, info
@@ -185,7 +185,7 @@ class VimAhk{
     this.GroupName := "VimGroup" this.GroupN
     Loop Parse, this.Conf["VimGroup"]["val"], this.GroupDel {
       if(A_LoopField != ""){
-        GroupAdd, % this.GroupName, %A_LoopField%
+        GroupAdd(this.GroupName, A_LoopField)
       }
     }
   }
