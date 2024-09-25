@@ -220,8 +220,8 @@ class VimAhk{
   }
 
   Setup(){
-    SetTitleMatchMode, % this.Conf["VimSetTitleMatchMode"]["val"]
-    SetTitleMatchMode, % this.Conf["VimSetTitleMatchModeFS"]["val"]
+    SetTitleMatchMode(this.Conf["VimSetTitleMatchMode"]["val"])
+    SetTitleMatchMode(this.Conf["VimSetTitleMatchModeFS"]["val"])
     this.State.SetStatusCheck()
     this.SetGroup()
     this.LoadTwoLetterMaps()
