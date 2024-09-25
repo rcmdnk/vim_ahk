@@ -44,18 +44,18 @@
     Send("{Shift Up}")
     ydc_y := false
     if(this.Vim.State.StrIsInCurrentVimMode("ydc_y")){
-      Clipboard :=
+      A_Clipboard := ""
       Send("^c")
       ClipWait(1)
       this.Vim.State.SetMode("Vim_Normal")
       ydc_y := true
     }else if(this.Vim.State.StrIsInCurrentVimMode("ydc_d")){
-      Clipboard :=
+      A_Clipboard := ""
       Send("^x")
       ClipWait(1)
       this.Vim.State.SetMode("Vim_Normal")
     }else if(this.Vim.State.StrIsInCurrentVimMode("ydc_c")){
-      Clipboard :=
+      A_Clipboard := ""
       Send("^x")
       ClipWait(1)
       this.Vim.State.SetMode("Insert")

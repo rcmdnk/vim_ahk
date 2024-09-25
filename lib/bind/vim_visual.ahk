@@ -19,7 +19,7 @@ v::Vim.State.SetMode("Vim_Normal")
 ; ydc
 y::
 {
-  Clipboard :=
+  A_Clipboard := ""
   Send("^c")
   Send("{Right}")
   if WinActive("ahk_group VimCursorSameAfterSelect"){
@@ -35,7 +35,7 @@ y::
 
 d::
 {
-  Clipboard :=
+  A_Clipboard := ""
   Send("^x")
   ClipWait(1)
   if(Vim.State.StrIsInCurrentVimMode("Line")){
@@ -47,7 +47,7 @@ d::
 
 x::
 {
-  Clipboard :=
+  A_Clipboard := ""
   Send("^x")
   ClipWait(1)
   if(Vim.State.StrIsInCurrentVimMode("Line")){
@@ -59,7 +59,7 @@ x::
 
 c::
 {
-  Clipboard :=
+  A_Clipboard := ""
   Send("^x")
   ClipWait(1)
   if(Vim.State.StrIsInCurrentVimMode("Line")){
@@ -71,13 +71,13 @@ c::
 
 *::
 {
-  bak := ClipboardAll
-  Clipboard :=
+  ClipSaved := ClipboardAll()
+  A_Clipboard := ""
   Send("^c")
   ClipWait(1)
   Send("^f")
   Send("^v!f")
-  clipboard := bak
+  A_Clipboard := ClipSaved
   Vim.State.SetMode("Vim_Normal")
 }
 

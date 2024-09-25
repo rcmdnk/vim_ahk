@@ -9,17 +9,17 @@ u::Send("^z")
 ; Change case
 ~::
 {
-  bak := ClipboardAll
-  Clipboard =
+  ClipSaved := ClipboardAll()
+  A_Clipboard = ""
   Send("+{Right}^x")
   ClipWait(1)
-  if(Clipboard is lower){
-    StringUpper, Clipboard, Clipboard
+  if(A_Clipboard is lower){
+    StringUpper, A_Clipboard, A_Clipboard
   }else if(Clipboard is upper){
-    StringLower, Clipboard, Clipboard
+    StringLower, A_Clipboard, A_Clipboard
   }
   Send("^v")
-  Clipboard := bak
+  A_Clipboard := ClipSaved
 }
 
 ; period
