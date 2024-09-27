@@ -2,14 +2,14 @@
 
 ; Get IME Status. 0: Off, 1: On
 VIM_IME_GET(WinTitle:="A"){
-  hwnd := WinExist(WinTitle)
+  hwnd := WinGetID(WinTitle)
   if(WinActive(WinTitle)){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
-    cbSize := 4+4+(PtrSize*6)+16
-    stGTI := Buffer(cbSize,0)
-    NumPut("DWORD", cbSize, stGTI.Ptr, 0) ; DWORD cbSize;
+    cbSize := 4 + 4 + (PtrSize * 6) + 16
+    stGTI := Buffer(cbSize, 0)
+    NumPut("UInt", cbSize, stGTI, 0)   ;	DWORD   cbSize;
     hwnd := DllCall("GetGUIThreadInfo", "UInt", 0, "UInt", stGTI.Ptr)
-        ? NumGet(stGTI.Ptr, 8+PtrSize, "UInt") : hwnd
+        ? NumGet(stGTI, 8 + PtrSize, "UInt") : hwnd
   }
 
   Return DllCall("SendMessage"
@@ -35,14 +35,14 @@ VIM_IME_GetConverting(WinTitle:="A", ConvCls:="", CandCls:=""){
     .  "|SKKIME\d+\.*\d+UCand"                    ; SKKIME Unicode
   CandGCls := "GoogleJapaneseInputCandidateWindow" ; Google IME
 
-  hwnd := WinExist(WinTitle)
+  hwnd := WinGetID(WinTitle)
   if(WinActive(WinTitle)){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
-    cbSize := 4+4+(PtrSize*6)+16
-    stGTI := Buffer(cbSize,0)
-    NumPut("UInt", cbSize, stGTI.Ptr,0)   ;   DWORD   cbSize;
+    cbSize := 4 + 4 + (PtrSize * 6) + 16
+    stGTI := Buffer(cbSize, 0)
+    NumPut("UInt", cbSize, stGTI, 0)   ;   DWORD   cbSize;
     hwnd := DllCall("GetGUIThreadInfo", "UInt", 0, "Ptr", stGTI.Ptr)
-      ? NumGet(stGTI.Ptr, 8+PtrSize, "UInt") : hwnd
+      ? NumGet(stGTI, 8 + PtrSize, "UInt") : hwnd
   }
 
   pid := WinGetPID("ahk_id " hwnd)
@@ -58,14 +58,14 @@ VIM_IME_GetConverting(WinTitle:="A", ConvCls:="", CandCls:=""){
 
 ; Set IME, SetSts=0: Off, 1: On, return 0 for success, others for non-success
 VIM_IME_SET(SetSts:=0, WinTitle:="A"){
-  hwnd := WinExist(WinTitle)
+  hwnd := WinGetID(WinTitle)
   if(WinActive(WinTitle)){
     ptrSize := !A_PtrSize ? 4 : A_PtrSize
-    cbSize := 4+4+(PtrSize*6)+16
-    stGTI := Buffer(cbSize,0)
-    NumPut("UInt", cbSize, stGTI.Ptr,0)   ;   DWORD   cbSize;
-    hwnd := DllCall("GetGUIThreadInfo", "UInt", 0, "UInt",stGTI.Ptr)
-      ? NumGet(stGTI.Ptr,8+PtrSize,"Uint") : hwnd
+    cbSize := 4 + 4 + (PtrSize * 6) + 16
+    stGTI := Buffer(cbSize, 0)
+    NumPut("UInt", cbSize, stGTI, 0)   ;   DWORD   cbSize;
+    hwnd := DllCall("GetGUIThreadInfo", "UInt", 0, "UInt", stGTI.Ptr)
+      ? NumGet(stGTI, 8 + PtrSize, "Uint") : hwnd
   }
   Return DllCall("SendMessage"
     , "UInt", DllCall("imm32\ImmGetDefaultIMEWnd", "UInt", hwnd)
