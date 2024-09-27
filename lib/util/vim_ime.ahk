@@ -64,9 +64,9 @@ VIM_IME_SET(SetSts:=0, WinTitle:="A"){
     cbSize := 4+4+(PtrSize*6)+16
     stGTI := Buffer(cbSize,0)
     NumPut("UInt", cbSize, stGTI.Ptr,0)   ;   DWORD   cbSize;
-    hwnd := DllCall("GetGUIThreadInfo", "UInt", 0, "Ptr", stGTI.Ptr)
+    hwnd := DllCall("GetGUIThreadInfo", "UInt", 0, "UInt",stGTI.Ptr)
+      ? NumGet(stGTI.Ptr,8+PtrSize,"Uint") : hwnd
   }
-
   Return DllCall("SendMessage"
     , "UInt", DllCall("imm32\ImmGetDefaultIMEWnd", "UInt", hwnd)
     , "UInt", 0x0283  ;Message : WM_IME_CONTROL
