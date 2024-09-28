@@ -204,19 +204,26 @@ class VimAhk{
   }
 
   SetTwoLetterMap(key1, key2){
-    EnterNormal := ObjBindMethod(this, "TwoLetterEnterNormal")
     Enabled := ObjBindMethod(this, "TwoLetterNormalMapsEnabled")
+    SendSame := ObjBindMethod(this, "SendSame")
+    EnterNormal := ObjBindMethod(this, "TwoLetterEnterNormal")
     HotIf(Enabled)
-    HotKey("%key1% & %key2%", EnterNormal)
-    HotKey("%key2% & %key1%", EnterNormal)
+    HotKey(key1, SendSame)
+    HotKey(key2, SendSame)
+    HotKey(key1 " & " key2, EnterNormal)
+    HotKey(key2 " & " key1, EnterNormal)
+    HotIf()
   }
 
-  TwoLetterNormalMapsEnabled(){
+  SendSame(HotkeyName){
+    SendInput(HotkeyName)
+  }
+
+  TwoLetterNormalMapsEnabled(*){
     Return this.IsVimGroup() && (this.State.StrIsInCurrentVimMode("Insert")) && this.TwoLetterNormalIsSet
   }
 
-  TwoLetterEnterNormal(){
-    SendInput("{BackSpace 1}")
+  TwoLetterEnterNormal(*){
     this.State.SetNormal()
   }
 
