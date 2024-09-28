@@ -1,13 +1,13 @@
 class VimGui{
-  __New(vim, title){
-    this.Vim := vim
+  __New(Vim, Title){
+    this.Vim := Vim
     this.Hwnd := 0
     this.HwndAll := []
-    this.Title := title
+    this.Title := Title
     this.OKObj := ObjBindMethod(this, "OK")
   }
 
-  ShowGui(name, pos, mymenu){
+  ShowGui(*){
     if(this.Hwnd == 0){
       this.Hwnd := Gui("", this.Title)
       this.HwndAll.Push(this.Hwnd)
@@ -33,27 +33,27 @@ class VimGui{
     this.Hwnd.Hide()
   }
 
-  OK(btn, info){
+  OK(*){
     this.Hide()
   }
 
-  IsThisWindow(hwnd){
+  IsThisWindow(Hwnd){
     for i, h in this.HwndAll {
-      if(hwnd == h){
+      if(Hwnd == h){
         Return True
       }
     }
     Return False
   }
 
-  OnClose(wp, lp, msg, hwnd){
-    if(wp == 0xF060 && hwnd == this.Hwnd){
+  OnClose(Wp, Lp, Msg, Hwnd){
+    if(Wp == 0xF060 && Hwnd == this.Hwnd){
       this.Hide()
     }
   }
 
-  OnEscape(wp, lp, msg, hwnd){
-    if(wp == 27 && this.IsThisWindow(hwnd)){
+  OnEscape(Wp, Lp, Msg, Hwnd){
+    if(Wp == 27 && this.IsThisWindow(Hwnd)){
       this.Hide()
     }
   }

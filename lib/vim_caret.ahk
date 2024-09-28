@@ -1,6 +1,6 @@
 class VimCaret{
-  __New(vim){
-    this.Vim := vim
+  __New(Vim){
+    this.Vim := Vim
     this.caretwidths := Map("Normal", 10
       , "Visual", 10
       , "Insert", 1
@@ -11,29 +11,29 @@ class VimCaret{
     if (this.Vim.Conf["VimChangeCaretWidth"]["val"] == 0){
       return
     }
-    width := ""
+    Width := ""
     if this.Vim.State.IsCurrentVimMode("Vim_Normal"){
-      width := this.caretwidths["Normal"]
+      Width := this.caretwidths["Normal"]
     }else if this.Vim.State.StrIsInCurrentVimMode("Visual"){
-      width := this.caretwidths["Visual"]
+      Width := this.caretwidths["Visual"]
     }else if this.Vim.State.IsCurrentVimMode("Insert"){
-      width := this.caretwidths["Insert"]
+      Width := this.caretwidths["Insert"]
     }else{
-      width := this.caretwidths["Default"]
+      Width := this.caretwidths["Default"]
     }
-    this.SetCaretWidth(width)
+    this.SetCaretWidth(Width)
   }
 
-  ; Expects argument "width" in hex
-  SetCaretWidth(width){
-    CARETWIDTH := width
+  ; Expects argument "Width" in hex
+  SetCaretWidth(Width){
+    CARETWIDTH := Width
     ; SPI := SystemParametersInfo
     SPI_SETCARETWIDTH := 0x2007
     SPIF_UPDATEINIFILE := 0x01
     SPIF_SENDCHANGE := 0x02
     fWinIni := SPIF_UPDATEINIFILE | SPIF_SENDCHANGE
     DllCall("SystemParametersInfo", "UInt", SPI_SETCARETWIDTH, "UInt", 0, "UInt", CARETWIDTH, "UInt", fWinIni)
-    ; Switch focus to another window and back to update caret width
+    ; Switch focus to another window and back to update caret Width
     this.Refocus()
   }
 

@@ -1,9 +1,9 @@
 ﻿class VimCheck{
-  __New(vim){
-    this.Vim := vim
+  __New(Vim){
+    this.Vim := Vim
   }
 
-  CheckMenu(ItemName, ItemPos, MyMenu) {
+  CheckMenu(*) {
     ; Additional message is necessary before checking current window.
     ; Otherwise process name cannot be retrieved...?
     MsgBox("Checking current window...", "Vim Ahk")

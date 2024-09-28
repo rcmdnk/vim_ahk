@@ -1,6 +1,6 @@
 ﻿class VimMenu{
-  __New(vim){
-    this.Vim := vim
+  __New(Vim){
+    this.Vim := Vim
   }
 
   SetMenu(){

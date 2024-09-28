@@ -203,15 +203,15 @@ class VimAhk{
     }
   }
 
-  SetTwoLetterMap(key1, key2){
+  SetTwoLetterMap(Key1, Key2){
     Enabled := ObjBindMethod(this, "TwoLetterNormalMapsEnabled")
     SendSame := ObjBindMethod(this, "SendSame")
     EnterNormal := ObjBindMethod(this, "TwoLetterEnterNormal")
     HotIf(Enabled)
-    HotKey(key1, SendSame)
-    HotKey(key2, SendSame)
-    HotKey(key1 " & " key2, EnterNormal)
-    HotKey(key2 " & " key1, EnterNormal)
+    HotKey(Key1, SendSame)
+    HotKey(Key2, SendSame)
+    HotKey(Key1 " & " Key2, EnterNormal)
+    HotKey(Key2 " & " Key1, EnterNormal)
     HotIf()
   }
 
@@ -289,14 +289,14 @@ class VimAhk{
   }
 
   ; Ref: https://www.reddit.com/r/AutoHotkey/comments/4ma5b8/identifying_end_of_line_when_typing_with_ahk_and/
-  CheckChr(key){
+  CheckChr(Key){
     BlockInput("Send")
     ClipSaved := ClipboardAll()
     A_Clipboard := ""
     SendInput("{Shift Down}{Right}{Shift up}{Ctrl down}c{Ctrl Up}{Left}")
     Sleep(10)
     ret := False
-    If (A_Clipboard ~= key){
+    If (A_Clipboard ~= Key){
       ret := True
     }
     sleep(10)

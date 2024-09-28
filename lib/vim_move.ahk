@@ -1,17 +1,17 @@
 ﻿class VimMove{
-  __New(vim){
-    this.Vim := vim
+  __New(Vim){
+    this.Vim := Vim
     this.shift := 0
   }
 
-  MoveInitialize(key:=""){
+  MoveInitialize(Key:=""){
     this.shift := 0
     if(this.Vim.State.StrIsInCurrentVimMode("Visual") or this.Vim.State.StrIsInCurrentVimMode("ydc")){
       this.shift := 1
       Send("{Shift Down}")
     }
 
-    if(this.Vim.State.IsCurrentVimMode("Vim_VisualLineFirst")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
+    if(this.Vim.State.IsCurrentVimMode("Vim_VisualLineFirst")) and (Key == "k" or Key == "^u" or Key == "^b" or Key == "g"){
       Send("{Shift Up}{End}")
       this.Zero()
       Send("{Shift Down}")
@@ -19,11 +19,11 @@
       this.vim.state.setmode("Vim_VisualLine")
     }
 
-    if(this.Vim.State.IsCurrentVimMode("Vim_VisualLineFirst")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
+    if(this.Vim.State.IsCurrentVimMode("Vim_VisualLineFirst")) and (Key == "j" or Key == "^d" or Key == "^f" or Key == "+g"){
       this.vim.state.setmode("Vim_VisualLine")
     }
 
-    if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "k" or key == "^u" or key == "^b" or key == "g"){
+    if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (Key == "k" or Key == "^u" or Key == "^b" or Key == "g"){
       this.Vim.State.LineCopy := 1
       Send("{Shift Up}")
       this.Zero()
@@ -31,7 +31,7 @@
       Send("{Shift Down}")
       this.Up()
     }
-    if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (key == "j" or key == "^d" or key == "^f" or key == "+g"){
+    if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (Key == "j" or Key == "^d" or Key == "^f" or Key == "+g"){
       this.Vim.State.LineCopy := 1
       Send("{Shift Up}")
       this.Zero()
@@ -96,8 +96,8 @@
     }
   }
 
-  Move(key:="", repeat:=false){
-    if(!repeat){
+  Move(Key:="", Repeat:=false){
+    if(!Repeat){
       this.MoveInitialize(key)
     }
 
@@ -108,14 +108,14 @@
       ; For now, caret does not work even add + directly
 
       ; 1 character
-      if(key == "h"){
+      if(Key == "h"){
         if WinActive("ahk_group VimQdir"){
           Send("{BackSpace down}{BackSpace up}")
         }
         else {
           Send("{Left}")
         }
-      }else if(key == "l"){
+      }else if(Key == "l"){
         if WinActive("ahk_group VimQdir"){
           Send("{Enter}")
         }
@@ -123,15 +123,15 @@
           Send("{Right}")
         }
       ; Home/End
-      }else if(key == "0"){
+      }else if(Key == "0"){
         this.Zero()
-      }else if(key == "$"){
+      }else if(Key == "$"){
         if(this.shift == 1){
           Send("+{End}")
         }else{
           Send("{End}")
         }
-      }else if(key == "^"){
+      }else if(Key == "^"){
         if(this.shift == 1){
           if WinActive("ahk_group VimCaretMove"){
             Send("+{Home}")
@@ -150,13 +150,13 @@
           }
         }
       ; Words
-      }else if(key == "w"){
+      }else if(Key == "w"){
         if(this.shift == 1){
           Send("+^{Right}")
         }else{
           Send("^{Right}")
         }
-      }else if(key == "e"){
+      }else if(Key == "e"){
         if(this.shift == 1){
           if(this.Vim.CheckChr(" ")){
             Send("+^{Right}")
@@ -168,7 +168,7 @@
           }
           Send("^{Right}{Left}")
         }
-      }else if(key == "b"){
+      }else if(Key == "b"){
         if(this.shift == 1){
           Send("+^{Left}")
         }else{
@@ -177,38 +177,38 @@
       }
     }
     ; Up/Down 1 character
-    if(key == "j"){
+    if(Key == "j"){
       this.Down()
-    }else if(key="k"){
+    }else if(Key="k"){
       this.Up()
     ; Page Up/Down
     n := 10
-    }else if(key == "^u"){
+    }else if(Key == "^u"){
       this.Up(10)
-    }else if(key == "^d"){
+    }else if(Key == "^d"){
       this.Down(10)
-    }else if(key == "^b"){
+    }else if(Key == "^b"){
       Send("{PgUp}")
-    }else if(key == "^f"){
+    }else if(Key == "^f"){
       Send("{PgDn}")
-    }else if(key == "g"){
+    }else if(Key == "g"){
       Send("^{Home}")
-    }else if(key == "+g"){
+    }else if(Key == "+g"){
       Send("^{End}{Home}")
     }
 
-    if(!repeat){
+    if(!Repeat){
       this.MoveFinalize()
     }
   }
 
-  Repeat(key:=""){
-    this.MoveInitialize(key)
+  Repeat(Key:=""){
+    this.MoveInitialize(Key)
     if(this.Vim.State.n == 0){
       this.Vim.State.n := 1
     }
     Loop this.Vim.State.n {
-      this.Move(key, true)
+      this.Move(Key, true)
     }
     this.MoveFinalize()
   }
@@ -229,8 +229,8 @@
     }
   }
 
-  Inner(key:=""){
-    if(key == "w"){
+  Inner(Key:=""){
+    if(Key == "w"){
       this.Move("b", true)
       this.Move("w", false)
     }

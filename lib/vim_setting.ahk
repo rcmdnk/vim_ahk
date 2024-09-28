@@ -2,10 +2,10 @@
 
 
 class VimSetting Extends VimGui{
-  __New(vim){
-    super.__New(vim, "Vim Ahk Settings")
+  __New(Vim){
+    super.__New(Vim, "Vim Ahk Settings")
 
-    this.Vim := vim
+    this.Vim := Vim
 
     this.OKObj := ObjBindMethod(this, "OK")
     this.ResetObj := ObjBindMethod(this, "Reset")
@@ -149,10 +149,10 @@ class VimSetting Extends VimGui{
     }
   }
 
-  VimParseList(list){
+  VimParseList(List){
     result := ""
     tmpArray := []
-    Loop Parse, list, "`n" {
+    Loop Parse, List, "`n" {
       if(! tmpArray.Has(A_LoopField)){
         tmpArray.push(A_LoopField)
         if(result == ""){
@@ -171,23 +171,23 @@ class VimSetting Extends VimGui{
     }
   }
 
-  GetConf(name, key){
-    return this.Vim.Conf[name][key]
+  GetConf(Name, Key){
+    return this.Vim.Conf[Name][Key]
   }
 
-  GetVal(name){
-    return this.GetConf(name, "val")
+  GetVal(Name){
+    return this.GetConf(Name, "val")
   }
 
-  GetDefault(name){
-    return this.GetConf(name, "default")
+  GetDefault(Name){
+    return this.GetConf(Name, "default")
   }
 
   GetDescription(name){
-    return this.GetConf(name, "description")
+    return this.GetConf(Name, "description")
   }
 
-  OK(btn, info){
+  OK(*){
     this.Hwnd.Submit()
     this.VimV2Conf()
     this.Vim.Setup()
@@ -195,11 +195,11 @@ class VimSetting Extends VimGui{
     this.Hide()
   }
 
-  Cancel(btn, info){
+  Cancel(*){
     this.Hide()
   }
 
-  Reset(btn, info){
+  Reset(*){
     this.VimDefault2V()
     this.UpdateGuiValue()
   }

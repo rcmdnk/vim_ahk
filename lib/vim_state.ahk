@@ -1,6 +1,6 @@
 ﻿class VimState{
-  __New(vim){
-    this.Vim := vim
+  __New(Vim){
+    this.Vim := Vim
 
     ; CheckModeValue does not get set for compiled scripts.
     ;@Ahk2Exe-IgnoreBegin
@@ -23,15 +23,15 @@
     this.StatusCheckObj := ObjBindMethod(this, "StatusCheck")
   }
 
-  CheckMode(verbose:=1, Mode:="", g:=0, n:=0, LineCopy:=-1, force:=0){
-    if(force == 0) and ((verbose <= 1) or ((Mode == "") and (g == 0) and (n == 0) and (LineCopy == -1))){
+  CheckMode(Verbose:=1, Mode:="", g:=0, n:=0, LineCopy:=-1, Force:=0){
+    if(Force == 0) and ((Verbose <= 1) or ((Mode == "") and (g == 0) and (n == 0) and (LineCopy == -1))){
       Return
-    }else if(verbose == 2){
+    }else if(Verbose == 2){
       this.SetTooltip(this.Mode, 1)
-    }else if(verbose == 3){
+    }else if(Verbose == 3){
       this.SetTooltip(this.Mode "`r`ng=" this.g "`r`nn=" this.n "`r`nLineCopy=" this.LineCopy, 4)
     }
-    if(verbose >= 4){
+    if(Verbose >= 4){
       MsgBox("
       (
         Mode        : %this.Mode%
@@ -42,13 +42,13 @@
     }
   }
 
-  SetTooltip(Title, lines:=1){
+  SetTooltip(Title, Lines:=1){
     WinGetPos(, , &W, &H, "A")
-    ToolTip(Title, W - 110, H - 30 - (lines) * 20)
+    ToolTip(Title, W - 110, H - 30 - (Lines) * 20)
     this.Vim.VimToolTip.SetRemoveToolTip(1000)
   }
 
-  FullStatus(ItemName, ItemPos, MyMenu){
+  FullStatus(*){
     this.CheckMode(4, , , , 1)
   }
 
@@ -137,23 +137,23 @@
     }
   }
 
-  IsCurrentVimMode(mode){
-    this.CheckValidMode(mode)
+  IsCurrentVimMode(Mode){
+    this.CheckValidMode(Mode)
     Return (mode == this.Mode)
   }
 
-  StrIsInCurrentVimMode(mode){
-    this.CheckValidMode(mode, false)
-    Return (inStr(this.Mode, mode))
+  StrIsInCurrentVimMode(Mode){
+    this.CheckValidMode(Mode, false)
+    Return (inStr(this.Mode, Mode))
   }
 
-  CheckValidMode(mode, fullMatch:=true){
+  CheckValidMode(Mode, FullMatch:=true){
     if(this.CheckModeValue == false){
       Return
     }
     try{
-      InOrBlank := (not fullMatch) ? "in " : ""
-      if not this.HasValue(this.PossibleVimModes, mode, fullMatch){
+      InOrBlank := (not FullMatch) ? "in " : ""
+      if not this.HasValue(this.PossibleVimModes, Mode, FullMatch){
         Throw ValueError("Invalid mode specified", -2, "
         (
           '%Mode%' is not %InOrBlank%a valid mode as defined by the VimPossibleVimModes
@@ -173,19 +173,19 @@
     }
   }
 
-  HasValue(haystack, needle, fullMatch:=true){
-    if(!isObject(haystack)){
+  HasValue(Haystack, Needle, FullMatch:=true){
+    if(!isObject(Haystack)){
       return false
-    }else if(haystack.Length == 0){
+    }else if(Haystack.Length == 0){
       return false
     }
-    for index, value in haystack{
+    for index, value in Haystack{
       if fullMatch{
-        if (value == needle){
+        if (value == Needle){
           return true
         }
       }else{
-        if (inStr(value, needle)){
+        if (inStr(value, Needle)){
           return true
         }
       }

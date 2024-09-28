@@ -2,10 +2,10 @@
 
 
 class VimAbout Extends VimGui{
-  __New(vim){
-    super.__New(vim, "Vim Ahk")
+  __New(Vim){
+    super.__New(Vim, "Vim Ahk")
 
-    this.Vim := vim
+    this.Vim := Vim
 
     this.Version := ""
     this.Date := ""
@@ -30,7 +30,7 @@ class VimAbout Extends VimGui{
     this.HwndAll.Push(this.Hwnd["VimAboutOK"])
   }
 
-  OpenHomepage(btn, info){
+  OpenHomepage(*){
     this.Vim.VimToolTip.RemoveToolTip()
     Run(this.Homepage)
   }
