@@ -3,14 +3,14 @@
 v::Vim.State.SetMode("Vim_VisualChar")
 ^v::
 {
-  Send("^b")
+  SendInput("^b")
   Vim.State.SetMode("Vim_VisualChar")
 }
 
 +v::
 {
   Vim.State.SetMode("Vim_VisualLineFirst")
-  Send("{Home}+{Down}")
+  SendInput("{Home}+{Down}")
 }
 
 #HotIf Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Visual"))
@@ -20,10 +20,10 @@ v::Vim.State.SetMode("Vim_Normal")
 y::
 {
   A_Clipboard := ""
-  Send("^c")
-  Send("{Right}")
+  SendInput("^c")
+  SendInput("{Right}")
   if WinActive("ahk_group VimCursorSameAfterSelect"){
-    Send("{Left}")
+    SendInput("{Left}")
   }
   ClipWait(1)
   if(Vim.State.StrIsInCurrentVimMode("Line")){
@@ -36,7 +36,7 @@ y::
 d::
 {
   A_Clipboard := ""
-  Send("^x")
+  SendInput("^x")
   ClipWait(1)
   if(Vim.State.StrIsInCurrentVimMode("Line")){
     Vim.State.SetMode("Vim_Normal", 0, 0, 1)
@@ -48,7 +48,7 @@ d::
 x::
 {
   A_Clipboard := ""
-  Send("^x")
+  SendInput("^x")
   ClipWait(1)
   if(Vim.State.StrIsInCurrentVimMode("Line")){
     Vim.State.SetMode("Vim_Normal", 0, 0, 1)
@@ -60,7 +60,7 @@ x::
 c::
 {
   A_Clipboard := ""
-  Send("^x")
+  SendInput("^x")
   ClipWait(1)
   if(Vim.State.StrIsInCurrentVimMode("Line")){
     Vim.State.SetMode("Insert", 0, 0, 1)
@@ -73,10 +73,10 @@ c::
 {
   ClipSaved := ClipboardAll()
   A_Clipboard := ""
-  Send("^c")
+  SendInput("^c")
   ClipWait(1)
-  Send("^f")
-  Send("^v!f")
+  SendInput("^f")
+  SendInput("^v!f")
   A_Clipboard := ClipSaved
   Vim.State.SetMode("Vim_Normal")
 }

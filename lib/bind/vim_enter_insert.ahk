@@ -3,33 +3,33 @@ i::Vim.State.SetMode("Insert")
 
 +i::
 {
-  Send("{Home}")
+  SendInput("{Home}")
   Vim.State.SetMode("Insert")
 }
 
 a::
 {
   if(! Vim.CheckChr("`n")){
-    Send("{Right}")
+    SendInput("{Right}")
   }
   Vim.State.SetMode("Insert")
 }
 
 +a::
 {
-  Send("{End}")
+  SendInput("{End}")
   Vim.State.SetMode("Insert")
 }
 
 o::
 {
-  Send("{End}{Enter}")
+  SendInput("{End}{Enter}")
   Vim.State.SetMode("Insert")
 }
 
 +o::
 {
-  Send("{Home}{Enter}{Left}")
+  SendInput("{Home}{Enter}{Left}")
   Vim.State.SetMode("Insert")
 }
 

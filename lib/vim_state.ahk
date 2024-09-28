@@ -78,16 +78,16 @@
     this.LastIME := VIM_IME_Get()
     if(this.LastIME){
       if(VIM_IME_GetConverting("A")){
-        Send("{Esc}")
+        SendInput("{Esc}")
         Return
       }else{
         VIM_IME_SET()
       }
     }
     if(this.StrIsInCurrentVimMode("Visual") or this.StrIsInCurrentVimMode("ydc")){
-      Send("{Right}")
+      SendInput("{Right}")
       if WinActive("ahk_group VimCursorSameAfterSelect"){
-        Send("{Left}")
+        SendInput("{Left}")
       }
     }
     this.SetMode("Vim_Normal")
@@ -99,7 +99,7 @@
 
   HandleEsc(){
     if (!this.Vim.Conf["VimEscNormal"]["val"]) {
-      Send("{Esc}")
+      SendInput("{Esc}")
       Return
     }
     ; The keywait waits for esc to be released. If it doesn't detect a release
@@ -107,7 +107,7 @@
     ShortPress := KeyWait("Esc", "T0.5")
     SetNormal := this.Vim.Conf["VimLongEscNormal"]["val"] != ShortPress
     if (!SetNormal or (this.Vim.Conf["VimSendEscNormal"]["val"] && this.IsCurrentVimMode("Vim_Normal"))) {
-      Send("{Esc}")
+      SendInput("{Esc}")
     }
     if (SetNormal) {
       this.SetNormal()
@@ -121,13 +121,13 @@
 
   HandleCtrlBracket(){
     if (!this.Vim.Conf["VimCtrlBracketNormal"]["val"]) {
-      Send("^[")
+      SendInput("^[")
       Return
     }
     ShortPress := KeyWait("[", "T0.5")
     SetNormal := this.Vim.Conf["VimLongCtrlBracketNormal"]["val"] != ShortPress
     if (!SetNormal or (this.Vim.Conf["VimSendCtrlBracketNormal"]["val"] && this.IsCurrentVimMode("Vim_Normal"))) {
-      Send("^[")
+      SendInput("^[")
     }
     if (SetNormal) {
       this.SetNormal()

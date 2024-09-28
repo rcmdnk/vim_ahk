@@ -8,13 +8,13 @@
     this.shift := 0
     if(this.Vim.State.StrIsInCurrentVimMode("Visual") or this.Vim.State.StrIsInCurrentVimMode("ydc")){
       this.shift := 1
-      Send("{Shift Down}")
+      SendInput("{Shift Down}")
     }
 
     if(this.Vim.State.IsCurrentVimMode("Vim_VisualLineFirst")) and (Key == "k" or Key == "^u" or Key == "^b" or Key == "g"){
-      Send("{Shift Up}{End}")
+      SendInput("{Shift Up}{End}")
       this.Zero()
-      Send("{Shift Down}")
+      SendInput("{Shift Down}")
       this.Up()
       this.vim.state.setmode("Vim_VisualLine")
     }
@@ -25,63 +25,63 @@
 
     if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (Key == "k" or Key == "^u" or Key == "^b" or Key == "g"){
       this.Vim.State.LineCopy := 1
-      Send("{Shift Up}")
+      SendInput("{Shift Up}")
       this.Zero()
       this.Down()
-      Send("{Shift Down}")
+      SendInput("{Shift Down}")
       this.Up()
     }
     if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (Key == "j" or Key == "^d" or Key == "^f" or Key == "+g"){
       this.Vim.State.LineCopy := 1
-      Send("{Shift Up}")
+      SendInput("{Shift Up}")
       this.Zero()
-      Send("{Shift Down}")
+      SendInput("{Shift Down}")
       this.Down()
     }
   }
 
   MoveFinalize(){
-    Send("{Shift Up}")
+    SendInput("{Shift Up}")
     ydc_y := false
     if(this.Vim.State.StrIsInCurrentVimMode("ydc_y")){
       A_Clipboard := ""
-      Send("^c")
+      SendInput("^c")
       ClipWait(1)
       this.Vim.State.SetMode("Vim_Normal")
       ydc_y := true
     }else if(this.Vim.State.StrIsInCurrentVimMode("ydc_d")){
       A_Clipboard := ""
-      Send("^x")
+      SendInput("^x")
       ClipWait(1)
       this.Vim.State.SetMode("Vim_Normal")
     }else if(this.Vim.State.StrIsInCurrentVimMode("ydc_c")){
       A_Clipboard := ""
-      Send("^x")
+      SendInput("^x")
       ClipWait(1)
       this.Vim.State.SetMode("Insert")
     }
     this.Vim.State.SetMode("", 0, 0)
     if(ydc_y){
-      Send("{Left}{Right}")
+      SendInput("{Left}{Right}")
     }
     ; Sometimes, when using `c`, the control key would be stuck down afterwards.
     ; This forces it to be up again afterwards.
-    send("{Ctrl Up}")
+    SendInput("{Ctrl Up}")
   }
 
   Zero(){
     if WinActive("ahk_group VimDoubleHomeGroup"){
-      Send("{Home}")
+      SendInput("{Home}")
     }
-    Send("{Home}")
+    SendInput("{Home}")
   }
 
   Up(n:=1){
     Loop n {
       if WinActive("ahk_group VimCtrlUpDownGroup"){
-        Send("^{Up}")
+        SendInput("^{Up}")
       } else {
-        Send("{Up}")
+        SendInput("{Up}")
       }
     }
   }
@@ -89,9 +89,9 @@
   Down(n:=1){
     Loop n {
       if WinActive("ahk_group VimCtrlUpDownGroup"){
-        Send("^{Down}")
+        SendInput("^{Down}")
       } else {
-        Send("{Down}")
+        SendInput("{Down}")
       }
     }
   }
@@ -110,69 +110,69 @@
       ; 1 character
       if(Key == "h"){
         if WinActive("ahk_group VimQdir"){
-          Send("{BackSpace down}{BackSpace up}")
+          SendInput("{BackSpace down}{BackSpace up}")
         }
         else {
-          Send("{Left}")
+          SendInput("{Left}")
         }
       }else if(Key == "l"){
         if WinActive("ahk_group VimQdir"){
-          Send("{Enter}")
+          SendInput("{Enter}")
         }
         else {
-          Send("{Right}")
+          SendInput("{Right}")
         }
       ; Home/End
       }else if(Key == "0"){
         this.Zero()
       }else if(Key == "$"){
         if(this.shift == 1){
-          Send("+{End}")
+          SendInput("+{End}")
         }else{
-          Send("{End}")
+          SendInput("{End}")
         }
       }else if(Key == "^"){
         if(this.shift == 1){
           if WinActive("ahk_group VimCaretMove"){
-            Send("+{Home}")
-            Send("+^{Right}")
-            Send("+^{Left}")
+            SendInput("+{Home}")
+            SendInput("+^{Right}")
+            SendInput("+^{Left}")
           }else{
-            Send("+{Home}")
+            SendInput("+{Home}")
           }
         }else{
           if WinActive("ahk_group VimCaretMove"){
-            Send("{Home}")
-            Send("^{Right}")
-            Send("^{Left}")
+            SendInput("{Home}")
+            SendInput("^{Right}")
+            SendInput("^{Left}")
           }else{
-            Send("{Home}")
+            SendInput("{Home}")
           }
         }
       ; Words
       }else if(Key == "w"){
         if(this.shift == 1){
-          Send("+^{Right}")
+          SendInput("+^{Right}")
         }else{
-          Send("^{Right}")
+          SendInput("^{Right}")
         }
       }else if(Key == "e"){
         if(this.shift == 1){
           if(this.Vim.CheckChr(" ")){
-            Send("+^{Right}")
+            SendInput("+^{Right}")
           }
-          Send("+^{Right}+{Left}")
+          SendInput("+^{Right}+{Left}")
         }else{
           if(this.Vim.CheckChr(" ")){
-            Send("^{Right}")
+            SendInput("^{Right}")
           }
-          Send("^{Right}{Left}")
+          SendInput("^{Right}{Left}")
         }
       }else if(Key == "b"){
         if(this.shift == 1){
-          Send("+^{Left}")
+          SendInput("+^{Left}")
         }else{
-          Send("^{Left}")
+          SendInput("^{Left}")
         }
       }
     }
@@ -188,13 +188,13 @@
     }else if(Key == "^d"){
       this.Down(10)
     }else if(Key == "^b"){
-      Send("{PgUp}")
+      SendInput("{PgUp}")
     }else if(Key == "^f"){
-      Send("{PgDn}")
+      SendInput("{PgDn}")
     }else if(Key == "g"){
-      Send("^{Home}")
+      SendInput("^{Home}")
     }else if(Key == "+g"){
-      Send("^{End}{Home}")
+      SendInput("^{End}{Home}")
     }
 
     if(!Repeat){
@@ -216,12 +216,12 @@
   YDCMove(){
     this.Vim.State.LineCopy := 1
     this.Zero()
-    Send("{Shift Down}")
+    SendInput("{Shift Down}")
     if(this.Vim.State.n == 0){
       this.Vim.State.n := 1
     }
     this.Down(this.Vim.State.n - 1)
-    Send("{End}")
+    SendInput("{End}")
     if not WinActive("ahk_group VimLBSelectGroup"){
       this.Move("l")
     }else{
