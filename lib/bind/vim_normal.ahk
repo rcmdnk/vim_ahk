@@ -21,6 +21,9 @@ u::Send,^z
   Clipboard := bak
 Return
 
+; period
+.::Send, +^{Right}{BS}^v
+
 +z::Vim.State.SetMode("Z")
 #If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Z"))
 +z::
@@ -33,9 +36,6 @@ Return
   Send, !{F4}
   Vim.State.SetMode("Vim_Normal")
 Return
-
-; period
-.::Send, +^{Right}{BS}^v
 
 ; Q-dir
 #If Vim.IsVimGroup() and WinActive("ahk_group VimQdir") and (Vim.State.Mode == "Vim_Normal")
