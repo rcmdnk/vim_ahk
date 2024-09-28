@@ -33,14 +33,18 @@ class VimCaret{
       SPIF_SENDCHANGE := 0x02
       fWinIni := SPIF_UPDATEINIFILE | SPIF_SENDCHANGE
       DllCall("SystemParametersInfo", "UInt", SPI_SETCARETWIDTH, "UInt", 0, "UInt", CARETWIDTH, "UInt", fWinIni)
-      this.SwitchToSameWindow()
+      ; Switch focus to another window and back to update caret width
+      this.Refocus()
   }
 
-  SwitchToSameWindow(){
-      ; Get ID of active window
+  Refocus(){
+      ; Get ID of current active window
       hwnd := WinGetID("A")
       ; Activate desktop
-      WinActivate("ahk_class WorkerW")
+      ;WinActivate("ahk_class WorkerW")
+      WinActivate("ahk_class Progman")
+
+;     ; Re-activate current window
       WinActivate("ahk_id " hwnd)
   }
 }
