@@ -187,7 +187,7 @@ class VimSetting Extends VimGui{
     return this.GetConf(Name, "description")
   }
 
-  OK(*){
+  OK(Btn, Info){
     this.Hwnd.Submit()
     this.VimV2Conf()
     this.Vim.Setup()
@@ -195,11 +195,11 @@ class VimSetting Extends VimGui{
     this.Hide()
   }
 
-  Cancel(*){
+  Cancel(Btn, Info){
     this.Hide()
   }
 
-  Reset(*){
+  Reset(Btn, Info){
     this.VimDefault2V()
     this.UpdateGuiValue()
   }

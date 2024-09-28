@@ -215,15 +215,15 @@ class VimAhk{
     HotIf()
   }
 
+  TwoLetterNormalMapsEnabled(HotkeyName){
+    Return this.IsVimGroup() && (this.State.StrIsInCurrentVimMode("Insert")) && this.TwoLetterNormalIsSet
+  }
+
   SendSame(HotkeyName){
     SendInput(HotkeyName)
   }
 
-  TwoLetterNormalMapsEnabled(*){
-    Return this.IsVimGroup() && (this.State.StrIsInCurrentVimMode("Insert")) && this.TwoLetterNormalIsSet
-  }
-
-  TwoLetterEnterNormal(*){
+  TwoLetterEnterNormal(HotkeyName){
     this.State.SetNormal()
   }
 

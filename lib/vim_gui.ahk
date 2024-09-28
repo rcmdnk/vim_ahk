@@ -7,7 +7,7 @@ class VimGui{
     this.OKObj := ObjBindMethod(this, "OK")
   }
 
-  ShowGui(*){
+  ShowGui(ItemName, ItemPos, MyMenu){
     if(this.Hwnd == 0){
       this.Hwnd := Gui("", this.Title)
       this.HwndAll.Push(this.Hwnd)
@@ -33,7 +33,7 @@ class VimGui{
     this.Hwnd.Hide()
   }
 
-  OK(*){
+  OK(Btn, Info){
     this.Hide()
   }
 

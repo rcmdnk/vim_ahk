@@ -30,7 +30,7 @@ class VimAbout Extends VimGui{
     this.HwndAll.Push(this.Hwnd["VimAboutOK"])
   }
 
-  OpenHomepage(*){
+  OpenHomepage(Btn, Info){
     this.Vim.VimToolTip.RemoveToolTip()
     Run(this.Homepage)
   }

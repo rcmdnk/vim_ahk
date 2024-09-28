@@ -32,13 +32,7 @@
       this.SetTooltip(this.Mode "`r`ng=" this.g "`r`nn=" this.n "`r`nLineCopy=" this.LineCopy, 4)
     }
     if(Verbose >= 4){
-      MsgBox("
-      (
-        Mode        : %this.Mode%
-        Vim_g       : %this.g%
-        Vim_n       : %this.n%
-        VimLineCopy : %this.LineCopy%
-      )", "Vim Ahk")
+      MsgBox("Mode        : " this.Mode "`nVim_g       : " this.g "`nVim_n       : " this.n "`nVimLineCopy : " this.LineCopy, "Vim Ahk")
     }
   }
 
@@ -48,7 +42,7 @@
     this.Vim.VimToolTip.SetRemoveToolTip(1000)
   }
 
-  FullStatus(*){
+  FullStatus(ItemName, ItemPos, MyMenu){
     this.CheckMode(4, , , , 1)
   }
 
