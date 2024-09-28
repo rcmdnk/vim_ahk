@@ -26,26 +26,33 @@ class VimCaret{
 
   ; Expects argument "width" in hex
   SetCaretWidth(width){
-      CARETWIDTH := width
-      ; SPI := SystemParametersInfo
-      SPI_SETCARETWIDTH := 0x2007
-      SPIF_UPDATEINIFILE := 0x01
-      SPIF_SENDCHANGE := 0x02
-      fWinIni := SPIF_UPDATEINIFILE | SPIF_SENDCHANGE
-      DllCall("SystemParametersInfo", "UInt", SPI_SETCARETWIDTH, "UInt", 0, "UInt", CARETWIDTH, "UInt", fWinIni)
-      ; Switch focus to another window and back to update caret width
-      this.Refocus()
+    CARETWIDTH := width
+    ; SPI := SystemParametersInfo
+    SPI_SETCARETWIDTH := 0x2007
+    SPIF_UPDATEINIFILE := 0x01
+    SPIF_SENDCHANGE := 0x02
+    fWinIni := SPIF_UPDATEINIFILE | SPIF_SENDCHANGE
+    DllCall("SystemParametersInfo", "UInt", SPI_SETCARETWIDTH, "UInt", 0, "UInt", CARETWIDTH, "UInt", fWinIni)
+    ; Switch focus to another window and back to update caret width
+    this.Refocus()
   }
 
   Refocus(){
-      ; Get ID of current active window
-      hwnd := WinGetID("A")
-      ; Activate desktop
-      ;WinActivate("ahk_class WorkerW")
-      WinActivate("ahk_class Progman")
+    ; Get ID of current active window
+    hwnd := WinGetID("A")
 
-;     ; Re-activate current window
-      WinActivate("ahk_id " hwnd)
+    ; Activate desktop
+    try {
+      WinActivate("ahk_class Progman")
+    } catch Error {
+      try {
+        WinActivate("ahk_class WorkerW")
+      } catch Error {
+      }
+    }
+
+;   ; Re-activate current window
+    WinActivate("ahk_id " hwnd)
   }
 }
 
