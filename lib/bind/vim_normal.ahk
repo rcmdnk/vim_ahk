@@ -23,10 +23,13 @@ u::SendInput("^z")
 }
 
 ; period
-.::Send, +^{Right}{BS}^v
+.::SendInput("+^{Right}{BS}^v")
 
+; Z mode
 +z::Vim.State.SetMode("Z")
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Z"))
+
+; ZZ
 +z::
 {
   SendInput("^s")
@@ -34,6 +37,7 @@ u::SendInput("^z")
   Vim.State.SetMode("Vim_Normal")
 }
 
+; ZQ
 +q::
 {
   SendInput("!{F4}")
