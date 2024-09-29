@@ -1,4 +1,4 @@
-class Vimkey{
+class VimHotkey{
   __New(Vim){
     this.Vim := Vim
 

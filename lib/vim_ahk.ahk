@@ -7,8 +7,8 @@
 #Include %A_LineFile%\..\vim_check.ahk
 #Include %A_LineFile%\..\vim_icon.ahk
 #Include %A_LineFile%\..\vim_caret.ahk
+#Include %A_LineFile%\..\vim_hotkey.ahk
 #Include %A_LineFile%\..\vim_ini.ahk
-#Include %A_LineFile%\..\vim_key.ahk
 #Include %A_LineFile%\..\vim_menu.ahk
 #Include %A_LineFile%\..\vim_move.ahk
 #Include %A_LineFile%\..\vim_setting.ahk
@@ -38,8 +38,8 @@ class VimAhk{
     this.Check := VimCheck(this)
     this.Icon := VimIcon(this)
     this.Caret := VimCaret(this)
+    this.VimHotkey := VimHotkey(this)
     this.Ini := VimIni(this)
-    this.key := Vimkey(this)
     this.VimMenu := VimMenu(this)
     this.Move := VimMove(this)
     this.Setting := VimSetting(this)
@@ -172,6 +172,12 @@ class VimAhk{
     this.Conf[setting] :=  Map("default", default, "val", val, "description", description, "info", info)
   }
 
+  SetConfDefault(){
+    for k, v in this.Conf {
+      v["val"] := v["default"]
+    }
+  }
+
   SetExistValue(){
     ; Need some way to retrieve default values (v-label values are removed from vim_ahk for v2)
     ;for k, v in this.Conf {
@@ -183,10 +189,26 @@ class VimAhk{
     ;}
   }
 
+  GetConf(Name, Key){
+    return this.Conf[Name][Key]
+  }
+
+  GetVal(Name){
+    return this.GetConf(Name, "val")
+  }
+
+  GetDefault(Name){
+    return this.GetConf(Name, "default")
+  }
+
+  GetDescription(name){
+    return this.GetConf(Name, "description")
+  }
+
   SetGroup(){
     this.GroupN++
     this.GroupName := "VimGroup" this.GroupN
-    Loop Parse, this.Conf["VimGroup"]["val"], this.GroupDel {
+    Loop Parse, this.GetConf("VimGroup", "val"), this.GroupDel {
       if(A_LoopField != ""){
         GroupAdd(this.GroupName, A_LoopField)
       }
@@ -194,11 +216,11 @@ class VimAhk{
   }
 
   Setup(){
-    SetTitleMatchMode(this.Conf["VimSetTitleMatchMode"]["val"])
-    SetTitleMatchMode(this.Conf["VimSetTitleMatchModeFS"]["val"])
+    SetTitleMatchMode(this.GetVal("VimSetTitleMatchMode"))
+    SetTitleMatchMode(this.GetVal("VimSetTitleMatchModeFS"))
     this.State.SetStatusCheck()
     this.SetGroup()
-    this.Key.Set()
+    this.VimHotkey.Set()
   }
 
   Initialize(){
@@ -246,9 +268,9 @@ class VimAhk{
   IsVimGroup(){
     if(not this.Enabled){
       Return False
-    }else if(this.Conf["VimAppList"]["val"] == "Allow List"){
+    }else if(this.GetVal("VimAppList") == "Allow List"){
       Return WinActive("ahk_group " . this.GroupName)
-    }else if(this.Conf["VimAppList"]["val"] == "Deny List"){
+    }else if(this.GetVal("VimAppList") == "Deny List"){
       Return !WinActive("ahk_group " . this.GroupName)
     }
     Return True

@@ -26,51 +26,51 @@ class VimSetting Extends VimGui{
       }else{
         x := "10"
       }
-      this.Hwnd.AddCheckbox(k " XM+" x " " y " v" k, this.GetDescription(k))
+      this.Hwnd.AddCheckbox(k " XM+" x " " y " v" k, this.Vim.GetDescription(k))
       this.HwndAll.Push(this.Hwnd[k])
       created  := 1
-      this.Hwnd[k].Value := this.GetVal(k)
+      this.Hwnd[k].Value := this.Vim.GetVal(k)
     }
-    this.Hwnd.AddText("XM+10 Y+15 vVimTwoLetterText", this.GetDescription("VimTwoLetter"))
-    this.Hwnd.AddEdit("XM+10 Y+5 R4 W100 Multi vVimTwoLetter", StrReplace(this.GetVal("VimTwoLetter"), this.Vim.GroupDel, "`n", 0, , -1))
-    this.Hwnd.AddText("XM+10 Y+15 vVimDisableUnusedText", this.GetDescription("VimDisableUnused"))
-    this.Hwnd.AddDDL("X+5 Y+-16 W30 vVimDisableUnused Choose" this.GetVal("VimDisableUnused"), [1, 2, 3])
+    this.Hwnd.AddText("XM+10 Y+15 vVimTwoLetterText", this.Vim.GetDescription("VimTwoLetter"))
+    this.Hwnd.AddEdit("XM+10 Y+5 R4 W100 Multi vVimTwoLetter", StrReplace(this.Vim.GetVal("VimTwoLetter"), this.Vim.GroupDel, "`n", 0, , -1))
+    this.Hwnd.AddText("XM+10 Y+15 vVimDisableUnusedText", this.Vim.GetDescription("VimDisableUnused"))
+    this.Hwnd.AddDDL("X+5 Y+-16 W30 vVimDisableUnused Choose" this.Vim.GetVal("VimDisableUnused"), [1, 2, 3])
     this.HwndAll.Push(this.Hwnd["VimDisableUnused"])
-    this.Hwnd.AddText("XM+10 Y+15 vVimSetTitleMatchModeText", this.GetDescription("VimSetTitleMatchMode"))
-    if(this.GetVal("VimSetTitleMatchMode") == "RegEx"){
+    this.Hwnd.AddText("XM+10 Y+15 vVimSetTitleMatchModeText", this.Vim.GetDescription("VimSetTitleMatchMode"))
+    if(this.Vim.GetVal("VimSetTitleMatchMode") == "RegEx"){
       matchmode := 4
     }else{
-      matchmode := this.GetVal("VimSetTitleMatchMode")
+      matchmode := this.Vim.GetVal("VimSetTitleMatchMode")
     }
     this.Hwnd.AddDDL("X+5 Y+-16 W60 vVimSetTitleMatchMode Choose" matchmode, [1, 2, 3, "RegEx"])
     this.HwndAll.Push(this.Hwnd["VimSetTitleMatchMode"])
-    if(this.GetVal("VimSetTitleMatchModeFS") == "Fast"){
+    if(this.Vim.GetVal("VimSetTitleMatchModeFS") == "Fast"){
       matchmodefs := 1
     }else{
       matchmodefs := 2
     }
     this.Hwnd.AddDDL("X+5 Y+-20 W50 vVimSetTitleMatchModeFS Choose" matchmodefs, ["Fast", "Slow"])
     this.HwndAll.Push(this.Hwnd["VimSetTitleMatchModeFS"])
-    this.Hwnd.AddText("XM+10 Y+10  vVimIconCheckIntervalText", this.GetDescription("VimIconCheckInterval"))
+    this.Hwnd.AddText("XM+10 Y+10  vVimIconCheckIntervalText", this.Vim.GetDescription("VimIconCheckInterval"))
     this.Hwnd.AddEdit("X+5 Y+-16 W70 vVimIconCheckIntervalEdit")
     this.HwndAll.Push(this.Hwnd["VimIconCheckIntervalEdit"])
-    this.Hwnd.AddUpDown("vVimIconCheckInterval Range0-1000000", this.GetVal("VimIconCheckInterval"))
+    this.Hwnd.AddUpDown("vVimIconCheckInterval Range0-1000000", this.Vim.GetVal("VimIconCheckInterval"))
     this.HwndAll.Push(this.Hwnd["VimIconCheckInterval"])
-    this.Hwnd.AddText("XM+10 Y+10 vVimVerboseText", this.GetDescription("VimVerbose"))
-    this.Hwnd.AddDDL("X+5 Y+-16 W30 vVimVerbose Choose" this.GetVal("VimVerbose"), [1, 2, 3, 4])
+    this.Hwnd.AddText("XM+10 Y+10 vVimVerboseText", this.Vim.GetDescription("VimVerbose"))
+    this.Hwnd.AddDDL("X+5 Y+-16 W30 vVimVerbose Choose" this.Vim.GetVal("VimVerbose"), [1, 2, 3, 4])
     this.HwndAll.Push(this.Hwnd["VimVerbose"])
-    this.Hwnd.AddText("XM+10 Y+10 vVimAppListText", this.GetDescription("VimAppList"))
-    if(this.GetVal("VimAppList") == "All"){
+    this.Hwnd.AddText("XM+10 Y+10 vVimAppListText", this.Vim.GetDescription("VimAppList"))
+    if(this.Vim.GetVal("VimAppList") == "All"){
       matchapplist := 1
-    }else if(this.GetVal("VimAppList") == "Allow List"){
+    }else if(this.Vim.GetVal("VimAppList") == "Allow List"){
       matchapplist := 2
     }else{
       matchapplist := 3
     }
     this.Hwnd.AddDDL("X+5 Y+-16 W100 vVimAppList Choose" matchapplist, ["All", "Allow List", "Deny List"])
     this.HwndAll.Push(this.Hwnd["VimAppList"])
-    this.Hwnd.AddText("XM+10 Y+5 vVimGroupText", this.GetDescription("VimGroup"))
-    this.Hwnd.AddEdit("XM+10 Y+5 R10 W300 Multi vVimGroup", StrReplace(this.GetVal("VimGroup"), this.Vim.GroupDel, "`n", 0, , -1))
+    this.Hwnd.AddText("XM+10 Y+5 vVimGroupText", this.Vim.GetDescription("VimGroup"))
+    this.Hwnd.AddEdit("XM+10 Y+5 R10 W300 Multi vVimGroup", StrReplace(this.Vim.GetVal("VimGroup"), this.Vim.GroupDel, "`n", 0, , -1))
     this.HwndAll.Push(this.Hwnd["VimGroup"])
     this.Hwnd.AddText("XM+10 Y+10", "Check")
     this.Hwnd.SetFont("Underline")
@@ -94,33 +94,33 @@ class VimSetting Extends VimGui{
 
   UpdateGuiValue(){
     for i, k in this.Vim.Checkboxes {
-      this.Hwnd[k].Value := this.GetVal(k)
+      this.Hwnd[k].Value := this.Vim.GetVal(k)
     }
-    this.Hwnd["VimTwoLetter"].Value := StrReplace(this.GetVal("VimTwoLetter"), this.Vim.GroupDel, "`n", 0, , -1)
-    this.Hwnd["VimDisableUnused"].Value := this.GetVal("VimDisableUnused")
-    this.Hwnd["VimIconCheckInterval"].Value := this.GetVal("VimIconCheckInterval")
-    if(this.GetVal("VimSetTitleMatchMode") == "RegEx"){
+    this.Hwnd["VimTwoLetter"].Value := StrReplace(this.Vim.GetVal("VimTwoLetter"), this.Vim.GroupDel, "`n", 0, , -1)
+    this.Hwnd["VimDisableUnused"].Value := this.Vim.GetVal("VimDisableUnused")
+    this.Hwnd["VimIconCheckInterval"].Value := this.Vim.GetVal("VimIconCheckInterval")
+    if(this.Vim.GetVal("VimSetTitleMatchMode") == "RegEx"){
       matchmode := 4
     }else{
-      matchmode := this.GetVal("VimSetTitleMatchMode")
+      matchmode := this.Vim.GetVal("VimSetTitleMatchMode")
     }
     this.Hwnd["VimSetTitleMatchMode"].Value := matchmode
-    if(this.GetVal("VimSetTitleMatchModeFS") == "Fast"){
+    if(this.Vim.GetVal("VimSetTitleMatchModeFS") == "Fast"){
       matchmodefs := 1
     }else{
       matchmodefs := 2
     }
     this.Hwnd["VimSetTitleMatchModeFS"].Value := matchmodefs
-    this.Hwnd["VimVerbose"].Value := this.GetVal("VimVerbose")
-    if(this.GetVal("VimAppList") == "All"){
+    this.Hwnd["VimVerbose"].Value := this.Vim.GetVal("VimVerbose")
+    if(this.Vim.GetVal("VimAppList") == "All"){
       matchapplist := 1
-    }else if(this.GetVal("VimAppList") == "Allow List"){
+    }else if(this.Vim.GetVal("VimAppList") == "Allow List"){
       matchapplist := 2
     }else{
       matchapplist := 3
     }
     this.Hwnd["VimAppList"].Value := matchapplist
-    this.Hwnd["VimGroup"].Value := StrReplace(this.GetVal("VimGroup"), this.Vim.GroupDel, "`n", 0, , -1)
+    this.Hwnd["VimGroup"].Value := StrReplace(this.Vim.GetVal("VimGroup"), this.Vim.GroupDel, "`n", 0, , -1)
   }
 
   VimV2Conf(){
@@ -165,28 +165,6 @@ class VimSetting Extends VimGui{
     return result
   }
 
-  VimDefault2V(){
-    for k, v in this.Vim.Conf {
-      v["val"] := v["default"]
-    }
-  }
-
-  GetConf(Name, Key){
-    return this.Vim.Conf[Name][Key]
-  }
-
-  GetVal(Name){
-    return this.GetConf(Name, "val")
-  }
-
-  GetDefault(Name){
-    return this.GetConf(Name, "default")
-  }
-
-  GetDescription(name){
-    return this.GetConf(Name, "description")
-  }
-
   OK(Btn, Info){
     this.Hwnd.Submit()
     this.VimV2Conf()
@@ -200,7 +178,7 @@ class VimSetting Extends VimGui{
   }
 
   Reset(Btn, Info){
-    this.VimDefault2V()
+    this.Vim.SetConfDefault()
     this.UpdateGuiValue()
   }
 }
