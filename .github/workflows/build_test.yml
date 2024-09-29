@@ -8,7 +8,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+        uses: actions/checkout@v4
       - name: Install AutoHotkey with Chocolatey
         uses: crazy-max/ghaction-chocolatey@v3
         with:
