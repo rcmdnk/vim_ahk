@@ -8,6 +8,7 @@
 #Include %A_LineFile%\..\vim_icon.ahk
 #Include %A_LineFile%\..\vim_caret.ahk
 #Include %A_LineFile%\..\vim_ini.ahk
+#Include %A_LineFile%\..\vim_key.ahk
 #Include %A_LineFile%\..\vim_menu.ahk
 #Include %A_LineFile%\..\vim_move.ahk
 #Include %A_LineFile%\..\vim_setting.ahk
@@ -38,6 +39,7 @@ class VimAhk{
     this.Icon := VimIcon(this)
     this.Caret := VimCaret(this)
     this.Ini := VimIni(this)
+    this.key := Vimkey(this)
     this.VimMenu := VimMenu(this)
     this.Move := VimMove(this)
     this.Setting := VimSetting(this)
@@ -50,11 +52,6 @@ class VimAhk{
     this.GroupName := "VimGroup" this.GroupN
 
     DefaultGroup := this.SetDefaultActiveWindows()
-
-    ; Two-letter normal mode
-    this.TwoLetterNormalIsSet := False
-    this.TwoLetterNormalArray := Array()
-    this.TwoLetterNormalMapsEnabledObj := ObjBindMethod(this, "TwoLetterNormalMapsEnabled")
 
     ; On following applications, Enter works as Enter at the normal mode.
     GroupAdd("VimNonEditor", "ahk_exe explorer.exe")  ; Explorer
@@ -196,60 +193,12 @@ class VimAhk{
     }
   }
 
-  LoadTwoLetterMaps() {
-    HotIf(this.TwoLetterNormalMapsEnabledObj)
-    this.TwoLetterNormalIsSet := False
-    for value in this.TwoLetterNormalArray {
-      HotKey(value, "Off")
-    }
-    this.TwoLetterNormalArray := Array()
-
-    Loop Parse, this.Conf["VimTwoLetter"]["val"], this.GroupDel {
-      if(A_LoopField != ""){
-        if(StrLen(A_LoopField) != 2){
-          MsgBox("Two-letter should be exactly two letters: " A_LoopField)
-          Continue
-        }
-        this.TwoLetterNormalIsSet := True
-        key1 := SubStr(A_LoopField, 1, 1)
-        key2 := SubStr(A_LoopField, 2, 1)
-        this.SetTwoLetterMap(key1, key2)
-      }
-    }
-    HotIf()
-  }
-
-  SetTwoLetterMap(Key1, Key2){
-    SendSame := ObjBindMethod(this, "SendSame")
-    EnterNormal := ObjBindMethod(this, "TwoLetterEnterNormal")
-    EnterNormal1 := EnterNormal.Bind(Key2)
-    EnterNormal2 := EnterNormal.Bind(Key1)
-    HotKey("~" Key1, EnterNormal1)
-    HotKey("~" Key2, EnterNormal2)
-    this.TwoLetterNormalArray.Push(key1)
-    this.TwoLetterNormalArray.Push(key2)
-  }
-
-  TwoLetterNormalMapsEnabled(HotkeyName){
-    Return this.IsVimGroup() && (this.State.StrIsInCurrentVimMode("Insert")) && this.TwoLetterNormalIsSet
-  }
-
-  TwoLetterEnterNormal(EndKey, HotkeyName){
-    Out := InputHook("I T0.1 V L1", EndKey)
-    Out.Start()
-    EndReason := Out.Wait()
-    if(EndReason == "EndKey"){
-      SendInput("{BackSpace 2}")
-      Vim.State.SetNormal()
-    }
-  }
-
   Setup(){
     SetTitleMatchMode(this.Conf["VimSetTitleMatchMode"]["val"])
     SetTitleMatchMode(this.Conf["VimSetTitleMatchModeFS"]["val"])
     this.State.SetStatusCheck()
     this.SetGroup()
-    this.LoadTwoLetterMaps()
+    this.Key.Set()
   }
 
   Initialize(){
