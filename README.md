@@ -164,6 +164,12 @@ If you want to change them directly in the vim.ahk script,
 add these variable before `Vim := new VimAhk()`.
 
 > [!NOTE]
+> These Vim variables will overwrite the default values and initial values.
+> After checking these variables, the configuration file is read.
+> If you have already run vim_ahk, the configuration file was created and all the settings were saved.
+> To reflect the new settings, try `Reset` in the GUI option setting window.
+
+> [!NOTE]
 > VimIconCheckInterval example
 >
 > If you set VimIconCheckInterval as non-zero, the tray icon is changed
