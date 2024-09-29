@@ -25,7 +25,6 @@ class VimAhk{
     this.About.Author := "rcmdnk"
     this.About.Description := "Vim emulation with AutoHotkey, everywhere in Windows."
     this.About.Homepage := "https://github.com/rcmdnk/vim_ahk"
-    this.Info["VimHomepage"] := this.About.Homepage
   }
 
   __New(ScriptPath){
@@ -149,21 +148,6 @@ class VimAhk{
 
     this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth"]
 
-    ; ToolTip Information
-    this.Info := Map()
-    for k, v in this.Conf {
-      info := k ":`n" v["info"]
-      this.Info[k] := info
-      for i, t_type in ["Text", "List", "Value", "Edit"] {
-        textKey := k t_type
-        this.Info[textKey] := info
-      }
-    }
-
-    this.Info["VimSettingOK"] := "Reflect changes and exit"
-    this.Info["VimSettingReset"] := "Reset to the default values"
-    this.Info["VimSettingCancel"] := "Don't change and exit"
-
     ; Initialize
     this.Initialize()
   }
@@ -189,20 +173,24 @@ class VimAhk{
     ;}
   }
 
-  GetConf(Name, Key){
-    return this.Conf[Name][Key]
+  GetConf(Key, Data){
+    return this.Conf[Key][Data]
   }
 
-  GetVal(Name){
-    return this.GetConf(Name, "val")
+  GetVal(Key){
+    return this.GetConf(Key, "val")
   }
 
-  GetDefault(Name){
-    return this.GetConf(Name, "default")
+  GetDefault(Key){
+    return this.GetConf(Key, "default")
   }
 
-  GetDescription(name){
-    return this.GetConf(Name, "description")
+  GetDescription(Key){
+    return this.GetConf(Key, "description")
+  }
+
+  GetInfo(Key){
+    return this.GetConf(Key, "info")
   }
 
   SetGroup(){
@@ -291,5 +279,9 @@ class VimAhk{
     A_Clipboard := ClipSaved
     BlockInput("Off")
     Return ret
+  }
+
+  AddToolTip(Hwnd, Text){
+    this.VimToolTip.Info[Hwnd] := Text
   }
 }

@@ -1,60 +1,46 @@
 class VimGui{
   __New(Vim, Title){
     this.Vim := Vim
-    this.Hwnd := 0
-    this.HwndAll := []
+    this.Obj := 0
     this.Title := Title
+    this.HideObj := ObjBindMethod(this, "Hide")
     this.OKObj := ObjBindMethod(this, "OK")
   }
 
-  ShowGui(ItemName, ItemPos, MyMenu){
-    if(this.Hwnd == 0){
-      this.Hwnd := Gui("", this.Title)
-      this.HwndAll.Push(this.Hwnd)
-      this.MakeGui()
-      OnMessage(0x112, ObjBindMethod(this, "OnClose"))
-      OnMessage(0x100, ObjBindMethod(this, "OnEscape"))
-    }else{
-      this.UpdateGui()
+  Hide(Obj){
+    this.Vim.VimToolTip.RemoveToolTip()
+    this.Obj.Hide()
+  }
+
+  OK(Obj, Info){
+    this.Hide(Obj)
+  }
+
+  AddClick(ControlType, Option, Text, Callback, ToolTipText:=""){
+    Obj := this.Obj.Add(ControlType, Option, Text)
+    Obj.OnEvent("Click", Callback)
+    if(ToolTipText != ""){
+      this.Vim.AddToolTip(Obj.Hwnd, ToolTipText)
     }
-    this.Hwnd.Show()
   }
 
   MakeGui(){
-    this.Hwnd.AddButton("X200 W100 Default vGuiOK", "OK").OnEvent("Click", this.OKObj)
-    this.HwndAll.Push(this.Hwnd["GuiOK"])
+    this.AddClick("Button", "X200 W100 Default", "OK", this.OKObj)
   }
 
   UpdateGui(){
   }
 
-  Hide(){
-    this.Vim.VimToolTip.RemoveToolTip()
-    this.Hwnd.Hide()
-  }
-
-  OK(Btn, Info){
-    this.Hide()
-  }
-
-  IsThisWindow(Hwnd){
-    for i, h in this.HwndAll {
-      if(Hwnd == h){
-        Return True
-      }
+  ShowGui(ItemName, ItemPos, MyMenu){
+    if(this.Obj == 0){
+      this.Obj := Gui("", this.Title)
+      this.MakeGui()
+      this.Obj.OnEvent("Close", this.HideObj)
+      this.Obj.OnEvent("Escape", this.HideObj)
+    }else{
+      this.UpdateGui()
     }
-    Return False
+    this.Obj.Show()
   }
 
-  OnClose(Wp, Lp, Msg, Hwnd){
-    if(Wp == 0xF060 && Hwnd == this.Hwnd){
-      this.Hide()
-    }
-  }
-
-  OnEscape(Wp, Lp, Msg, Hwnd){
-    if(Wp == 27 && this.IsThisWindow(Hwnd)){
-      this.Hide()
-    }
-  }
 }
