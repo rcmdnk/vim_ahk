@@ -163,14 +163,12 @@ class VimAhk{
   }
 
   SetExistValue(){
-    ; Need some way to retrieve default values (v-label values are removed from vim_ahk for v2)
-    ;for k, v in this.Conf {
-    ;  ; This ensures the variable exists, as a workaround since in AHK we cannot directly check whether it exists.
-    ;  if(%k% != ""){
-    ;    this.Conf[k]["default"] := %k%
-    ;    this.Conf[k]["val"] := %k%
-    ;  }
-    ;}
+    for k, v in this.Conf {
+      if(IsSet(%k%)){
+        v["default"] := %k%
+        v["val"] := %k%
+      }
+    }
   }
 
   GetConf(Key, Data){

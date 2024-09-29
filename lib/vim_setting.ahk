@@ -1,9 +1,6 @@
 #Include %A_LineFile%\..\vim_gui.ahk
 
 
-DoNothing(Obj, Info){
-}
-
 class VimSetting Extends VimGui{
   __New(Vim){
     super.__New(Vim, "Vim Ahk Settings")
@@ -22,7 +19,7 @@ class VimSetting Extends VimGui{
     Obj := this.Obj.Add(ControlType, Options, Text)
     if(ControlType == "Text"){
       ; Pseudo click event to show tooltop
-      Obj.OnEvent("Click", DoNothing)
+      Obj.OnEvent("Click", DoNothing(Obj, Info) => "")
     }
     this.Vim.AddToolTip(Obj.Hwnd, this.Vim.GetInfo(Key))
   }
