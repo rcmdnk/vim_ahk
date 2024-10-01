@@ -1,19 +1,13 @@
 ﻿; Launch Settings
-#If
-^!+v::
-  Vim.Setting.ShowGui()
-Return
+#HotIf
+^!+v::Vim.Setting.ShowGui()
 
 ; Check Mode
-#If Vim.IsVimGroup()
-^!+c::
-  Vim.State.CheckMode(4, Vim.State.Mode)
-Return
+#HotIf Vim.IsVimGroup()
+^!+c::Vim.State.CheckMode(4, Vim.State.Mode)
 
 ; Suspend/restart
-#If
-^!+s::
-  Vim.State.ToggleEnabled()
-Return
+#HotIf
+^!+s::Vim.State.ToggleEnabled()
 
-#If
+#HotIf

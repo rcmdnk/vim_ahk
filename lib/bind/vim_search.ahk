@@ -1,21 +1,23 @@
-﻿#If Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
+﻿#HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 /::
-  Send, ^f
+{
+  SendInput("^f")
   Vim.State.SetMode("Insert")
-Return
+}
 
 *::
-  bak := ClipboardAll
-  Clipboard=
-  Send, ^{Left}+^{Right}^c
-  ClipWait, 1
-  Send, ^f
-  Send, ^v!f
-  clipboard := bak
+{
+  ClipSaved := ClipboardAll()
+  A_Clipboard := ""
+  SendInput("^{Left}+^{Right}^c")
+  ClipWait(1)
+  SendInput("^f")
+  SendInput("^v!f")
+  A_Clipboard := ClipSaved
   Vim.State.SetMode("Insert")
-Return
+}
 
-n::Send, {F3}
-+n::Send, +{F3}
+n::SendInput("{F3}")
++n::SendInput("+{F3}")
 
-#If
+#HotIf

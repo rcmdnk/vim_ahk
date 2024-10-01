@@ -1,18 +1,18 @@
 ﻿; Inner mode
-#If Vim.IsVimGroup() and ((Vim.State.StrIsInCurrentVimMode("Vim_ydc")) or (Vim.State.IsCurrentVimMode("Vim_VisualChar")))
+#HotIf Vim.IsVimGroup() and ((Vim.State.StrIsInCurrentVimMode("Vim_ydc")) or (Vim.State.IsCurrentVimMode("Vim_VisualChar")))
 i::Vim.State.SetInner()
 
-#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Inner"))
+#HotIf Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Inner"))
 w::Vim.Move.Inner("w")
 +w::Vim.Move.Inner("w")
 
 ; gg
-#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and (not Vim.State.g)
+#HotIf Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and (not Vim.State.g)
 g::Vim.State.SetMode("", 1)
-#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and (Vim.State.g)
+#HotIf Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and (Vim.State.g)
 g::Vim.Move.Move("g")
 
-#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_"))
+#HotIf Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_"))
 ; 1 character
 h::Vim.Move.Repeat("h")
 j::Vim.Move.Repeat("j")
@@ -44,10 +44,11 @@ b::Vim.Move.Repeat("b")
 +g::Vim.Move.Move("+g")
 ; Space
 Space::Vim.Move.Repeat("l")
-#If Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and not WinActive("ahk_group VimNonEditor")
+#HotIf Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and not WinActive("ahk_group VimNonEditor")
 ; Enter
 Enter::
+{
   Vim.Move.Repeat("j")
   Vim.Move.Move("^")
-  Return
-#If
+}
+#HotIf

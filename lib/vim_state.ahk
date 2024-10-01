@@ -1,6 +1,6 @@
 ﻿class VimState{
-  __New(vim){
-    this.Vim := vim
+  __New(Vim){
+    this.Vim := Vim
 
     ; CheckModeValue does not get set for compiled scripts.
     ;@Ahk2Exe-IgnoreBegin
@@ -23,30 +23,30 @@
     this.StatusCheckObj := ObjBindMethod(this, "StatusCheck")
   }
 
-  CheckMode(verbose=1, Mode="", g=0, n=0, LineCopy=-1, force=0){
-    if(force == 0) and ((verbose <= 1) or ((Mode == "") and (g == 0) and (n == 0) and (LineCopy == -1))){
+  CheckMode(Verbose:=1, Mode:="", g:=0, n:=0, LineCopy:=-1, Force:=0){
+    if(Force == 0) and ((Verbose <= 1) or ((Mode == "") and (g == 0) and (n == 0) and (LineCopy == -1))){
       Return
-    }else if(verbose == 2){
+    }else if(Verbose == 2){
       this.SetTooltip(this.Mode, 1)
-    }else if(verbose == 3){
+    }else if(Verbose == 3){
       this.SetTooltip(this.Mode "`r`ng=" this.g "`r`nn=" this.n "`r`nLineCopy=" this.LineCopy, 4)
     }
-    if(verbose >= 4){
-      Msgbox, , Vim Ahk, % "Mode: " this.Mode "`nVim_g: " this.g "`nVim_n: " this.n "`nVimLineCopy: " this.LineCopy
+    if(Verbose >= 4){
+      MsgBox("Mode        : " this.Mode "`nVim_g       : " this.g "`nVim_n       : " this.n "`nVimLineCopy : " this.LineCopy, "Vim Ahk")
     }
   }
 
-  SetTooltip(Title, lines=1){
-    WinGetPos, , , W, H, A
-    ToolTip, %Title%, W - 110, H - 30 - (lines) * 20
+  SetTooltip(Title, Lines:=1){
+    WinGetPos(, , &W, &H, "A")
+    ToolTip(Title, W - 110, H - 30 - (Lines) * 20)
     this.Vim.VimToolTip.SetRemoveToolTip(1000)
   }
 
-  FullStatus(){
+  FullStatus(ItemName, ItemPos, MyMenu){
     this.CheckMode(4, , , , 1)
   }
 
-  SetMode(Mode="", g=0, n=0, LineCopy=-1){
+  SetMode(Mode:="", g:=0, n:=0, LineCopy:=-1){
     this.CheckValidMode(Mode)
     if(Mode != ""){
       this.Mode := Mode
@@ -54,7 +54,7 @@
         VIM_IME_SET(this.LastIME)
       }
       this.Vim.Icon.SetIcon(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
-      this.Vim.Caret.SetCaret(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
+      this.Vim.Caret.SetCaret(this.Mode)
     }
     if(g != -1){
       this.g := g
@@ -71,17 +71,17 @@
   SetNormal(){
     this.LastIME := VIM_IME_Get()
     if(this.LastIME){
-      if(VIM_IME_GetConverting(A)){
-        Send, {Esc}
+      if(VIM_IME_GetConverting("A")){
+        SendInput("{Esc}")
         Return
       }else{
         VIM_IME_SET()
       }
     }
     if(this.StrIsInCurrentVimMode("Visual") or this.StrIsInCurrentVimMode("ydc")){
-      Send, {Right}
+      SendInput("{Right}")
       if WinActive("ahk_group VimCursorSameAfterSelect"){
-        Send, {Left}
+        SendInput("{Left}")
       }
     }
     this.SetMode("Vim_Normal")
@@ -92,96 +92,94 @@
   }
 
   HandleEsc(){
-    global Vim, VimEscNormal, vimSendEscNormal, VimLongEscNormal
-    if (!VimEscNormal) {
-      Send, {Esc}
+    if (!this.Vim.Conf["VimEscNormal"]["val"]) {
+      SendInput("{Esc}")
       Return
     }
     ; The keywait waits for esc to be released. If it doesn't detect a release
-    ; within the time limit, sets ErrorLevel to 1.
-    KeyWait, Esc, T0.5
-    LongPress := ErrorLevel
-    both := VimLongEscNormal && LongPress
-    neither := !(VimLongEscNormal || LongPress)
-    SetNormal :=  both or neither
-    if (!SetNormal or (VimSendEscNormal && this.IsCurrentVimMode("Vim_Normal"))) {
-      Send, {Esc}
+    ; within the time limit, return 0, otherwise return 1.
+    ShortPress := KeyWait("Esc", "T0.5")
+    SetNormal := this.Vim.Conf["VimLongEscNormal"]["val"] != ShortPress
+    if (!SetNormal or (this.Vim.Conf["VimSendEscNormal"]["val"] && this.IsCurrentVimMode("Vim_Normal"))) {
+      SendInput("{Esc}")
     }
     if (SetNormal) {
       this.SetNormal()
     }
-    if (LongPress){
+    if (!ShortPress){
       ; Have to ensure the key has been released, otherwise this will get
       ; triggered again.
-      KeyWait, Esc
+      KeyWait("Esc")
     }
   }
 
   HandleCtrlBracket(){
-    global Vim, VimCtrlBracketNormal, VimSendCtrlBracketNormal, VimLongCtrlBracketNormal
-    if (!VimCtrlBracketNormal) {
-      Send, ^[
+    if (!this.Vim.Conf["VimCtrlBracketNormal"]["val"]) {
+      SendInput("^[")
       Return
     }
-    KeyWait, [, T0.5
-    LongPress := ErrorLevel
-    both := VimLongCtrlBracketNormal && LongPress
-    neither := !(VimLongCtrlBracketNormal || LongPress)
-    SetNormal :=  both or neither
-    if (!SetNormal or (VimSendCtrlBracketNormal && this.IsCurrentVimMode("Vim_Normal"))) {
-      Send, ^[
+    ShortPress := KeyWait("[", "T0.5")
+    SetNormal := this.Vim.Conf["VimLongCtrlBracketNormal"]["val"] != ShortPress
+    if (!SetNormal or (this.Vim.Conf["VimSendCtrlBracketNormal"]["val"] && this.IsCurrentVimMode("Vim_Normal"))) {
+      SendInput("^[")
     }
     if (SetNormal) {
       this.SetNormal()
     }
-    if (LongPress){
-      KeyWait, [
+    if (!ShortPress){
+      KeyWait("[")
     }
   }
 
-  IsCurrentVimMode(mode){
-    this.CheckValidMode(mode)
+  IsCurrentVimMode(Mode){
+    this.CheckValidMode(Mode)
     Return (mode == this.Mode)
   }
 
-  StrIsInCurrentVimMode(mode){
-    this.CheckValidMode(mode, false)
-    Return (inStr(this.Mode, mode))
+  StrIsInCurrentVimMode(Mode){
+    this.CheckValidMode(Mode, false)
+    Return (inStr(this.Mode, Mode))
   }
 
-  CheckValidMode(mode, fullMatch=true){
+  CheckValidMode(Mode, FullMatch:=true){
     if(this.CheckModeValue == false){
       Return
     }
     try{
-      InOrBlank:= (not fullMatch) ? "in " : ""
-      if not this.HasValue(this.PossibleVimModes, mode, fullMatch){
-        throw Exception("Invalid mode specified",-2,
-        (Join
-  "'" Mode "' is not " InOrBlank " a valid mode as defined by the VimPossibleVimModes
-   array at the top of vim_state.ahk. This may be a typo.
-   Fix this error by using an existing mode,
-   or adding your mode to the array.")
-        )
+      InOrBlank := (not FullMatch) ? "in " : ""
+      if not this.HasValue(this.PossibleVimModes, Mode, FullMatch){
+        Throw ValueError("Invalid mode specified", -2, "
+        (
+          '%Mode%' is not %InOrBlank%a valid mode as defined by the VimPossibleVimModes
+          array at the top of vim_state.ahk. This may be a typo.
+          Fix this error by using an existing mode,
+          or adding your mode to the array.
+        )")
       }
-    }catch e{
-      MsgBox % "Warning: " e.Message "`n" e.Extra "`n`n Called in " e.What " at line " e.Line
+    }catch ValueError as e{
+      MsgBox("
+      (
+        Warning: %e.Message%
+        %e.Extra%
+
+        Called in %e.What% at line %e.Line%
+      )", "Vim Ahk")
     }
   }
 
-  HasValue(haystack, needle, fullMatch=true){
-    if(!isObject(haystack)){
+  HasValue(Haystack, Needle, FullMatch:=true){
+    if(!isObject(Haystack)){
       return false
-    }else if(haystack.Length() == 0){
+    }else if(Haystack.Length == 0){
       return false
     }
-    for index, value in haystack{
+    for index, value in Haystack{
       if fullMatch{
-        if (value == needle){
+        if (value == Needle){
           return true
         }
       }else{
-        if (inStr(value, needle)){
+        if (inStr(value, Needle)){
           return true
         }
       }
@@ -201,10 +199,10 @@
   SetStatusCheck(){
     check := this.StatusCheckObj
     if(this.Vim.Conf["VimIconCheckInterval"]["val"] > 0){
-      SetTimer, % check, % this.Vim.Conf["VimIconCheckInterval"]["val"]
+      SetTimer(check, this.Vim.Conf["VimIconCheckInterval"]["val"])
     }else{
       this.Vim.Icon.SetIcon("", 0)
-      SetTimer, % check, Off
+      SetTimer(check, 0)
     }
   }
 

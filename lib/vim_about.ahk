@@ -1,39 +1,34 @@
-﻿class VimAbout Extends VimGui{
-  __New(vim){
-    this.Vim := vim
+﻿#Include %A_LineFile%\..\vim_gui.ahk
+
+
+class VimAbout Extends VimGui{
+  __New(Vim){
+    super.__New(Vim, "Vim Ahk")
 
     this.Version := ""
     this.Date := ""
     this.Author := ""
     this.Description := ""
     this.Homepage := ""
-
-    base.__New(vim, "Vim Ahk")
+    this.OpenHomepageObj := ObjBindMethod(this, "OpenHomepage")
   }
 
   MakeGui(){
-    global VimHomepage, VimAboutOK, VimScriptPath
-    Gui, % this.Hwnd ":-MinimizeBox"
-    Gui, % this.Hwnd ":-Resize"
-    Gui, % this.Hwnd ":Add", Text, , % "Vim Ahk (vim_ahk):`n" this.Description
-    Gui, % this.Hwnd ":Font", Underline
-    Gui, % this.Hwnd ":Add", Text, Y+0 cBlue vVimHomepage, Homepage
-    VimGuiAboutOpenHomepage := ObjBindMethod(this, "OpenHomepage")
-    GuiControl, +G, VimHomepage, % VimGuiAboutOpenHomepage
-    Gui, % this.Hwnd ":Font", Norm
-    Gui, % this.Hwnd ":Add", Text, , % "Author: " this.Author
-    Gui, % this.Hwnd ":Add", Text, , % "Version: " this.Version
-    Gui, % this.Hwnd ":Add", Text, Y+0, % "Last update: " this.Date
-    Gui, % this.Hwnd ":Add", Text, , Script path:`n%VimScriptPath%
-    Gui, % this.Hwnd ":Add", Text, , % "Setting file:`n" this.Vim.Ini.Ini
-    Gui, % this.Hwnd ":Add", Button, +HwndOK X200 W100 Default vVimAboutOK, &OK
-    this.HwndAll.Push(OK)
-    ok := ObjBindMethod(this, "OK")
-    GuiControl, +G, VimAboutOK, % ok
+    this.Obj.Opt("-MinimizeBox -Resize")
+    this.Obj.AddText(, "Vim Ahk (vim_ahk):`n" this.Description)
+    this.Obj.SetFont("Underline")
+    this.AddClick("Text", "Y+0 cBlue", this.Homepage, this.Vim.about.OpenHomepageObj, this.Homepage)
+    this.Obj.SetFont("Norm")
+    this.Obj.AddText(, "Author: " this.Author)
+    this.Obj.AddText(, "Version: " this.Version)
+    this.Obj.AddText("Y+0", "Last update: " this.Date)
+    this.Obj.AddText(, "Script path:`n%this.Vim.ScriptPath%")
+    this.Obj.AddText(, "Setting file:`n" this.Vim.Ini.Ini)
+    this.AddClick("Button", "X200 W100 Default", "OK", this.OKObj)
   }
 
-  OpenHomepage(){
+  OpenHomepage(Obj, Info){
     this.Vim.VimToolTip.RemoveToolTip()
-    Run % this.Homepage
+    Run(this.Homepage)
   }
 }

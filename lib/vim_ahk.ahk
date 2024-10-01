@@ -5,9 +5,9 @@
 ; Classes, Functions
 #Include %A_LineFile%\..\vim_about.ahk
 #Include %A_LineFile%\..\vim_check.ahk
-#Include %A_LineFile%\..\vim_gui.ahk
 #Include %A_LineFile%\..\vim_icon.ahk
 #Include %A_LineFile%\..\vim_caret.ahk
+#Include %A_LineFile%\..\vim_hotkey.ahk
 #Include %A_LineFile%\..\vim_ini.ahk
 #Include %A_LineFile%\..\vim_menu.ahk
 #Include %A_LineFile%\..\vim_move.ahk
@@ -20,29 +20,30 @@
 
 class VimAhk{
   __About(){
-    this.About.Version := "v0.13.1"
-    this.About.Date := "01/Mar/2024"
+    this.About.Version := "v0.14.0"
+    this.About.Date := "26/Sep/2024"
     this.About.Author := "rcmdnk"
     this.About.Description := "Vim emulation with AutoHotkey, everywhere in Windows."
     this.About.Homepage := "https://github.com/rcmdnk/vim_ahk"
-    this.Info["VimHomepage"] := this.About.Homepage
   }
 
-  __New(setup=true){
+  __New(ScriptPath){
+    this.ScriptPath := ScriptPath
     this.Enabled := True
 
 
     ; Classes
-    this.About := new VimAbout(this)
-    this.Check := new VimCheck(this)
-    this.Icon := new VimIcon(this)
-    this.Caret := new VimCaret(this)
-    this.Ini := new VimIni(this)
-    this.VimMenu := new VimMenu(this)
-    this.Move := new VimMove(this)
-    this.Setting := new VimSetting(this)
-    this.State := new VimState(this)
-    this.VimToolTip := new VimToolTip(this)
+    this.About := VimAbout(this)
+    this.Check := VimCheck(this)
+    this.Icon := VimIcon(this)
+    this.Caret := VimCaret(this)
+    this.VimHotkey := VimHotkey(this)
+    this.Ini := VimIni(this)
+    this.VimMenu := VimMenu(this)
+    this.Move := VimMove(this)
+    this.Setting := VimSetting(this)
+    this.State := VimState(this)
+    this.VimToolTip := VimToolTip(this)
 
     ; Group Settings
     this.GroupDel := ","
@@ -52,44 +53,44 @@ class VimAhk{
     DefaultGroup := this.SetDefaultActiveWindows()
 
     ; On following applications, Enter works as Enter at the normal mode.
-    GroupAdd, VimNonEditor, ahk_exe explorer.exe  ; Explorer
-    GroupAdd, VimNonEditor, ahk_exe Explorer.exe  ; Explorer, Explorer became also upper case, but lower case works for this
-    GroupAdd, VimNonEditor, ahk_exe Q-Dir_x64.exe ; Q-dir
-    GroupAdd, VimNonEditor, ahk_exe Q-Dir.exe     ; Q-dir
+    GroupAdd("VimNonEditor", "ahk_exe explorer.exe")  ; Explorer
+    GroupAdd("VimNonEditor", "ahk_exe Explorer.exe")  ; Explorer, Explorer became also upper case, but lower case works for this
+    GroupAdd("VimNonEditor", "ahk_exe Q-Dir_x64.exe") ; Q-dir
+    GroupAdd("VimNonEditor", "ahk_exe Q-Dir.exe")     ; Q-dir
 
     ; Following applications select the line break at Shift + End.
-    GroupAdd, VimLBSelectGroup, ahk_exe POWERPNT.exe ; PowerPoint
-    GroupAdd, VimLBSelectGroup, ahk_exe WINWORD.exe  ; Word
-    GroupAdd, VimLBSelectGroup, ahk_exe wordpad.exe  ; WordPad
+    GroupAdd("VimLBSelectGroup", "ahk_exe POWERPNT.exe") ; PowerPoint
+    GroupAdd("VimLBSelectGroup", "ahk_exe WINWORD.exe")  ; Word
+    GroupAdd("VimLBSelectGroup", "ahk_exe wordpad.exe")  ; WordPad
 
     ; Following applications do not copy the line break
-    GroupAdd, VimNoLBCopyGroup, ahk_exe Evernote.exe ; Evernote
+    GroupAdd("VimNoLBCopyGroup", "ahk_exe Evernote.exe") ; Evernote
 
     ; Need Ctrl for Up/Down
-    GroupAdd, VimCtrlUpDownGroup, ahk_exe onenote.exe ; OneNote Desktop, before Windows 10
+    GroupAdd("VimCtrlUpDownGroup", "ahk_exe onenote.exe") ; OneNote Desktop, before Windows 10
 
     ; Need Home twice
-    GroupAdd, VimDoubleHomeGroup, ahk_exe Code.exe ; Visual Studio Code
+    GroupAdd("VimDoubleHomeGroup", "ahk_exe Code.exe") ; Visual Studio Code
 
     ; Followings can emulate ^. For others, ^ works as same as 0
     ; It does not work for NotePad at Windows 11
-    ; GroupAdd, VimCaretMove, ahk_exe notepad.exe ; NotePad
-    ; GroupAdd, VimCaretMove, ahk_exe Notepad.exe ; NotePad
+    ; GroupAdd("VimCaretMove", "ahk_exe notepad.exe") ; NotePad
+    ; GroupAdd("VimCaretMove", "ahk_exe Notepad.exe") ; NotePad
 
     ; Followings start cursor from the same place after selection.
     ; Others start right/left (by cursor) point of the selection
-    GroupAdd, VimCursorSameAfterSelect, ahk_exe notepad.exe ; NotePad
-    GroupAdd, VimCursorSameAfterSelect, ahk_exe Notepad.exe ; NotePad
-    GroupAdd, VimCursorSameAfterSelect, ahk_exe explorer.exe ; Explorer
-    GroupAdd, VimCursorSameAfterSelect, ahk_exe Explorer.exe ; Explorer
+    GroupAdd("VimCursorSameAfterSelect", "ahk_exe notepad.exe") ; NotePad
+    GroupAdd("VimCursorSameAfterSelect", "ahk_exe Notepad.exe") ; NotePad
+    GroupAdd("VimCursorSameAfterSelect", "ahk_exe explorer.exe") ; Explorer
+    GroupAdd("VimCursorSameAfterSelect", "ahk_exe Explorer.exe") ; Explorer
 
     ; Q-Dir
-    GroupAdd, VimQdir, ahk_exe Q-Dir_x64.exe ; q-dir
-    GroupAdd, VimQdir, ahk_exe Q-Dir.exe ; q-dir
+    GroupAdd("VimQdir", "ahk_exe Q-Dir_x64.exe") ; q-dir
+    GroupAdd("VimQdir", "ahk_exe Q-Dir.exe") ; q-dir
 
     ; Configuration values for Read/Write ini
     ; setting, default, val, description, info
-    this.Conf := {}
+    this.Conf := Map()
     this.AddToConf("VimEscNormal", 1, 1
       , "ESC to enter the normal mode"
       , "Use ESC to enter the normal mode, long press ESC to send ESC.")
@@ -147,86 +148,65 @@ class VimAhk{
 
     this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth"]
 
-    ; ToolTip Information
-    this.Info := {}
-    for k, v in this.Conf {
-      info := k ":`n" v["info"]
-      this.Info[k] := info
-      for i, type in ["Text", "List", "Value", "Edit"] {
-        textKey := k type
-        this.Info[textKey] := info
-      }
-    }
-
-    this.Info["VimSettingOK"] := "Reflect changes and exit"
-    this.Info["VimSettingReset"] := "Reset to the default values"
-    this.Info["VimSettingCancel"] := "Don't change and exit"
-
     ; Initialize
     this.Initialize()
   }
 
   AddToConf(setting, default, val, description, info){
-    this.Conf[setting] :=  {"default": default, "val": val, "description": description, "info": info}
+    this.Conf[setting] :=  Map("default", default, "val", val, "description", description, "info", info)
+  }
+
+  SetConfDefault(){
+    for k, v in this.Conf {
+      v["val"] := v["default"]
+    }
   }
 
   SetExistValue(){
     for k, v in this.Conf {
-      ; This ensures the variable exists, as a workaround since in AHK we cannot directly check whether it exists.
-      if(%k% != ""){
-        this.Conf[k]["default"] := %k%
-        this.Conf[k]["val"] := %k%
+      if(IsSet(%k%)){
+        v["default"] := %k%
+        v["val"] := %k%
       }
     }
+  }
+
+  GetConf(Key, Data){
+    return this.Conf[Key][Data]
+  }
+
+  GetVal(Key){
+    return this.GetConf(Key, "val")
+  }
+
+  GetDefault(Key){
+    return this.GetConf(Key, "default")
+  }
+
+  GetDescription(Key){
+    return this.GetConf(Key, "description")
+  }
+
+  GetInfo(Key){
+    return this.GetConf(Key, "info")
   }
 
   SetGroup(){
     this.GroupN++
     this.GroupName := "VimGroup" this.GroupN
-    Loop, Parse, % this.Conf["VimGroup"]["val"], % this.GroupDel
-    {
+    Loop Parse, this.GetConf("VimGroup", "val"), this.GroupDel {
       if(A_LoopField != ""){
-        GroupAdd, % this.GroupName, %A_LoopField%
+        GroupAdd(this.GroupName, A_LoopField)
       }
     }
-  }
-
-  LoadTwoLetterMaps() {
-    this.TwoLetterNormalIsSet := False
-    Loop, Parse, % this.Conf["VimTwoLetter"]["val"], % this.GroupDel
-    {
-      if(A_LoopField != ""){
-        this.TwoLetterNormalIsSet := True
-        key1 := SubStr(A_LoopField, 1, 1)
-        key2 := SubStr(A_LoopField, 2, 1)
-        this.SetTwoLetterMap(key1, key2)
-      }
-    }
-  }
-
-  SetTwoLetterMap(key1, key2){
-    EnterNormal := ObjBindMethod(this, "TwoLetterEnterNormal")
-    Enabled := ObjBindMethod(this, "TwoLetterNormalMapsEnabled")
-    HotKey If, % Enabled
-    HotKey, %key1% & %key2%, % EnterNormal
-    HotKey, %key2% & %key1%, % EnterNormal
-  }
-
-  TwoLetterNormalMapsEnabled(){
-    Return this.IsVimGroup() && (this.State.StrIsInCurrentVimMode("Insert")) && this.TwoLetterNormalIsSet
-  }
-
-  TwoLetterEnterNormal(){
-    SendInput, {BackSpace 1}
-    this.State.SetNormal()
   }
 
   Setup(){
-    SetTitleMatchMode, % this.Conf["VimSetTitleMatchMode"]["val"]
-    SetTitleMatchMode, % this.Conf["VimSetTitleMatchModeFS"]["val"]
+    SetTitleMatchMode(this.GetVal("VimSetTitleMatchMode"))
+    SetTitleMatchMode(this.GetVal("VimSetTitleMatchModeFS"))
     this.State.SetStatusCheck()
     this.SetGroup()
-    this.LoadTwoLetterMaps()
+    this.VimHotkey.Set()
   }
 
   Initialize(){
@@ -274,28 +254,32 @@ class VimAhk{
   IsVimGroup(){
     if(not this.Enabled){
       Return False
-    }else if(this.Conf["VimAppList"]["val"] == "Allow List"){
+    }else if(this.GetVal("VimAppList") == "Allow List"){
       Return WinActive("ahk_group " . this.GroupName)
-    }else if(this.Conf["VimAppList"]["val"] == "Deny List"){
+    }else if(this.GetVal("VimAppList") == "Deny List"){
       Return !WinActive("ahk_group " . this.GroupName)
     }
     Return True
   }
 
   ; Ref: https://www.reddit.com/r/AutoHotkey/comments/4ma5b8/identifying_end_of_line_when_typing_with_ahk_and/
-  CheckChr(key){
-    BlockInput, Send
-    tempClip := clipboard
-    clipboard := ""
-    SendInput {Shift Down}{Right}{Shift up}{Ctrl down}c{Ctrl Up}{Left}
-    Sleep 10
+  CheckChr(Key){
+    BlockInput("Send")
+    ClipSaved := ClipboardAll()
+    A_Clipboard := ""
+    SendInput("{Shift Down}{Right}{Shift up}{Ctrl down}c{Ctrl Up}{Left}")
+    Sleep(10)
     ret := False
-    If (clipboard ~= key){
+    If (A_Clipboard ~= Key){
       ret := True
     }
-    sleep 10
-    clipboard := tempClip
-    BlockInput, off
+    sleep(10)
+    A_Clipboard := ClipSaved
+    BlockInput("Off")
     Return ret
+  }
+
+  AddToolTip(Hwnd, Text){
+    this.VimToolTip.Info[Hwnd] := Text
   }
 }

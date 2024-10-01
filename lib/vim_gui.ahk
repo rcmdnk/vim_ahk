@@ -1,63 +1,46 @@
 class VimGui{
-  __New(vim, title){
-    this.Vim := vim
-    this.Hwnd := 0
-    this.HwndAll := []
-    this.Title := title
+  __New(Vim, Title){
+    this.Vim := Vim
+    this.Obj := 0
+    this.Title := Title
+    this.HideObj := ObjBindMethod(this, "Hide")
+    this.OKObj := ObjBindMethod(this, "OK")
   }
 
-  ShowGui(){
-    if(this.hwnd == 0){
-      Gui, New, +HwndGuiHwnd
-      this.Hwnd := GuiHwnd
-      this.HwndAll.Push(GuiHwnd)
-      this.MakeGui()
-      Gui, % this.Hwnd ":Show", , % this.Title
-      OnMessage(0x112, ObjBindMethod(this, "OnClose"))
-      OnMessage(0x100, ObjBindMethod(this, "OnEscape"))
+  Hide(Obj){
+    this.Vim.VimToolTip.RemoveToolTip()
+    this.Obj.Hide()
+  }
+
+  OK(Obj, Info){
+    this.Hide(Obj)
+  }
+
+  AddClick(ControlType, Option, Text, Callback, ToolTipText:=""){
+    Obj := this.Obj.Add(ControlType, Option, Text)
+    Obj.OnEvent("Click", Callback)
+    if(ToolTipText != ""){
+      this.Vim.AddToolTip(Obj.Hwnd, ToolTipText)
     }
-    this.UpdateGui()
-    Gui, % this.Hwnd ":Show", , % this.Title
-    Return
   }
 
   MakeGui(){
-    Gui, % this.Hwnd ":Add", Button, +HwndOK X200 W100 Default, &OK
-    this.HwndAll.Push(OK)
-    ok := ObjBindMethod(this, "OK")
-    GuiControl, +G, % OK, % ok
+    this.AddClick("Button", "X200 W100 Default", "OK", this.OKObj)
   }
 
   UpdateGui(){
   }
 
-  Hide(){
-    this.Vim.VimToolTip.RemoveToolTip()
-    Gui, % this.Hwnd ":Hide"
-  }
-
-  OK(){
-    this.Hide()
-  }
-
-  IsThisWindow(hwnd){
-    for i, h in this.HwndAll {
-      if(hwnd == h){
-        Return True
-      }
+  ShowGui(ItemName, ItemPos, MyMenu){
+    if(this.Obj == 0){
+      this.Obj := Gui("", this.Title)
+      this.MakeGui()
+      this.Obj.OnEvent("Close", this.HideObj)
+      this.Obj.OnEvent("Escape", this.HideObj)
+    }else{
+      this.UpdateGui()
     }
-    Return False
+    this.Obj.Show()
   }
 
-  OnClose(wp, lp, msg, hwnd){
-    if(wp == 0xF060 && hwnd == this.Hwnd){
-      this.Hide()
-    }
-  }
-
-  OnEscape(wp, lp, msg, hwnd){
-    if(wp == 27 && this.IsThisWindow(hwnd)){
-      this.Hide()
-    }
-  }
 }

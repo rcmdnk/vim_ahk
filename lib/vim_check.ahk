@@ -1,32 +1,20 @@
 ﻿class VimCheck{
-  __New(vim){
-    this.Vim := vim
+  __New(Vim){
+    this.Vim := Vim
   }
 
-  CheckMenu() {
+  CheckMenu(ItemName, ItemPos, MyMenu) {
     ; Additional message is necessary before checking current window.
     ; Otherwise process name cannot be retrieved...?
-    Msgbox, , Vim Ahk, Checking current window...
-    WinGet, process, PID, A
-    WinGet, name, ProcessName, ahk_pid %process%
-    WinGetClass, class, ahk_pid %process%
-    WinGetTitle, title, ahk_pid %process%
+    MsgBox("Checking current window...", "Vim Ahk")
+    process := WinGetPID("A")
+    name := WinGetProcessName("ahk_pid " process)
+    win_class := WinGetClass("ahk_pid " process)
+    title := WinGetTitle("ahk_pid " process)
     if(this.Vim.IsVimGroup()){
-      Msgbox, 0x40, Vim Ahk,
-      (
-        Supported
-        Process name: %name%
-        Class       : %class%
-        Title       : %title%
-      )
+      MsgBox("Supported`nProcess name: " name "`nClass       : " win_class "`nTitle       : " title, "Vim Ahk", "Iconi")
     }else{
-      Msgbox, 0x10, Vim Ahk,
-      (
-        Not supported
-        Process name: %name%
-        Class       : %class%
-        Title       : %title%
-      )
+      MsgBox("Not supported`nProcess name: " name "`nClass       : " win_class "`nTitle       : " title, "Vim Ahk", "Iconx")
     }
   }
 }

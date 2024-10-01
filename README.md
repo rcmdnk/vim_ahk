@@ -10,6 +10,12 @@ This is vim emulation for Windows.
 If you are interested in the same settings for Mac,
 try Vim emulation for [Karabiner - Software for macOS](https://pqrs.org/osx/karabiner/): [Karabiner-Elements complex_modifications rules by rcmdnk](https://rcmdnk.com/KE-complex_modifications/).
 
+## AutoHotkey v1 or v2
+
+This script is for AutoHotkey v2.
+
+If you are using AutoHotkey v1, please use release [v0.13.1](https://github.com/rcmdnk/vim_ahk/tree/v0.13.1).
+
 ## Installation
 
 ### Scripts
@@ -82,13 +88,14 @@ Example line:
 
 Multiple applications can be written by a comma-separated.
 
-Note: This will overwrite the default applications. If you want to **add**
-these applications to the default applications, add following applications
-after your applications:
-
-    ahk_exe notepad.exe,ahk_exe explorer.exe,ahk_exe wordpad.exe,ahk_exe TeraPad.exe,作成,Write:,ahk_exe POWERPNT.exe,ahk_exe WINWORD.exe,ahk_exe Evernote.exe,ahk_exe Code.exe,ahk_exe onenote.exe,OneNote,ahk_exe texworks.exe,ahk_exe texstudio.exe
-
-Or you can use GUI option setting menu described below.
+> [!NOTE]
+> This will overwrite the default applications. If you want to **add**
+> these applications to the default applications, add following applications
+> after your applications:
+> 
+>     ahk_exe notepad.exe,ahk_exe explorer.exe,ahk_exe wordpad.exe,ahk_exe TeraPad.exe,作成,Write:,ahk_exe POWERPNT.exe,ahk_exe WINWORD.exe,ahk_exe Evernote.exe,ahk_exe Code.exe,ahk_exe onenote.exe,OneNote,ahk_exe texworks.exe,ahk_exe texstudio.exe
+> 
+> Or you can use GUI option setting menu described below.
 
 The default setting of `VimSetTitleMatchMode` is 2,
 which makes matching methods as `Contain`.
@@ -97,7 +104,7 @@ If you set `OneNote`, all windows with a title containing `OneNote`
 (e.g. `XXX's OneNote`) will be included.
 If you set `VimSetTitleMatchMode` as 3, only the exact title of `OneNote` will be included.
 
-Note: It may not work on OneNote. OneNote may have a window name like
+It may not work on OneNote. OneNote may have a window name like
 **User's Notebook - OneNote**, instead of **OneNote**.
 
 In that case, you need to check OneNote's window title with Window spy.
@@ -155,6 +162,12 @@ in the auto execute section like:
 
 If you want to change them directly in the vim.ahk script,
 add these variable before `Vim := new VimAhk()`.
+
+> [!NOTE]
+> These Vim variables will overwrite the default values and initial values.
+> After checking these variables, the configuration file is read.
+> If you have already run vim_ahk, the configuration file was created and all the settings were saved.
+> To reflect the new settings, try `Reset` in the GUI option setting window.
 
 > [!NOTE]
 > VimIconCheckInterval example
@@ -248,6 +261,10 @@ and a long press will change the mode to the normal mode.
 
 If using a custom two-letter hotkey to enter the normal mode, the two letters must be different.
 
+> [!WARNING]
+> A character can be used only for one two-letter hotkey. If you specify `ab` and `bc`, `ba` (push `b` first and then `a`) does not work. If you push `a` first, then `ab` will work, though.
+
+
 ## Available commands in the normal mode
 
 ### Mode Change
@@ -275,7 +292,8 @@ If using a custom two-letter hotkey to enter the normal mode, the two letters mu
 |Space| Right.|
 |Enter| Move to the beginning of the next line.|
 
-Note: Enter works only for editor applications (for other than Explorer, Q-dir, it works as Enter even in the normal mode).
+> [!NOTE]
+> Enter works only for editor applications (for other than Explorer, Q-dir, it works as Enter even in the normal mode).
 
 In addition, `Repeat` is also available for some commands.
 
