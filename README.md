@@ -15,7 +15,7 @@ try Vim emulation for [Karabiner - Software for macOS](https://pqrs.org/osx/kara
 
 This script is for AutoHotkey v1.
 
-Use the latest relase or the main branch for AutoHotkey v2.
+Use the latest release or the master branch for AutoHotkey v2.
 
 ## Installation
 
