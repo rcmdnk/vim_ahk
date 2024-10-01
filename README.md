@@ -14,7 +14,7 @@ try Vim emulation for [Karabiner - Software for macOS](https://pqrs.org/osx/kara
 
 This script is for AutoHotkey v2.
 
-If you are using AutoHotkey v1, please use release [v0.13.1](https://github.com/rcmdnk/vim_ahk/tree/v0.13.1).
+If you are using AutoHotkey v1, please use release [v0.13.2](https://github.com/rcmdnk/vim_ahk/tree/v0.13.2).
 
 ## Installation
 
