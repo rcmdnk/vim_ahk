@@ -1,51 +1,35 @@
-on: [push, pull_request]
+on: [push]
 
-name: Build test
+name: Build
 
 jobs:
   build:
-    name: Build test
+    name: Build
+    if: startsWith( github.ref, 'refs/tags/v' )
     runs-on: windows-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-      - name: Install AutoHotkey with Chocolatey
-        uses: crazy-max/ghaction-chocolatey@v3
+        uses: actions/checkout@v4
+      - name: Build with latest AutoHotkey release
+        uses: benmusson/ahk2exe-action@v1
         with:
-          args: install autohotkey
-          # fix for [Unable to copy error by command line · Issue #68 · AutoHotkey/Ahk2Exe](https://github.com/AutoHotkey/Ahk2Exe/issues/68)
-      - name: build
+          in: .\vim.ahk
+          out: .\vim_ahk\vim_ahk.exe
+          target: x64
+          compression: upx
+          ahk-tag: v1.1.37.02
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Copy icons
         shell: cmd
-        run: ./build.bat
-      - name: get tag
-        if: startsWith( github.ref, 'refs/tags/v' )
-        id: get_tag
-        shell: bash
-        run: echo ::set-output name=tag::${GITHUB_REF##*/}
+        run: xcopy /i /y vim_ahk_icons vim_ahk\vim_ahk_icons
       - name: zip
-        if: startsWith( github.ref, 'refs/tags/v' )
         shell: pwsh
         run:
-          Compress-Archive -Path "vim_ahk"  -DestinationPath vim_ahk-${{steps.get_tag.outputs.tag}}.zip
+          Compress-Archive -Path "vim_ahk"  -DestinationPath vim_ahk-${{github.ref_name}}.zip
       - name: Create Release
-        if: startsWith( github.ref, 'refs/tags/v' )
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{github.ref}}
-          release_name: Release ${{github.ref}}
-          draft: false
-          prerelease: false
-      - name: Upload Release Asset
-        if: startsWith( github.ref, 'refs/tags/v' )
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: vim_ahk-${{steps.get_tag.outputs.tag}}.zip
-          asset_name: vim_ahk-${{steps.get_tag.outputs.tag}}.zip
-          asset_content_type: application/zip
+          files: |
+            vim_ahk-${{github.ref_name}}.zip
