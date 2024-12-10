@@ -2,7 +2,8 @@
   __New(Vim){
     this.Vim := Vim
 
-    ; CheckModeValue does not get set for compiled scripts.
+    this.CheckModeValue := false
+    ; CheckModeValue set to true only for script mode
     ;@Ahk2Exe-IgnoreBegin
     this.CheckModeValue := true
     ;@Ahk2Exe-IgnoreEnd
