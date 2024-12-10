@@ -20,5 +20,5 @@ if errorlevel 1 (
 )
 if exist vim_ahk rmdir /s /q vim_ahk
 mkdir vim_ahk
-"%AHKPath%\compiler\ahk2exe.exe" /in vim.ahk /out vim_ahk\vim_ahk.exe /compress 0
+"%AHKPath%\compiler\ahk2exe.exe" /in vim.ahk /out vim_ahk\vim_ahk.exe /compress 0 /base "%AHKPath%\v2\AutoHotkey.exe"
 xcopy /i /y vim_ahk_icons vim_ahk\vim_ahk_icons
