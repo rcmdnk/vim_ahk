@@ -189,7 +189,7 @@ add these variable before `Vim := new VimAhk()`.
 >
 > If you enabled this option and change the caret width thick in the Normal mode, and disable the option,
 > the cursor width is kept as thick.
-> To reverse the caret width, re-enable the option and enter the Normal mode at the Wordpad or something to revert the caret width, then disable the option.
+> To reverse the caret width, re-enable the option and enter the Insert mode at the Wordpad or something to revert the caret width, then disable the option.
 
 ## GUI Option Setting Window
 
