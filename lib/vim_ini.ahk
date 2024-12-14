@@ -53,7 +53,11 @@
         this.Vim.Conf["VimTwoLetter"]["val"] := this.Vim.Conf["VimTwoLetter"]["val"] this.Vim.GroupDel L1 L2
       }
     }
-    IniDelete(this.Ini, this.Section, twoLetter)
+    try {
+      IniDelete(this.Ini, this.Section, twoLetter)
+    } catch OSError as e {
+      ; pass
+    }
   }
 
   WriteIni(){
