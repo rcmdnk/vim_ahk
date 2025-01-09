@@ -228,15 +228,15 @@ Here are the main modes.
 |:---|:----------|
 |Insert mode|Original Windows state|
 |Normal mode|As in vim, a cursor is moved by `hjkl`, `w`, etc... and some vim-like commands are available.|
-|Visual mode|There are three visual modes: Character-wise, Line-wise, and Block-wise. Block-wise visual mode is valid only for applications that support block-wise selection (such TeraPad).|
+|Visual mode|Visual modes: Character-wise and, Line-wise. Block-wise visual mode is supported for now.|
 |Command mode|Can be used for saving the file/quitting.|
 
 The initial state is the insert mode, then `ESC` or `Ctrl-[` brings you to the normal mode.
 
 In the normal mode, `i` is the key to being back to the insert mode.
 
-`v`, `V` and `Ctrl-v` are the key to
-the Character-wise, the Line-wise, and the Block-wise
+`v` (and `Ctrl-v`), `V` and `Ctrl-v` are the key to
+the Character-wise and the Line-wise
 visual mode, respectively.
 
 After pressing `:`, a few commands to save/quit are available.
