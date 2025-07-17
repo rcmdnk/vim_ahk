@@ -366,8 +366,9 @@ Refer [ranger](https://github.com/ranger/ranger) which is a console file manager
 
 |Key/Commands|Function|
 |:----------:|:-------|
-|h/j/k/l|Backspace(returns to the parent directory)/Down/Up/Enter(enters the selected directory or opens a file)|
-|Alt+u/i/j/k| switch between Quad-Directories|
+|h/l|Go Back/Forward in the directory history.|
+|i/k|Select down/up.|
+|Alt+u/i/j/k| Select left upper/right upper/left lower/right lower pane.|
 |'| menu Quick-links|
 
 ## Testing

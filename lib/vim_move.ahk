@@ -4,17 +4,28 @@
     this.shift := 0
   }
 
+  ShiftDown() {
+    SendInput("{Shift Down}")
+    this.shift := 1
+  }
+
+  ShiftUp() {
+    SendInput("{Shift Up}")
+    this.shift := 0
+  }
+
+
   MoveInitialize(Key:=""){
     this.shift := 0
     if(this.Vim.State.StrIsInCurrentVimMode("Visual") or this.Vim.State.StrIsInCurrentVimMode("ydc")){
-      this.shift := 1
-      SendInput("{Shift Down}")
+      this.ShiftDown()
     }
 
     if(this.Vim.State.IsCurrentVimMode("Vim_VisualLineFirst")) and (Key == "k" or Key == "^u" or Key == "^b" or Key == "g"){
-      SendInput("{Shift Up}{End}")
+      this.ShiftUp()
+      SendInput("{End}")
       this.Zero()
-      SendInput("{Shift Down}")
+      this.ShiftDown()
       this.Up()
       this.vim.state.setmode("Vim_VisualLine")
     }
@@ -25,23 +36,23 @@
 
     if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (Key == "k" or Key == "^u" or Key == "^b" or Key == "g"){
       this.Vim.State.LineCopy := 1
-      SendInput("{Shift Up}")
+      this.ShiftUp()
       this.Zero()
       this.Down()
-      SendInput("{Shift Down}")
+      this.ShiftDown()
       this.Up()
     }
     if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (Key == "j" or Key == "^d" or Key == "^f" or Key == "+g"){
       this.Vim.State.LineCopy := 1
-      SendInput("{Shift Up}")
+      this.ShiftUp()
       this.Zero()
-      SendInput("{Shift Down}")
+      this.ShiftDown()
       this.Down()
     }
   }
 
   MoveFinalize(){
-    SendInput("{Shift Up}")
+    this.ShiftUp()
     ydc_y := false
     if(this.Vim.State.StrIsInCurrentVimMode("ydc_y")){
       A_Clipboard := ""
@@ -62,6 +73,7 @@
     }
     this.Vim.State.SetMode("", 0, 0)
     if(ydc_y){
+      ; Remove the selection
       SendInput("{Left}{Right}")
     }
     ; Sometimes, when using `c`, the control key would be stuck down afterwards.
@@ -110,7 +122,7 @@
       ; 1 character
       if(Key == "h"){
         if WinActive("ahk_group VimQdir"){
-          SendInput("{BackSpace down}{BackSpace up}")
+          SendInput("{BackSpace}")
         }
         else {
           SendInput("{Left}")
@@ -216,7 +228,7 @@
   YDCMove(){
     this.Vim.State.LineCopy := 1
     this.Zero()
-    SendInput("{Shift Down}")
+    this.ShiftDown()
     if(this.Vim.State.n == 0){
       this.Vim.State.n := 1
     }

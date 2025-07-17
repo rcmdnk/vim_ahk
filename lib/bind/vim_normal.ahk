@@ -49,12 +49,12 @@ u::SendInput("^z")
 ; For Q-dir, ^X mapping does not work, use !X instead.
 ; ^X does not work to be sent, too, use Down/Up
 ; switch to left top (1), right top (2), left bottom (3), right bottom (4)
-!u::SendInput("{LControl Down}{1 Down}{1 Up}{LControl Up}")
-!i::SendInput("{LControl Down}{2 Down}{2 Up}{LControl Up}")
-!j::SendInput("{LControl Down}{3 Down}{3 Up}{LControl Up}")
-!k::SendInput("{LControl Down}{4 Down}{4 Up}{LControl Up}")
+!u::SendInput("^1")
+!i::SendInput("^2")
+!j::SendInput("^3")
+!k::SendInput("^4")
 ; Ctrl+q, menu Quick-links
-'::SendInput("{LControl Down}{q Down}{q Up}{LControl Up}")
+'::SendInput("^q")
 ; Keep the e key in Normal mode, use the right button and then press the refresh (e) function, do nothing, return to the e key directly
 ~e::
 {}
