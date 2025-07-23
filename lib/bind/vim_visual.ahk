@@ -74,7 +74,7 @@ c::
   A_Clipboard := ""
   SendInput("^c")
   ClipWait(1)
-  SendInput("^f^v!f")
+  SendInput("^f^v")
   A_Clipboard := ClipSaved
   Vim.State.SetMode("Vim_Normal")
 }
