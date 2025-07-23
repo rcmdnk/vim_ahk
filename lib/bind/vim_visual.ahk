@@ -20,8 +20,7 @@ v::Vim.State.SetMode("Vim_Normal")
 y::
 {
   A_Clipboard := ""
-  SendInput("^c")
-  SendInput("{Right}")
+  SendInput("^c{Right}")
   if WinActive("ahk_group VimCursorSameAfterSelect"){
     SendInput("{Left}")
   }
@@ -75,8 +74,7 @@ c::
   A_Clipboard := ""
   SendInput("^c")
   ClipWait(1)
-  SendInput("^f")
-  SendInput("^v!f")
+  SendInput("^f^v!f")
   A_Clipboard := ClipSaved
   Vim.State.SetMode("Vim_Normal")
 }

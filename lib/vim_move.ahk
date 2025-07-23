@@ -146,19 +146,15 @@
       }else if(Key == "^"){
         if(this.shift == 1){
           if WinActive("ahk_group VimCaretMove"){
-            SendInput("+{Home}")
-            SendInput("+^{Right}")
-            SendInput("+^{Left}")
+            SendInput("+{Home}+^{Right}+^{Left}")
           }else{
             SendInput("+{Home}")
           }
         }else{
           if WinActive("ahk_group VimCaretMove"){
-            SendInput("{Home}")
-            SendInput("^{Right}")
-            SendInput("^{Left}")
+            SendInput("{Home}^{Right}^{Left}")
           }else{
-            SendInput("{Home}")
+            this.Zero()
           }
         }
       ; Words

@@ -32,8 +32,7 @@ u::SendInput("^z")
 ; ZZ
 +z::
 {
-  SendInput("^s")
-  SendInput("!{F4}")
+  SendInput("^s!{F4}")
   Vim.State.SetMode("Vim_Normal")
 }
 

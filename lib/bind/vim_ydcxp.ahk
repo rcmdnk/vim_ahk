@@ -94,11 +94,9 @@ p::
       SendInput("{End}{Enter}^v{BS}{Home}")
     }
   }else{
-    SendInput("{Right}")
-    SendInput("^v")
+    SendInput("{Right}^v")
     ;Sleep(1000)
     SendInput("{Left}")
-    ;;SendInput("^{Left}")
   }
   KeyWait("p") ; To avoid repeat, somehow it calls <C-p>, print...
 }
@@ -109,7 +107,6 @@ p::
     SendInput("{Up}{End}{Enter}^v{BS}{Home}")
   }else{
     SendInput("^v")
-    ;SendInput("^{Left}")
   }
   KeyWait("p")
 }
