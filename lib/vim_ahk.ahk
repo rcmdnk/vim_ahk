@@ -61,6 +61,7 @@ class VimAhk{
     GroupAdd("VimLBSelectGroup", "ahk_exe powerpnt.exe") ; PowerPoint
     GroupAdd("VimLBSelectGroup", "ahk_exe winword.exe")  ; Word
     GroupAdd("VimLBSelectGroup", "ahk_exe wordpad.exe")  ; WordPad
+    GroupAdd("VimLBSelectGroup", "ahk_exe notepad.exe")  ; NotePad
 
     ; Following applications do not copy the line break
     GroupAdd("VimNoLBCopyGroup", "ahk_exe evernote.exe") ; Evernote
