@@ -54,39 +54,35 @@ class VimAhk{
 
     ; On following applications, Enter works as Enter at the normal mode.
     GroupAdd("VimNonEditor", "ahk_exe explorer.exe")  ; Explorer
-    GroupAdd("VimNonEditor", "ahk_exe Explorer.exe")  ; Explorer, Explorer became also upper case, but lower case works for this
-    GroupAdd("VimNonEditor", "ahk_exe Q-Dir_x64.exe") ; Q-dir
-    GroupAdd("VimNonEditor", "ahk_exe Q-Dir.exe")     ; Q-dir
+    GroupAdd("VimNonEditor", "ahk_exe q-dir_x64.exe") ; Q-dir
+    GroupAdd("VimNonEditor", "ahk_exe q-dir.exe")     ; Q-dir
 
     ; Following applications select the line break at Shift + End.
-    GroupAdd("VimLBSelectGroup", "ahk_exe POWERPNT.exe") ; PowerPoint
-    GroupAdd("VimLBSelectGroup", "ahk_exe WINWORD.exe")  ; Word
+    GroupAdd("VimLBSelectGroup", "ahk_exe powerpnt.exe") ; PowerPoint
+    GroupAdd("VimLBSelectGroup", "ahk_exe winword.exe")  ; Word
     GroupAdd("VimLBSelectGroup", "ahk_exe wordpad.exe")  ; WordPad
 
     ; Following applications do not copy the line break
-    GroupAdd("VimNoLBCopyGroup", "ahk_exe Evernote.exe") ; Evernote
+    GroupAdd("VimNoLBCopyGroup", "ahk_exe evernote.exe") ; Evernote
 
     ; Need Ctrl for Up/Down
     GroupAdd("VimCtrlUpDownGroup", "ahk_exe onenote.exe") ; OneNote Desktop, before Windows 10
 
     ; Need Home twice
-    GroupAdd("VimDoubleHomeGroup", "ahk_exe Code.exe") ; Visual Studio Code
+    GroupAdd("VimDoubleHomeGroup", "ahk_exe code.exe") ; Visual Studio Code
 
     ; Followings can emulate ^. For others, ^ works as same as 0
     ; It does not work for NotePad at Windows 11
     ; GroupAdd("VimCaretMove", "ahk_exe notepad.exe") ; NotePad
-    ; GroupAdd("VimCaretMove", "ahk_exe Notepad.exe") ; NotePad
 
     ; Followings start cursor from the same place after selection.
     ; Others start right/left (by cursor) point of the selection
     GroupAdd("VimCursorSameAfterSelect", "ahk_exe notepad.exe") ; NotePad
-    GroupAdd("VimCursorSameAfterSelect", "ahk_exe Notepad.exe") ; NotePad
     GroupAdd("VimCursorSameAfterSelect", "ahk_exe explorer.exe") ; Explorer
-    GroupAdd("VimCursorSameAfterSelect", "ahk_exe Explorer.exe") ; Explorer
 
     ; Q-Dir
-    GroupAdd("VimQdir", "ahk_exe Q-Dir_x64.exe") ; q-dir
-    GroupAdd("VimQdir", "ahk_exe Q-Dir.exe") ; q-dir
+    GroupAdd("VimQdir", "ahk_exe q-dir_x64.exe") ; q-dir
+    GroupAdd("VimQdir", "ahk_exe q-dir.exe") ; q-dir
 
     ; Configuration values for Read/Write ini
     ; setting, default, val, description, info
@@ -218,26 +214,23 @@ class VimAhk{
   }
 
   SetDefaultActiveWindows(){
-    DefaultList := ["ahk_exe Evernote.exe"  ; Evernote
+    DefaultList := ["ahk_exe evernote.exe"  ; Evernote
                   , "ahk_exe explorer.exe"  ; Explorer
-                  , "ahk_exe Explorer.exe"  ; Explorer, Explorer became also upper case, but lower case works for this
                   , "ahk_exe notepad.exe"   ; NotePad
-                  , "ahk_exe Notepad.exe"   ; NotePad, Changed as upper case since ~2022/1 ??
-                  , "OneNote"               ; OneNote at Windows 10
                   , "ahk_exe onenote.exe"   ; OneNote Desktop
-                  , "ahk_exe ApplicationFrameHost.exe" ; Some Windows applications use this, including OneNote at Windows 10
-                  , "ahk_exe POWERPNT.exe"  ; PowerPoint
-                  , "ahk_exe TeraPad.exe"   ; TeraPad
+                  , "ahk_exe applicationframehost.exe" ; Some Windows applications use this, including OneNote at Windows 10
+                  , "ahk_exe powerpnt.exe"  ; PowerPoint
+                  , "ahk_exe terapad.exe"   ; TeraPad
                   , "ahk_exe texstudio.exe" ; TexStudio
                   , "ahk_exe texworks.exe"  ; TexWork
                   , "Write:"                ; Thunderbird, English
                   , "作成"                  ; Thunderbird, 日本語
-                  , "ahk_exe Code.exe"      ; Visual Studio Code
-                  , "ahk_exe WINWORD.exe"   ; Word
+                  , "ahk_exe code.exe"      ; Visual Studio Code
+                  , "ahk_exe winword.exe"   ; Word
                   , "ahk_exe wordpad.exe"   ; WordPad
-                  , "ahk_exe Q-Dir_x64.exe" ; Q-dir
-                  , "ahk_exe Q-Dir.exe"     ; Q-dir
-                  , "ahk_exe Obsidian.exe"] ; Obsidian
+                  , "ahk_exe q-dir_x64.exe" ; Q-dir
+                  , "ahk_exe q-dir.exe"     ; Q-dir
+                  , "ahk_exe obsidian.exe"] ; Obsidian
 
     DefaultGroup := ""
     for i, v in DefaultList
