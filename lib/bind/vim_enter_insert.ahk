@@ -7,19 +7,19 @@ i::Vim.State.SetMode("Insert")
   Vim.State.SetMode("Insert")
 }
 
-a::
-{
-  if(! Vim.CheckChr("`n")){
-    SendInput("{Right}")
-  }
-  Vim.State.SetMode("Insert")
-}
-
-+a::
-{
-  SendInput("{End}")
-  Vim.State.SetMode("Insert")
-}
+;a::
+;{
+;  if(! Vim.CheckChr("`n")){
+;    SendInput("{Right}")
+;  }
+;  Vim.State.SetMode("Insert")
+;}
+;
+;+a::
+;{
+;  SendInput("{End}")
+;  Vim.State.SetMode("Insert")
+;}
 
 o::
 {

@@ -1,6 +1,6 @@
 ﻿#HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_Normal"))
 y::Vim.State.SetMode("Vim_ydc_y", 0, -1, 0)
-d::Vim.State.SetMode("Vim_ydc_d", 0, -1, 0)
+;d::Vim.State.SetMode("Vim_ydc_d", 0, -1, 0)
 c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
 +y::
 {
@@ -18,16 +18,16 @@ c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
   SendInput("{Left}{Home}")
 }
 
-+d::
-{
-  Vim.State.SetMode("Vim_ydc_d", 0, 0, 0)
-  if not WinActive("ahk_group VimLBSelectGroup"){
-    Vim.Move.Move("$")
-  }else{
-    SendInput("{Shift Down}{End}{Left}")
-    Vim.Move.Move("")
-  }
-}
+;+d::
+;{
+;  Vim.State.SetMode("Vim_ydc_d", 0, 0, 0)
+;  if not WinActive("ahk_group VimLBSelectGroup"){
+;    Vim.Move.Move("$")
+;  }else{
+;    SendInput("{Shift Down}{End}{Left}")
+;    Vim.Move.Move("")
+;  }
+;}
 
 +c::
 {
@@ -48,7 +48,7 @@ y::
 }
 
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_ydc_d"))
-d::Vim.Move.YDCMove()
+;d::Vim.Move.YDCMove()
 
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Vim_ydc_c"))
 c::Vim.Move.YDCMove()
