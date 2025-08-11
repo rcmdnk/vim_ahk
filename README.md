@@ -199,13 +199,19 @@ or launch the setting window by `Ctrl-Alt-Shift-v`.
 
 ![traymenu](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/traymenu.jpg "traymenu")
 
-![settings](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/settings.jpg "settings")
+![settings_keys](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/settings_keys.png "settings_keys")
+![settings_applications](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/settings_applications.png "settings_applications")
+![settings_status](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/settings_status.png "settings_status")
+![settings_configuration](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/settings_configuration.png "settings_configuration")
 
-Here, you can add applications, change the mode change key,
-or change the verbose level.
+Here, you can add applications, change the mode change key, change the verbose level,
+or import/export the configuration file.
+
+If you import a configuration file, these settings will be enabled
+only if you push the `Apply` or `OK` button.
 
 If you push `Reset`, default settings will be shown in the window.
-These settings will be enabled only if you push the `OK` button.
+These settings will be enabled only if you push the `Apply` or `OK` button, too.
 
 These **default settings** are overwritten by
 your `VimXXX` options in your script described above.
