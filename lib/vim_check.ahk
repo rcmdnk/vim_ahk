@@ -3,7 +3,7 @@
     this.Vim := Vim
   }
 
-  CheckMenu(ItemName, ItemPos, MyMenu) {
+  CheckMenu(ItemName:="", ItemPos:="", MyMenu:="") {
     ; Additional message is necessary before checking current window.
     ; Otherwise process name cannot be retrieved...?
     MsgBox("Checking current window...", "Vim Ahk")

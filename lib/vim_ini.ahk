@@ -17,13 +17,13 @@
     this.IniDir := Dir
     this.Ini := Dir "\" Ini
     this.section := Section
+
+    this.OpenIniDirObj := ObjBindMethod(this, "OpenIniDir")
+    this.OpenIniObj := ObjBindMethod(this, "OpenIni")
   }
 
-  ReadIni(Conf:=""){
-    if (Conf == ""){
-        Conf := this.Vim.Conf
-    }
-    for k, v in Conf {
+  ReadIni(){
+    for k, v in this.Vim.Conf {
       Current := v["val"]
       if(Current != ""){
         val := IniRead(this.Ini, this.Section, k, Current)
@@ -67,5 +67,15 @@
     for k, v in this.Vim.Conf {
       IniWrite(v["val"], this.Ini, this.Section, k)
     }
+  }
+
+  OpenIniDir(Obj, Info){
+    this.Vim.VimToolTip.RemoveToolTip()
+    Run("explorer.exe " this.IniDir)
+  }
+
+  OpenIni(Obj, Info){
+    this.Vim.VimToolTip.RemoveToolTip()
+    Run("notepad.exe " this.Ini)
   }
 }

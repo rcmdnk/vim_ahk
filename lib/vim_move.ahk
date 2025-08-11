@@ -27,11 +27,11 @@
       this.Zero()
       this.ShiftDown()
       this.Up()
-      this.vim.state.setmode("Vim_VisualLine")
+      this.Vim.state.setmode("Vim_VisualLine")
     }
 
     if(this.Vim.State.IsCurrentVimMode("Vim_VisualLineFirst")) and (Key == "j" or Key == "^d" or Key == "^f" or Key == "+g"){
-      this.vim.state.setmode("Vim_VisualLine")
+      this.Vim.state.setmode("Vim_VisualLine")
     }
 
     if(this.Vim.State.StrIsInCurrentVimMode("Vim_ydc")) and (Key == "k" or Key == "^u" or Key == "^b" or Key == "g"){
