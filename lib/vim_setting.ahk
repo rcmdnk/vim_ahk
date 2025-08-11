@@ -167,7 +167,7 @@ class VimSetting Extends VimGui{
     this.Obj.Submit()
     this.VimV2Conf()
     this.Vim.Setup()
-    this.vim.Ini.WriteIni()
+    this.Vim.Ini.WriteIni()
     this.Hide(Obj)
   }
 
