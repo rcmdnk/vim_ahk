@@ -31,7 +31,7 @@ class VimGui{
   UpdateGui(){
   }
 
-  ShowGui(ItemName, ItemPos, MyMenu){
+  ShowGui(ItemName:="", ItemPos:="", MyMenu:=""){
     if(this.Obj == 0){
       this.Obj := Gui("", this.Title)
       this.MakeGui()
