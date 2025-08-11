@@ -138,9 +138,9 @@ class VimAhk{
       , "1: Nothing `n2: Minimum tooltip (mode information only)`n3: Tooltip (all information)`n4: Debug mode with a message box, which doesn't disappear automatically")
     this.AddToConf("VimAppList", "Allow List", "Allow List"
       , "Application list usage"
-      , "All: Enable on all application (the application list is ignored) `nAllow List: Use the application list as an allow list`nDeny List: Use the application list as a deny list")
+      , "All: Enable on all applications (the application list is ignored) `nAllow List: Use the application list as an allow list`nDeny List: Use the application list as a deny list")
     this.AddToConf("VimGroup", DefaultGroup, DefaultGroup
-      , "Application"
+      , "Application list"
       , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
 
     this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth"]
