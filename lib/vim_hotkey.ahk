@@ -17,7 +17,13 @@ class VimHotkey{
     Out.Start()
     EndReason := Out.Wait()
     if(EndReason == "EndKey"){
-      SendInput("{BackSpace 2}")
+      ; Add IME status to decide switch logic.
+      if(VIM_IME_GET()){
+        SendInput("{Escape}")
+        Sleep(50)
+      } else {
+        SendInput("{BackSpace 2}")
+      }
       Vim.State.SetNormal()
     }
   }
