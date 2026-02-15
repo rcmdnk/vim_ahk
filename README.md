@@ -1,14 +1,12 @@
 # vim_ahk
 
-Setting file/exe file of AutoHotkey for Vim emulation.
+AutoHotkey scripts and executable builds for Vim-like key bindings on Windows.
 
-vim.ahk is the setting file for [AutoHotkey](http://www.autohotkey.com/)(Autohotkey_L).
+`vim.ahk` is the main script for [AutoHotkey](https://www.autohotkey.com/).
 
-vim.exe is a standalone application made from vim.ahk (available in [the releases page](https://github.com/rcmdnk/vim_ahk/releases)).
+`vim_ahk.exe` is a standalone executable built from `vim.ahk` (available on [Releases](https://github.com/rcmdnk/vim_ahk/releases)).
 
-This is vim emulation for Windows.
-If you are interested in the same settings for Mac,
-try Vim emulation for [Karabiner - Software for macOS](https://pqrs.org/osx/karabiner/): [Karabiner-Elements complex_modifications rules by rcmdnk](https://rcmdnk.com/KE-complex_modifications/).
+If you are looking for similar behavior on macOS, see [Karabiner-Elements complex_modifications rules by rcmdnk](https://rcmdnk.com/KE-complex_modifications/).
 
 ## AutoHotkey v1 or v2
 
@@ -20,46 +18,39 @@ If you are using AutoHotkey v1, please use release [v0.13.2](https://github.com/
 
 ### Scripts
 
-If you've already installed AutoHotKey, just open vim.ahk with AutoHotkey.
+If AutoHotkey is already installed, open `vim.ahk` with AutoHotkey.
 
-If you are running AutoHotKey with another script,
-you can include it in your script using AutoHotKey...
-Please copy vim.ahk and lib directory in `\Users\%username%\Documents`
-or where the script is in,
-and add the following line in AutoHotkey.ahk or your script:
+If you run AutoHotkey with another script, include `vim.ahk` from that script.
+Copy `vim.ahk` and the `lib` directory under the same parent directory as your script, then add:
 
     #Include  %A_LineFile%\..\vim.ahk
 
-at the end of the <a href="http://www.autohotkey.com/docs/Scripts.htm#auto">Auto-execute section</a>.
+to the end of the <a href="https://www.autohotkey.com/docs/v2/Scripts.htm#auto">auto-execute section</a>.
 
 ### Executable
 
-You can also use **vim_ahk.exe**, which can work standalone w/o AutoHotKey.
+You can also use **vim_ahk.exe**, which runs standalone without AutoHotkey.
 
-To get executable, go to [the releases page](https://github.com/rcmdnk/vim_ahk/releases)
-and download the latest zip file.
-
-Unzip the zip file, and place the extracted vim_ahk folder where you like,
-then launch **vim_ahk.exe**.
+Download the latest zip from [Releases](https://github.com/rcmdnk/vim_ahk/releases), extract it, and run **vim_ahk.exe**.
 
 > [!NOTE]
-> place **vim_ahk_icons** folder in the same folder with **vim_ahk.exe**,
-> otherwise, the tray menu icon feature does not work.
+> Place the **vim_ahk_icons** folder in the same directory as **vim_ahk.exe**.
+> Otherwise, tray menu icons will not work.
 
 ### Build executable from the source
 
-Clone vim_ahk and go vim_ahk folder, and run **build.bat**.
+Clone this repository, move to the `vim_ahk` directory, and run **build.bat**.
 
-* Double click the file
-* Or run `.\build.bat` on PowerShell or Command Prompt.
+* Double-click the file.
+* Or run `.\build.bat` in PowerShell or Command Prompt.
 
-You will find **vim_ahk** folder which contains **vim_ahk.exe** and **vim_ahk_icons**.
+This creates a **vim_ahk** folder containing **vim_ahk.exe** and **vim_ahk_icons**.
 
 ## Applications (VimGroup)
-The default setting enables vim-mode for the following applications:
+By default, vim mode is enabled for:
 
 * Notepad (メモ帳)
-* Wordpad
+* WordPad
 * TeraPad
 * Windows Explorer
 * Thunderbird (only sending window)
@@ -67,38 +58,36 @@ The default setting enables vim-mode for the following applications:
 * Microsoft Word
 * Evernote
 * Visual Studio Code
-* TexWork
-* TexStudio
+* TeXworks
+* TeXstudio
 * Q-dir
 * OneNote
-* Applications using ahk_exe ApplicationFrameHost.exe
+* Apps running under `ahk_exe ApplicationFrameHost.exe`
 
-You can change them from the right-click menu of the task tray icon
+You can change this list from the tray icon's right-click menu
 (find `VimMenu`-`Settings` in the list),
 or launch the setting window by `Ctrl-Alt-Shift-v`.
 
-If you want to change applications directly in the script, add `VimGroup`
-variable before `Vim := new VimAhk()` in vim.ahk
-(Window title/class can be checked by Window spy of AutoHotkey),
-or write before including vim.ahk
+If you want to configure applications directly in script, set `VimGroup`
+before `Vim := VimAhk(A_LineFile)` in `vim.ahk`,
+or set it before `#Include` in your own script.
+You can inspect title/class/process with AutoHotkey Window Spy.
 
 Example line:
 
     VimGroup := "ahk_exe chrome.exe,ahk_exe firefox.exe"
 
-Multiple applications can be written by a comma-separated.
+Specify multiple applications as a comma-separated list.
 
 > [!NOTE]
-> This will overwrite the default applications. If you want to **add**
-> these applications to the default applications, add following applications
-> after your applications:
+> Setting `VimGroup` this way replaces the default list.
+> To **add** entries while keeping defaults, append the default entries after your own list:
 > 
 >     ahk_exe notepad.exe,ahk_exe explorer.exe,ahk_exe wordpad.exe,ahk_exe TeraPad.exe,作成,Write:,ahk_exe POWERPNT.exe,ahk_exe WINWORD.exe,ahk_exe Evernote.exe,ahk_exe Code.exe,ahk_exe onenote.exe,OneNote,ahk_exe texworks.exe,ahk_exe texstudio.exe
 > 
-> Or you can use GUI option setting menu described below.
+> Or configure this from the GUI settings window described below.
 
-The default setting of `VimSetTitleMatchMode` is 2,
-which makes matching methods as `Contain`.
+By default, `VimSetTitleMatchMode` is `2` (`Contain`).
 
 If you set `OneNote`, all windows with a title containing `OneNote`
 (e.g. `XXX's OneNote`) will be included.
@@ -107,18 +96,18 @@ If you set `VimSetTitleMatchMode` as 3, only the exact title of `OneNote` will b
 It may not work on OneNote. OneNote may have a window name like
 **User's Notebook - OneNote**, instead of **OneNote**.
 
-In that case, you need to check OneNote's window title with Window spy.
+In that case, check the OneNote window title in Window Spy.
 
-Window spy will give you about Window Title, Class and Process like:
+Window Spy shows Window Title, Class, and Process, for example:
 
     User's Notebook - OneNote
     ahk_class ApplicationFrameWindow
     ahk_exe ApplicationFrameHost.exe
 
-If you add any of the above lines to VimGroup, vim_ahk works on OneNote.
-But if you set `ahk_class ApplicationFrameWindow` or `ahk_exe ApplicationFrameHost.exe`,
-vim_ahk also works on other applications which use these Class/Process names
-(most of the applications installed from Microsoft Store).
+If you add any of these lines to `VimGroup`, vim_ahk will work on OneNote.
+If you set `ahk_class ApplicationFrameWindow` or `ahk_exe ApplicationFrameHost.exe`,
+vim_ahk will also match other apps that use the same class/process
+(many Microsoft Store apps).
 
 Examples of applications:
 
@@ -129,71 +118,70 @@ Examples of applications:
 
 ## Options
 
-In addition to `VimGroup`,
-there are the following options that you can set in your script.
-All of these can be changed from the setting menu, too.
+In addition to `VimGroup`, you can set the following options in your script.
+All of them can also be changed from the settings GUI.
 
 |Option|Description|Default|
 |:-----|:----------|:------|
 |VimEscNormal|If 1, short press ESC sets the normal mode, while long press ESC sends ESC.|1|
-|VimSendEscNormal|If 1, short press ESC send ESC in the normal mode.|0|
+|VimSendEscNormal|If 1, a short ESC press sends ESC in normal mode.|0|
 |VimLongEscNormal|If 1, short press and long press of ESC behaviors are swapped.|0|
 |VimCtrlBracketToEsc|If 1, Ctrl-[ behaves as ESC.<br>If VimCtrlBracketNormal is 0, Ctrl-[ sends ESC.<br>If VimCtrlBracketNormal is 1, long press Ctrl-[ sends ESC.|0|
-|VimCtrlBracketNormal|If 1, pushing Ctrl-[ sets the normal mode, while long press Ctrl-[ sends Ctrl-[.|1|
-|VimSendCtrlBracketNormal|If 1, short press Ctrl-[ send Ctrl-[ in the normal mode.|0|
+|VimCtrlBracketNormal|If 1, pressing Ctrl-[ enters normal mode, while long press Ctrl-[ sends Ctrl-[.|1|
+|VimSendCtrlBracketNormal|If 1, a short Ctrl-[ press sends Ctrl-[ in normal mode.|0|
 |VimLongCtrlBracketNormal|If 1, short press and long press of Ctrl-[ behaviors are swapped.|0|
-|VimChangeCaretWidth|If 1, check the character under the cursor before an action. Currently this is used for: `a` in the normal mode (check if the cursor is located at the end of the line).|0|
+|VimChangeCaretWidth|If 1, changes caret width by mode. Also checks the character under cursor for `a` in normal mode (to detect end-of-line behavior).|0|
 |VimRestoreIME|If 1, IME status is restored at entering the insert mode.|1|
 |VimJJ|If 1, `jj` changes the mode to the normal mode from the insert mode.|0|
-|VimTwoLetterEsc|A list of character pairs to press together during the insert mode to get to the Normal mode.<br>For example, a value of `jf` means pressing `j` and `f` at the same time will enter the Normal mode.<br>Multiple combination can be set by separated by `,`. (e.g. `jf,jk,sd`)||
-|VimDisableUnused|Disable level of unused keys in other than the insert mode:<br><ol><li>Do not disable unused keys</li><li>Disable alphabets (+shift) and symbols</li><li>Disable all including keys with modifiers (e.g. Ctrl+Z)</li></ol>|3|
+|VimTwoLetter|A list of two-letter pairs used in insert mode to enter normal mode.<br>For example, `jf` means pressing `j` then `f` quickly enters normal mode.<br>Set multiple pairs separated by `,` (for example: `jf,jk,sd`).||
+|VimDisableUnused|Disable level for unused keys outside insert mode:<br><ol><li>Do not disable unused keys</li><li>Disable alphabet keys (+Shift) and symbols</li><li>Disable all, including modified keys (for example: Ctrl+Z)</li></ol>|3|
 |VimSetTitleMatchMode|SetTitleMatchMode:<br><ol><li>Start with</li><li>Contain</li><li>Exact match</li><li>Regular expression</li>|2|
 |VimSetTitleMatchModeFS|SetTitleMatchMode:<br><ol><li>Fast: Text is not detected for such edit control.</li><li>Slow: Works for all windows, but slow.</li>|Fast|
 |VimIconCheckInterval|Interval to check vim_ahk status (ms) and change tray icon (see below picture).<br>If it is set to 0, the original AHK icon is set and not changed.|1000|
-|VimVerbose|Verbose level:<br><ol><li>Nothing.</li><li>Minimum tooltip (mode information only).</li><li>ToolTip (all information).</li><li>Debug mode with a message box, which doesn't disappear automatically.</li></ol>|1|
-|VimAppList|Application list usage:<br><ul><li>All: Enable vim_ahk on all applications (the applicatoin list is ignored).</li><li>Allow List: Use the application list as an allow list.</li><li>Deny List: Use the application list as a deny list.</li></ul>|Allow List|
-|VimGroup|Applications on witch vim_ahk is enabled.|See **Applications** section|
+|VimVerbose|Verbose level:<br><ol><li>No output.</li><li>Minimum tooltip (mode only).</li><li>Tooltip (all information).</li><li>Debug mode with a non-auto-closing message box.</li></ol>|1|
+|VimAppList|How to use the application list:<br><ul><li>All: Enable vim_ahk on all applications (ignore the list).</li><li>Allow List: Use the list as an allow list.</li><li>Deny List: Use the list as a deny list.</li></ul>|Allow List|
+|VimGroup|Applications where vim_ahk is enabled.|See **Applications** section|
 
-You can add your options before including **vim.ahk** in your script
-in the auto execute section like:
+Set options before including **vim.ahk** in your script
+inside the auto-execute section, for example:
 
     VimVerbose := 2
     #Include \path\to\vim.ahk
 
-If you want to change them directly in the vim.ahk script,
-add these variable before `Vim := new VimAhk()`.
+If you want to change them directly in `vim.ahk`,
+set these variables before `Vim := VimAhk(A_LineFile)`.
 
 > [!NOTE]
-> These Vim variables will overwrite the default values and initial values.
+> These variables overwrite default values.
 > After checking these variables, the configuration file is read.
-> If you have already run vim_ahk, the configuration file was created and all the settings were saved.
-> To reflect the new settings, try `Reset` in the GUI option setting window.
+> If you have already run vim_ahk, the configuration file already exists and settings are loaded from it.
+> To apply updated script defaults, use `Reset` in the settings GUI.
 
 > [!NOTE]
 > VimIconCheckInterval example
 >
-> If you set VimIconCheckInterval as non-zero, the tray icon is changed
-> when you change the mode or change the applications to vim_ahk enabled or not enabled ones.
+> If `VimIconCheckInterval` is non-zero, the tray icon changes
+> when mode changes or focus moves between enabled/disabled apps.
 >
 > ![trayicon](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/trayicon.gif "trayicon")
 
 > [!WARNING]
 > VimChangeCaretWidth
 >
-> Caret width can be changed only on specific applications: Wordpad, Word, or OneNote.
+> Caret width can be changed only in specific applications: WordPad, Word, and OneNote.
 > On Notepad or Explorer, the caret width is kept but does not change.
 >
 > For most other applications, the caret width is kept as the original width.
 >
 > When this option is enabled, the current window briefly loses focus when the mode is changed.
 >
-> If you enabled this option and change the caret width thick in the Normal mode, and disable the option,
-> the cursor width is kept as thick.
-> To reverse the caret width, re-enable the option and enter the Insert mode at the Wordpad or something to revert the caret width, then disable the option.
+> If you enable this option and switch to a thick caret in normal mode, then disable the option,
+> the cursor may remain thick.
+> To revert it, re-enable the option, enter insert mode in a supported app (for example WordPad), then disable it again.
 
 ## GUI Option Setting Window
 
-You can change these options from the right-click menu of the task tray icon
+You can change these options from the tray icon right-click menu
 (find `VimMenu`-`Settings` in the list),
 or launch the setting window by `Ctrl-Alt-Shift-v`.
 
@@ -204,71 +192,68 @@ or launch the setting window by `Ctrl-Alt-Shift-v`.
 ![settings_status](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/settings_status.png "settings_status")
 ![settings_configuration](https://raw.githubusercontent.com/rcmdnk/vim_ahk/master/pictures/settings_configuration.png "settings_configuration")
 
-Here, you can add applications, change the mode change key, change the verbose level,
+Here you can add applications, change mode-switch keys, adjust verbose level,
 or import/export the configuration file.
 
-If you import a configuration file, these settings will be enabled
-only if you push the `Apply` or `OK` button.
+If you import a configuration file, settings are staged and only applied
+when you click `Apply` or `OK`.
 
-If you push `Reset`, default settings will be shown in the window.
-These settings will be enabled only if you push the `Apply` or `OK` button, too.
+If you click `Reset`, default settings are shown in the window.
+They are applied only when you click `Apply` or `OK`.
 
-These **default settings** are overwritten by
-your `VimXXX` options in your script described above.
-(i.e. `Reset` will restore your options in the script in addition to
-the default settings of vim_ahk.)
+These **default settings** are then overridden by
+your script-level `VimXXX` options described above.
+(`Reset` restores built-in defaults plus your script defaults.)
 
 ## Global shortcut keys
 
 |Key|Function|
 |:----------:|:-------|
-|Ctrl-Alt-Shift-v|Launch GUI Option Setting Window.|
-|Ctrl-Alt-Shift-s|Suspend/restart vim_ahk.|
-|Ctrl-Alt-Shift-c|Show status check window. (Only on the VimGroup applications.)|
+|Ctrl-Alt-Shift-v|Open the GUI settings window.|
+|Ctrl-Alt-Shift-s|Suspend/resume vim_ahk.|
+|Ctrl-Alt-Shift-c|Show the status window (only in VimGroup apps).|
 
 ## Main Modes
 
-Here are the main modes.
+The main modes are:
 
 |Mode|Description|
 |:---|:----------|
-|Insert mode|Original Windows state|
-|Normal mode|As in vim, a cursor is moved by `hjkl`, `w`, etc... and some vim-like commands are available.|
-|Visual mode|Visual modes: Character-wise and, Line-wise. Block-wise visual mode is supported for now.|
-|Command mode|Can be used for saving the file/quitting.|
+|Insert mode|Default Windows input state.|
+|Normal mode|Vim-like movement and command mode (`hjkl`, `w`, and more).|
+|Visual mode|Character-wise and line-wise selection mode.|
+|Command mode|Command-line mode for save/quit style commands.|
 
-The initial state is the insert mode, then `ESC` or `Ctrl-[` brings you to the normal mode.
+The initial state is insert mode. Press `ESC` or `Ctrl-[` to enter normal mode.
 
-In the normal mode, `i` is the key to being back to the insert mode.
+In normal mode, press `i` to return to insert mode.
 
-`v` (and `Ctrl-v`), `V` and `Ctrl-v` are the key to
-the Character-wise and the Line-wise
-visual mode, respectively.
+Press `v` for character-wise visual mode and `V` for line-wise visual mode.
 
-After pressing `:`, a few commands to save/quit are available.
+Press `:` to enter command mode with save/quit commands.
 
 ## Available commands in the insert mode
 
 |Key/Commands|Function|
 |:----------:|:-------|
-|ESC/Ctrl-[| Enter the normal mode. Holding (0.5s) these keys emulate normal ESC/Ctrl-[.|
+|ESC/Ctrl-[|Enter normal mode. Long press (0.5s) sends the original ESC/Ctrl-[ key.|
 |jj|Enter the normal mode, if enabled.|
 |Custom two letters|If two-letter mapping is set.|
 
-ESC/Ctrl-[ switch off IME if IME is on.
-ESC acts as ESC when IME is on and converting instructions.
+ESC/Ctrl-[ turn off IME if IME is on.
+ESC behaves as normal ESC while IME is in conversion.
 Ctrl-[ switches off IME and enters the normal mode even if IME is on.
 
-Long press ESC (Ctrl-[) will send these original keys, if `VimLongEscNormal` (`VimLongCtrlBracketNormal` is not enabled (0).
+If `VimLongEscNormal` (`VimLongCtrlBracketNormal`) is disabled (`0`), long-press ESC (Ctrl-[) sends the original key.
 
 If `VimLongEscNormal` (`VimLongCtrlBracketNormal`) is enabled,
-a single press will send original keys
+a single press sends the original key
 and a long press will change the mode to the normal mode.
 
 If using a custom two-letter hotkey to enter the normal mode, the two letters must be different.
 
 > [!WARNING]
-> A character can be used only for one two-letter hotkey. If you specify `ab` and `bc`, `ba` (push `b` first and then `a`) does not work. If you push `a` first, then `ab` will work, though.
+> A character can be used in only one two-letter mapping. If you set `ab` and `bc`, `ba` (press `b` then `a`) does not work.
 
 
 ## Available commands in the normal mode
@@ -277,9 +262,9 @@ If using a custom two-letter hotkey to enter the normal mode, the two letters mu
 
 |Key/Commands|Function|
 |:----------:|:-------|
-|i/I/a/A/o/O| Enter the insert mode under the cursor/start of the line/next to the cursor/end of the line/next line/previous line.|
-|v/V/Ctrl-v|Enter the visual mode of Character-wise/Line-wise/Block-wise.|
-|:|Enter the command line mode|
+|i/I/a/A/o/O|Enter insert mode (cursor/start of line/next char/end of line/new line below/new line above).|
+|v/V/Ctrl-v|Enter visual mode (character-wise/line-wise/block-like behavior).|
+|:|Enter command-line mode.|
 
 ### Move
 
@@ -287,21 +272,21 @@ If using a custom two-letter hotkey to enter the normal mode, the two letters mu
 |:----------:|:-------|
 |h/j/k/l|Left/Down/Up/Right.|
 |0/$| Move to the start/end of the line.|
-|Ctrl-a/Ctrl-e| Move to the start/end of the line (emacs like).|
+|Ctrl-a/Ctrl-e|Move to the start/end of the line (Emacs-like).|
 |^| Move to the starting non-whitespace character of the line.|
 |w/W| Move to the beginning of the next word.|
 |e/E| Move to the end of the word. (Actually, move to the beginning of the next word and move one character left.)|
 |b/B| Move to the beginning of the previous word.|
-|Ctrl-u/Ctrl-d| Go Up/Down 10 line.|
+|Ctrl-u/Ctrl-d|Move up/down 10 lines.|
 |Ctrl-b/Ctrl-f| PageUp/PageDown.|
-|gg/G| Go to the top/bottom of the file|
+|gg/G|Go to the top/bottom of the file.|
 |Space| Right.|
 |Enter| Move to the beginning of the next line.|
 
 > [!NOTE]
-> Enter works only for editor applications (for other than Explorer, Q-dir, it works as Enter even in the normal mode).
+> Enter movement works only in editor-like apps; in Explorer/Q-dir it behaves as normal Enter.
 
-In addition, `Repeat` is also available for some commands.
+Repeat counts are available for many commands.
 
 |Example Commands|Action|
 |:----------:|:-------|
@@ -322,7 +307,7 @@ In addition, `Repeat` is also available for some commands.
 |p/P| Paste to the next/current place. If copy/cut was done with the line-wise visual mode, it pastes to the next/current line. Some commands (such yy/dd) also force to paste as line-wise.|
 |yiw/diw/ciw| Copy/cut/change current word.|
 
-y/d/c+Move Command can be used, too.
+y/d/c + move command combinations are also available.
 * e.g.) `yw` -> copy next one word.
 * e.g.) `d3w` -> delete next 3 words.
 
@@ -333,10 +318,10 @@ y/d/c+Move Command can be used, too.
 |u/Ctrl-r| Undo/Redo.|
 |r/R| Replace one character/multiple characters.|
 |J| Combine two lines.|
-|.| It is fixed to do: `Replace the following word with a clipboard` (useful to use with a search).|
+|.|Replace the following word with clipboard content (useful with search).|
 |~| Change case.|
-|/| Start search (search box will be opened)|
-|n/N| Search next/previous (Some applications support only next search)|
+|/|Start search (opens find box).|
+|n/N|Search next/previous (some apps support only next).|
 |*| Search the word under the cursor.|
 |ZZ/ZQ|Save and Quit/Quit.|
 
@@ -346,8 +331,8 @@ y/d/c+Move Command can be used, too.
 |:----------:|:-------|
 |ESC/Ctrl-[| Enter the normal mode.|
 |Move command| Most move commands in the normal mode are available.|
-|y/d/x/c| Copy/Cut/Cut/Cut and insert (`d`=`x`)|
-|Y/D/X/C| Move to the end of the line, then Copy/Cut/Cut/Cut and the insert mode (`D`=`X`)|
+|y/d/x/c|Copy/Cut/Cut/Cut+insert (`d` = `x`).|
+|Y/D/X/C|Move to end of line, then Copy/Cut/Cut/Cut+insert (`D` = `X`).|
 |iw| Select the current word.|
 |*| Search the selected word.|
 
@@ -356,34 +341,36 @@ y/d/c+Move Command can be used, too.
 |Key/Commands|Function|
 |:----------:|:-------|
 |ESC/Ctrl-[| Enter the normal mode.|
-|w + RETURN| Save |
-|w + SPACE | Save as |
-|w + q| Save and Quit |
-|q | Quit |
-|h | Open help of the application|
+|w + RETURN|Save.|
+|w + SPACE|Save as.|
+|w + q|Save and quit.|
+|q|Quit.|
+|h|Open application help.|
 
 ## Application-specific settings
 
 ### Q-dir
 
-Refer [ranger](https://github.com/ranger/ranger) which is a console file manager with VI key bindings.
+Inspired by [ranger](https://github.com/ranger/ranger), a console file manager with VI key bindings.
 
 #### Available commands in the normal mode
 
 |Key/Commands|Function|
 |:----------:|:-------|
-|h/l|Go Back/Forward in the directory history.|
+|h/l|Go back/forward in directory history.|
 |i/k|Select down/up.|
 |Alt+u/i/j/k| Select left upper/right upper/left lower/right lower pane.|
-|'| menu Quick-links|
+|'|Open Quick-links menu.|
 
 ## Testing
 
-Tests are run by executing `tests/run_vimahk_tests.ahk`. A notepad and vim window is opened, and vim_ahk is started.
+Run tests with `tests/run_vimahk_tests.ahk`. It opens Notepad and a Vim window, then starts vim_ahk.
 
-The testing system used is a series of test cases in `tests/testcases.txt` representing keystrokes to send to vim_ahk. These are sent to the open vim and notepad windows, and the resulting text is compared.
+The test system uses `tests/testcases.txt`, which defines keystroke sequences sent to vim_ahk.
+The resulting text in the opened windows is then compared.
 
-The tests can be very flakey, so should be used as a guide and to execute code paths to check for errors. Tests should be run with a default ini.
+These tests can be flaky, so use them as guidance and for path coverage/error checks.
+Run tests with a default INI.
 
 ## References (Japanese)
 
