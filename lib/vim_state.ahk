@@ -113,9 +113,9 @@
     if (SetNormal) {
       if(VIM_IME_GetConverting("A") and !IsDirect){
         SendInput("{Esc}")
-        Return
+      } else {
+        this.SetNormal()
       }
-      this.SetNormal()
     }
     if (!ShortPress){
       ; Have to ensure the key has been released, otherwise this will get
