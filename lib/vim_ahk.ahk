@@ -91,6 +91,9 @@ class VimAhk{
     this.AddToConf("VimEscNormal", 1, 1
       , "ESC to enter the normal mode"
       , "Use ESC to enter the normal mode, long press ESC to send ESC.")
+    this.AddToConf("VimEscNormalDirect", 1, 1
+      , "ESC to enter the normal mode directly even if converting in IME"
+      , "If enabled, ESC enters the normal mode directly even when converting in IME, and the conversion is canceled at the same time.`nOtherwise, ESC just sends ESC when converting in IME.")
     this.AddToConf("VimSendEscNormal", 0, 0
       , "Send ESC by ESC at the normal mode"
       , "If not checked, short press ESC does not send anything at the normal mode.`nEnable ESC to enter the normal mode first.")
@@ -106,6 +109,9 @@ class VimAhk{
     this.AddToConf("VimSendCtrlBracketNormal", 0, 0
       , "Send Ctrl-[ by Ctrl-[ at the normal mode"
       , "If not checked, short press Ctrl-[ does not send anything at the normal mode.`nEnable Ctrl-[ to enter the normal mode first.")
+    this.AddToConf("VimCtrlBracketNormalDirect", 1, 1
+      , "Ctrl-[ to enter the normal mode directly even if converting in IME"
+      , "If enabled, ctrl-[ enters the normal mode directly even when converting in IME, and the conversion is canceled at the same time.`nOtherwise, Ctrl-[ just sends ESC when converting in IME.")
     this.AddToConf("VimLongCtrlBracketNormal", 0, 0
       , "Long press Ctrl-[ to enter the normal mode:"
       , "Swap short press and long press behaviors for Ctrl-[.`nEnable Ctrl-[ to enter the normal mode first.")
@@ -143,7 +149,7 @@ class VimAhk{
       , "Application list"
       , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
 
-    this.CheckBoxes := ["VimEscNormal", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth"]
+    this.CheckBoxes := ["VimEscNormal", "VimEscNormalDirect", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimCtrlBracketNormalDirect", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth"]
 
     ; Initialize
     this.Initialize()
