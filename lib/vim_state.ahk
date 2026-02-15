@@ -69,16 +69,26 @@
     this.CheckMode(this.Vim.Conf["VimVerbose"]["val"], Mode, g, n, LineCopy)
   }
 
+  SetInner(){
+    this.SetMode(this.Mode "Inner")
+  }
+
   SetNormal(){
-    this.LastIME := VIM_IME_Get()
-    if(this.LastIME){
-      if(VIM_IME_GetConverting("A")){
-        SendInput("{Esc}")
-        Return
-      }else{
-        VIM_IME_SET()
-      }
+    CurrentIME := VIM_IME_Get()
+    if(this.IsCurrentVimMode("Insert")){
+      ; Store the current IME so it can be restored when going back to insert mode
+      this.LastIME := CurrentIME
     }
+    if(VIM_IME_GetConverting("A")){
+      ; Confirm to stop the IME comversion.
+      SendInput("{Esc}")
+      Sleep(50)
+    }
+    if(CurrentIME){
+      ; Confirm to turn off the IME.
+      VIM_IME_SET()
+    }
+
     if(this.StrIsInCurrentVimMode("Visual") or this.StrIsInCurrentVimMode("ydc")){
       SendInput("{Right}")
       if WinActive("ahk_group VimCursorSameAfterSelect"){
@@ -88,48 +98,38 @@
     this.SetMode("Vim_Normal")
   }
 
-  SetInner(){
-    this.SetMode(this.Mode "Inner")
-  }
-
-  HandleEsc(){
-    if (!this.Vim.Conf["VimEscNormal"]["val"]) {
-      SendInput("{Esc}")
+  HandleNormalKey(Key, WaitKey, IsMap, IsDirect, IsLong, IsSend){
+    if (!IsMap) {
+      SendInput(Key)
       Return
     }
-    ; The keywait waits for esc to be released. If it doesn't detect a release
+    ; The keywait waits for WaitKey to be released. If it doesn't detect a release
     ; within the time limit, return 0, otherwise return 1.
-    ShortPress := KeyWait("Esc", "T0.5")
-    SetNormal := this.Vim.Conf["VimLongEscNormal"]["val"] != ShortPress
-    if (!SetNormal or (this.Vim.Conf["VimSendEscNormal"]["val"] && this.IsCurrentVimMode("Vim_Normal"))) {
-      SendInput("{Esc}")
+    ShortPress := KeyWait(WaitKey, "T0.5")
+    SetNormal := IsLong != ShortPress
+    if (!SetNormal or (IsSend && this.IsCurrentVimMode("Vim_Normal"))) {
+      SendInput(Key)
     }
     if (SetNormal) {
-      this.SetNormal()
+      if(VIM_IME_GetConverting("A") and !IsDirect){
+        SendInput("{Esc}")
+      } else {
+        this.SetNormal()
+      }
     }
     if (!ShortPress){
       ; Have to ensure the key has been released, otherwise this will get
       ; triggered again.
-      KeyWait("Esc")
+      KeyWait(WaitKey)
     }
   }
 
+  HandleEsc(){
+    this.HandleNormalKey("{Esc}", "Esc", this.Vim.Conf["VimEscNormal"]["val"], this.Vim.Conf["VimEscNormalDirect"]["val"], this.Vim.Conf["VimLongEscNormal"]["val"], this.Vim.Conf["VimSendEscNormal"]["val"])
+  }
+
   HandleCtrlBracket(){
-    if (!this.Vim.Conf["VimCtrlBracketNormal"]["val"]) {
-      SendInput("^[")
-      Return
-    }
-    ShortPress := KeyWait("[", "T0.5")
-    SetNormal := this.Vim.Conf["VimLongCtrlBracketNormal"]["val"] != ShortPress
-    if (!SetNormal or (this.Vim.Conf["VimSendCtrlBracketNormal"]["val"] && this.IsCurrentVimMode("Vim_Normal"))) {
-      SendInput("^[")
-    }
-    if (SetNormal) {
-      this.SetNormal()
-    }
-    if (!ShortPress){
-      KeyWait("[")
-    }
+    this.HandleNormalKey("^[", "[", this.Vim.Conf["VimCtrlBracketNormal"]["val"], this.Vim.Conf["VimCtrlBracketNormalDirect"]["val"], this.Vim.Conf["VimLongCtrlBracketNormal"]["val"], this.Vim.Conf["VimSendCtrlBracketNormal"]["val"])
   }
 
   IsCurrentVimMode(Mode){
@@ -139,7 +139,7 @@
 
   StrIsInCurrentVimMode(Mode){
     this.CheckValidMode(Mode, false)
-    Return (inStr(this.Mode, Mode))
+    Return (InStr(this.Mode, Mode))
   }
 
   CheckValidMode(Mode, FullMatch:=true){
@@ -180,7 +180,7 @@
           return true
         }
       }else{
-        if (inStr(value, Needle)){
+        if (InStr(value, Needle)){
           return true
         }
       }

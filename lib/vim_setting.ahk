@@ -29,13 +29,13 @@ class VimSetting Extends VimGui{
 
   MakeGui(){
     this.Obj.Opt("-Resize -MinimizeBox -MaximizeBox")
-    this.Tab := this.Obj.Add("Tab3", "X+0 Y+0 W480 H360", ["Keys", "Applications", "Status", "Configuration file"])
+    this.Tab := this.Obj.Add("Tab3", "X+0 Y+0 W480 H400", ["Keys", "Applications", "Status", "Configuration file"])
 
     ; Tab 1: Keys
     this.Tab.UseTab(1)
     this.Obj.AddText("X+0 Y+0 Section", "")
-    for i, k in this.Vim.Checkboxes {
-      x := (inStr(k, "Long") or inStr(k, "Send")) ? "30" : "10"
+    for i, k in this.Vim.CheckBoxes {
+      x := (InStr(k, "Direct") or InStr(k, "Long") or InStr(k, "Send")) ? "30" : "10"
       this.AddConf("Checkbox", k, "XS+" x " Y+6", this.Vim.GetDescription(k), True)
       this.Obj[k].Value := this.Vim.GetVal(k)
     }
@@ -120,7 +120,7 @@ class VimSetting Extends VimGui{
   }
 
   UpdateGuiValue(){
-    for i, k in this.Vim.Checkboxes {
+    for i, k in this.Vim.CheckBoxes {
       this.Obj[k].Value := this.Vim.GetVal(k)
     }
     this.Obj["VimTwoLetter"].Value := StrReplace(this.Vim.GetVal("VimTwoLetter"), this.Vim.GroupDel, "`n", 0, , -1)
@@ -232,8 +232,8 @@ class VimSetting Extends VimGui{
       tmpIni.ReadIni()
 
       ; Update GUI controls from tmpConf only
-      ; Checkboxes
-      for i, k in this.Vim.Checkboxes {
+      ; CheckBoxes
+      for i, k in this.Vim.CheckBoxes {
         if this.Obj.HasProp(k) && tmpConf.Has(k)
           this.Obj[k].Value := tmpConf[k]["val"]
       }

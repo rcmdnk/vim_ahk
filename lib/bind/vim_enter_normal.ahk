@@ -9,10 +9,7 @@ Esc::Vim.State.HandleEsc()
   jout.Start()
   EndReason := jout.Wait()
   if(EndReason == "EndKey"){
-    if(VIM_IME_GET()){
-      SendInput("{Escape}")
-      Sleep(50)
-    } else {
+    if(!VIM_IME_GET()){
       SendInput("{BackSpace 2}")
     }
     Vim.State.SetNormal()
