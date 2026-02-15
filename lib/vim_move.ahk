@@ -110,7 +110,7 @@
 
   Move(Key:="", Repeat:=false){
     if(!Repeat){
-      this.MoveInitialize(key)
+      this.MoveInitialize(Key)
     }
 
     ; Left/Right
@@ -187,7 +187,7 @@
     ; Up/Down 1 character
     if(Key == "j"){
       this.Down()
-    }else if(Key="k"){
+    }else if(Key == "k"){
       this.Up()
     ; Page Up/Down
     n := 10

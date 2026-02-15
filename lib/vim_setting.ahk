@@ -21,7 +21,7 @@ class VimSetting Extends VimGui{
     }
     Obj := this.Obj.Add(ControlType, Options, Text)
     if(ControlType == "Text"){
-      ; Pseudo click event to show tooltop
+      ; Pseudo click event to show tooltip
       Obj.OnEvent("Click", DoNothing(Obj, Info) => "")
     }
     this.Vim.AddToolTip(Obj.Hwnd, this.Vim.GetInfo(Key))
@@ -228,7 +228,8 @@ class VimSetting Extends VimGui{
         tmpConf[k] := Map("default", v["default"], "val", v["val"], "description", v["description"], "info", v["info"])
       }
       SplitPath(path, &fileName, &dir)
-      tmpIni := VimIni(this.Vim, dir, fileName)
+      tmpVim := {Conf: tmpConf, GroupDel: this.Vim.GroupDel}
+      tmpIni := VimIni(tmpVim, dir, fileName)
       tmpIni.ReadIni()
 
       ; Update GUI controls from tmpConf only

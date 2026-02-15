@@ -61,7 +61,7 @@ class VimAhk{
     GroupAdd("VimLBSelectGroup", "ahk_exe powerpnt.exe") ; PowerPoint
     GroupAdd("VimLBSelectGroup", "ahk_exe winword.exe")  ; Word
     GroupAdd("VimLBSelectGroup", "ahk_exe wordpad.exe")  ; WordPad
-    GroupAdd("VimLBSelectGroup", "ahk_exe notepad.exe")  ; NotePad
+    GroupAdd("VimLBSelectGroup", "ahk_exe notepad.exe")  ; Notepad
 
     ; Following applications do not copy the line break
     GroupAdd("VimNoLBCopyGroup", "ahk_exe evernote.exe") ; Evernote
@@ -72,13 +72,13 @@ class VimAhk{
     ; Need Home twice
     GroupAdd("VimDoubleHomeGroup", "ahk_exe code.exe") ; Visual Studio Code
 
-    ; Followings can emulate ^. For others, ^ works as same as 0
-    ; It does not work for NotePad at Windows 11
-    ; GroupAdd("VimCaretMove", "ahk_exe notepad.exe") ; NotePad
+    ; The following can emulate ^. For others, ^ works the same as 0.
+    ; It does not work for Notepad on Windows 11.
+    ; GroupAdd("VimCaretMove", "ahk_exe notepad.exe") ; Notepad
 
-    ; Followings start cursor from the same place after selection.
+    ; The following start cursor from the same place after selection.
     ; Others start right/left (by cursor) point of the selection
-    GroupAdd("VimCursorSameAfterSelect", "ahk_exe notepad.exe") ; NotePad
+    GroupAdd("VimCursorSameAfterSelect", "ahk_exe notepad.exe") ; Notepad
     GroupAdd("VimCursorSameAfterSelect", "ahk_exe explorer.exe") ; Explorer
 
     ; Q-Dir
@@ -102,7 +102,7 @@ class VimAhk{
       , "Swap short press and long press behaviors for ESC.`nEnable ESC to enter Normal mode first.")
     this.AddToConf("VimCtrlBracketToEsc", 1, 1
       , "Ctrl-[ to ESC"
-      , "Send ESC by Ctrl-[.`nThis changes Ctrl-[ behavir even if Ctrl-[ to enter the normal mode is enabled.`nIf both Ctlr-[ to ESC and Ctlr-[ to enter the normal mode are enabled, long press Ctrl-[ sends ESC instead of Ctrl-[.")
+      , "Send ESC by Ctrl-[.`nThis changes Ctrl-[ behavior even if Ctrl-[ to enter the normal mode is enabled.`nIf both Ctrl-[ to ESC and Ctrl-[ to enter the normal mode are enabled, long press Ctrl-[ sends ESC instead of Ctrl-[.")
     this.AddToConf("VimCtrlBracketNormal", 1, 1
       , "Ctrl-[ to enter the normal mode"
       , "Use Ctrl-[ to enter the normal mode, long press Ctrl-[ to send Ctrl-[.")
@@ -223,7 +223,7 @@ class VimAhk{
   SetDefaultActiveWindows(){
     DefaultList := ["ahk_exe evernote.exe"  ; Evernote
                   , "ahk_exe explorer.exe"  ; Explorer
-                  , "ahk_exe notepad.exe"   ; NotePad
+                  , "ahk_exe notepad.exe"   ; Notepad
                   , "ahk_exe onenote.exe"   ; OneNote Desktop
                   , "ahk_exe applicationframehost.exe" ; Some Windows applications use this, including OneNote at Windows 10
                   , "ahk_exe powerpnt.exe"  ; PowerPoint
