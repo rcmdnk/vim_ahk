@@ -124,25 +124,25 @@ All of them can also be changed from the settings GUI.
 |Option|Description|Default|
 |:-----|:----------|:------|
 |VimEscNormal|If 1, pressing ESC enters normal mode.|1|
-|VimEscNormalDirect|If 1, enter the normal mode even if IME is in conversion. If 0, ESC behaves as normal ESC while IME is in conversion.|0|
+|VimEscNormalDirect|If 1, ESC enters normal mode even while IME is converting. If 0, ESC behaves as normal ESC while IME is converting.|1|
 |VimSendEscNormal|If 1, a short ESC press sends ESC in normal mode.|0|
-|VimLongEscNormal|If 1, short press and long press of ESC behaviors are swapped.|0|
-|VimCtrlBracketToEsc|If 1, Ctrl-[ behaves as ESC.<br>If VimCtrlBracketNormal is 0, Ctrl-[ sends ESC.<br>If VimCtrlBracketNormal is 1, long press Ctrl-[ sends ESC.|0|
+|VimLongEscNormal|If 1, short and long press behavior of ESC is swapped.|0|
+|VimCtrlBracketToEsc|If 1, Ctrl-[ behaves as ESC.<br>If VimCtrlBracketNormal is 0, Ctrl-[ always sends ESC.<br>If both are 1, long press Ctrl-[ sends ESC.|1|
 |VimCtrlBracketNormal|If 1, pressing Ctrl-[ enters normal mode.|1|
-|VimCtrlBracketNormalDirect|If 1, enter the normal mode even if IME is in conversion. If 0, Ctrl-[ behaves as ESC while IME is in conversion.|0|
+|VimCtrlBracketNormalDirect|If 1, Ctrl-[ enters normal mode even while IME is converting. If 0, Ctrl-[ behaves as ESC while IME is converting.|1|
 |VimSendCtrlBracketNormal|If 1, a short Ctrl-[ press sends Ctrl-[ in normal mode.|0|
-|VimLongCtrlBracketNormal|If 1, short press and long press of Ctrl-[ behaviors are swapped.|0|
-|VimChangeCaretWidth|If 1, changes caret width by mode. Also checks the character under cursor for `a` in normal mode (to detect end-of-line behavior).|0|
-|VimRestoreIME|If 1, IME status is restored at entering the insert mode.|1|
-|VimJJ|If 1, `jj` changes the mode to the normal mode from the insert mode.|0|
-|VimTwoLetter|A list of two-letter pairs used in insert mode to enter normal mode.<br>For example, `jf` means pressing `j` then `f` quickly enters normal mode.<br>Set multiple pairs separated by `,` (for example: `jf,jk,sd`).||
-|VimDisableUnused|Disable level for unused keys outside insert mode:<br><ol><li>Do not disable unused keys</li><li>Disable alphabet keys (+Shift) and symbols</li><li>Disable all, including modified keys (for example: Ctrl+Z)</li></ol>|3|
-|VimSetTitleMatchMode|SetTitleMatchMode:<br><ol><li>Start with</li><li>Contain</li><li>Exact match</li><li>Regular expression</li>|2|
-|VimSetTitleMatchModeFS|SetTitleMatchMode:<br><ol><li>Fast: Text is not detected for such edit control.</li><li>Slow: Works for all windows, but slow.</li>|Fast|
-|VimIconCheckInterval|Interval to check vim_ahk status (ms) and change tray icon (see below picture).<br>If it is set to 0, the original AHK icon is set and not changed.|1000|
-|VimVerbose|Verbose level:<br><ol><li>No output.</li><li>Minimum tooltip (mode only).</li><li>Tooltip (all information).</li><li>Debug mode with a non-auto-closing message box.</li></ol>|1|
-|VimAppList|How to use the application list:<br><ul><li>All: Enable vim_ahk on all applications (ignore the list).</li><li>Allow List: Use the list as an allow list.</li><li>Deny List: Use the list as a deny list.</li></ul>|Allow List|
-|VimGroup|Applications where vim_ahk is enabled.|See **Applications** section|
+|VimLongCtrlBracketNormal|If 1, short and long press behavior of Ctrl-[ is swapped.|0|
+|VimChangeCaretWidth|If 1, caret width changes by mode (thick in normal/visual, thin in insert).|0|
+|VimRestoreIME|If 1, IME status is saved in insert mode and restored when returning to insert mode.|1|
+|VimJJ|If 1, `jj` enters normal mode from insert mode.|0|
+|VimTwoLetter|Two-letter mappings to enter normal mode from insert mode.<br>Set one pair per line, exactly two different letters per pair.||
+|VimDisableUnused|Disable level for unused keys outside insert mode:<br><ol><li>Do not disable unused keys</li><li>Disable alphabets (+Shift) and symbols</li><li>Disable all, including modified keys (e.g. Ctrl+Z)</li></ol>|1|
+|VimSetTitleMatchMode|SetTitleMatchMode mode:<br><ol><li>Start with</li><li>Contain</li><li>Exact match</li><li>Regular expression (`RegEx`)</li></ol>|2|
+|VimSetTitleMatchModeFS|SetTitleMatchMode speed:<br><ol><li>Fast: Text is not detected for some edit controls.</li><li>Slow: Works for all windows, but slower.</li></ol>|Fast|
+|VimIconCheckInterval|Interval (ms) to check vim_ahk status and update tray icon.<br>If set to 0, the original AHK icon is used.|1000|
+|VimVerbose|Verbose level:<br><ol><li>No output.</li><li>Minimum tooltip (mode only).</li><li>Tooltip (all information).</li><li>Debug message box (does not auto-close).</li></ol>|1|
+|VimAppList|Application list mode:<br><ul><li>All: Enable vim_ahk on all applications (ignore the list).</li><li>Allow List: Use the list as an allow list.</li><li>Deny List: Use the list as a deny list.</li></ul>|Allow List|
+|VimGroup|Applications where vim_ahk is enabled. Set one application per line (Window Title/Class/Process).|See **Applications** section|
 
 Set options before including **vim.ahk** in your script
 inside the auto-execute section, for example:
