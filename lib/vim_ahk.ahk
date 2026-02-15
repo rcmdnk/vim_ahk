@@ -90,7 +90,7 @@ class VimAhk{
     this.Conf := Map()
     this.AddToConf("VimEscNormal", 1, 1
       , "ESC to enter the normal mode"
-      , "Use ESC to enter the normal mode, long press ESC to send ESC.")
+      , "Pressing ESC enters the normal mode."
     this.AddToConf("VimEscNormalDirect", 1, 1
       , "ESC to enter the normal mode directly even if converting in IME"
       , "If enabled, ESC enters the normal mode directly even when converting in IME, and the conversion is canceled at the same time.`nOtherwise, ESC just sends ESC when converting in IME.")
@@ -105,13 +105,13 @@ class VimAhk{
       , "Send ESC by Ctrl-[.`nThis changes Ctrl-[ behavior even if Ctrl-[ to enter the normal mode is enabled.`nIf both Ctrl-[ to ESC and Ctrl-[ to enter the normal mode are enabled, long press Ctrl-[ sends ESC instead of Ctrl-[.")
     this.AddToConf("VimCtrlBracketNormal", 1, 1
       , "Ctrl-[ to enter the normal mode"
-      , "Use Ctrl-[ to enter the normal mode, long press Ctrl-[ to send Ctrl-[.")
-    this.AddToConf("VimSendCtrlBracketNormal", 0, 0
-      , "Send Ctrl-[ by Ctrl-[ at the normal mode"
-      , "If not checked, short press Ctrl-[ does not send anything at the normal mode.`nEnable Ctrl-[ to enter the normal mode first.")
+      , "Pressing Ctrl-[ enters the normal mode.")
     this.AddToConf("VimCtrlBracketNormalDirect", 1, 1
       , "Ctrl-[ to enter the normal mode directly even if converting in IME"
       , "If enabled, ctrl-[ enters the normal mode directly even when converting in IME, and the conversion is canceled at the same time.`nOtherwise, Ctrl-[ just sends ESC when converting in IME.")
+    this.AddToConf("VimSendCtrlBracketNormal", 0, 0
+      , "Send Ctrl-[ by Ctrl-[ at the normal mode"
+      , "If not checked, short press Ctrl-[ does not send anything at the normal mode.`nEnable Ctrl-[ to enter the normal mode first.")
     this.AddToConf("VimLongCtrlBracketNormal", 0, 0
       , "Long press Ctrl-[ to enter the normal mode:"
       , "Swap short press and long press behaviors for Ctrl-[.`nEnable Ctrl-[ to enter the normal mode first.")
@@ -228,8 +228,8 @@ class VimAhk{
                   , "ahk_exe applicationframehost.exe" ; Some Windows applications use this, including OneNote at Windows 10
                   , "ahk_exe powerpnt.exe"  ; PowerPoint
                   , "ahk_exe terapad.exe"   ; TeraPad
-                  , "ahk_exe texstudio.exe" ; TexStudio
-                  , "ahk_exe texworks.exe"  ; TexWork
+                  , "ahk_exe texstudio.exe" ; TeXstudio
+                  , "ahk_exe texworks.exe"  ; Texworks
                   , "Write:"                ; Thunderbird, English
                   , "作成"                  ; Thunderbird, 日本語
                   , "ahk_exe code.exe"      ; Visual Studio Code

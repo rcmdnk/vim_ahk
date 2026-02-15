@@ -1,6 +1,6 @@
 # vim_ahk
 
-AutoHotkey scripts and executable builds for Vim-like key bindings on Windows.
+AutoHotkey scripts and executable builds for Vim emulation on Windows.
 
 `vim.ahk` is the main script for [AutoHotkey](https://www.autohotkey.com/).
 
@@ -123,11 +123,13 @@ All of them can also be changed from the settings GUI.
 
 |Option|Description|Default|
 |:-----|:----------|:------|
-|VimEscNormal|If 1, short press ESC sets the normal mode, while long press ESC sends ESC.|1|
+|VimEscNormal|If 1, pressing ESC enters normal mode.|1|
+|VimEscNormalDirect|If 1, enter the normal mode even if IME is in conversion. If 0, ESC behaves as normal ESC while IME is in conversion.|0|
 |VimSendEscNormal|If 1, a short ESC press sends ESC in normal mode.|0|
 |VimLongEscNormal|If 1, short press and long press of ESC behaviors are swapped.|0|
 |VimCtrlBracketToEsc|If 1, Ctrl-[ behaves as ESC.<br>If VimCtrlBracketNormal is 0, Ctrl-[ sends ESC.<br>If VimCtrlBracketNormal is 1, long press Ctrl-[ sends ESC.|0|
-|VimCtrlBracketNormal|If 1, pressing Ctrl-[ enters normal mode, while long press Ctrl-[ sends Ctrl-[.|1|
+|VimCtrlBracketNormal|If 1, pressing Ctrl-[ enters normal mode.|1|
+|VimCtrlBracketNormalDirect|If 1, enter the normal mode even if IME is in conversion. If 0, Ctrl-[ behaves as ESC while IME is in conversion.|0|
 |VimSendCtrlBracketNormal|If 1, a short Ctrl-[ press sends Ctrl-[ in normal mode.|0|
 |VimLongCtrlBracketNormal|If 1, short press and long press of Ctrl-[ behaviors are swapped.|0|
 |VimChangeCaretWidth|If 1, changes caret width by mode. Also checks the character under cursor for `a` in normal mode (to detect end-of-line behavior).|0|
