@@ -61,7 +61,7 @@ class VimAhk{
     GroupAdd("VimLBSelectGroup", "ahk_exe powerpnt.exe") ; PowerPoint
     GroupAdd("VimLBSelectGroup", "ahk_exe winword.exe")  ; Word
     GroupAdd("VimLBSelectGroup", "ahk_exe wordpad.exe")  ; WordPad
-    GroupAdd("VimLBSelectGroup", "ahk_exe notepad.exe")  ; NotePad
+    GroupAdd("VimLBSelectGroup", "ahk_exe notepad.exe")  ; Notepad
 
     ; Following applications do not copy the line break
     GroupAdd("VimNoLBCopyGroup", "ahk_exe evernote.exe") ; Evernote
@@ -72,13 +72,13 @@ class VimAhk{
     ; Need Home twice
     GroupAdd("VimDoubleHomeGroup", "ahk_exe code.exe") ; Visual Studio Code
 
-    ; Followings can emulate ^. For others, ^ works as same as 0
-    ; It does not work for NotePad at Windows 11
-    ; GroupAdd("VimCaretMove", "ahk_exe notepad.exe") ; NotePad
+    ; The following can emulate ^. For others, ^ works the same as 0.
+    ; It does not work for Notepad on Windows 11.
+    ; GroupAdd("VimCaretMove", "ahk_exe notepad.exe") ; Notepad
 
-    ; Followings start cursor from the same place after selection.
+    ; The following start cursor from the same place after selection.
     ; Others start right/left (by cursor) point of the selection
-    GroupAdd("VimCursorSameAfterSelect", "ahk_exe notepad.exe") ; NotePad
+    GroupAdd("VimCursorSameAfterSelect", "ahk_exe notepad.exe") ; Notepad
     GroupAdd("VimCursorSameAfterSelect", "ahk_exe explorer.exe") ; Explorer
 
     ; Q-Dir
@@ -90,64 +90,64 @@ class VimAhk{
     this.Conf := Map()
     this.AddToConf("VimEscNormal", 1, 1
       , "ESC to enter the normal mode"
-      , "Use ESC to enter the normal mode, long press ESC to send ESC.")
+      , "If checked, pressing ESC enters normal mode.")
     this.AddToConf("VimEscNormalDirect", 1, 1
       , "ESC to enter the normal mode directly even if converting in IME"
-      , "If enabled, ESC enters the normal mode directly even when converting in IME, and the conversion is canceled at the same time.`nOtherwise, ESC just sends ESC when converting in IME.")
+      , "If checked, ESC enters normal mode even while IME is converting.`nIf not checked, ESC behaves as normal ESC while IME is converting.")
     this.AddToConf("VimSendEscNormal", 0, 0
       , "Send ESC by ESC at the normal mode"
-      , "If not checked, short press ESC does not send anything at the normal mode.`nEnable ESC to enter the normal mode first.")
+      , "If checked, a short ESC press sends ESC in normal mode.`nEnable ESC to enter normal mode first.")
     this.AddToConf("VimLongEscNormal", 0, 0
       , "Long press ESC to enter the normal mode"
-      , "Swap short press and long press behaviors for ESC.`nEnable ESC to enter Normal mode first.")
+      , "If checked, short and long press behavior of ESC is swapped.`nEnable ESC to enter normal mode first.")
     this.AddToConf("VimCtrlBracketToEsc", 1, 1
       , "Ctrl-[ to ESC"
-      , "Send ESC by Ctrl-[.`nThis changes Ctrl-[ behavir even if Ctrl-[ to enter the normal mode is enabled.`nIf both Ctlr-[ to ESC and Ctlr-[ to enter the normal mode are enabled, long press Ctrl-[ sends ESC instead of Ctrl-[.")
+      , "If checked, Ctrl-[ behaves as ESC.`nIf Ctrl-[ to normal mode is disabled, Ctrl-[ always sends ESC.`nIf both are checked, long press Ctrl-[ sends ESC.")
     this.AddToConf("VimCtrlBracketNormal", 1, 1
       , "Ctrl-[ to enter the normal mode"
-      , "Use Ctrl-[ to enter the normal mode, long press Ctrl-[ to send Ctrl-[.")
-    this.AddToConf("VimSendCtrlBracketNormal", 0, 0
-      , "Send Ctrl-[ by Ctrl-[ at the normal mode"
-      , "If not checked, short press Ctrl-[ does not send anything at the normal mode.`nEnable Ctrl-[ to enter the normal mode first.")
+      , "If checked, pressing Ctrl-[ enters normal mode.")
     this.AddToConf("VimCtrlBracketNormalDirect", 1, 1
       , "Ctrl-[ to enter the normal mode directly even if converting in IME"
-      , "If enabled, ctrl-[ enters the normal mode directly even when converting in IME, and the conversion is canceled at the same time.`nOtherwise, Ctrl-[ just sends ESC when converting in IME.")
+      , "If checked, Ctrl-[ enters normal mode even while IME is converting.`nIf not checked, Ctrl-[ behaves as ESC while IME is converting.")
+    this.AddToConf("VimSendCtrlBracketNormal", 0, 0
+      , "Send Ctrl-[ by Ctrl-[ at the normal mode"
+      , "If checked, a short Ctrl-[ press sends Ctrl-[ in normal mode.`nEnable Ctrl-[ to enter normal mode first.")
     this.AddToConf("VimLongCtrlBracketNormal", 0, 0
-      , "Long press Ctrl-[ to enter the normal mode:"
-      , "Swap short press and long press behaviors for Ctrl-[.`nEnable Ctrl-[ to enter the normal mode first.")
+      , "Long press Ctrl-[ to enter the normal mode"
+      , "If checked, short and long press behavior of Ctrl-[ is swapped.`nEnable Ctrl-[ to enter normal mode first.")
     this.AddToConf("VimChangeCaretWidth", 0, 0
       , "Change to thick text caret when in normal mode"
-      , "When entering normal mode, sets the text cursor/caret to a thick bar, then sets back to thin when exiting normal mode.`nDoesn't work with all windows, and causes the current window to briefly lose focus when changing mode.")
+      , "If checked, caret width changes by mode (thick in normal/visual, thin in insert).`nIt may not work in all applications and can briefly change window focus.")
     this.AddToConf("VimRestoreIME", 1, 1
       , "Restore IME status at entering the insert mode"
-      , "Save the IME status in the insert mode, and restore it at entering the insert mode.")
+      , "If checked, IME status is saved in insert mode and restored when returning to insert mode.")
     this.AddToConf("VimJJ", 0, 0
       , "JJ to enter the normal mode"
-      , "Use JJ to enter the normal mode.")
+      , "If checked, `jj` enters normal mode from insert mode.")
     this.AddToConf("VimTwoLetter", "", ""
       , "Two-letter to enter the normal mode"
-      , "When these two letters are pressed together in insert mode, enters the normal mode.`n`nSet one per line, exactly two letters per line.`nThe two letters must be different.")
+      , "Two-letter mappings to enter normal mode from insert mode.`nSet one pair per line.`nEach pair must be exactly two different letters.")
     this.AddToConf("VimDisableUnused", 1, 1
       , "Disable unused keys in the normal mode"
-      , "1: Do not disable unused keys`n2: Disable alphabets (+shift) and symbols`n3: Disable all including keys with modifiers (e.g. Ctrl+Z)")
+      , "Disable level for unused keys outside insert mode:`n1: Do not disable unused keys`n2: Disable alphabets (+Shift) and symbols`n3: Disable all, including modified keys (e.g. Ctrl+Z)")
     this.AddToConf("VimSetTitleMatchMode", "2", "2"
       , "SetTitleMatchMode"
-      , "[Mode] 1: Start with, 2: Contain, 3: Exact match, RegExp: Regular expression.`n[Fast/Slow] Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow.")
+      , "SetTitleMatchMode mode:`n1: Start with`n2: Contain`n3: Exact match`nRegEx: Regular expression")
     this.AddToConf("VimSetTitleMatchModeFS", "Fast", "Fast"
       , "SetTitleMatchMode"
-      , "[Mode]1: Start with, 2: Contain, 3: Exact match, RegExp: Regular expression.`n[Fast/Slow]: Fast: Text is not detected for such edit control, Slow: Works for all windows, but slow.")
+      , "SetTitleMatchMode speed:`nFast: Text is not detected for some edit controls`nSlow: Works for all windows, but slower")
     this.AddToConf("VimIconCheckInterval", 1000, 1000
       , "Icon check interval (ms)"
-      , "Interval to check vim_ahk status (ms) and change tray icon. If it is set to 0, the original AHK icon is set.")
+      , "Interval (ms) to check vim_ahk status and update tray icon.`nIf set to 0, the original AHK icon is used.")
     this.AddToConf("VimVerbose", 1, 1
       , "Verbose level"
-      , "1: Nothing `n2: Minimum tooltip (mode information only)`n3: Tooltip (all information)`n4: Debug mode with a message box, which doesn't disappear automatically")
+      , "Verbose level:`n1: No output`n2: Minimum tooltip (mode only)`n3: Tooltip (all information)`n4: Debug message box (does not auto-close)")
     this.AddToConf("VimAppList", "Allow List", "Allow List"
       , "Application list usage"
-      , "All: Enable on all applications (the application list is ignored) `nAllow List: Use the application list as an allow list`nDeny List: Use the application list as a deny list")
+      , "Application list mode:`nAll: Enable vim_ahk on all applications (ignore the list)`nAllow List: Use list as allow list`nDeny List: Use list as deny list")
     this.AddToConf("VimGroup", DefaultGroup, DefaultGroup
       , "Application list"
-      , "Set one application per line.`n`nIt can be any of Window Title, Class or Process.`nYou can check these values by Window Spy (in the right click menu of tray icon).")
+      , "Applications where vim_ahk is enabled.`nSet one application per line.`nEach line can be Window Title, Class, or Process.")
 
     this.CheckBoxes := ["VimEscNormal", "VimEscNormalDirect", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimCtrlBracketNormalDirect", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth"]
 
@@ -223,13 +223,13 @@ class VimAhk{
   SetDefaultActiveWindows(){
     DefaultList := ["ahk_exe evernote.exe"  ; Evernote
                   , "ahk_exe explorer.exe"  ; Explorer
-                  , "ahk_exe notepad.exe"   ; NotePad
+                  , "ahk_exe notepad.exe"   ; Notepad
                   , "ahk_exe onenote.exe"   ; OneNote Desktop
                   , "ahk_exe applicationframehost.exe" ; Some Windows applications use this, including OneNote at Windows 10
                   , "ahk_exe powerpnt.exe"  ; PowerPoint
                   , "ahk_exe terapad.exe"   ; TeraPad
-                  , "ahk_exe texstudio.exe" ; TexStudio
-                  , "ahk_exe texworks.exe"  ; TexWork
+                  , "ahk_exe texstudio.exe" ; TeXstudio
+                  , "ahk_exe texworks.exe"  ; Texworks
                   , "Write:"                ; Thunderbird, English
                   , "作成"                  ; Thunderbird, 日本語
                   , "ahk_exe code.exe"      ; Visual Studio Code

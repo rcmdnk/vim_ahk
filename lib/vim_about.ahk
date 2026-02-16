@@ -22,7 +22,7 @@ class VimAbout Extends VimGui{
     this.Obj.AddText(, "Author: " this.Author)
     this.Obj.AddText(, "Version: " this.Version)
     this.Obj.AddText("Y+0", "Last update: " this.Date)
-    this.Obj.AddText(, "Script path:`n%this.Vim.ScriptPath%")
+    this.Obj.AddText(, "Script path:`n" this.Vim.ScriptPath)
     this.Obj.AddText(, "Setting file:`n" this.Vim.Ini.Ini)
     this.AddClick("Button", "X200 W100 Default", "OK", this.OKObj)
   }

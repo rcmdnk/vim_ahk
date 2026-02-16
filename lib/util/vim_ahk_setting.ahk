@@ -1,4 +1,4 @@
-#UseHook True ; Make it a bit slow, but can avoid infinitude loop
+#UseHook True ; Makes it a bit slower, but can avoid an infinite loop.
               ; Same as "$" for each hotkey
 InstallKeybdHook(true) ; For checking key history
                        ; Use ~500kB memory?

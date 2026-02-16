@@ -47,14 +47,14 @@ u::SendInput("^z")
 #HotIf Vim.IsVimGroup() and WinActive("ahk_group VimQdir") and (Vim.State.Mode == "Vim_Normal")
 ; For Q-dir, ^X mapping does not work, use !X instead.
 ; ^X does not work to be sent, too, use Down/Up
-; switch to left top (1), right top (2), left bottom (3), right bottom (4)
+; Switch to left top (1), right top (2), left bottom (3), right bottom (4).
 !u::^1
 !i::^2
 !j::^3
 !k::^4
 ; Ctrl+q, menu Quick-links
 '::^q
-; Keep the e key in Normal mode, use the right button and then press the refresh (e) function, do nothing, return to the e key directly
+; Keep `e` for Q-dir's refresh function while staying in normal mode.
 ~e::
 {}
 

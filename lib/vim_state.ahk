@@ -80,7 +80,7 @@
       this.LastIME := CurrentIME
     }
     if(VIM_IME_GetConverting("A")){
-      ; Confirm to stop the IME comversion.
+      ; Confirm to stop IME conversion.
       SendInput("{Esc}")
       Sleep(50)
     }
