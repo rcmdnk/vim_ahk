@@ -164,11 +164,11 @@ class VimSetting Extends VimGui{
         }
       }else if(k == "VimAppList"){
         if(this.Obj[k].Value == 1){
-          v["val"] = "All"
+          v["val"] := "All"
         }else if(this.Obj[k].Value == 2){
-          v["val"] = "Allow List"
+          v["val"] := "Allow List"
         }else{
-          v["val"] = "Deny List"
+          v["val"] := "Deny List"
         }
       }else{
         v["val"] := this.Obj[k].Value
