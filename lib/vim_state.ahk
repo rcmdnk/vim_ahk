@@ -210,10 +210,10 @@
   ToggleEnabled(ItemName:="", ItemPos:="", MyMenu:=""){
     if(this.Vim.Enabled){
       this.Vim.Enabled := False
-      this.Vim.SubMenu.Rename("3&", "Enable Script")
+      this.Vim.SubMenu.Uncheck("Script Enabled")
     }else{
       this.Vim.Enabled := True
-      this.Vim.SubMenu.Rename("3&", "Disable Script")
+      this.Vim.SubMenu.Check("Script Enabled")
     }
   }
 
