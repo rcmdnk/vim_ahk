@@ -207,11 +207,14 @@
     }
   }
 
-  ToggleEnabled(){
+  ToggleEnabled(ItemName:="", ItemPos:="", MyMenu:=""){
     if(this.Vim.Enabled){
       this.Vim.Enabled := False
+      this.Vim.SubMenu.Uncheck("Script Enabled")
     }else{
       this.Vim.Enabled := True
+      this.Vim.SubMenu.Check("Script Enabled")
     }
   }
+
 }
