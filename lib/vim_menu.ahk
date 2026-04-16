@@ -13,7 +13,11 @@
     this.Vim.SubMenu.Add("Settings", MenuVimSetting)
     this.Vim.SubMenu.Add()
     this.Vim.SubMenu.Add("Script Enabled", MenuVimToggleEnabled)
-    this.Vim.SubMenu.Check("Script Enabled")
+    if(this.Vim.Enabled){
+      this.Vim.SubMenu.Check("Script Enabled")
+    }else{
+      this.Vim.SubMenu.UnCheck("Script Enabled")
+    }
     this.Vim.SubMenu.Add("Vim Check", MenuVimCheck)
     this.Vim.SubMenu.Add("Status", MenuVimStatus)
     this.Vim.SubMenu.Add("About vim_ahk", MenuVimAbout)
