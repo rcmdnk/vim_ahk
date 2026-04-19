@@ -29,7 +29,7 @@ jobs:
         run:
           Compress-Archive -Path "vim_ahk"  -DestinationPath vim_ahk-${{github.ref_name}}.zip
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             vim_ahk-${{github.ref_name}}.zip
