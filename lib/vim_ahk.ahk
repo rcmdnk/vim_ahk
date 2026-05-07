@@ -53,9 +53,16 @@ class VimAhk{
     DefaultGroup := this.SetDefaultActiveWindows()
 
     ; On following applications, Enter works as Enter at the normal mode.
+    ; Also, {Home} after Ctrl+End scrolls to top, so G skips {Home} for these.
     GroupAdd("VimNonEditor", "ahk_exe explorer.exe")  ; Explorer
     GroupAdd("VimNonEditor", "ahk_exe q-dir_x64.exe") ; Q-dir
     GroupAdd("VimNonEditor", "ahk_exe q-dir.exe")     ; Q-dir
+    GroupAdd("VimNonEditor", "ahk_exe chrome.exe")    ; Google Chrome
+    GroupAdd("VimNonEditor", "ahk_exe msedge.exe")    ; Microsoft Edge
+    GroupAdd("VimNonEditor", "ahk_exe firefox.exe")   ; Firefox
+    GroupAdd("VimNonEditor", "ahk_exe brave.exe")     ; Brave
+    GroupAdd("VimNonEditor", "ahk_exe vivaldi.exe")   ; Vivaldi
+    GroupAdd("VimNonEditor", "ahk_exe opera.exe")     ; Opera
 
     ; Following applications select the line break at Shift + End.
     GroupAdd("VimLBSelectGroup", "ahk_exe powerpnt.exe") ; PowerPoint
