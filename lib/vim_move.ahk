@@ -202,7 +202,11 @@
     }else if(Key == "g"){
       SendInput("^{Home}")
     }else if(Key == "+g"){
-      SendInput("^{End}{Home}")
+      if WinActive("ahk_group VimNonEditor"){
+        SendInput("{End}")
+      } else {
+        SendInput("^{End}{Home}")
+      }
     }
 
     if(!Repeat){
