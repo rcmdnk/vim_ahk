@@ -364,6 +364,17 @@ Inspired by [ranger](https://github.com/ranger/ranger), a console file manager w
 |Alt+u/i/j/k| Select left upper/right upper/left lower/right lower pane.|
 |'|Open Quick-links menu.|
 
+## Cancelling changing status
+
+If you enable `ESC` or `Ctrl-[` to enter the normal mode,
+such y/d/c, multiple replace or visual mode can be cancelled by
+`ESC` or `Ctrl-[` and return the normal mode.
+
+But if you enable only VimJJ or VimTwoLetter, it does not work in these status.
+Expecially for multiple replace mode, you need to canncel at somewhere.
+In these status, `ESC` or `Ctrl-[` will canncel the status and return to the normal mode
+instead of sending key as is.
+
 ## Testing
 
 Run tests with `tests/run_vimahk_tests.ahk`. It opens Notepad and a Vim window, then starts vim_ahk.
