@@ -100,6 +100,9 @@
 
   HandleNormalKey(Key, WaitKey, IsMap, IsDirect, IsLong, IsSend){
     if (!IsMap) {
+      if(this.CancelPendingByEsc()){
+        Return
+      }
       SendInput(Key)
       Return
     }
@@ -126,6 +129,18 @@
 
   HandleEsc(){
     this.HandleNormalKey("{Esc}", "Esc", this.Vim.Conf["VimEscNormal"]["val"], this.Vim.Conf["VimEscNormalDirect"]["val"], this.Vim.Conf["VimLongEscNormal"]["val"], this.Vim.Conf["VimSendEscNormal"]["val"])
+  }
+
+  CancelPendingByEsc(){
+    if(this.StrIsInCurrentVimMode("Vim_ydc") or this.IsCurrentVimMode("r_once") or this.IsCurrentVimMode("r_repeat")){
+      this.SetMode("Vim_Normal", 0, 0)
+      Return true
+    }
+    if(this.StrIsInCurrentVimMode("Visual")){
+      this.SetNormal()
+      Return true
+    }
+    Return false
   }
 
   HandleCtrlBracket(){

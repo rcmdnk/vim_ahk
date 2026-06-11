@@ -10,7 +10,8 @@ v::Vim.State.SetMode("Vim_VisualChar")
 +v::
 {
   Vim.State.SetMode("Vim_VisualLineFirst")
-  SendInput("{Home}+{Down}")
+  Vim.Move.Zero()
+  SendInput("+{Down}")
 }
 
 #HotIf Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Visual"))
