@@ -364,16 +364,21 @@ Inspired by [ranger](https://github.com/ranger/ranger), a console file manager w
 |Alt+u/i/j/k| Select left upper/right upper/left lower/right lower pane.|
 |'|Open Quick-links menu.|
 
-## Cancelling changing status
+## Cancelling a pending state
 
-If you enable `ESC` or `Ctrl-[` to enter the normal mode,
-such y/d/c, multiple replace or visual mode can be cancelled by
-`ESC` or `Ctrl-[` and return the normal mode.
+vim_ahk has several pending states that wait for the next key, such as the
+operator-pending state after `y`/`d`/`c`, multiple replace mode, and visual mode.
 
-But if you enable only VimJJ or VimTwoLetter, it does not work in these status.
-Expecially for multiple replace mode, you need to canncel at somewhere.
-In these status, `ESC` or `Ctrl-[` will canncel the status and return to the normal mode
-instead of sending key as is.
+If you enable `ESC` or `Ctrl-[` to enter normal mode (`VimEscNormal` or
+`VimCtrlBracketNormal`), pressing `ESC` or `Ctrl-[` in these states cancels the
+state and returns to normal mode.
+
+However, if you enter normal mode only through `VimJJ` or `VimTwoLetter`,
+`ESC`/`Ctrl-[` are not bound to enter normal mode and cannot cancel these states
+the usual way. This is a problem especially for multiple replace mode, which
+otherwise has no way to be cancelled. Therefore, while one of these states is
+active, `ESC` or `Ctrl-[` cancels the state and returns to normal mode instead of
+sending the key as is.
 
 ## Testing
 
