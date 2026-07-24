@@ -19,7 +19,7 @@
   A_Clipboard := ClipSaved
   Vim.State.SearchActive := true
   Vim.State.SearchHwnd := WinGetID("A")
-  Vim.State.SetMode("Insert")
+  Vim.State.SetMode("Vim_Normal")
 }
 
 n::
