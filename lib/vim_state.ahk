@@ -20,8 +20,21 @@
     this.LastIME := 0
     this.CurrControl := ""
     this.PrevControl := ""
+    this.SearchActive := false
+    this.SearchHwnd := 0
 
     this.StatusCheckObj := ObjBindMethod(this, "StatusCheck")
+  }
+
+  HasSearchReady(){
+    if !this.SearchActive
+      return false
+    if !WinActive("ahk_id " this.SearchHwnd){
+      this.SearchActive := false
+      this.SearchHwnd := 0
+      return false
+    }
+    return true
   }
 
   CheckMode(Verbose:=1, Mode:="", g:=0, n:=0, LineCopy:=-1, Force:=0){

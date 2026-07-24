@@ -2,6 +2,8 @@
 /::
 {
   SendInput("^f")
+  Vim.State.SearchActive := true
+  Vim.State.SearchHwnd := WinGetID("A")
   Vim.State.SetMode("Insert")
 }
 
@@ -15,10 +17,21 @@
   SendInput("^f^v{Enter}")
   Sleep(150)
   A_Clipboard := ClipSaved
+  Vim.State.SearchActive := true
+  Vim.State.SearchHwnd := WinGetID("A")
   Vim.State.SetMode("Insert")
 }
 
-n::SendInput("{F3}")
-+n::SendInput("+{F3}")
+n::
+{
+  if Vim.State.HasSearchReady()
+    SendInput("{F3}")
+}
+
++n::
+{
+  if Vim.State.HasSearchReady()
+    SendInput("+{F3}")
+}
 
 #HotIf
