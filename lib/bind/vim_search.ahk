@@ -11,7 +11,9 @@
   A_Clipboard := ""
   SendInput("^{Left}+^{Right}^c")
   ClipWait(1)
-  SendInput("^f^v!f")
+  SendInput("{Right}")
+  SendInput("^f^v{Enter}")
+  Sleep(150)
   A_Clipboard := ClipSaved
   Vim.State.SetMode("Insert")
 }
