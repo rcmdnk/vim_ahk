@@ -107,7 +107,7 @@ class VimAhk{
     GroupAdd("VimShiftEnter", "ahk_exe LINE.exe") ;
 
     ; Control-Enter to insert line break in these applications
-    ;GroupAdd("VimCtrlEnter", "ahk_exe LINE.exe") ;
+    ;GroupAdd("VimCtrlEnter", "...") ;
 
     ; Configuration values for Read/Write ini
     ; setting, default, val, description, info
