@@ -23,13 +23,25 @@ a::
 
 o::
 {
-  SendInput("{End}{Enter}")
+  if WinActive("ahk_group VimShiftEnter"){
+    SendInput("{End}+{Enter}")
+  } else if WinActive("ahk_group VimCtrlEnter"){
+    SendInput("{End}^{Enter}")
+  } else {
+    SendInput("{End}{Enter}")
+  }
   Vim.State.SetMode("Insert")
 }
 
 +o::
 {
-  SendInput("{Home}{Enter}{Left}")
+  if WinActive("ahk_group VimShiftEnter"){
+    SendInput("{Home}+{Enter}{Left}")
+  } else if WinActive("ahk_group VimCtrlEnter"){
+    SendInput("{Home}^{Enter}{Left}")
+  } else {
+    SendInput("{Home}{Enter}{Left}")
+  }
   Vim.State.SetMode("Insert")
 }
 
