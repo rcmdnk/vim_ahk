@@ -20,8 +20,7 @@ class VimSettingPanel {
     this.Search := this.Gui.Add("Edit", "x64 y12 w684")
     this.Category := this.Gui.Add("ListBox", "x12 y46 w170 h380")
     this.List := this.Gui.Add("ListView", "x194 y46 w554 h240 -Multi", ["Setting", "Value"])
-    this.Name := this.Gui.Add("Text", "x194 y298 w554 h22")
-    this.Info := this.Gui.Add("Text", "x194 y322 w554 h110")
+    this.Details := this.Gui.Add("Edit", "x194 y298 w554 h134 ReadOnly Multi VScroll")
     this.Boolean := this.Gui.Add("CheckBox", "x194 y440 w554", "Enabled")
     this.Choice := this.Gui.Add("DropDownList", "x194 y440 w300")
     this.Text := this.Gui.Add("Edit", "x194 y440 w554")
@@ -91,8 +90,7 @@ class VimSettingPanel {
       this.ShowEditor(this.RowKeys[SelectedRow])
     } else {
       this.CurrentKey := ""
-      this.Name.Text := ""
-      this.Info.Text := ""
+      this.Details.Text := ""
       this.HideEditors()
     }
   }
@@ -106,8 +104,7 @@ class VimSettingPanel {
   ShowEditor(Key) {
     this.CurrentKey := Key
     Setting := this.Schema[Key]
-    this.Name.Text := Setting["description"]
-    this.Info.Text := Setting["info"]
+    this.Details.Text := Setting["description"] "`r`n`r`n" Setting["info"]
     this.HideEditors()
     Kind := Setting["kind"]
     if (Kind == "boolean") {
@@ -194,43 +191,42 @@ class VimSettingPanel {
   }
 
   ResizeColumns() {
-    this.List.ModifyCol(1, Max(180, this.ListWidth - 120))
-    this.List.ModifyCol(2, 110)
+    ValueWidth := Min(140, Floor(this.ListWidth * 0.30))
+    this.List.ModifyCol(1, this.ListWidth - ValueWidth - 20)
+    this.List.ModifyCol(2, ValueWidth)
   }
 
   ResizeDetails() {
-    NameY := this.DetailsTop
-    InfoY := NameY + 24
-    AvailableHeight := Max(96, this.DetailsBottom - InfoY)
+    Gap := 8
+    AvailableHeight := this.DetailsBottom - this.DetailsTop
     Kind := this.CurrentKey == "" ? "text" : this.Schema[this.CurrentKey]["kind"]
     if (Kind == "list") {
-      InfoHeight := Max(64, Floor((AvailableHeight - 8) * 0.45))
-      EditorY := InfoY + InfoHeight + 8
-      EditorHeight := Max(40, this.DetailsBottom - EditorY)
+      DetailsHeight := Floor((AvailableHeight - Gap) * 0.45)
+      EditorY := this.DetailsTop + DetailsHeight + Gap
+      EditorHeight := this.DetailsBottom - EditorY
     } else {
       EditorHeight := 24
       EditorY := this.DetailsBottom - EditorHeight
-      InfoHeight := Max(64, EditorY - InfoY - 8)
+      DetailsHeight := EditorY - this.DetailsTop - Gap
     }
 
-    this.Name.Move(this.RightX, NameY, this.RightWidth, 22)
-    this.Info.Move(this.RightX, InfoY, this.RightWidth, InfoHeight)
+    this.Details.Move(this.RightX, this.DetailsTop, this.RightWidth, DetailsHeight)
     this.Boolean.Move(this.RightX, EditorY, this.RightWidth, 24)
     this.Choice.Move(this.RightX, EditorY, Min(320, this.RightWidth), 24)
     this.Text.Move(this.RightX, EditorY, this.RightWidth, 24)
     this.ListText.Move(this.RightX, EditorY, this.RightWidth, EditorHeight)
   }
 
-  Resize(Width, Height, FooterTop) {
+  Resize(Width, FooterTop, Narrow) {
     Margin := 12
-    LeftWidth := 170
-    Gap := 12
+    Gap := Narrow ? 8 : 12
+    LeftWidth := Min(170, Floor(Width * 0.28))
     RightX := Margin + LeftWidth + Gap
-    RightWidth := Max(300, Width - RightX - Margin)
+    RightWidth := Width - RightX - Margin
     ContentTop := 46
-    ContentHeight := Max(280, FooterTop - ContentTop - Gap)
-    ListHeight := Max(130, Floor(ContentHeight * 0.45))
-    NameY := ContentTop + ListHeight + 12
+    ContentHeight := FooterTop - ContentTop - Gap
+    ListHeight := Floor(ContentHeight * 0.43)
+    DetailsTop := ContentTop + ListHeight + Gap
 
     this.SearchLabel.Move(Margin, Margin + 3, 48, 20)
     this.Search.Move(Margin + 52, Margin, Width - Margin * 2 - 52)
@@ -239,7 +235,7 @@ class VimSettingPanel {
     this.ListWidth := RightWidth
     this.RightX := RightX
     this.RightWidth := RightWidth
-    this.DetailsTop := NameY
+    this.DetailsTop := DetailsTop
     this.DetailsBottom := FooterTop - Gap
     this.ResizeDetails()
     this.ResizeColumns()

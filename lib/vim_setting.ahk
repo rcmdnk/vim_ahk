@@ -4,6 +4,8 @@
 
 
 class VimSetting Extends VimGui {
+  static NarrowWidth := 680
+
   __New(Vim) {
     super.__New(Vim, "Vim Ahk Settings")
 
@@ -16,7 +18,7 @@ class VimSetting Extends VimGui {
   }
 
   MakeGui() {
-    this.Obj.Opt("+Resize +MinSize680x480")
+    this.Obj.Opt("+Resize +MinSize520x380")
     this.Panel := VimSettingPanel(this.Obj, this.Vim.Conf, this.Vim.GroupDel)
     this.ConfigLabel := this.Obj.Add("Text", "x12 y456 w100 h16", "Configuration file:")
     this.ConfigPath := this.Obj.Add("Edit", "x120 y452 w540 h24 ReadOnly"
@@ -45,21 +47,24 @@ class VimSetting Extends VimGui {
     if (MinMax == -1) {
       return
     }
-    FooterTop := Height - 92
-    this.Panel.Resize(Width, Height, FooterTop)
+    Narrow := Width < VimSetting.NarrowWidth
+    FooterHeight := Narrow ? 108 : 92
+    FooterTop := Height - FooterHeight
+    this.Panel.Resize(Width, FooterTop, Narrow)
     OpenFolderX := Width - 96
     this.ConfigLabel.Move(12, FooterTop + 4, 100, 16)
     this.ConfigPath.Move(120, FooterTop, OpenFolderX - 128, 24)
     this.OpenFolderButton.Move(OpenFolderX, FooterTop, 84, 24)
 
-    ButtonY := Height - 36
-    this.ImportButton.Move(12, ButtonY, 80)
-    this.ExportButton.Move(100, ButtonY, 80)
+    ActionY := Height - 36
+    UtilityY := Narrow ? Height - 68 : ActionY
+    this.ImportButton.Move(12, UtilityY, 80, 24)
+    this.ExportButton.Move(100, UtilityY, 80, 24)
     RightX := Width - 356
-    this.OKButton.Move(RightX, ButtonY, 80)
-    this.ApplyButton.Move(RightX + 88, ButtonY, 80)
-    this.ResetButton.Move(RightX + 176, ButtonY, 80)
-    this.CancelButton.Move(RightX + 264, ButtonY, 80)
+    this.OKButton.Move(RightX, ActionY, 80, 24)
+    this.ApplyButton.Move(RightX + 88, ActionY, 80, 24)
+    this.ResetButton.Move(RightX + 176, ActionY, 80, 24)
+    this.CancelButton.Move(RightX + 264, ActionY, 80, 24)
   }
 
   UpdateGui() {
