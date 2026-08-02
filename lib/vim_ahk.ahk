@@ -20,8 +20,8 @@
 
 class VimAhk{
   __About(){
-    this.About.Version := "v0.16.5"
-    this.About.Date := "11/Jun/2026"
+    this.About.Version := "v0.16.6"
+    this.About.Date := "2/Aug/2026"
     this.About.Author := "rcmdnk"
     this.About.Description := "Vim emulation with AutoHotkey, everywhere in Windows."
     this.About.Homepage := "https://github.com/rcmdnk/vim_ahk"
