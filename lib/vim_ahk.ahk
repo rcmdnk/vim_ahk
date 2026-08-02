@@ -11,6 +11,8 @@
 #Include %A_LineFile%\..\vim_ini.ahk
 #Include %A_LineFile%\..\vim_menu.ahk
 #Include %A_LineFile%\..\vim_move.ahk
+#Include %A_LineFile%\..\vim_setting_schema.ahk
+#Include %A_LineFile%\..\vim_setting_panel.ahk
 #Include %A_LineFile%\..\vim_setting.ahk
 #Include %A_LineFile%\..\vim_state.ahk
 #Include %A_LineFile%\..\vim_tooltip.ahk
