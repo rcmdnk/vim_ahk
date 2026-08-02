@@ -44,7 +44,7 @@ u::SendInput("^z")
 }
 
 ; Q-dir
-#HotIf Vim.IsVimGroup() and WinActive("ahk_group VimQdir") and (Vim.State.Mode == "Vim_Normal")
+#HotIf Vim.IsVimGroup() and Vim.IsConfiguredGroup("VimQdir") and (Vim.State.Mode == "Vim_Normal")
 ; For Q-dir, ^X mapping does not work, use !X instead.
 ; ^X does not work to be sent, too, use Down/Up
 ; Switch to left top (1), right top (2), left bottom (3), right bottom (4).

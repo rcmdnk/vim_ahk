@@ -23,9 +23,9 @@ a::
 
 o::
 {
-  if WinActive("ahk_group VimShiftEnter"){
+  if Vim.IsConfiguredGroup("VimShiftEnter"){
     SendInput("{End}+{Enter}")
-  } else if WinActive("ahk_group VimCtrlEnter"){
+  } else if Vim.IsConfiguredGroup("VimCtrlEnter"){
     SendInput("{End}^{Enter}")
   } else {
     SendInput("{End}{Enter}")
@@ -35,9 +35,9 @@ o::
 
 +o::
 {
-  if WinActive("ahk_group VimShiftEnter"){
+  if Vim.IsConfiguredGroup("VimShiftEnter"){
     SendInput("{Home}+{Enter}{Left}")
-  } else if WinActive("ahk_group VimCtrlEnter"){
+  } else if Vim.IsConfiguredGroup("VimCtrlEnter"){
     SendInput("{Home}^{Enter}{Left}")
   } else {
     SendInput("{Home}{Enter}{Left}")
@@ -46,7 +46,7 @@ o::
 }
 
 ; Q-dir
-#HotIf Vim.IsVimGroup() and WinActive("ahk_group VimQdir") and (Vim.State.Mode == "Vim_Normal")
+#HotIf Vim.IsVimGroup() and Vim.IsConfiguredGroup("VimQdir") and (Vim.State.Mode == "Vim_Normal")
 ; Enter insert mode to quickly locate the file/folder by using the first letter
 /::Vim.State.SetMode("Insert")
 ; Enter insert mode at rename

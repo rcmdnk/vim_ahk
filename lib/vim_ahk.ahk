@@ -50,6 +50,8 @@ class VimAhk{
     this.GroupDel := ","
     this.GroupN := 0
     this.GroupName := "VimGroup" this.GroupN
+    this.ConfiguredGroupN := 0
+    this.ConfiguredGroups := Map()
     DefaultGroup := this.SetDefaultActiveWindows()
     this.Conf := VimSettingSchema.Build(DefaultGroup, this.GroupDel)
 
@@ -75,29 +77,56 @@ class VimAhk{
   }
 
   SetValues(Values){
-    NeedsReload := False
+    this.ValidateLineBreakGroups(Values)
     for Key, Value in Values {
-      Setting := this.Conf[Key]
-      if (Setting["val"] != Value && Setting["reload"]) {
-        NeedsReload := True
-      }
-      Setting["val"] := Value
+      this.Conf[Key]["val"] := Value
     }
-    return NeedsReload
+  }
+
+  ValidateLineBreakGroups(Values){
+    ShiftApps := Map()
+    Loop Parse, Values["VimShiftEnter"], this.GroupDel {
+      if (A_LoopField != "") {
+        ShiftApps[StrLower(A_LoopField)] := A_LoopField
+      }
+    }
+
+    Conflicts := ""
+    Loop Parse, Values["VimCtrlEnter"], this.GroupDel {
+      if (A_LoopField != "" && ShiftApps.Has(StrLower(A_LoopField))) {
+        Conflicts .= (Conflicts == "" ? "" : "`n") A_LoopField
+      }
+    }
+
+    if (Conflicts != "") {
+      throw ValueError("Choose one line-break method for each application.`n"
+        . "The following entries appear in both Shift+Enter and Ctrl+Enter:`n`n"
+        . Conflicts)
+    }
   }
 
   SetConfiguredGroups(){
-    for Key, Setting in this.Conf {
+    this.ConfiguredGroupN++
+    Groups := Map()
+    for , Setting in this.Conf {
       Group := Setting["group"]
       if (Group == "") {
         continue
       }
+      GroupName := Group "_" this.ConfiguredGroupN
+      Groups[Group] := GroupName
       Loop Parse, Setting["val"], this.GroupDel {
         if (A_LoopField != "") {
-          GroupAdd(Group, A_LoopField)
+          GroupAdd(GroupName, A_LoopField)
         }
       }
     }
+    this.ConfiguredGroups := Groups
+  }
+
+  IsConfiguredGroup(Group){
+    return this.ConfiguredGroups.Has(Group)
+      and WinActive("ahk_group " this.ConfiguredGroups[Group])
   }
 
   SetGroup(){
@@ -113,6 +142,7 @@ class VimAhk{
   Setup(){
     SetTitleMatchMode(this.GetVal("VimSetTitleMatchMode"))
     SetTitleMatchMode(this.GetVal("VimSetTitleMatchModeFS"))
+    this.SetConfiguredGroups()
     this.State.SetStatusCheck()
     this.SetGroup()
     this.VimHotkey.Set()
@@ -122,7 +152,6 @@ class VimAhk{
     this.__About()
     this.SetExistValue()
     this.Ini.ReadIni()
-    this.SetConfiguredGroups()
     this.VimMenu.SetMenu()
     this.Setup()
   }

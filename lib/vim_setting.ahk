@@ -69,18 +69,13 @@ class VimSetting Extends VimGui {
 
   StoreValues() {
     Values := this.Panel.NormalizedValues()
-    NeedsReload := this.Vim.SetValues(Values)
+    this.Vim.SetValues(Values)
     this.Vim.Ini.WriteIni()
-    return NeedsReload
   }
 
-  ActivateValues(NeedsReload, CloseWindow) {
+  ActivateValues(CloseWindow) {
     if CloseWindow {
       this.Hide()
-    }
-    if NeedsReload {
-      Reload()
-      return
     }
     this.Vim.Setup()
     this.Vim.VimToolTip.RemoveToolTip()
@@ -88,8 +83,8 @@ class VimSetting Extends VimGui {
 
   OK(Obj, Info) {
     try {
-      NeedsReload := this.StoreValues()
-      this.ActivateValues(NeedsReload, True)
+      this.StoreValues()
+      this.ActivateValues(True)
     } catch as ErrorInfo {
       MsgBox(ErrorInfo.Message, "Vim Ahk", "Iconx")
     }
@@ -97,8 +92,8 @@ class VimSetting Extends VimGui {
 
   Apply(Obj, Info) {
     try {
-      NeedsReload := this.StoreValues()
-      this.ActivateValues(NeedsReload, False)
+      this.StoreValues()
+      this.ActivateValues(False)
     } catch as ErrorInfo {
       MsgBox(ErrorInfo.Message, "Vim Ahk", "Iconx")
     }
@@ -135,10 +130,10 @@ class VimSetting Extends VimGui {
       if (Path == "") {
         return
       }
-      NeedsReload := this.StoreValues()
+      this.StoreValues()
       FileCopy(this.Vim.Ini.Ini, Path, True)
       MsgBox("Exported settings to:`n" Path, "Vim Ahk")
-      this.ActivateValues(NeedsReload, False)
+      this.ActivateValues(False)
     } catch as ErrorInfo {
       MsgBox("Failed to export: " ErrorInfo.Message, "Vim Ahk", "Iconx")
     }

@@ -131,7 +131,7 @@ class VimSettingSchema {
 
   static AddApplicationGroup(Schema, Key, Items, Description, Info, Delimiter) {
     this.Add(Schema, Key, this.Join(Items, Delimiter), "Application behavior", "list"
-      , Description, Info, 0, "", "", Key, True)
+      , Description, Info, 0, "", "", Key)
   }
 
   static Join(Items, Delimiter) {
@@ -143,7 +143,7 @@ class VimSettingSchema {
   }
 
   static Add(Schema, Key, Default, Category, Kind, Description, Info
-      , Choices := 0, Min := "", Max := "", Group := "", Reload := False) {
+      , Choices := 0, Min := "", Max := "", Group := "") {
     if !(Choices is Array) {
       Choices := []
     }
@@ -157,8 +157,7 @@ class VimSettingSchema {
       "choices", Choices,
       "min", Min,
       "max", Max,
-      "group", Group,
-      "reload", Reload)
+      "group", Group)
   }
 
   static Copy(Schema) {
