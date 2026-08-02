@@ -7,7 +7,7 @@ class VimGui{
     this.OKObj := ObjBindMethod(this, "OK")
   }
 
-  Hide(Obj){
+  Hide(Obj := 0){
     this.Vim.VimToolTip.RemoveToolTip()
     this.Obj.Hide()
   }
@@ -22,6 +22,7 @@ class VimGui{
     if(ToolTipText != ""){
       this.Vim.AddToolTip(Obj.Hwnd, ToolTipText)
     }
+    return Obj
   }
 
   MakeGui(){
