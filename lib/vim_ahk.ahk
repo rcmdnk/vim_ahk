@@ -93,6 +93,22 @@ class VimAhk{
     GroupAdd("VimQdir", "ahk_exe q-dir_x64.exe") ; q-dir
     GroupAdd("VimQdir", "ahk_exe q-dir.exe") ; q-dir
 
+    ; Shift-Enter to insert line break in these applications
+    GroupAdd("VimShiftEnter", "ahk_exe ChatGPT.exe") ;
+    GroupAdd("VimShiftEnter", "ahk_exe Claude.exe") ;
+    GroupAdd("VimShiftEnter", "ahk_exe Cursor.exe") ;
+    GroupAdd("VimShiftEnter", "ahk_exe slack.exe") ;
+    GroupAdd("VimShiftEnter", "ahk_exe ms-teams.exe") ;
+    GroupAdd("VimShiftEnter", "ahk_exe Teams.exe") ; Old version
+    GroupAdd("VimShiftEnter", "ahk_exe Discord.exe") ;
+    GroupAdd("VimShiftEnter", "ahk_exe WhatsApp.exe") ;
+    GroupAdd("VimShiftEnter", "ahk_exe Zoom.exe") ;
+    GroupAdd("VimShiftEnter", "ahk_exe PhoneExperienceHost.exe") ;
+    GroupAdd("VimShiftEnter", "ahk_exe LINE.exe") ;
+
+    ; Control-Enter to insert line break in these applications
+    ;GroupAdd("VimCtrlEnter", "ahk_exe LINE.exe") ;
+
     ; Configuration values for Read/Write ini
     ; setting, default, val, description, info
     this.Conf := Map()
