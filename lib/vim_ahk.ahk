@@ -77,31 +77,9 @@ class VimAhk{
   }
 
   SetValues(Values){
-    this.ValidateLineBreakGroups(Values)
+    VimSettingSchema.ValidateExclusiveGroups(this.Conf, Values, this.GroupDel)
     for Key, Value in Values {
       this.Conf[Key]["val"] := Value
-    }
-  }
-
-  ValidateLineBreakGroups(Values){
-    ShiftApps := Map()
-    Loop Parse, Values["VimShiftEnter"], this.GroupDel {
-      if (A_LoopField != "") {
-        ShiftApps[StrLower(A_LoopField)] := A_LoopField
-      }
-    }
-
-    Conflicts := ""
-    Loop Parse, Values["VimCtrlEnter"], this.GroupDel {
-      if (A_LoopField != "" && ShiftApps.Has(StrLower(A_LoopField))) {
-        Conflicts .= (Conflicts == "" ? "" : "`n") A_LoopField
-      }
-    }
-
-    if (Conflicts != "") {
-      throw ValueError("Choose one line-break method for each application.`n"
-        . "The following entries appear in both Shift+Enter and Ctrl+Enter:`n`n"
-        . Conflicts)
     }
   }
 

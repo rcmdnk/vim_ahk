@@ -111,11 +111,11 @@ class VimSettingSchema {
         , "ahk_exe PhoneExperienceHost.exe", "ahk_exe LINE.exe"]
       , "Applications using Shift+Enter for line breaks"
       , "The o and O commands send Shift+Enter in these applications."
-      , Delimiter)
+      , Delimiter, ["lineBreakMethod"])
     this.AddApplicationGroup(Schema, "VimCtrlEnter", []
       , "Applications using Ctrl+Enter for line breaks"
       , "The o and O commands send Ctrl+Enter in these applications."
-      , Delimiter)
+      , Delimiter, ["lineBreakMethod"])
 
     this.Add(Schema, "VimIconCheckInterval", 1000, "Status", "integer"
       , "Icon check interval (ms)"
@@ -129,9 +129,10 @@ class VimSettingSchema {
     return Schema
   }
 
-  static AddApplicationGroup(Schema, Key, Items, Description, Info, Delimiter) {
+  static AddApplicationGroup(Schema, Key, Items, Description, Info, Delimiter
+      , ExclusiveGroups := 0) {
     this.Add(Schema, Key, this.Join(Items, Delimiter), "Application behavior", "list"
-      , Description, Info, 0, "", "", Key)
+      , Description, Info, 0, "", "", Key, ExclusiveGroups)
   }
 
   static Join(Items, Delimiter) {
@@ -143,9 +144,12 @@ class VimSettingSchema {
   }
 
   static Add(Schema, Key, Default, Category, Kind, Description, Info
-      , Choices := 0, Min := "", Max := "", Group := "") {
+      , Choices := 0, Min := "", Max := "", Group := "", ExclusiveGroups := 0) {
     if !(Choices is Array) {
       Choices := []
+    }
+    if !(ExclusiveGroups is Array) {
+      ExclusiveGroups := []
     }
     Schema[Key] := Map(
       "default", Default,
@@ -157,7 +161,8 @@ class VimSettingSchema {
       "choices", Choices,
       "min", Min,
       "max", Max,
-      "group", Group)
+      "group", Group,
+      "exclusiveGroups", ExclusiveGroups)
   }
 
   static Copy(Schema) {
@@ -179,6 +184,48 @@ class VimSettingSchema {
       Values[Key] := Setting[Field]
     }
     return Values
+  }
+
+  static ValidateExclusiveGroups(Schema, Values, Delimiter) {
+    Index := Map()
+    for Key, Setting in Schema {
+      for Group in Setting["exclusiveGroups"] {
+        if !Index.Has(Group) {
+          Index[Group] := Map()
+        }
+        Items := Index[Group]
+        Loop Parse, Values[Key], Delimiter {
+          if (A_LoopField == "") {
+            continue
+          }
+          ItemKey := StrLower(A_LoopField)
+          if !Items.Has(ItemKey) {
+            Items[ItemKey] := Map("value", A_LoopField, "owners", [])
+          }
+          Items[ItemKey]["owners"].Push(Key)
+        }
+      }
+    }
+
+    Conflicts := ""
+    for Group, Items in Index {
+      for , Item in Items {
+        if (Item["owners"].Length < 2) {
+          continue
+        }
+        Owners := ""
+        for Key in Item["owners"] {
+          Owners .= (Owners == "" ? "" : ", ") Schema[Key]["description"]
+        }
+        Conflicts .= (Conflicts == "" ? "" : "`n`n")
+          . Group ":`n" Item["value"] "`n" Owners
+      }
+    }
+
+    if (Conflicts != "") {
+      throw ValueError("Each item can belong to one setting in an exclusive group.`n`n"
+        . Conflicts)
+    }
   }
 
   static Normalize(Setting, Value, Delimiter) {
