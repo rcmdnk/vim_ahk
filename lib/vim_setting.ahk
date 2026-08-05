@@ -20,27 +20,28 @@ class VimSetting Extends VimGui {
   MakeGui() {
     this.Obj.Opt("+Resize +MinSize520x380")
     this.Panel := VimSettingPanel(this.Obj, this.Vim.Conf, this.Vim.GroupDel)
-    this.ConfigLabel := this.Obj.Add("Text", "x12 y456 w100 h16", "Configuration file:")
-    this.ConfigPath := this.Obj.Add("Edit", "x120 y452 w540 h24 ReadOnly"
+    this.ConfigLabel := this.Obj.Add("Text", "x0 y0 w0 h0", "Configuration file:")
+    this.ConfigPath := this.Obj.Add("Edit", "x0 y0 w0 h0 ReadOnly"
       , this.Vim.Ini.Ini)
-    this.OpenFolderButton := this.AddClick("Button", "x668 y452 w84", "Open folder"
+    this.OpenFolderButton := this.AddClick("Button", "x0 y0 w0 h0", "Open folder"
       , this.Vim.Ini.OpenIniDirObj, "Open the current configuration directory")
 
-    this.ImportButton := this.AddClick("Button", "x12 y504 w80", "Import"
+    this.ImportButton := this.AddClick("Button", "x0 y0 w0 h0", "Import"
       , this.ImportObj, "Load settings from an INI file")
-    this.ExportButton := this.AddClick("Button", "x100 y504 w80", "Export"
+    this.ExportButton := this.AddClick("Button", "x0 y0 w0 h0", "Export"
       , this.ExportObj, "Save current settings to an INI file")
-    this.OKButton := this.AddClick("Button", "x408 y504 w80 Default", "OK"
+    this.OKButton := this.AddClick("Button", "x0 y0 w0 h0 Default", "OK"
       , this.OKObj, "Apply changes and close")
-    this.ApplyButton := this.AddClick("Button", "x496 y504 w80", "Apply"
+    this.ApplyButton := this.AddClick("Button", "x0 y0 w0 h0", "Apply"
       , this.ApplyObj, "Apply changes")
-    this.ResetButton := this.AddClick("Button", "x584 y504 w80", "Reset"
+    this.ResetButton := this.AddClick("Button", "x0 y0 w0 h0", "Reset"
       , this.ResetObj, "Show default values")
-    this.CancelButton := this.AddClick("Button", "x672 y504 w80", "Cancel"
+    this.CancelButton := this.AddClick("Button", "x0 y0 w0 h0", "Cancel"
       , this.CancelObj, "Discard staged changes and close")
 
     this.Obj.OnEvent("Size", this.ResizeObj)
     this.ResizeGui(this.Obj, 0, 764, 544)
+    this.Panel.RefreshList()
   }
 
   ResizeGui(GuiObj, MinMax, Width, Height) {

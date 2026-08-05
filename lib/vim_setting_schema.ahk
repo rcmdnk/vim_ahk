@@ -186,6 +186,14 @@ class VimSettingSchema {
     return Values
   }
 
+  static NormalizeValues(Schema, Values, Delimiter) {
+    Normalized := Map()
+    for Key, Setting in Schema {
+      Normalized[Key] := this.Normalize(Setting, Values[Key], Delimiter)
+    }
+    return Normalized
+  }
+
   static ValidateExclusiveGroups(Schema, Values, Delimiter) {
     Index := Map()
     for Key, Setting in Schema {

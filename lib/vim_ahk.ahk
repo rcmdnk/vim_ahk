@@ -83,6 +83,9 @@ class VimAhk{
     }
   }
 
+  ; AutoHotkey can only append rules to window groups; existing rules cannot be cleared.
+  ; Whenever settings are applied, new groups are built before the current mapping is replaced.
+  ; Old groups remain until the script exits and are no longer queried.
   SetConfiguredGroups(){
     this.ConfiguredGroupN++
     Groups := Map()
@@ -130,6 +133,9 @@ class VimAhk{
     this.__About()
     this.SetExistValue()
     this.Ini.ReadIni()
+    Values := VimSettingSchema.NormalizeValues(
+      this.Conf, VimSettingSchema.Values(this.Conf), this.GroupDel)
+    this.SetValues(Values)
     this.VimMenu.SetMenu()
     this.Setup()
   }

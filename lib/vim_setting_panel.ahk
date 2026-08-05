@@ -10,21 +10,16 @@ class VimSettingPanel {
     this.RowKeys := Map()
     this.Categories := []
     this.CurrentKey := ""
-    this.ListWidth := 554
-    this.RightX := 194
-    this.RightWidth := 554
-    this.DetailsTop := 298
-    this.DetailsBottom := 464
 
-    this.SearchLabel := this.Gui.Add("Text", "x12 y15 w48", "Search:")
-    this.Search := this.Gui.Add("Edit", "x64 y12 w684")
-    this.Category := this.Gui.Add("ListBox", "x12 y46 w170 h380")
-    this.List := this.Gui.Add("ListView", "x194 y46 w554 h240 -Multi", ["Setting", "Value"])
-    this.Details := this.Gui.Add("Edit", "x194 y298 w554 h134 ReadOnly Multi VScroll")
-    this.Boolean := this.Gui.Add("CheckBox", "x194 y440 w554", "Enabled")
-    this.Choice := this.Gui.Add("DropDownList", "x194 y440 w300")
-    this.Text := this.Gui.Add("Edit", "x194 y440 w554")
-    this.ListText := this.Gui.Add("Edit", "x194 y394 w554 h70 Multi VScroll WantTab")
+    this.SearchLabel := this.Gui.Add("Text", "x0 y0 w0 h0", "Search:")
+    this.Search := this.Gui.Add("Edit", "x0 y0 w0 h0")
+    this.Category := this.Gui.Add("ListBox", "x0 y0 w0 h0")
+    this.List := this.Gui.Add("ListView", "x0 y0 w0 h0 -Multi", ["Setting", "Value"])
+    this.Details := this.Gui.Add("Edit", "x0 y0 w0 h0 ReadOnly Multi VScroll")
+    this.Boolean := this.Gui.Add("CheckBox", "x0 y0 w0 h0", "Enabled")
+    this.Choice := this.Gui.Add("DropDownList", "x0 y0 w0 h0")
+    this.Text := this.Gui.Add("Edit", "x0 y0 w0 h0")
+    this.ListText := this.Gui.Add("Edit", "x0 y0 w0 h0 Multi VScroll WantTab")
 
     this.Search.OnEvent("Change", ObjBindMethod(this, "FilterChanged"))
     this.Category.OnEvent("Change", ObjBindMethod(this, "FilterChanged"))
@@ -36,7 +31,6 @@ class VimSettingPanel {
 
     this.LoadCategories()
     this.HideEditors()
-    this.RefreshList()
   }
 
   LoadCategories() {
@@ -183,11 +177,7 @@ class VimSettingPanel {
   }
 
   NormalizedValues() {
-    Values := Map()
-    for Key, Setting in this.Schema {
-      Values[Key] := VimSettingSchema.Normalize(Setting, this.Values[Key], this.Delimiter)
-    }
-    return Values
+    return VimSettingSchema.NormalizeValues(this.Schema, this.Values, this.Delimiter)
   }
 
   ResizeColumns() {
