@@ -19,7 +19,6 @@
     this.section := Section
 
     this.OpenIniDirObj := ObjBindMethod(this, "OpenIniDir")
-    this.OpenIniObj := ObjBindMethod(this, "OpenIni")
   }
 
   ReadIni(){
@@ -72,10 +71,5 @@
   OpenIniDir(Obj, Info){
     this.Vim.VimToolTip.RemoveToolTip()
     Run("explorer.exe " this.IniDir)
-  }
-
-  OpenIni(Obj, Info){
-    this.Vim.VimToolTip.RemoveToolTip()
-    Run("notepad.exe " this.Ini)
   }
 }

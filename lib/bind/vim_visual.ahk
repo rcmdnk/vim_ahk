@@ -22,7 +22,7 @@ y::
 {
   A_Clipboard := ""
   SendInput("^c{Right}")
-  if WinActive("ahk_group VimCursorSameAfterSelect"){
+  if Vim.IsConfiguredGroup("VimCursorSameAfterSelect"){
     SendInput("{Left}")
   }
   ClipWait(1)

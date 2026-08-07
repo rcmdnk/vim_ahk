@@ -104,7 +104,7 @@
 
     if(this.StrIsInCurrentVimMode("Visual") or this.StrIsInCurrentVimMode("ydc")){
       SendInput("{Right}")
-      if WinActive("ahk_group VimCursorSameAfterSelect"){
+      if this.Vim.IsConfiguredGroup("VimCursorSameAfterSelect"){
         SendInput("{Left}")
       }
     }

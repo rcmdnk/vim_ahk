@@ -44,7 +44,7 @@ b::Vim.Move.Repeat("b")
 +g::Vim.Move.Move("+g")
 ; Space
 Space::Vim.Move.Repeat("l")
-#HotIf Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and not WinActive("ahk_group VimNonEditor")
+#HotIf Vim.IsVimGroup() and (Vim.State.StrIsInCurrentVimMode("Vim_")) and not Vim.IsConfiguredGroup("VimNonEditor")
 ; Enter
 Enter::
 {

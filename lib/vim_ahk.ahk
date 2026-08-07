@@ -11,6 +11,7 @@
 #Include %A_LineFile%\..\vim_ini.ahk
 #Include %A_LineFile%\..\vim_menu.ahk
 #Include %A_LineFile%\..\vim_move.ahk
+#Include %A_LineFile%\..\vim_setting_schema.ahk
 #Include %A_LineFile%\..\vim_setting.ahk
 #Include %A_LineFile%\..\vim_state.ahk
 #Include %A_LineFile%\..\vim_tooltip.ahk
@@ -45,148 +46,17 @@ class VimAhk{
     this.State := VimState(this)
     this.VimToolTip := VimToolTip(this)
 
-    ; Group Settings
+    ; Configuration values for Read/Write ini and settings GUI
     this.GroupDel := ","
     this.GroupN := 0
     this.GroupName := "VimGroup" this.GroupN
-
+    this.ConfiguredGroupN := 0
+    this.ConfiguredGroups := Map()
     DefaultGroup := this.SetDefaultActiveWindows()
-
-    ; On following applications, Enter works as Enter at the normal mode.
-    ; G sends {End} (not Ctrl+End) to scroll to bottom in these apps.
-    GroupAdd("VimNonEditor", "ahk_exe explorer.exe")  ; Explorer
-    GroupAdd("VimNonEditor", "ahk_exe q-dir_x64.exe") ; Q-dir
-    GroupAdd("VimNonEditor", "ahk_exe q-dir.exe")     ; Q-dir
-    GroupAdd("VimNonEditor", "ahk_exe chrome.exe")    ; Google Chrome
-    GroupAdd("VimNonEditor", "ahk_exe msedge.exe")    ; Microsoft Edge
-    GroupAdd("VimNonEditor", "ahk_exe firefox.exe")   ; Firefox
-    GroupAdd("VimNonEditor", "ahk_exe waterfox.exe")  ; Waterfox
-    GroupAdd("VimNonEditor", "ahk_exe brave.exe")     ; Brave
-    GroupAdd("VimNonEditor", "ahk_exe vivaldi.exe")   ; Vivaldi
-    GroupAdd("VimNonEditor", "ahk_exe opera.exe")     ; Opera
-
-    ; Following applications select the line break at Shift + End.
-    GroupAdd("VimLBSelectGroup", "ahk_exe powerpnt.exe") ; PowerPoint
-    GroupAdd("VimLBSelectGroup", "ahk_exe winword.exe")  ; Word
-    GroupAdd("VimLBSelectGroup", "ahk_exe wordpad.exe")  ; WordPad
-    GroupAdd("VimLBSelectGroup", "ahk_exe notepad.exe")  ; Notepad
-
-    ; Following applications do not copy the line break
-    GroupAdd("VimNoLBCopyGroup", "ahk_exe evernote.exe") ; Evernote
-
-    ; Need Ctrl for Up/Down
-    GroupAdd("VimCtrlUpDownGroup", "ahk_exe onenote.exe") ; OneNote Desktop, before Windows 10
-
-    ; Need Home twice
-    GroupAdd("VimDoubleHomeGroup", "ahk_exe code.exe") ; Visual Studio Code
-
-    ; The following can emulate ^. For others, ^ works the same as 0.
-    ; It does not work for Notepad on Windows 11.
-    ; GroupAdd("VimCaretMove", "ahk_exe notepad.exe") ; Notepad
-
-    ; The following start cursor from the same place after selection.
-    ; Others start right/left (by cursor) point of the selection
-    GroupAdd("VimCursorSameAfterSelect", "ahk_exe notepad.exe") ; Notepad
-    GroupAdd("VimCursorSameAfterSelect", "ahk_exe explorer.exe") ; Explorer
-
-    ; Q-Dir
-    GroupAdd("VimQdir", "ahk_exe q-dir_x64.exe") ; q-dir
-    GroupAdd("VimQdir", "ahk_exe q-dir.exe") ; q-dir
-
-    ; Shift-Enter to insert line break in these applications
-    GroupAdd("VimShiftEnter", "ahk_exe ChatGPT.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe Claude.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe Cursor.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe slack.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe ms-teams.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe Teams.exe") ; Old version
-    GroupAdd("VimShiftEnter", "ahk_exe Discord.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe WhatsApp.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe Zoom.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe PhoneExperienceHost.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe LINE.exe") ;
-
-    ; Control-Enter to insert line break in these applications
-    ;GroupAdd("VimCtrlEnter", "...") ;
-
-    ; Configuration values for Read/Write ini
-    ; setting, default, val, description, info
-    this.Conf := Map()
-    this.AddToConf("VimEscNormal", 1, 1
-      , "ESC to enter the normal mode"
-      , "If checked, pressing ESC enters normal mode.")
-    this.AddToConf("VimEscNormalDirect", 1, 1
-      , "ESC to enter the normal mode directly even if converting in IME"
-      , "If checked, ESC enters normal mode even while IME is converting.`nIf not checked, ESC behaves as normal ESC while IME is converting.")
-    this.AddToConf("VimSendEscNormal", 0, 0
-      , "Send ESC by ESC at the normal mode"
-      , "If checked, a short ESC press sends ESC in normal mode.`nEnable ESC to enter normal mode first.")
-    this.AddToConf("VimLongEscNormal", 0, 0
-      , "Long press ESC to enter the normal mode"
-      , "If checked, short and long press behavior of ESC is swapped.`nEnable ESC to enter normal mode first.")
-    this.AddToConf("VimCtrlBracketToEsc", 1, 1
-      , "Ctrl-[ to ESC"
-      , "If checked, Ctrl-[ behaves as ESC.`nIf Ctrl-[ to normal mode is disabled, Ctrl-[ always sends ESC.`nIf both are checked, long press Ctrl-[ sends ESC.")
-    this.AddToConf("VimCtrlBracketNormal", 1, 1
-      , "Ctrl-[ to enter the normal mode"
-      , "If checked, pressing Ctrl-[ enters normal mode.")
-    this.AddToConf("VimCtrlBracketNormalDirect", 1, 1
-      , "Ctrl-[ to enter the normal mode directly even if converting in IME"
-      , "If checked, Ctrl-[ enters normal mode even while IME is converting.`nIf not checked, Ctrl-[ behaves as ESC while IME is converting.")
-    this.AddToConf("VimSendCtrlBracketNormal", 0, 0
-      , "Send Ctrl-[ by Ctrl-[ at the normal mode"
-      , "If checked, a short Ctrl-[ press sends Ctrl-[ in normal mode.`nEnable Ctrl-[ to enter normal mode first.")
-    this.AddToConf("VimLongCtrlBracketNormal", 0, 0
-      , "Long press Ctrl-[ to enter the normal mode"
-      , "If checked, short and long press behavior of Ctrl-[ is swapped.`nEnable Ctrl-[ to enter normal mode first.")
-    this.AddToConf("VimChangeCaretWidth", 0, 0
-      , "Change to thick text caret when in normal mode"
-      , "If checked, caret width changes by mode (thick in normal/visual, thin in insert).`nIt may not work in all applications and can briefly change window focus.")
-    this.AddToConf("VimRestoreIME", 1, 1
-      , "Restore IME status at entering the insert mode"
-      , "If checked, IME status is saved in insert mode and restored when returning to insert mode.")
-    this.AddToConf("VimJJ", 0, 0
-      , "JJ to enter the normal mode"
-      , "If checked, `jj` enters normal mode from insert mode.")
-    this.AddToConf("VimTwoLetter", "", ""
-      , "Two-letter to enter the normal mode"
-      , "Two-letter mappings to enter normal mode from insert mode.`nSet one pair per line.`nEach pair must be exactly two different letters.")
-    this.AddToConf("VimDisableUnused", 1, 1
-      , "Disable unused keys in the normal mode"
-      , "Disable level for unused keys outside insert mode:`n1: Do not disable unused keys`n2: Disable alphabets (+Shift) and symbols`n3: Disable all, including modified keys (e.g. Ctrl+Z)")
-    this.AddToConf("VimSetTitleMatchMode", "2", "2"
-      , "SetTitleMatchMode"
-      , "SetTitleMatchMode mode:`n1: Start with`n2: Contain`n3: Exact match`nRegEx: Regular expression")
-    this.AddToConf("VimSetTitleMatchModeFS", "Fast", "Fast"
-      , "SetTitleMatchMode"
-      , "SetTitleMatchMode speed:`nFast: Text is not detected for some edit controls`nSlow: Works for all windows, but slower")
-    this.AddToConf("VimIconCheckInterval", 1000, 1000
-      , "Icon check interval (ms)"
-      , "Interval (ms) to check vim_ahk status and update tray icon.`nIf set to 0, the original AHK icon is used.")
-    this.AddToConf("VimVerbose", 1, 1
-      , "Verbose level"
-      , "Verbose level:`n1: No output`n2: Minimum tooltip (mode only)`n3: Tooltip (all information)`n4: Debug message box (does not auto-close)")
-    this.AddToConf("VimAppList", "Allow List", "Allow List"
-      , "Application list usage"
-      , "Application list mode:`nAll: Enable vim_ahk on all applications (ignore the list)`nAllow List: Use list as allow list`nDeny List: Use list as deny list")
-    this.AddToConf("VimGroup", DefaultGroup, DefaultGroup
-      , "Application list"
-      , "Applications where vim_ahk is enabled.`nSet one application per line.`nEach line can be Window Title, Class, or Process.")
-
-    this.CheckBoxes := ["VimEscNormal", "VimEscNormalDirect", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimCtrlBracketNormalDirect", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth"]
+    this.Conf := VimSettingSchema.Build(DefaultGroup, this.GroupDel)
 
     ; Initialize
     this.Initialize()
-  }
-
-  AddToConf(setting, default, val, description, info){
-    this.Conf[setting] :=  Map("default", default, "val", val, "description", description, "info", info)
-  }
-
-  SetConfDefault(){
-    for k, v in this.Conf {
-      v["val"] := v["default"]
-    }
   }
 
   SetExistValue(){
@@ -206,16 +76,38 @@ class VimAhk{
     return this.GetConf(Key, "val")
   }
 
-  GetDefault(Key){
-    return this.GetConf(Key, "default")
+  SetValues(Values){
+    VimSettingSchema.ValidateExclusiveGroups(this.Conf, Values, this.GroupDel)
+    for Key, Value in Values {
+      this.Conf[Key]["val"] := Value
+    }
   }
 
-  GetDescription(Key){
-    return this.GetConf(Key, "description")
+  ; AutoHotkey can only append rules to window groups; existing rules cannot be cleared.
+  ; Whenever settings are applied, new groups are built before the current mapping is replaced.
+  ; Old groups remain until the script exits and are no longer queried.
+  SetConfiguredGroups(){
+    this.ConfiguredGroupN++
+    Groups := Map()
+    for , Setting in this.Conf {
+      Group := Setting["group"]
+      if (Group == "") {
+        continue
+      }
+      GroupName := Group "_" this.ConfiguredGroupN
+      Groups[Group] := GroupName
+      Loop Parse, Setting["val"], this.GroupDel {
+        if (A_LoopField != "") {
+          GroupAdd(GroupName, A_LoopField)
+        }
+      }
+    }
+    this.ConfiguredGroups := Groups
   }
 
-  GetInfo(Key){
-    return this.GetConf(Key, "info")
+  IsConfiguredGroup(Group){
+    return this.ConfiguredGroups.Has(Group)
+      and WinActive("ahk_group " this.ConfiguredGroups[Group])
   }
 
   SetGroup(){
@@ -231,6 +123,7 @@ class VimAhk{
   Setup(){
     SetTitleMatchMode(this.GetVal("VimSetTitleMatchMode"))
     SetTitleMatchMode(this.GetVal("VimSetTitleMatchModeFS"))
+    this.SetConfiguredGroups()
     this.State.SetStatusCheck()
     this.SetGroup()
     this.VimHotkey.Set()
@@ -240,6 +133,9 @@ class VimAhk{
     this.__About()
     this.SetExistValue()
     this.Ini.ReadIni()
+    Values := VimSettingSchema.NormalizeValues(
+      this.Conf, VimSettingSchema.Values(this.Conf), this.GroupDel)
+    this.SetValues(Values)
     this.VimMenu.SetMenu()
     this.Setup()
   }
@@ -263,16 +159,7 @@ class VimAhk{
                   , "ahk_exe q-dir.exe"     ; Q-dir
                   , "ahk_exe obsidian.exe"] ; Obsidian
 
-    DefaultGroup := ""
-    for i, v in DefaultList
-    {
-      if(DefaultGroup == ""){
-        DefaultGroup := v
-      }else{
-        DefaultGroup := DefaultGroup this.GroupDel v
-      }
-    }
-    Return DefaultGroup
+    return VimSettingSchema.Join(DefaultList, this.GroupDel)
   }
 
   IsVimGroup(){
