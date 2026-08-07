@@ -4,8 +4,6 @@
 
 
 class VimSetting Extends VimGui {
-  static NarrowWidth := 680
-
   __New(Vim) {
     super.__New(Vim, "Vim Ahk Settings")
 
@@ -14,58 +12,54 @@ class VimSetting Extends VimGui {
     this.ApplyObj := ObjBindMethod(this, "Apply")
     this.ImportObj := ObjBindMethod(this, "ImportIni")
     this.ExportObj := ObjBindMethod(this, "ExportIni")
-    this.ResizeObj := ObjBindMethod(this, "ResizeGui")
   }
 
   MakeGui() {
-    this.Obj.Opt("+Resize +MinSize520x380")
-    this.Panel := VimSettingPanel(this.Obj, this.Vim.Conf, this.Vim.GroupDel)
-    this.ConfigLabel := this.Obj.Add("Text", "x0 y0 w0 h0", "Configuration file:")
-    this.ConfigPath := this.Obj.Add("Edit", "x0 y0 w0 h0 ReadOnly"
-      , this.Vim.Ini.Ini)
-    this.OpenFolderButton := this.AddClick("Button", "x0 y0 w0 h0", "Open folder"
-      , this.Vim.Ini.OpenIniDirObj, "Open the current configuration directory")
-
-    this.ImportButton := this.AddClick("Button", "x0 y0 w0 h0", "Import"
-      , this.ImportObj, "Load settings from an INI file")
-    this.ExportButton := this.AddClick("Button", "x0 y0 w0 h0", "Export"
-      , this.ExportObj, "Save current settings to an INI file")
-    this.OKButton := this.AddClick("Button", "x0 y0 w0 h0 Default", "OK"
-      , this.OKObj, "Apply changes and close")
-    this.ApplyButton := this.AddClick("Button", "x0 y0 w0 h0", "Apply"
-      , this.ApplyObj, "Apply changes")
-    this.ResetButton := this.AddClick("Button", "x0 y0 w0 h0", "Reset"
-      , this.ResetObj, "Show default values")
-    this.CancelButton := this.AddClick("Button", "x0 y0 w0 h0", "Cancel"
-      , this.CancelObj, "Discard staged changes and close")
-
-    this.Obj.OnEvent("Size", this.ResizeObj)
-    this.ResizeGui(this.Obj, 0, 764, 544)
-    this.Panel.RefreshList()
+    this.Obj.Opt("-Resize -MinimizeBox -MaximizeBox")
+    this.Tab := this.Obj.Add("Tab3", "X+0 Y+0 W480 H400"
+      , ["Keys", "Applications", "Status", "Configuration file"])
+    this.Panel := VimSettingPanel(
+      this.Obj, this.Tab, this.Vim.Conf, this.Vim.GroupDel)
+    this.MakeConfigurationTab()
+    this.MakeFooter()
   }
 
-  ResizeGui(GuiObj, MinMax, Width, Height) {
-    if (MinMax == -1) {
-      return
-    }
-    Narrow := Width < VimSetting.NarrowWidth
-    FooterHeight := Narrow ? 108 : 92
-    FooterTop := Height - FooterHeight
-    this.Panel.Resize(Width, FooterTop, Narrow)
-    OpenFolderX := Width - 96
-    this.ConfigLabel.Move(12, FooterTop + 4, 100, 16)
-    this.ConfigPath.Move(120, FooterTop, OpenFolderX - 128, 24)
-    this.OpenFolderButton.Move(OpenFolderX, FooterTop, 84, 24)
+  MakeConfigurationTab() {
+    this.Tab.UseTab(4)
+    this.Obj.Add("Text", "X+0 Y+0 Section", "")
+    this.ConfigLabel := this.Obj.Add(
+      "Text", "XS+10 Y+10", "Current configuration file:")
+    this.ConfigPath := this.Obj.Add(
+      "Edit", "XS+10 Y+5 W430 ReadOnly", this.Vim.Ini.Ini)
+    this.OpenFolderButton := this.AddClick(
+      "Button", "XS+10 Y+12 W100", "Open folder"
+      , this.Vim.Ini.OpenIniDirObj, "Open the current configuration directory")
+    this.ImportButton := this.AddClick(
+      "Button", "X+10 W100", "Import", this.ImportObj
+      , "Load settings from an INI file")
+    this.ExportButton := this.AddClick(
+      "Button", "X+10 W100", "Export", this.ExportObj
+      , "Save current settings to an INI file")
+    this.Tab.UseTab()
+  }
 
-    ActionY := Height - 36
-    UtilityY := Narrow ? Height - 68 : ActionY
-    this.ImportButton.Move(12, UtilityY, 80, 24)
-    this.ExportButton.Move(100, UtilityY, 80, 24)
-    RightX := Width - 356
-    this.OKButton.Move(RightX, ActionY, 80, 24)
-    this.ApplyButton.Move(RightX + 88, ActionY, 80, 24)
-    this.ResetButton.Move(RightX + 176, ActionY, 80, 24)
-    this.CancelButton.Move(RightX + 264, ActionY, 80, 24)
+  MakeFooter() {
+    this.Tab.GetPos(&TabX, &TabY, &TabWidth, &TabHeight)
+    FooterY := TabY + TabHeight + 10
+    ButtonWidth := 100
+    ButtonGap := 10
+    this.OKButton := this.AddClick(
+      "Button", "X" TabX " Y" FooterY " W" ButtonWidth " Default"
+      , "OK", this.OKObj, "Apply changes and close")
+    this.ApplyButton := this.AddClick(
+      "Button", "X+" ButtonGap " W" ButtonWidth
+      , "Apply", this.ApplyObj, "Apply changes")
+    this.ResetButton := this.AddClick(
+      "Button", "X+" ButtonGap " W" ButtonWidth
+      , "Reset", this.ResetObj, "Show default values")
+    this.CancelButton := this.AddClick(
+      "Button", "X+" ButtonGap " W" ButtonWidth
+      , "Cancel", this.CancelObj, "Discard staged changes and close")
   }
 
   UpdateGui() {

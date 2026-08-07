@@ -2,174 +2,212 @@
 
 
 class VimSettingPanel {
-  __New(GuiObj, Schema, Delimiter) {
+  static KeysCategory := "Mode keys"
+  static StatusCategory := "Status"
+  static MainGroupKey := "VimGroup"
+  static AppListKey := "VimAppList"
+  static UpDownNoThousandsOption := "0x80"
+
+  __New(GuiObj, TabObj, Schema, Delimiter) {
     this.Gui := GuiObj
+    this.Tab := TabObj
     this.Schema := Schema
     this.Delimiter := Delimiter
     this.Values := VimSettingSchema.Values(Schema)
-    this.RowKeys := Map()
-    this.Categories := []
-    this.CurrentKey := ""
+    this.Controls := Map()
+    this.GroupKeys := []
+    this.CurrentGroupKey := ""
+    this.Loading := False
 
-    this.SearchLabel := this.Gui.Add("Text", "x0 y0 w0 h0", "Search:")
-    this.Search := this.Gui.Add("Edit", "x0 y0 w0 h0")
-    this.Category := this.Gui.Add("ListBox", "x0 y0 w0 h0")
-    this.List := this.Gui.Add("ListView", "x0 y0 w0 h0 -Multi", ["Setting", "Value"])
-    this.Details := this.Gui.Add("Edit", "x0 y0 w0 h0 ReadOnly Multi VScroll")
-    this.Boolean := this.Gui.Add("CheckBox", "x0 y0 w0 h0", "Enabled")
-    this.Choice := this.Gui.Add("DropDownList", "x0 y0 w0 h0")
-    this.Text := this.Gui.Add("Edit", "x0 y0 w0 h0")
-    this.ListText := this.Gui.Add("Edit", "x0 y0 w0 h0 Multi VScroll WantTab")
-
-    this.Search.OnEvent("Change", ObjBindMethod(this, "FilterChanged"))
-    this.Category.OnEvent("Change", ObjBindMethod(this, "FilterChanged"))
-    this.List.OnEvent("ItemSelect", ObjBindMethod(this, "ItemSelected"))
-    this.Boolean.OnEvent("Click", ObjBindMethod(this, "EditorChanged"))
-    this.Choice.OnEvent("Change", ObjBindMethod(this, "EditorChanged"))
-    this.Text.OnEvent("Change", ObjBindMethod(this, "EditorChanged"))
-    this.ListText.OnEvent("Change", ObjBindMethod(this, "EditorChanged"))
-
-    this.LoadCategories()
-    this.HideEditors()
+    this.BuildKeysTab()
+    this.BuildApplicationsTab()
+    this.BuildStatusTab()
+    this.Tab.UseTab()
+    this.ValidateCoverage()
+    this.LoadValues(this.Values)
   }
 
-  LoadCategories() {
-    Seen := Map()
-    this.Categories := ["All"]
-    for , Setting in this.Schema {
-      Category := Setting["category"]
-      if !Seen.Has(Category) {
-        Seen[Category] := True
-        this.Categories.Push(Category)
-      }
-    }
-    this.Category.Delete()
-    this.Category.Add(this.Categories)
-    this.Category.Choose(1)
-  }
-
-  FilterChanged(Control, Info) {
-    this.RefreshList()
-  }
-
-  RefreshList() {
-    PreferredKey := this.CurrentKey
-    CategoryIndex := this.Category.Value
-    Category := CategoryIndex ? this.Categories[CategoryIndex] : "All"
-    Query := StrLower(Trim(this.Search.Text))
-    this.List.Delete()
-    this.RowKeys := Map()
-    SelectedRow := 0
+  BuildKeysTab() {
+    this.Tab.UseTab(1)
+    this.Gui.Add("Text", "X+0 Y+0 Section", "")
     for Key, Setting in this.Schema {
-      if (Category != "All" && Setting["category"] != Category) {
+      if (Setting["category"] != VimSettingPanel.KeysCategory) {
         continue
       }
-      SearchText := StrLower(Key " " Setting["description"] " " Setting["info"])
-      if (Query != "" && !InStr(SearchText, Query)) {
-        continue
+      Kind := Setting["kind"]
+      if (Kind == "boolean") {
+        Control := this.Gui.Add("CheckBox", "XS+10 Y+6", Setting["description"])
+      } else if (Kind == "list") {
+        this.Gui.Add("Text", "XS+10 Y+12", Setting["description"])
+        Control := this.Gui.Add("Edit", "XS+10 Y+5 R4 W150 Multi VScroll WantTab")
+      } else if (Kind == "choice") {
+        this.Gui.Add("Text", "XS+10 Y+12", Setting["description"])
+        Control := this.Gui.Add("DropDownList", "X+5 YP-4 W80")
+        Control.Add(Setting["choices"])
+      } else {
+        throw ValueError("Unsupported setting kind in Keys tab: " Kind)
       }
-      Row := this.List.Add("", Setting["description"]
-        , VimSettingSchema.Summary(Setting, this.Values[Key], this.Delimiter))
-      this.RowKeys[Row] := Key
-      if (Key == PreferredKey) {
-        SelectedRow := Row
-      }
-    }
-    this.ResizeColumns()
-    if (!SelectedRow && this.RowKeys.Count) {
-      SelectedRow := 1
-    }
-    if SelectedRow {
-      this.List.Modify(SelectedRow, "Select Focus Vis")
-      this.ShowEditor(this.RowKeys[SelectedRow])
-    } else {
-      this.CurrentKey := ""
-      this.Details.Text := ""
-      this.HideEditors()
+      this.RegisterControl(Key, Control)
     }
   }
 
-  ItemSelected(Control, Row, Selected) {
-    if (Selected && this.RowKeys.Has(Row)) {
-      this.ShowEditor(this.RowKeys[Row])
-    }
+  BuildApplicationsTab() {
+    this.Tab.UseTab(2)
+    this.Gui.Add("Text", "X+0 Y+0 Section", "")
+    this.AddApplicationChoice("VimSetTitleMatchMode", "XS+10 Y+10", "X+5 YP-4 W90")
+    this.AddApplicationChoice("VimSetTitleMatchModeFS", "XS+10 Y+12", "X+5 YP-4 W90")
+
+    this.ApplicationGroupLabel := this.Gui.Add("Text", "XS+10 Y+15", "Application group")
+    this.ApplicationGroup := this.Gui.Add("DropDownList", "X+5 YP-4 W260")
+    this.LoadApplicationGroups()
+
+    AppListSetting := this.Schema[VimSettingPanel.AppListKey]
+    this.AppListLabel := this.Gui.Add("Text", "XS+10 Y+12", AppListSetting["description"])
+    this.AppList := this.Gui.Add("DropDownList", "X+5 YP-4 W120")
+    this.AppList.Add(AppListSetting["choices"])
+    this.RegisterControl(VimSettingPanel.AppListKey, this.AppList)
+
+    this.GroupEditor := this.Gui.Add("Edit", "XS+10 Y+10 R8 W430 Multi VScroll WantTab")
+    this.GroupInfo := this.Gui.Add("Text", "XS+10 Y+8 W430 H48", "")
+    this.ApplicationGroup.OnEvent("Change", ObjBindMethod(this, "ApplicationGroupChanged"))
   }
 
-  ShowEditor(Key) {
-    this.CurrentKey := Key
+  AddApplicationChoice(Key, LabelOptions, ControlOptions) {
     Setting := this.Schema[Key]
-    this.Details.Text := Setting["description"] "`r`n`r`n" Setting["info"]
-    this.HideEditors()
-    Kind := Setting["kind"]
-    if (Kind == "boolean") {
-      this.Boolean.Value := this.Values[Key]
-      this.Boolean.Visible := True
-    } else if (Kind == "choice") {
-      this.Choice.Delete()
-      this.Choice.Add(Setting["choices"])
-      ChoiceIndex := 0
-      for Index, Choice in Setting["choices"] {
-        if (Choice == this.Values[Key]) {
-          ChoiceIndex := Index
-          break
-        }
-      }
-      this.Choice.Choose(ChoiceIndex)
-      this.Choice.Visible := True
-    } else if (Kind == "list") {
-      this.ListText.Text := VimSettingSchema.ToEditor(Setting, this.Values[Key], this.Delimiter)
-      this.ListText.Visible := True
-    } else {
-      this.Text.Text := this.Values[Key]
-      this.Text.Visible := True
+    this.Gui.Add("Text", LabelOptions, Setting["description"])
+    Control := this.Gui.Add("DropDownList", ControlOptions)
+    Control.Add(Setting["choices"])
+    this.RegisterControl(Key, Control)
+  }
+
+  LoadApplicationGroups() {
+    if !this.Schema.Has(VimSettingPanel.MainGroupKey) {
+      throw ValueError("Missing application group setting: " VimSettingPanel.MainGroupKey)
     }
-    this.ResizeDetails()
+    this.GroupKeys.Push(VimSettingPanel.MainGroupKey)
+    Descriptions := [this.Schema[VimSettingPanel.MainGroupKey]["description"]]
+    for Key, Setting in this.Schema {
+      if (Setting["group"] == "") {
+        continue
+      }
+      this.GroupKeys.Push(Key)
+      Descriptions.Push(Setting["description"])
+    }
+    this.ApplicationGroup.Add(Descriptions)
   }
 
-  HideEditors() {
-    this.Boolean.Visible := False
-    this.Choice.Visible := False
-    this.Text.Visible := False
-    this.ListText.Visible := False
+  BuildStatusTab() {
+    this.Tab.UseTab(3)
+    this.Gui.Add("Text", "X+0 Y+0 Section", "")
+    for Key, Setting in this.Schema {
+      if (Setting["category"] != VimSettingPanel.StatusCategory) {
+        continue
+      }
+      Kind := Setting["kind"]
+      this.Gui.Add("Text", "XS+10 Y+10", Setting["description"])
+      if (Kind == "integer") {
+        Control := this.Gui.Add("Edit", "X+5 YP-4 W80")
+        UpDownOptions := VimSettingPanel.UpDownNoThousandsOption
+        if (Setting["min"] != "" && Setting["max"] != "") {
+          UpDownOptions .= " Range" Setting["min"] "-" Setting["max"]
+        }
+        this.Gui.Add("UpDown", UpDownOptions)
+      } else if (Kind == "choice") {
+        Control := this.Gui.Add("DropDownList", "X+5 YP-4 W80")
+        Control.Add(Setting["choices"])
+      } else {
+        throw ValueError("Unsupported setting kind in Status tab: " Kind)
+      }
+      this.RegisterControl(Key, Control)
+    }
   }
 
-  EditorChanged(Control, Info) {
-    if (this.CurrentKey == "") {
+  RegisterControl(Key, Control) {
+    if !this.Schema.Has(Key) {
+      throw ValueError("Unknown setting control: " Key)
+    }
+    if this.Controls.Has(Key) {
+      throw ValueError("Duplicate setting control: " Key)
+    }
+    this.Controls[Key] := Control
+  }
+
+  ValidateCoverage() {
+    Covered := Map()
+    for Key in this.Controls {
+      Covered[Key] := True
+    }
+    for Key in this.GroupKeys {
+      if Covered.Has(Key) {
+        throw ValueError("Duplicate setting editor: " Key)
+      }
+      Covered[Key] := True
+    }
+    for Key in this.Schema {
+      if !Covered.Has(Key) {
+        throw ValueError("Missing setting editor: " Key)
+      }
+    }
+  }
+
+  ApplicationGroupChanged(Control, Info) {
+    if this.Loading {
       return
     }
-    Setting := this.Schema[this.CurrentKey]
-    Kind := Setting["kind"]
-    if (Kind == "boolean") {
-      Value := this.Boolean.Value
-    } else if (Kind == "choice") {
-      Value := this.Choice.Text
-    } else if (Kind == "list") {
-      Value := VimSettingSchema.NormalizeList(this.ListText.Text, this.Delimiter)
-    } else {
-      Value := this.Text.Text
+    this.CommitCurrentApplicationGroup()
+    Index := Control.Value
+    if (Index < 1 || Index > this.GroupKeys.Length) {
+      throw ValueError("Invalid application group selection.")
     }
-    this.Values[this.CurrentKey] := Value
-    this.UpdateSummary(this.CurrentKey)
+    this.ShowApplicationGroup(this.GroupKeys[Index])
   }
 
-  UpdateSummary(SettingKey) {
-    for Row, RowKey in this.RowKeys {
-      if (RowKey == SettingKey) {
-        this.List.Modify(Row, "Col2"
-          , VimSettingSchema.Summary(this.Schema[SettingKey]
-            , this.Values[SettingKey], this.Delimiter))
-        break
-      }
+  CommitCurrentApplicationGroup() {
+    if (this.CurrentGroupKey == "") {
+      return
     }
+    this.Values[this.CurrentGroupKey] := VimSettingSchema.NormalizeList(
+      this.GroupEditor.Text, this.Delimiter)
+  }
+
+  ShowApplicationGroup(Key) {
+    if !this.Schema.Has(Key) {
+      throw ValueError("Unknown application group: " Key)
+    }
+    Setting := this.Schema[Key]
+    if (Setting["kind"] != "list") {
+      throw ValueError("Application group requires a list setting: " Key)
+    }
+    this.CurrentGroupKey := Key
+    this.GroupEditor.Text := VimSettingSchema.ToEditor(
+      Setting, this.Values[Key], this.Delimiter)
+    this.GroupInfo.Text := Setting["info"]
+    ShowAppList := Key == VimSettingPanel.MainGroupKey
+    this.AppListLabel.Visible := ShowAppList
+    this.AppList.Visible := ShowAppList
   }
 
   LoadValues(Values) {
-    for Key in this.Schema {
-      if Values.Has(Key) {
+    this.Loading := True
+    try {
+      for Key in this.Schema {
+        if !Values.Has(Key) {
+          throw ValueError("Missing setting value: " Key)
+        }
         this.Values[Key] := Values[Key]
       }
+      for Key, Control in this.Controls {
+        this.SetControlValue(Key, Control, this.Values[Key])
+      }
+      GroupKey := this.CurrentGroupKey
+      if (GroupKey == "") {
+        GroupKey := this.GroupKeys[1]
+      }
+      this.ApplicationGroup.Choose(this.ApplicationGroupIndex(GroupKey))
+      this.ShowApplicationGroup(GroupKey)
+    } finally {
+      this.Loading := False
     }
-    this.RefreshList()
   }
 
   LoadDefaults() {
@@ -177,57 +215,62 @@ class VimSettingPanel {
   }
 
   NormalizedValues() {
-    return VimSettingSchema.NormalizeValues(this.Schema, this.Values, this.Delimiter)
-  }
-
-  ResizeColumns() {
-    ValueWidth := Min(140, Floor(this.ListWidth * 0.30))
-    this.List.ModifyCol(1, this.ListWidth - ValueWidth - 20)
-    this.List.ModifyCol(2, ValueWidth)
-  }
-
-  ResizeDetails() {
-    Gap := 8
-    AvailableHeight := this.DetailsBottom - this.DetailsTop
-    Kind := this.CurrentKey == "" ? "text" : this.Schema[this.CurrentKey]["kind"]
-    if (Kind == "list") {
-      DetailsHeight := Floor((AvailableHeight - Gap) * 0.45)
-      EditorY := this.DetailsTop + DetailsHeight + Gap
-      EditorHeight := this.DetailsBottom - EditorY
-    } else {
-      EditorHeight := 24
-      EditorY := this.DetailsBottom - EditorHeight
-      DetailsHeight := EditorY - this.DetailsTop - Gap
+    this.CommitCurrentApplicationGroup()
+    for Key, Control in this.Controls {
+      this.Values[Key] := this.ControlValue(Key, Control)
     }
-
-    this.Details.Move(this.RightX, this.DetailsTop, this.RightWidth, DetailsHeight)
-    this.Boolean.Move(this.RightX, EditorY, this.RightWidth, 24)
-    this.Choice.Move(this.RightX, EditorY, Min(320, this.RightWidth), 24)
-    this.Text.Move(this.RightX, EditorY, this.RightWidth, 24)
-    this.ListText.Move(this.RightX, EditorY, this.RightWidth, EditorHeight)
+    return VimSettingSchema.NormalizeValues(
+      this.Schema, this.Values, this.Delimiter)
   }
 
-  Resize(Width, FooterTop, Narrow) {
-    Margin := 12
-    Gap := Narrow ? 8 : 12
-    LeftWidth := Min(170, Floor(Width * 0.28))
-    RightX := Margin + LeftWidth + Gap
-    RightWidth := Width - RightX - Margin
-    ContentTop := 46
-    ContentHeight := FooterTop - ContentTop - Gap
-    ListHeight := Floor(ContentHeight * 0.43)
-    DetailsTop := ContentTop + ListHeight + Gap
+  SetControlValue(Key, Control, Value) {
+    Setting := this.Schema[Key]
+    Kind := Setting["kind"]
+    if (Kind == "boolean") {
+      Control.Value := Value ? 1 : 0
+    } else if (Kind == "choice") {
+      Control.Choose(this.ChoiceIndex(Setting, Value))
+    } else if (Kind == "list") {
+      Control.Text := VimSettingSchema.ToEditor(Setting, Value, this.Delimiter)
+    } else if (Kind == "integer") {
+      Control.Text := Value
+    } else {
+      throw ValueError("Unsupported setting kind: " Kind)
+    }
+  }
 
-    this.SearchLabel.Move(Margin, Margin + 3, 48, 20)
-    this.Search.Move(Margin + 52, Margin, Width - Margin * 2 - 52)
-    this.Category.Move(Margin, ContentTop, LeftWidth, ContentHeight)
-    this.List.Move(RightX, ContentTop, RightWidth, ListHeight)
-    this.ListWidth := RightWidth
-    this.RightX := RightX
-    this.RightWidth := RightWidth
-    this.DetailsTop := DetailsTop
-    this.DetailsBottom := FooterTop - Gap
-    this.ResizeDetails()
-    this.ResizeColumns()
+  ControlValue(Key, Control) {
+    Kind := this.Schema[Key]["kind"]
+    if (Kind == "boolean") {
+      return Control.Value
+    }
+    if (Kind == "choice") {
+      return Control.Text
+    }
+    if (Kind == "list") {
+      return VimSettingSchema.NormalizeList(Control.Text, this.Delimiter)
+    }
+    if (Kind == "integer") {
+      return Control.Text
+    }
+    throw ValueError("Unsupported setting kind: " Kind)
+  }
+
+  ChoiceIndex(Setting, Value) {
+    for Index, Choice in Setting["choices"] {
+      if (Choice == Value) {
+        return Index
+      }
+    }
+    throw ValueError(Setting["description"] " has an invalid value.")
+  }
+
+  ApplicationGroupIndex(Key) {
+    for Index, GroupKey in this.GroupKeys {
+      if (GroupKey == Key) {
+        return Index
+      }
+    }
+    throw ValueError("Unknown application group: " Key)
   }
 }
