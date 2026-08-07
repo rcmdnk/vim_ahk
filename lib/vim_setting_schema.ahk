@@ -67,40 +67,48 @@ class VimSettingSchema {
         , "ahk_exe chrome.exe", "ahk_exe msedge.exe", "ahk_exe firefox.exe"
         , "ahk_exe waterfox.exe", "ahk_exe brave.exe", "ahk_exe vivaldi.exe"
         , "ahk_exe opera.exe"]
+      , "Non-editor"
       , "Non-editor applications"
       , "Enter keeps its native behavior in normal mode, and G sends End in these applications."
       , Delimiter)
     this.AddApplicationGroup(Schema, "VimLBSelectGroup"
       , ["ahk_exe powerpnt.exe", "ahk_exe winword.exe", "ahk_exe wordpad.exe", "ahk_exe notepad.exe"]
+      , "Select line breaks"
       , "Applications that select line breaks"
       , "Shift+End includes the line break in these applications."
       , Delimiter)
     this.AddApplicationGroup(Schema, "VimNoLBCopyGroup"
       , ["ahk_exe evernote.exe"]
+      , "Omit copied line breaks"
       , "Applications that omit copied line breaks"
       , "Line-wise copy omits the line break in these applications."
       , Delimiter)
     this.AddApplicationGroup(Schema, "VimCtrlUpDownGroup"
       , ["ahk_exe onenote.exe"]
+      , "Ctrl+Up/Down"
       , "Applications requiring Ctrl+Up and Ctrl+Down"
       , "Vertical paragraph movement uses Ctrl+Up and Ctrl+Down in these applications."
       , Delimiter)
     this.AddApplicationGroup(Schema, "VimDoubleHomeGroup"
       , ["ahk_exe code.exe"]
+      , "Double Home"
       , "Applications requiring Home twice"
       , "Line-start movement sends Home twice in these applications."
       , Delimiter)
     this.AddApplicationGroup(Schema, "VimCaretMove", []
+      , "Caret movement"
       , "Applications supporting caret movement"
       , "The ^ command moves to the first non-whitespace character in these applications."
       , Delimiter)
     this.AddApplicationGroup(Schema, "VimCursorSameAfterSelect"
       , ["ahk_exe notepad.exe", "ahk_exe explorer.exe"]
+      , "Cursor after select"
       , "Applications preserving the cursor after selection"
       , "The cursor starts from the same position after selection in these applications."
       , Delimiter)
     this.AddApplicationGroup(Schema, "VimQdir"
       , ["ahk_exe q-dir_x64.exe", "ahk_exe q-dir.exe"]
+      , "Q-Dir"
       , "Q-Dir applications"
       , "Q-Dir-specific normal-mode bindings are active in these applications."
       , Delimiter)
@@ -109,10 +117,12 @@ class VimSettingSchema {
         , "ahk_exe slack.exe", "ahk_exe ms-teams.exe", "ahk_exe Teams.exe"
         , "ahk_exe Discord.exe", "ahk_exe WhatsApp.exe", "ahk_exe Zoom.exe"
         , "ahk_exe PhoneExperienceHost.exe", "ahk_exe LINE.exe"]
+      , "Shift+Enter line break"
       , "Applications using Shift+Enter for line breaks"
       , "The o and O commands send Shift+Enter in these applications."
       , Delimiter, ["lineBreakMethod"])
     this.AddApplicationGroup(Schema, "VimCtrlEnter", []
+      , "Ctrl+Enter line break"
       , "Applications using Ctrl+Enter for line breaks"
       , "The o and O commands send Ctrl+Enter in these applications."
       , Delimiter, ["lineBreakMethod"])
@@ -129,10 +139,10 @@ class VimSettingSchema {
     return Schema
   }
 
-  static AddApplicationGroup(Schema, Key, Items, Description, Info, Delimiter
+  static AddApplicationGroup(Schema, Key, Items, Label, Description, Info, Delimiter
       , ExclusiveGroups := 0) {
     this.Add(Schema, Key, this.Join(Items, Delimiter), "Application behavior", "list"
-      , Description, Info, 0, "", "", Key, ExclusiveGroups)
+      , Description, Info, 0, "", "", Key, ExclusiveGroups, Label)
   }
 
   static Join(Items, Delimiter) {
@@ -144,7 +154,8 @@ class VimSettingSchema {
   }
 
   static Add(Schema, Key, Default, Category, Kind, Description, Info
-      , Choices := 0, Min := "", Max := "", Group := "", ExclusiveGroups := 0) {
+      , Choices := 0, Min := "", Max := "", Group := "", ExclusiveGroups := 0
+      , Label := "") {
     if !(Choices is Array) {
       Choices := []
     }
@@ -162,7 +173,8 @@ class VimSettingSchema {
       "min", Min,
       "max", Max,
       "group", Group,
-      "exclusiveGroups", ExclusiveGroups)
+      "exclusiveGroups", ExclusiveGroups,
+      "label", Label)
   }
 
   static Copy(Schema) {

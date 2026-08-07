@@ -85,15 +85,19 @@ class VimSettingPanel {
       throw ValueError("Missing application group setting: " VimSettingPanel.MainGroupKey)
     }
     this.GroupKeys.Push(VimSettingPanel.MainGroupKey)
-    Descriptions := [this.Schema[VimSettingPanel.MainGroupKey]["description"]]
+    Labels := [this.Schema[VimSettingPanel.MainGroupKey]["description"]]
     for Key, Setting in this.Schema {
       if (Setting["group"] == "") {
         continue
       }
+      Label := Setting["label"]
+      if (Label == "") {
+        throw ValueError("Missing application group label: " Key)
+      }
       this.GroupKeys.Push(Key)
-      Descriptions.Push(Setting["description"])
+      Labels.Push(Label)
     }
-    this.ApplicationGroup.Add(Descriptions)
+    this.ApplicationGroup.Add(Labels)
   }
 
   BuildStatusTab() {
