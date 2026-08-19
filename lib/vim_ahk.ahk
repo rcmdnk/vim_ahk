@@ -50,68 +50,13 @@ class VimAhk{
     this.GroupDel := ","
     this.GroupN := 0
     this.GroupName := "VimGroup" this.GroupN
+    this.ConfiguredGroupN := 0
+    this.ConfiguredGroups := Map()
 
     DefaultGroup := this.SetDefaultActiveWindows()
 
-    ; On following applications, Enter works as Enter at the normal mode.
-    ; G sends {End} (not Ctrl+End) to scroll to bottom in these apps.
-    GroupAdd("VimNonEditor", "ahk_exe explorer.exe")  ; Explorer
-    GroupAdd("VimNonEditor", "ahk_exe q-dir_x64.exe") ; Q-dir
-    GroupAdd("VimNonEditor", "ahk_exe q-dir.exe")     ; Q-dir
-    GroupAdd("VimNonEditor", "ahk_exe chrome.exe")    ; Google Chrome
-    GroupAdd("VimNonEditor", "ahk_exe msedge.exe")    ; Microsoft Edge
-    GroupAdd("VimNonEditor", "ahk_exe firefox.exe")   ; Firefox
-    GroupAdd("VimNonEditor", "ahk_exe waterfox.exe")  ; Waterfox
-    GroupAdd("VimNonEditor", "ahk_exe brave.exe")     ; Brave
-    GroupAdd("VimNonEditor", "ahk_exe vivaldi.exe")   ; Vivaldi
-    GroupAdd("VimNonEditor", "ahk_exe opera.exe")     ; Opera
-
-    ; Following applications select the line break at Shift + End.
-    GroupAdd("VimLBSelectGroup", "ahk_exe powerpnt.exe") ; PowerPoint
-    GroupAdd("VimLBSelectGroup", "ahk_exe winword.exe")  ; Word
-    GroupAdd("VimLBSelectGroup", "ahk_exe wordpad.exe")  ; WordPad
-    GroupAdd("VimLBSelectGroup", "ahk_exe notepad.exe")  ; Notepad
-
-    ; Following applications do not copy the line break
-    GroupAdd("VimNoLBCopyGroup", "ahk_exe evernote.exe") ; Evernote
-
-    ; Need Ctrl for Up/Down
-    GroupAdd("VimCtrlUpDownGroup", "ahk_exe onenote.exe") ; OneNote Desktop, before Windows 10
-
-    ; Need Home twice
-    GroupAdd("VimDoubleHomeGroup", "ahk_exe code.exe") ; Visual Studio Code
-
-    ; The following can emulate ^. For others, ^ works the same as 0.
-    ; It does not work for Notepad on Windows 11.
-    ; GroupAdd("VimCaretMove", "ahk_exe notepad.exe") ; Notepad
-
-    ; The following start cursor from the same place after selection.
-    ; Others start right/left (by cursor) point of the selection
-    GroupAdd("VimCursorSameAfterSelect", "ahk_exe notepad.exe") ; Notepad
-    GroupAdd("VimCursorSameAfterSelect", "ahk_exe explorer.exe") ; Explorer
-
-    ; Q-Dir
-    GroupAdd("VimQdir", "ahk_exe q-dir_x64.exe") ; q-dir
-    GroupAdd("VimQdir", "ahk_exe q-dir.exe") ; q-dir
-
-    ; Shift-Enter to insert line break in these applications
-    GroupAdd("VimShiftEnter", "ahk_exe ChatGPT.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe Claude.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe Cursor.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe slack.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe ms-teams.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe Teams.exe") ; Old version
-    GroupAdd("VimShiftEnter", "ahk_exe Discord.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe WhatsApp.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe Zoom.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe PhoneExperienceHost.exe") ;
-    GroupAdd("VimShiftEnter", "ahk_exe LINE.exe") ;
-
-    ; Control-Enter to insert line break in these applications
-    ;GroupAdd("VimCtrlEnter", "...") ;
-
     ; Configuration values for Read/Write ini
-    this.Conf := VimSettingSchema.Build(DefaultGroup)
+    this.Conf := VimSettingSchema.Build(DefaultGroup, this.GroupDel)
 
     this.CheckBoxes := ["VimEscNormal", "VimEscNormalDirect", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimCtrlBracketNormalDirect", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth"]
 
@@ -143,6 +88,7 @@ class VimAhk{
   }
 
   SetValues(Values){
+    VimSettingSchema.ValidateExclusiveGroups(this.Conf, Values, this.GroupDel)
     for Key, Value in Values {
       this.Conf[Key]["val"] := Value
     }
@@ -160,6 +106,33 @@ class VimAhk{
     return this.GetConf(Key, "info")
   }
 
+  ; AutoHotkey can only append rules to window groups; existing rules cannot be cleared.
+  ; Whenever settings are applied, new groups are built before the current mapping is replaced.
+  ; Old groups remain until the script exits and are no longer queried.
+  SetConfiguredGroups(){
+    this.ConfiguredGroupN++
+    Groups := Map()
+    for , Setting in this.Conf {
+      Group := Setting["group"]
+      if (Group == "") {
+        continue
+      }
+      GroupName := Group "_" this.ConfiguredGroupN
+      Groups[Group] := GroupName
+      Loop Parse, Setting["val"], this.GroupDel {
+        if (A_LoopField != "") {
+          GroupAdd(GroupName, A_LoopField)
+        }
+      }
+    }
+    this.ConfiguredGroups := Groups
+  }
+
+  IsConfiguredGroup(Group){
+    return this.ConfiguredGroups.Has(Group)
+      and WinActive("ahk_group " this.ConfiguredGroups[Group])
+  }
+
   SetGroup(){
     this.GroupN++
     this.GroupName := "VimGroup" this.GroupN
@@ -173,6 +146,7 @@ class VimAhk{
   Setup(){
     SetTitleMatchMode(this.GetVal("VimSetTitleMatchMode"))
     SetTitleMatchMode(this.GetVal("VimSetTitleMatchModeFS"))
+    this.SetConfiguredGroups()
     this.State.SetStatusCheck()
     this.SetGroup()
     this.VimHotkey.Set()

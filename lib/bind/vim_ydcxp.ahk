@@ -6,11 +6,11 @@ c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
 {
   Vim.State.SetMode("Vim_ydc_y", 0, 0, 1)
   Sleep(150) ; Need to wait (For variable change?)
-  if WinActive("ahk_group VimDoubleHomeGroup"){
+  if Vim.IsConfiguredGroup("VimDoubleHomeGroup"){
     SendInput("{Home}")
   }
   SendInput("{Home}+{End}")
-  if not WinActive("ahk_group VimLBSelectGroup"){
+  if not Vim.IsConfiguredGroup("VimLBSelectGroup"){
     Vim.Move.Move("l")
   }else{
     Vim.Move.Move("")
@@ -21,7 +21,7 @@ c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
 +d::
 {
   Vim.State.SetMode("Vim_ydc_d", 0, 0, 0)
-  if not WinActive("ahk_group VimLBSelectGroup"){
+  if not Vim.IsConfiguredGroup("VimLBSelectGroup"){
     Vim.Move.Move("$")
   }else{
     SendInput("{Shift Down}{End}{Left}")
@@ -32,7 +32,7 @@ c::Vim.State.SetMode("Vim_ydc_c", 0, -1, 0)
 +c::
 {
   Vim.State.SetMode("Vim_ydc_c",0,0,0)
-  if not WinActive("ahk_group VimLBSelectGroup"){
+  if not Vim.IsConfiguredGroup("VimLBSelectGroup"){
     Vim.Move.Move("$")
   }else{
     SendInput("{Shift Down}{End}{Left}")
@@ -88,7 +88,7 @@ p::
   ;  break
   ;}
   if(Vim.State.LineCopy == 1){
-    if WinActive("ahk_group VimNoLBCopyGroup"){
+    if Vim.IsConfiguredGroup("VimNoLBCopyGroup"){
       SendInput("{End}{Enter}^v{Home}")
     }else{
       SendInput("{End}{Enter}^v{BS}{Home}")
