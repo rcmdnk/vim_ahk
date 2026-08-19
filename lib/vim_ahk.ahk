@@ -11,6 +11,7 @@
 #Include %A_LineFile%\..\vim_ini.ahk
 #Include %A_LineFile%\..\vim_menu.ahk
 #Include %A_LineFile%\..\vim_move.ahk
+#Include %A_LineFile%\..\vim_setting_schema.ahk
 #Include %A_LineFile%\..\vim_setting.ahk
 #Include %A_LineFile%\..\vim_state.ahk
 #Include %A_LineFile%\..\vim_tooltip.ahk
@@ -110,77 +111,12 @@ class VimAhk{
     ;GroupAdd("VimCtrlEnter", "...") ;
 
     ; Configuration values for Read/Write ini
-    ; setting, default, val, description, info
-    this.Conf := Map()
-    this.AddToConf("VimEscNormal", 1, 1
-      , "ESC to enter the normal mode"
-      , "If checked, pressing ESC enters normal mode.")
-    this.AddToConf("VimEscNormalDirect", 1, 1
-      , "ESC to enter the normal mode directly even if converting in IME"
-      , "If checked, ESC enters normal mode even while IME is converting.`nIf not checked, ESC behaves as normal ESC while IME is converting.")
-    this.AddToConf("VimSendEscNormal", 0, 0
-      , "Send ESC by ESC at the normal mode"
-      , "If checked, a short ESC press sends ESC in normal mode.`nEnable ESC to enter normal mode first.")
-    this.AddToConf("VimLongEscNormal", 0, 0
-      , "Long press ESC to enter the normal mode"
-      , "If checked, short and long press behavior of ESC is swapped.`nEnable ESC to enter normal mode first.")
-    this.AddToConf("VimCtrlBracketToEsc", 1, 1
-      , "Ctrl-[ to ESC"
-      , "If checked, Ctrl-[ behaves as ESC.`nIf Ctrl-[ to normal mode is disabled, Ctrl-[ always sends ESC.`nIf both are checked, long press Ctrl-[ sends ESC.")
-    this.AddToConf("VimCtrlBracketNormal", 1, 1
-      , "Ctrl-[ to enter the normal mode"
-      , "If checked, pressing Ctrl-[ enters normal mode.")
-    this.AddToConf("VimCtrlBracketNormalDirect", 1, 1
-      , "Ctrl-[ to enter the normal mode directly even if converting in IME"
-      , "If checked, Ctrl-[ enters normal mode even while IME is converting.`nIf not checked, Ctrl-[ behaves as ESC while IME is converting.")
-    this.AddToConf("VimSendCtrlBracketNormal", 0, 0
-      , "Send Ctrl-[ by Ctrl-[ at the normal mode"
-      , "If checked, a short Ctrl-[ press sends Ctrl-[ in normal mode.`nEnable Ctrl-[ to enter normal mode first.")
-    this.AddToConf("VimLongCtrlBracketNormal", 0, 0
-      , "Long press Ctrl-[ to enter the normal mode"
-      , "If checked, short and long press behavior of Ctrl-[ is swapped.`nEnable Ctrl-[ to enter normal mode first.")
-    this.AddToConf("VimChangeCaretWidth", 0, 0
-      , "Change to thick text caret when in normal mode"
-      , "If checked, caret width changes by mode (thick in normal/visual, thin in insert).`nIt may not work in all applications and can briefly change window focus.")
-    this.AddToConf("VimRestoreIME", 1, 1
-      , "Restore IME status at entering the insert mode"
-      , "If checked, IME status is saved in insert mode and restored when returning to insert mode.")
-    this.AddToConf("VimJJ", 0, 0
-      , "JJ to enter the normal mode"
-      , "If checked, `jj` enters normal mode from insert mode.")
-    this.AddToConf("VimTwoLetter", "", ""
-      , "Two-letter to enter the normal mode"
-      , "Two-letter mappings to enter normal mode from insert mode.`nSet one pair per line.`nEach pair must be exactly two different letters.")
-    this.AddToConf("VimDisableUnused", 1, 1
-      , "Disable unused keys in the normal mode"
-      , "Disable level for unused keys outside insert mode:`n1: Do not disable unused keys`n2: Disable alphabets (+Shift) and symbols`n3: Disable all, including modified keys (e.g. Ctrl+Z)")
-    this.AddToConf("VimSetTitleMatchMode", "2", "2"
-      , "SetTitleMatchMode"
-      , "SetTitleMatchMode mode:`n1: Start with`n2: Contain`n3: Exact match`nRegEx: Regular expression")
-    this.AddToConf("VimSetTitleMatchModeFS", "Fast", "Fast"
-      , "SetTitleMatchMode"
-      , "SetTitleMatchMode speed:`nFast: Text is not detected for some edit controls`nSlow: Works for all windows, but slower")
-    this.AddToConf("VimIconCheckInterval", 1000, 1000
-      , "Icon check interval (ms)"
-      , "Interval (ms) to check vim_ahk status and update tray icon.`nIf set to 0, the original AHK icon is used.")
-    this.AddToConf("VimVerbose", 1, 1
-      , "Verbose level"
-      , "Verbose level:`n1: No output`n2: Minimum tooltip (mode only)`n3: Tooltip (all information)`n4: Debug message box (does not auto-close)")
-    this.AddToConf("VimAppList", "Allow List", "Allow List"
-      , "Application list usage"
-      , "Application list mode:`nAll: Enable vim_ahk on all applications (ignore the list)`nAllow List: Use list as allow list`nDeny List: Use list as deny list")
-    this.AddToConf("VimGroup", DefaultGroup, DefaultGroup
-      , "Application list"
-      , "Applications where vim_ahk is enabled.`nSet one application per line.`nEach line can be Window Title, Class, or Process.")
+    this.Conf := VimSettingSchema.Build(DefaultGroup)
 
     this.CheckBoxes := ["VimEscNormal", "VimEscNormalDirect", "VimSendEscNormal", "VimLongEscNormal", "VimCtrlBracketToEsc", "VimCtrlBracketNormal", "VimCtrlBracketNormalDirect", "VimSendCtrlBracketNormal", "VimLongCtrlBracketNormal", "VimRestoreIME", "VimJJ", "VimChangeCaretWidth"]
 
     ; Initialize
     this.Initialize()
-  }
-
-  AddToConf(setting, default, val, description, info){
-    this.Conf[setting] :=  Map("default", default, "val", val, "description", description, "info", info)
   }
 
   SetConfDefault(){
@@ -204,6 +140,12 @@ class VimAhk{
 
   GetVal(Key){
     return this.GetConf(Key, "val")
+  }
+
+  SetValues(Values){
+    for Key, Value in Values {
+      this.Conf[Key]["val"] := Value
+    }
   }
 
   GetDefault(Key){
@@ -240,6 +182,9 @@ class VimAhk{
     this.__About()
     this.SetExistValue()
     this.Ini.ReadIni()
+    Values := VimSettingSchema.NormalizeValues(
+      this.Conf, VimSettingSchema.Values(this.Conf), this.GroupDel)
+    this.SetValues(Values)
     this.VimMenu.SetMenu()
     this.Setup()
   }
