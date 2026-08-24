@@ -195,6 +195,52 @@ class VimSettingSchema {
     return Normalized
   }
 
+  ; Used at startup so that a broken configuration file cannot prevent launching,
+  ; while OK/Apply in the GUI keep the strict NormalizeValues().
+  static NormalizeValuesWithFallback(Schema, Values, Delimiter, Warnings) {
+    Normalized := Map()
+    for Key, Setting in Schema {
+      try {
+        Normalized[Key] := this.Normalize(Setting, Values[Key], Delimiter)
+      } catch as e {
+        Normalized[Key] := Setting["default"]
+        Warnings.Push(e.Message " The default value is used.")
+      }
+    }
+    return Normalized
+  }
+
+  ; Resolve exclusive-group conflicts by keeping an item in the first setting
+  ; (in schema order) it appears in and removing it from the later ones.
+  ; Used at startup so that a broken configuration file cannot prevent launching.
+  static RepairExclusiveGroups(Schema, Values, Delimiter, Warnings) {
+    Index := Map()
+    for Key, Setting in Schema {
+      for Group in Setting["exclusiveGroups"] {
+        if !Index.Has(Group) {
+          Index[Group] := Map()
+        }
+        Owners := Index[Group]
+        Kept := ""
+        Loop Parse, Values[Key], Delimiter {
+          if (A_LoopField == "") {
+            continue
+          }
+          ItemKey := StrLower(A_LoopField)
+          if (Owners.Has(ItemKey) && Owners[ItemKey] != Key) {
+            Warnings.Push(A_LoopField " was removed from " Setting["description"]
+              . " because it is already set in " Schema[Owners[ItemKey]]["description"] ".")
+            continue
+          }
+          Owners[ItemKey] := Key
+          Kept .= (Kept == "" ? "" : Delimiter) A_LoopField
+        }
+        Values[Key] := Kept
+      }
+    }
+    return Values
+  }
+
   static ValidateExclusiveGroups(Schema, Values, Delimiter) {
     Index := Map()
     for Key, Setting in Schema {
@@ -240,7 +286,10 @@ class VimSettingSchema {
   static Normalize(Setting, Value, Delimiter) {
     Kind := Setting["kind"]
     if (Kind == "boolean") {
-      return Value ? 1 : 0
+      if (Value == 0 || Value == 1) {
+        return Integer(Value)
+      }
+      throw ValueError(Setting["description"] " must be 0 or 1.")
     }
     if (Kind == "integer") {
       if !IsInteger(Value) {
