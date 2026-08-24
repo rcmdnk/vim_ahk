@@ -144,6 +144,27 @@ All of them can also be changed from the settings GUI.
 |VimAppList|Application list mode:<br><ul><li>All: Enable vim_ahk on all applications (ignore the list).</li><li>Allow List: Use the list as an allow list.</li><li>Deny List: Use the list as a deny list.</li></ul>|Allow List|
 |VimGroup|Applications where vim_ahk is enabled. Set one application per line (Window Title/Class/Process).|See **Applications** section|
 
+In addition, the following options define application lists which change specific behaviors.
+They can be edited in the settings GUI (**Applications** tab, **Application group** dropdown)
+or set in your script like the other options.
+Each list uses the same format as `VimGroup`
+(one application per line in the GUI, comma separated in the script).
+
+|Option|Description|Default|
+|:-----|:----------|:------|
+|VimNonEditor|Enter keeps its native behavior in normal mode and G sends End (instead of Ctrl-End).|Explorer, Q-dir, Chrome, Edge, Firefox, Waterfox, Brave, Vivaldi, Opera|
+|VimLBSelectGroup|Shift+End includes the line break.|PowerPoint, Word, WordPad, Notepad|
+|VimNoLBCopyGroup|Line-wise copy omits the line break.|Evernote|
+|VimCtrlUpDownGroup|Vertical movement uses Ctrl+Up and Ctrl+Down.|OneNote Desktop|
+|VimDoubleHomeGroup|Line-start movement sends Home twice.|Visual Studio Code|
+|VimCaretMove|The `^` command moves to the first non-whitespace character.|(empty)|
+|VimCursorSameAfterSelect|The cursor starts from the same position after selection.|Notepad, Explorer|
+|VimQdir|Q-Dir specific normal-mode bindings are active.|Q-dir|
+|VimShiftEnter|The o and O commands send Shift+Enter to insert a line break.|ChatGPT, Claude, Cursor, Slack, Teams, Discord, WhatsApp, Zoom, Phone Link, LINE|
+|VimCtrlEnter|The o and O commands send Ctrl+Enter to insert a line break.|(empty)|
+
+The same application cannot be set in both `VimShiftEnter` and `VimCtrlEnter`.
+
 Set options before including **vim.ahk** in your script
 inside the auto-execute section, for example:
 
@@ -156,8 +177,9 @@ set these variables before `Vim := VimAhk(A_LineFile)`.
 > [!NOTE]
 > These variables overwrite default values.
 > After checking these variables, the configuration file is read.
-> If you have already run vim_ahk, the configuration file already exists and settings are loaded from it.
-> To apply updated script defaults, use `Reset` in the settings GUI.
+> The configuration file keeps only values changed from the default in the settings GUI,
+> so options you have not changed there follow these variables and script updates.
+> To restore all default values, use `Reset` in the settings GUI, then `OK` or `Apply`.
 
 > [!NOTE]
 > VimIconCheckInterval example
