@@ -1,0 +1,31 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+name: Syntax check
+
+jobs:
+  check:
+    name: Syntax check
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Install latest AutoHotkey v2
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $headers = @{ Authorization = "Bearer $env:GITHUB_TOKEN" }
+          $release = Invoke-RestMethod -Uri https://api.github.com/repos/AutoHotkey/AutoHotkey/releases/latest -Headers $headers
+          $asset = $release.assets | Where-Object { $_.name -match '^AutoHotkey_.*\.zip$' } | Select-Object -First 1
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile AutoHotkey.zip
+          Expand-Archive AutoHotkey.zip -DestinationPath AutoHotkey
+      - name: Validate vim.ahk
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath .\AutoHotkey\AutoHotkey64.exe -ArgumentList '/ErrorStdOut', '/validate', 'vim.ahk' -Wait -PassThru -NoNewWindow -RedirectStandardOutput validate.log
+          Get-Content validate.log
+          exit $p.ExitCode
