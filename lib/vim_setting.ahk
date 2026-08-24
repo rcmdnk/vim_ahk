@@ -1,4 +1,5 @@
 #Include %A_LineFile%\..\vim_gui.ahk
+#Include %A_LineFile%\..\vim_setting_application_panel.ahk
 
 
 class VimSetting Extends VimGui{
@@ -63,17 +64,9 @@ class VimSetting Extends VimGui{
     this.AddConf("DDL", "VimSetTitleMatchModeFS", "X+5 YP+0 W50 Choose" matchmodefs, ["Fast", "Slow"], True)
 
     ; Applications specific
-    this.AddConf("Text", "VimAppList", "XS+10 Y+15")
-    if(this.Vim.GetVal("VimAppList") == "All"){
-      matchapplist := 1
-    }else if(this.Vim.GetVal("VimAppList") == "Allow List"){
-      matchapplist := 2
-    }else{
-      matchapplist := 3
-    }
-    this.AddConf("DDL", "VimAppList", "X+5 YP-4 W100 Choose" matchapplist, ["All", "Allow List", "Deny List"], True)
-    this.AddConf("Text", "VimGroup", "XS+10 Y+5")
-    this.AddConf("Edit", "VimGroup", "XS+10 Y+5 R10 W300 Multi", StrReplace(this.Vim.GetVal("VimGroup"), this.Vim.GroupDel, "`n", 0, , -1), True)
+    this.ApplicationPanel := VimSettingApplicationPanel(
+      this.Obj, this.Vim.Conf, this.Vim.GroupDel
+      , ObjBindMethod(this.Vim, "AddToolTip"))
 
     ; Tab 3: Status
     this.Tab.UseTab(3)
@@ -119,93 +112,71 @@ class VimSetting Extends VimGui{
     this.UpdateGuiValue()
   }
 
-  UpdateGuiValue(){
-    for i, k in this.Vim.CheckBoxes {
-      this.Obj[k].Value := this.Vim.GetVal(k)
+  UpdateGuiValue(Values := 0){
+    if !(Values is Map) {
+      Values := VimSettingSchema.Values(this.Vim.Conf)
     }
-    this.Obj["VimTwoLetter"].Value := StrReplace(this.Vim.GetVal("VimTwoLetter"), this.Vim.GroupDel, "`n", 0, , -1)
-    this.Obj["VimDisableUnused"].Value := this.Vim.GetVal("VimDisableUnused")
-    this.Obj["VimIconCheckInterval"].Value := this.Vim.GetVal("VimIconCheckInterval")
-    if(this.Vim.GetVal("VimSetTitleMatchMode") == "RegEx"){
+    for i, k in this.Vim.CheckBoxes {
+      this.Obj[k].Value := Values[k]
+    }
+    this.Obj["VimTwoLetter"].Value := StrReplace(Values["VimTwoLetter"], this.Vim.GroupDel, "`n", 0, , -1)
+    this.Obj["VimDisableUnused"].Value := Values["VimDisableUnused"]
+    this.Obj["VimIconCheckInterval"].Value := Values["VimIconCheckInterval"]
+    if(Values["VimSetTitleMatchMode"] == "RegEx"){
       matchmode := 4
     }else{
-      matchmode := this.Vim.GetVal("VimSetTitleMatchMode")
+      matchmode := Values["VimSetTitleMatchMode"]
     }
     this.Obj["VimSetTitleMatchMode"].Value := matchmode
-    if(this.Vim.GetVal("VimSetTitleMatchModeFS") == "Fast"){
+    if(Values["VimSetTitleMatchModeFS"] == "Fast"){
       matchmodefs := 1
     }else{
       matchmodefs := 2
     }
     this.Obj["VimSetTitleMatchModeFS"].Value := matchmodefs
-    this.Obj["VimVerbose"].Value := this.Vim.GetVal("VimVerbose")
-    if(this.Vim.GetVal("VimAppList") == "All"){
-      matchapplist := 1
-    }else if(this.Vim.GetVal("VimAppList") == "Allow List"){
-      matchapplist := 2
-    }else{
-      matchapplist := 3
-    }
-    this.Obj["VimAppList"].Value := matchapplist
-    this.Obj["VimGroup"].Value := StrReplace(this.Vim.GetVal("VimGroup"), this.Vim.GroupDel, "`n", 0, , -1)
+    this.Obj["VimVerbose"].Value := Values["VimVerbose"]
+    this.ApplicationPanel.LoadValues(Values)
   }
 
   VimV2Conf(){
-    for k, v in this.Vim.Conf {
-      if(k == "VimGroup" || k == "VimTwoLetter"){
-        v["val"] := this.VimParseList(this.Obj[k].Value)
-      }else if(k == "VimSetTitleMatchMode" && this.Obj[k].Value == 4){
-        v["val"] := "RegEx"
-      }else if(k == "VimSetTitleMatchModeFS"){
-        if(this.Obj[k].Value == 1){
-          v["val"] := "Fast"
-        }else{
-          v["val"] := "Slow"
-        }
-      }else if(k == "VimAppList"){
-        if(this.Obj[k].Value == 1){
-          v["val"] := "All"
-        }else if(this.Obj[k].Value == 2){
-          v["val"] := "Allow List"
-        }else{
-          v["val"] := "Deny List"
-        }
-      }else{
-        v["val"] := this.Obj[k].Value
-      }
+    Values := VimSettingSchema.Values(this.Vim.Conf)
+    for i, k in this.Vim.CheckBoxes {
+      Values[k] := this.Obj[k].Value
     }
-  }
-
-  VimParseList(List){
-    result := ""
-    tmpArray := []
-    Loop Parse, List, "`n" {
-      if(! tmpArray.Has(A_LoopField)){
-        tmpArray.push(A_LoopField)
-        if(result == ""){
-          result := A_LoopField
-        }else{
-          result := result this.Vim.GroupDel A_LoopField
-        }
-      }
-    }
-    return result
+    Values["VimTwoLetter"] := this.Obj["VimTwoLetter"].Value
+    Values["VimDisableUnused"] := this.Obj["VimDisableUnused"].Text
+    Values["VimIconCheckInterval"] := this.Obj["VimIconCheckInterval"].Value
+    Values["VimSetTitleMatchMode"] := this.Obj["VimSetTitleMatchMode"].Text
+    Values["VimSetTitleMatchModeFS"] := this.Obj["VimSetTitleMatchModeFS"].Text
+    Values["VimVerbose"] := this.Obj["VimVerbose"].Text
+    this.ApplicationPanel.StoreValues(Values)
+    Values := VimSettingSchema.NormalizeValues(
+      this.Vim.Conf, Values, this.Vim.GroupDel)
+    this.Vim.SetValues(Values)
   }
 
   OK(Obj, Info){
-    this.Obj.Submit()
-    this.VimV2Conf()
-    this.Vim.Setup()
-    this.Vim.Ini.WriteIni()
-    this.Hide(Obj)
+    try {
+      this.Obj.Submit(false)
+      this.VimV2Conf()
+      this.Vim.Setup()
+      this.Vim.Ini.WriteIni()
+      this.Hide(Obj)
+    } catch as e {
+      MsgBox(e.Message, "Vim Ahk", "Iconx")
+    }
   }
 
   Apply(Obj, Info){
-    this.Obj.Submit(false)
-    this.VimV2Conf()
-    this.Vim.Setup()
-    this.Vim.Ini.WriteIni()
-    this.Vim.VimToolTip.RemoveToolTip()
+    try {
+      this.Obj.Submit(false)
+      this.VimV2Conf()
+      this.Vim.Setup()
+      this.Vim.Ini.WriteIni()
+      this.Vim.VimToolTip.RemoveToolTip()
+    } catch as e {
+      MsgBox(e.Message, "Vim Ahk", "Iconx")
+    }
   }
 
   Cancel(Obj, Info){
@@ -213,8 +184,7 @@ class VimSetting Extends VimGui{
   }
 
   Reset(Obj, Info){
-    this.Vim.SetConfDefault()
-    this.UpdateGuiValue()
+    this.UpdateGuiValue(VimSettingSchema.Values(this.Vim.Conf, True))
   }
 
   ImportIni(Obj, Info){
@@ -233,35 +203,10 @@ class VimSetting Extends VimGui{
       tmpIni.ReadIni()
 
       ; Update GUI controls from tmpConf only
-      ; CheckBoxes
-      for i, k in this.Vim.CheckBoxes {
-        if this.Obj.HasProp(k) && tmpConf.Has(k)
-          this.Obj[k].Value := tmpConf[k]["val"]
-      }
-      ; Text/DDL fields with conversions
-      if this.Obj.HasProp("VimTwoLetter")
-        this.Obj["VimTwoLetter"].Value := StrReplace(tmpConf["VimTwoLetter"]["val"], this.Vim.GroupDel, "`n", 0, , -1)
-      if this.Obj.HasProp("VimDisableUnused")
-        this.Obj["VimDisableUnused"].Value := tmpConf["VimDisableUnused"]["val"]
-      if this.Obj.HasProp("VimIconCheckInterval")
-        this.Obj["VimIconCheckInterval"].Value := tmpConf["VimIconCheckInterval"]["val"]
-      ; Title match mode
-      if this.Obj.HasProp("VimSetTitleMatchMode") {
-        matchmode := tmpConf["VimSetTitleMatchMode"]["val"]
-        this.Obj["VimSetTitleMatchMode"].Value := (matchmode == "RegEx") ? 4 : matchmode
-      }
-      if this.Obj.HasProp("VimSetTitleMatchModeFS") {
-        matchmodefs := tmpConf["VimSetTitleMatchModeFS"]["val"]
-        this.Obj["VimSetTitleMatchModeFS"].Value := (matchmodefs == "Fast") ? 1 : 2
-      }
-      if this.Obj.HasProp("VimVerbose")
-        this.Obj["VimVerbose"].Value := tmpConf["VimVerbose"]["val"]
-      if this.Obj.HasProp("VimAppList") {
-        ap := tmpConf["VimAppList"]["val"]
-        this.Obj["VimAppList"].Value := (ap == "All") ? 1 : (ap == "Allow List") ? 2 : 3
-      }
-      if this.Obj.HasProp("VimGroup")
-        this.Obj["VimGroup"].Value := StrReplace(tmpConf["VimGroup"]["val"], this.Vim.GroupDel, "`n", 0, , -1)
+      Values := VimSettingSchema.Values(tmpConf)
+      Values := VimSettingSchema.NormalizeValues(
+        this.Vim.Conf, Values, this.Vim.GroupDel)
+      this.UpdateGuiValue(Values)
 
       ; Do not write to the main INI nor apply runtime yet — waits for Apply
       MsgBox("Imported settings staged from:`n" path "`nClick Apply to apply them.", "Vim Ahk")
@@ -278,6 +223,7 @@ class VimSetting Extends VimGui{
       ; Ensure current settings are saved before export
       this.Obj.Submit(false)
       this.VimV2Conf()
+      this.Vim.Setup()
       this.Vim.Ini.WriteIni()
       FileCopy(this.Vim.Ini.Ini, path, true)
       MsgBox("Exported settings to: `n" path, "Vim Ahk")

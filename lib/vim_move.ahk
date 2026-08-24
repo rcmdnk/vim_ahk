@@ -82,7 +82,7 @@
   }
 
   Zero(){
-    if WinActive("ahk_group VimDoubleHomeGroup"){
+    if this.Vim.IsConfiguredGroup("VimDoubleHomeGroup"){
       SendInput("{Home}")
     }
     SendInput("{Home}")
@@ -90,7 +90,7 @@
 
   Up(n:=1){
     Loop n {
-      if WinActive("ahk_group VimCtrlUpDownGroup"){
+      if this.Vim.IsConfiguredGroup("VimCtrlUpDownGroup"){
         SendInput("^{Up}")
       } else {
         SendInput("{Up}")
@@ -100,7 +100,7 @@
 
   Down(n:=1){
     Loop n {
-      if WinActive("ahk_group VimCtrlUpDownGroup"){
+      if this.Vim.IsConfiguredGroup("VimCtrlUpDownGroup"){
         SendInput("^{Down}")
       } else {
         SendInput("{Down}")
@@ -121,14 +121,14 @@
 
       ; 1 character
       if(Key == "h"){
-        if WinActive("ahk_group VimQdir"){
+        if this.Vim.IsConfiguredGroup("VimQdir"){
           SendInput("{BackSpace}")
         }
         else {
           SendInput("{Left}")
         }
       }else if(Key == "l"){
-        if WinActive("ahk_group VimQdir"){
+        if this.Vim.IsConfiguredGroup("VimQdir"){
           SendInput("{Enter}")
         }
         else {
@@ -145,13 +145,13 @@
         }
       }else if(Key == "^"){
         if(this.shift == 1){
-          if WinActive("ahk_group VimCaretMove"){
+          if this.Vim.IsConfiguredGroup("VimCaretMove"){
             SendInput("+{Home}+^{Right}+^{Left}")
           }else{
             SendInput("+{Home}")
           }
         }else{
-          if WinActive("ahk_group VimCaretMove"){
+          if this.Vim.IsConfiguredGroup("VimCaretMove"){
             SendInput("{Home}^{Right}^{Left}")
           }else{
             this.Zero()
@@ -202,7 +202,7 @@
     }else if(Key == "g"){
       SendInput("^{Home}")
     }else if(Key == "+g"){
-      if WinActive("ahk_group VimNonEditor"){
+      if this.Vim.IsConfiguredGroup("VimNonEditor"){
         SendInput("{End}")
       } else {
         SendInput("^{End}{Home}")
@@ -234,7 +234,7 @@
     }
     this.Down(this.Vim.State.n - 1)
     SendInput("{End}")
-    if not WinActive("ahk_group VimLBSelectGroup"){
+    if not this.Vim.IsConfiguredGroup("VimLBSelectGroup"){
       this.Move("l")
     }else{
       this.Move("")
