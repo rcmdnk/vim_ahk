@@ -192,10 +192,12 @@ class VimSetting Extends VimGui{
       path := FileSelect("", "", "Import INI (staged; Apply to confirm)", "INI (*.ini)")
       if (path == "")
         return
-      ; Read selected INI into a temporary conf map without touching runtime conf
+      ; Read selected INI into a temporary conf map without touching runtime conf.
+      ; Values are seeded with the defaults because the INI keeps only
+      ; non-default values: a missing key means the default value.
       tmpConf := Map()
       for k, v in this.Vim.Conf {
-        tmpConf[k] := Map("default", v["default"], "val", v["val"], "description", v["description"], "info", v["info"])
+        tmpConf[k] := Map("default", v["default"], "val", v["default"], "description", v["description"], "info", v["info"])
       }
       SplitPath(path, &fileName, &dir)
       tmpVim := {Conf: tmpConf, GroupDel: this.Vim.GroupDel}
