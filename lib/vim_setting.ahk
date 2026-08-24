@@ -159,8 +159,8 @@ class VimSetting Extends VimGui{
     try {
       this.Obj.Submit(false)
       this.VimV2Conf()
-      this.Vim.Ini.WriteIni()
       this.Vim.Setup()
+      this.Vim.Ini.WriteIni()
       this.Hide(Obj)
     } catch as e {
       MsgBox(e.Message, "Vim Ahk", "Iconx")
@@ -171,8 +171,8 @@ class VimSetting Extends VimGui{
     try {
       this.Obj.Submit(false)
       this.VimV2Conf()
-      this.Vim.Ini.WriteIni()
       this.Vim.Setup()
+      this.Vim.Ini.WriteIni()
       this.Vim.VimToolTip.RemoveToolTip()
     } catch as e {
       MsgBox(e.Message, "Vim Ahk", "Iconx")
@@ -223,8 +223,8 @@ class VimSetting Extends VimGui{
       ; Ensure current settings are saved before export
       this.Obj.Submit(false)
       this.VimV2Conf()
-      this.Vim.Ini.WriteIni()
       this.Vim.Setup()
+      this.Vim.Ini.WriteIni()
       FileCopy(this.Vim.Ini.Ini, path, true)
       MsgBox("Exported settings to: `n" path, "Vim Ahk")
     } catch as e {
