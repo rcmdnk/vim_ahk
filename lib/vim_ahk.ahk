@@ -64,12 +64,6 @@ class VimAhk{
     this.Initialize()
   }
 
-  SetConfDefault(){
-    for k, v in this.Conf {
-      v["val"] := v["default"]
-    }
-  }
-
   SetExistValue(){
     for k, v in this.Conf {
       if(IsSet(%k%)){
@@ -118,11 +112,17 @@ class VimAhk{
         continue
       }
       GroupName := Group "_" this.ConfiguredGroupN
-      Groups[Group] := GroupName
+      Added := False
       Loop Parse, Setting["val"], this.GroupDel {
         if (A_LoopField != "") {
           GroupAdd(GroupName, A_LoopField)
+          Added := True
         }
+      }
+      ; Groups without any rule are not registered, so that IsConfiguredGroup()
+      ; does not query group names that were never created.
+      if (Added) {
+        Groups[Group] := GroupName
       }
     }
     this.ConfiguredGroups := Groups
@@ -156,11 +156,29 @@ class VimAhk{
     this.__About()
     this.SetExistValue()
     this.Ini.ReadIni()
-    Values := VimSettingSchema.NormalizeValues(
-      this.Conf, VimSettingSchema.Values(this.Conf), this.GroupDel)
+    Warnings := []
+    Values := VimSettingSchema.NormalizeValuesWithFallback(
+      this.Conf, VimSettingSchema.Values(this.Conf), this.GroupDel, Warnings)
+    VimSettingSchema.RepairExclusiveGroups(
+      this.Conf, Values, this.GroupDel, Warnings)
     this.SetValues(Values)
+    ; Rewrite the file so that values equal to the default are removed
+    ; (files written by older versions store every setting) and corrected
+    ; values are persisted.
+    try {
+      this.Ini.WriteIni()
+    } catch {
+      ; Keep the corrected values only in memory if the file cannot be written
+    }
     this.VimMenu.SetMenu()
     this.Setup()
+    if (Warnings.Length > 0) {
+      Message := "Invalid values were found in the configuration file and corrected:"
+      for Warning in Warnings {
+        Message .= "`n`n" Warning
+      }
+      MsgBox(Message, "Vim Ahk", "Icon!")
+    }
   }
 
   SetDefaultActiveWindows(){

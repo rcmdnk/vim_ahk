@@ -31,7 +31,7 @@ class VimSettingApplicationPanel {
     this.AddToolTip(this.AppList, AppListSetting["info"])
 
     this.GroupEditor := this.Gui.Add(
-      "Edit", "XS+10 Y+10 R8 W430 Multi VScroll WantTab")
+      "Edit", "XS+10 Y+10 R8 W430 Multi VScroll")
     this.GroupInfo := this.AddLabel("XS+10 Y+8 W430 H48", "")
     this.ApplicationGroup.OnEvent(
       "Change", ObjBindMethod(this, "ApplicationGroupChanged"))
@@ -79,11 +79,12 @@ class VimSettingApplicationPanel {
     if this.Loading {
       return
     }
-    this.SaveCurrentGroup()
     Index := Control.Value
     if (Index < 1 || Index > this.GroupKeys.Length) {
-      throw ValueError("Invalid application group selection.")
+      ; No item is selected; keep the current group
+      return
     }
+    this.SaveCurrentGroup()
     this.ShowGroup(this.GroupKeys[Index])
   }
 

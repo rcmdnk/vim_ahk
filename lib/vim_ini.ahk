@@ -65,8 +65,22 @@
       DirCreate(this.IniDir)
 
     for k, v in this.Vim.Conf {
-      IniWrite(v["val"], this.Ini, this.Section, k)
+      ; Keep only non-default values in the file, so that default value updates
+      ; are applied to the settings which have not been changed by the user.
+      if (v["val"] == v["default"]) {
+        try {
+          IniDelete(this.Ini, this.Section, k)
+        } catch OSError {
+          ; The file or the key does not exist
+        }
+      } else {
+        IniWrite(v["val"], this.Ini, this.Section, k)
+      }
     }
+
+    ; Keep the file itself even if all values are default (e.g. for Export)
+    if not FileExist(this.Ini)
+      FileAppend("", this.Ini)
   }
 
   OpenIniDir(Obj, Info){
