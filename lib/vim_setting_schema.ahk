@@ -1,3 +1,5 @@
+; All static and stateless: called directly without an instance,
+; unlike the components held as members of VimAhk.
 class VimSettingSchema {
   static Build(DefaultGroup, Delimiter := ",") {
     Schema := Map()

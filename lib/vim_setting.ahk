@@ -1,5 +1,6 @@
 #Include %A_LineFile%\..\vim_gui.ahk
 #Include %A_LineFile%\..\vim_setting_application_panel.ahk
+#Include %A_LineFile%\..\vim_setting_schema.ahk
 
 
 class VimSetting Extends VimGui{
