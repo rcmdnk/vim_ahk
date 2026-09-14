@@ -13,7 +13,8 @@ class VimHotkey{
   }
 
   TwoLetterEnterNormal(EndKey, HotkeyName){
-    Out := InputHook("I T0.1 V L1", EndKey)
+    TwoLetterInterval := this.Vim.Conf["VimJJInterval"]["val"] / 1000
+    Out := InputHook("I T" TwoLetterInterval " V L1", EndKey)
     Out.Start()
     EndReason := Out.Wait()
     if(EndReason == "EndKey"){

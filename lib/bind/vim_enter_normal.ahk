@@ -5,7 +5,8 @@ Esc::Vim.State.HandleEsc()
 #HotIf Vim.IsVimGroup() and (Vim.State.IsCurrentVimMode("Insert")) and (Vim.Conf["VimJJ"]["val"] == 1)
 ~j up:: ; jj: go to Normal mode.
 {
-  jout := InputHook("I T0.1 V L1", "j")
+  JjInterval := Vim.Conf["VimJJInterval"]["val"] / 1000
+  jout := InputHook("I T" JjInterval " V L1", "j")
   jout.Start()
   EndReason := jout.Wait()
   if(EndReason == "EndKey"){

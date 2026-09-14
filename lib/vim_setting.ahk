@@ -41,6 +41,9 @@ class VimSetting Extends VimGui{
       this.AddConf("Checkbox", k, "XS+" x " Y+6", this.Vim.GetDescription(k), True)
       this.Obj[k].Value := this.Vim.GetVal(k)
     }
+    this.AddConf("Text", "VimJJInterval", "XS+10 Y+15")
+    this.AddConf("Edit", "VimJJInterval", "XS+10 Y+5 W70")
+    this.AddConf("UpDown", "VimJJInterval", "Range10-1000", this.Vim.GetVal("VimJJInterval"), True)
     this.AddConf("Text", "VimTwoLetter", "XS+10 Y+15")
     this.AddConf("Edit", "VimTwoLetter", "XS+10 Y+5 R4 W100 Multi", StrReplace(this.Vim.GetVal("VimTwoLetter"), this.Vim.GroupDel, "`n", 0, , -1), True)
     this.AddConf("Text", "VimDisableUnused", "XS+10 Y+15")
@@ -121,6 +124,7 @@ class VimSetting Extends VimGui{
       this.Obj[k].Value := Values[k]
     }
     this.Obj["VimTwoLetter"].Value := StrReplace(Values["VimTwoLetter"], this.Vim.GroupDel, "`n", 0, , -1)
+    this.Obj["VimJJInterval"].Value := Values["VimJJInterval"]
     this.Obj["VimDisableUnused"].Value := Values["VimDisableUnused"]
     this.Obj["VimIconCheckInterval"].Value := Values["VimIconCheckInterval"]
     if(Values["VimSetTitleMatchMode"] == "RegEx"){
@@ -145,6 +149,7 @@ class VimSetting Extends VimGui{
       Values[k] := this.Obj[k].Value
     }
     Values["VimTwoLetter"] := this.Obj["VimTwoLetter"].Value
+    Values["VimJJInterval"] := this.Obj["VimJJInterval"].Value
     Values["VimDisableUnused"] := this.Obj["VimDisableUnused"].Text
     Values["VimIconCheckInterval"] := this.Obj["VimIconCheckInterval"].Value
     Values["VimSetTitleMatchMode"] := this.Obj["VimSetTitleMatchMode"].Text

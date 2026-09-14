@@ -40,6 +40,10 @@ class VimSettingSchema {
     this.Add(Schema, "VimJJ", 0, "Mode keys", "boolean"
       , "JJ to enter the normal mode"
       , "If checked, `jj` enters normal mode from insert mode.")
+    this.Add(Schema, "VimJJInterval", 100, "Mode keys", "integer"
+      , "Two-letter key interval (ms)"
+      , "Maximum interval (ms) between the two keys in `jj` or a configured two-letter mapping to enter normal mode."
+      , 0, 10, 1000)
     this.Add(Schema, "VimTwoLetter", "", "Mode keys", "list"
       , "Two-letter to enter the normal mode"
       , "Two-letter mappings to enter normal mode from insert mode.`nSet one pair per line.`nEach pair must be exactly two different letters.")
