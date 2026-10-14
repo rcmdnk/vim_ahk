@@ -31,7 +31,7 @@ class VimSetting Extends VimGui{
 
   MakeGui(){
     this.Obj.Opt("-Resize -MinimizeBox -MaximizeBox")
-    this.Tab := this.Obj.Add("Tab3", "X+0 Y+0 W480 H400", ["Keys", "Applications", "Status", "Configuration file"])
+    this.Tab := this.Obj.Add("Tab3", "X+0 Y+0 W480 H440", ["Keys", "Applications", "Status", "Configuration file"])
 
     ; Tab 1: Keys
     this.Tab.UseTab(1)
