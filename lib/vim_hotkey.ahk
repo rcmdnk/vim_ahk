@@ -55,6 +55,9 @@ class VimHotkey{
     this.TwoLetterNormalArray := Array()
 
     Pairs := Map()
+    if(this.Vim.Conf["VimJJ"]["val"] == 1){
+      Pairs["j"] := "j"
+    }
     Loop Parse, this.Vim.Conf["VimTwoLetter"]["val"], this.Vim.GroupDel {
       if(A_LoopField != ""){
         if(StrLen(A_LoopField) != 2){
