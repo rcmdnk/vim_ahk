@@ -30,10 +30,10 @@ class VimHotkey{
     EnterNormal := ObjBindMethod(this, "TwoLetterEnterNormal")
     EnterNormal1 := EnterNormal.Bind(Key2)
     EnterNormal2 := EnterNormal.Bind(Key1)
-    HotKey("~" Key1, EnterNormal1)
-    HotKey("~" Key2, EnterNormal2)
-    this.TwoLetterNormalArray.Push(key1)
-    this.TwoLetterNormalArray.Push(key2)
+    HotKey("~" Key1, EnterNormal1, "On")
+    HotKey("~" Key2, EnterNormal2, "On")
+    this.TwoLetterNormalArray.Push("~" Key1)
+    this.TwoLetterNormalArray.Push("~" Key2)
   }
 
   SetTwoLetterMaps() {
