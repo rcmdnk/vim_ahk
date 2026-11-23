@@ -136,7 +136,7 @@ All of them can also be changed from the settings GUI.
 |VimRestoreIME|If 1, IME status is saved in insert mode and restored when returning to insert mode.|1|
 |VimJJ|If 1, `jj` enters normal mode from insert mode.|0|
 |VimJJInterval|Maximum interval (ms) between the two keys in `jj` or a configured two-letter mapping to enter normal mode.|100|
-|VimTwoLetter|Two-letter mappings to enter normal mode from insert mode.<br>Set one pair per line, exactly two different letters per pair.||
+|VimTwoLetter|Two-letter mappings to enter normal mode from insert mode.<br>Set exactly two letters per line, in typing order. Repeated letters are allowed (e.g. `jj`). Type lowercase letters to trigger.||
 |VimDisableUnused|Disable level for unused keys outside insert mode:<br><ol><li>Do not disable unused keys</li><li>Disable alphabets (+Shift) and symbols</li><li>Disable all, including modified keys (e.g. Ctrl+Z)</li></ol>|1|
 |VimSetTitleMatchMode|SetTitleMatchMode mode:<br><ol><li>Start with</li><li>Contain</li><li>Exact match</li><li>Regular expression (`RegEx`)</li></ol>|2|
 |VimSetTitleMatchModeFS|SetTitleMatchMode speed:<br><ol><li>Fast: Text is not detected for some edit controls.</li><li>Slow: Works for all windows, but slower.</li></ol>|Fast|
