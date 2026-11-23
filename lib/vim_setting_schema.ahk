@@ -46,7 +46,7 @@ class VimSettingSchema {
       , 0, 10, 1000)
     this.Add(Schema, "VimTwoLetter", "", "Mode keys", "list"
       , "Two-letter to enter the normal mode"
-      , "Two-letter mappings to enter normal mode from insert mode.`nSet one pair per line.`nEach pair must be exactly two different letters.")
+      , "Two-letter mappings to enter normal mode from insert mode.`nSet exactly two letters per line, in typing order.`nRepeated letters are allowed (e.g. jj). Type lowercase letters to trigger.")
     this.Add(Schema, "VimDisableUnused", 1, "Mode keys", "choice"
       , "Disable unused keys in the normal mode"
       , "Disable level for unused keys outside insert mode:`n1: Do not disable unused keys`n2: Disable alphabets (+Shift) and symbols`n3: Disable all, including modified keys (e.g. Ctrl+Z)"

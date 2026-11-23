@@ -4,36 +4,46 @@ class VimHotkey{
 
     ; Two-letter normal mode
     this.TwoLetterNormalIsSet := False
+    this.TwoLetterNormalPending := False
     this.TwoLetterNormalArray := Array()
     this.TwoLetterNormalEnabledObj := ObjBindMethod(this, "TwoLetterNormalEnabled")
   }
 
   TwoLetterNormalEnabled(HotkeyName){
-    Return this.Vim.IsVimGroup() && (this.Vim.State.StrIsInCurrentVimMode("Insert")) && this.TwoLetterNormalIsSet
+    Return this.Vim.IsVimGroup() && (this.Vim.State.StrIsInCurrentVimMode("Insert")) && this.TwoLetterNormalIsSet && !this.TwoLetterNormalPending && !GetKeyState("CapsLock", "T")
   }
 
-  TwoLetterEnterNormal(EndKey, HotkeyName){
-    TwoLetterInterval := this.Vim.Conf["VimJJInterval"]["val"] / 1000
-    Out := InputHook("I T" TwoLetterInterval " V L1", EndKey)
-    Out.Start()
-    EndReason := Out.Wait()
-    if(EndReason == "EndKey"){
-      if(!VIM_IME_GET()){
-        SendInput("{BackSpace 2}")
+  TwoLetterEnterNormal(FirstKey, EndKeys, HotkeyName){
+    this.TwoLetterNormalPending := True
+    try {
+      TwoLetterInterval := this.Vim.Conf["VimJJInterval"]["val"] / 1000
+      Out := InputHook("I T" TwoLetterInterval " V L1")
+      ; Ignore auto-repeat until the first key has actually been released.
+      Out.KeyOpt(FirstKey, "IN")
+      Out.OnKeyUp := (Hook, *) => Hook.KeyOpt(FirstKey, "-I")
+      Out.Start()
+      if(!GetKeyState(FirstKey, "P")){
+        Out.KeyOpt(FirstKey, "-I")
       }
-      Vim.State.SetNormal()
+      EndReason := Out.Wait()
+      if(EndReason == "Max" && StrLen(Out.Input) == 1 && InStr(EndKeys, Out.Input, True)){
+        if(!VIM_IME_GET()){
+          SendInput("{BackSpace 2}")
+        }
+        this.Vim.State.SetNormal()
+      }
+    } finally {
+      KeyWait(FirstKey)
+      this.TwoLetterNormalPending := False
     }
   }
 
-  SetTwoLetterMap(Key1, Key2){
-    SendSame := ObjBindMethod(this, "SendSame")
-    EnterNormal := ObjBindMethod(this, "TwoLetterEnterNormal")
-    EnterNormal1 := EnterNormal.Bind(Key2)
-    EnterNormal2 := EnterNormal.Bind(Key1)
-    HotKey("~" Key1, EnterNormal1)
-    HotKey("~" Key2, EnterNormal2)
-    this.TwoLetterNormalArray.Push(key1)
-    this.TwoLetterNormalArray.Push(key2)
+  SetTwoLetterMap(Key1, EndKeys){
+    EnterNormal := ObjBindMethod(this, "TwoLetterEnterNormal", Key1, EndKeys)
+    ; Start on key-down so rolled typing (j down, k down, j up) is captured.
+    Key := "~" Key1
+    HotKey(Key, EnterNormal, "On")
+    this.TwoLetterNormalArray.Push(Key)
   }
 
   SetTwoLetterMaps() {
@@ -44,18 +54,25 @@ class VimHotkey{
     }
     this.TwoLetterNormalArray := Array()
 
+    Pairs := Map()
+    if(this.Vim.Conf["VimJJ"]["val"] == 1){
+      Pairs["j"] := "j"
+    }
     Loop Parse, this.Vim.Conf["VimTwoLetter"]["val"], this.Vim.GroupDel {
       if(A_LoopField != ""){
         if(StrLen(A_LoopField) != 2){
           MsgBox("Two-letter should be exactly two letters: " A_LoopField)
           Continue
         }
-        this.TwoLetterNormalIsSet := True
-        key1 := SubStr(A_LoopField, 1, 1)
-        key2 := SubStr(A_LoopField, 2, 1)
-        this.SetTwoLetterMap(key1, key2)
+        key1 := StrLower(SubStr(A_LoopField, 1, 1))
+        key2 := StrLower(SubStr(A_LoopField, 2, 1))
+        Pairs[key1] := (Pairs.Has(key1) ? Pairs[key1] : "") key2
       }
     }
+    for Key1, EndKeys in Pairs {
+      this.SetTwoLetterMap(Key1, EndKeys)
+    }
+    this.TwoLetterNormalIsSet := Pairs.Count > 0
     HotIf()
   }
 
